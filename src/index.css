@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+/* ── Kids Design System Tokens & Base Setup ── */
+@layer base {
+  :root {
+    --font-heading: 'Nunito', 'Fredoka', system-ui, sans-serif;
+    --font-body: 'Nunito', system-ui, sans-serif;
+  }
+
+  html {
+    font-family: var(--font-heading);
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: #1E293B;
+    background-color: #F8FAFC;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  ::selection {
+    background-color: #FCD34D;
+    color: #0F172A;
+  }
+
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  button {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    color: #0F172A;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ── Tactile 3D Buttons & Kids Game UI Tokens ── */
+.btn-3d-amber {
+  background-color: #F59E0B;
+  border: 2px solid #D97706;
+  box-shadow: 0 5px 0 #B45309;
+  color: #0F172A;
+  transition: all 0.1s ease;
+}
+.btn-3d-amber:hover {
+  background-color: #FBBF24;
+}
+.btn-3d-amber:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #B45309;
+}
+
+.btn-3d-emerald {
+  background-color: #10B981;
+  border: 2px solid #059669;
+  box-shadow: 0 5px 0 #047857;
+  color: #FFFFFF;
+  transition: all 0.1s ease;
+}
+.btn-3d-emerald:hover {
+  background-color: #34D399;
+}
+.btn-3d-emerald:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #047857;
+}
+
+.btn-3d-sky {
+  background-color: #0EA5E9;
+  border: 2px solid #0284C7;
+  box-shadow: 0 5px 0 #0369A1;
+  color: #FFFFFF;
+  transition: all 0.1s ease;
+}
+.btn-3d-sky:hover {
+  background-color: #38BDF8;
+}
+.btn-3d-sky:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #0369A1;
+}
+
+.btn-3d-indigo {
+  background-color: #6366F1;
+  border: 2px solid #4F46E5;
+  box-shadow: 0 5px 0 #4338CA;
+  color: #FFFFFF;
+  transition: all 0.1s ease;
+}
+.btn-3d-indigo:hover {
+  background-color: #818CF8;
+}
+.btn-3d-indigo:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #4338CA;
+}
+
+.btn-3d-slate {
+  background-color: #F1F5F9;
+  border: 2px solid #CBD5E1;
+  box-shadow: 0 4px 0 #94A3B8;
+  color: #334155;
+  transition: all 0.1s ease;
+}
+.btn-3d-slate:hover {
+  background-color: #E2E8F0;
+}
+.btn-3d-slate:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #94A3B8;
+}
+
+/* ── 3D Card Elevation ── */
+.card-3d {
+  background: #FFFFFF;
+  border: 2.5px solid #E2E8F0;
+  box-shadow: 0 6px 0 #CBD5E1;
+  border-radius: 1.5rem;
+}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
