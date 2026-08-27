@@ -156,15 +156,20 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 
           <button
             onClick={() => {
-              voiceAssistant.stop();
-              onNext();
+              if (isStepComplete) {
+                voiceAssistant.stop();
+                onNext();
+              } else {
+                sounds.boing();
+                voiceAssistant.speak('Tap your answer or try the experiment on screen first to continue!');
+              }
             }}
-            disabled={!isStepComplete}
             className={`flex items-center gap-1.5 sm:gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-2xl font-black text-xs sm:text-base transition-all cursor-pointer ${
               isStepComplete
                 ? 'btn-3d-amber animate-pulse'
-                : 'bg-slate-200 text-slate-400 border-2 border-slate-300 cursor-not-allowed'
+                : 'bg-amber-100/70 text-amber-900 border-2 border-amber-300 hover:bg-amber-100 shadow-xs'
             }`}
+            title={isStepComplete ? 'Advance to next step' : 'Complete the activity above first!'}
           >
             <span>{currentStep === totalSteps ? 'Complete! 🎉' : 'Next Step'}</span>
             <ArrowRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 stroke-[3]" />
