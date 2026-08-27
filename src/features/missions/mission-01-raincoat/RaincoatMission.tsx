@@ -33,6 +33,8 @@ export function RaincoatMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [initialChoice, setInitialChoice] = useState<'A' | 'B' | null>(null);
   const [testedWater, setTestedWater] = useState<{ a: boolean; b: boolean }>({ a: false, b: false });
+  const [isSprayingA, setIsSprayingA] = useState(false);
+  const [isSprayingB, setIsSprayingB] = useState(false);
   const [finalChoice, setFinalChoice] = useState<'A' | 'B' | null>(null);
   const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
   const [matches, setMatches] = useState<Record<string, string>>({});
@@ -335,7 +337,7 @@ export function RaincoatMission() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 {/* Coat A Test Card: Cotton Absorption */}
-                <div className="bg-white p-5 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative">
+                <div className="bg-white p-5 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
                   <div className="flex items-center justify-between w-full mb-3">
                     <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-black uppercase">
                       Plant Fibre (Natural Cotton)
@@ -347,19 +349,42 @@ export function RaincoatMission() {
                     )}
                   </div>
 
-                  {/* Real Photo with Live Wet Transformation */}
+                  {/* Real Photo with Live Wet Transition & Water Mist Ripple */}
                   <div className="w-52 h-52 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center">
-                    <img
-                      src={testedWater.a ? cottonCoatSoakedImg : cottonCoatDryImg}
-                      alt="Cotton Coat Experiment"
-                      className="w-full h-full object-contain p-1 transition-all duration-500"
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={testedWater.a ? 'soaked' : 'dry'}
+                        src={testedWater.a ? cottonCoatSoakedImg : cottonCoatDryImg}
+                        alt="Cotton Coat Experiment"
+                        initial={{ opacity: 0.4, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0.4, scale: 1.04 }}
+                        transition={{ duration: 0.6, ease: 'easeOut' }}
+                        className="w-full h-full object-contain p-1"
+                      />
+                    </AnimatePresence>
+
+                    {/* Spray Shower Particle Wave Effect */}
+                    {isSprayingA && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: [0, 1, 0], scale: [0.8, 1.4, 1.8] }}
+                        transition={{ duration: 0.7 }}
+                        className="absolute inset-0 bg-blue-500/20 rounded-2xl pointer-events-none flex items-center justify-center text-4xl"
+                      >
+                        🚿💦💧
+                      </motion.div>
+                    )}
                   </div>
 
                   <button
                     onClick={() => {
                       sounds.splash();
-                      setTestedWater((prev) => ({ ...prev, a: true }));
+                      setIsSprayingA(true);
+                      setTimeout(() => {
+                        setTestedWater((prev) => ({ ...prev, a: true }));
+                        setIsSprayingA(false);
+                      }, 400);
                     }}
                     className={`w-full py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       testedWater.a
@@ -395,7 +420,7 @@ export function RaincoatMission() {
                 </div>
 
                 {/* Coat B Test Card: Synthetic Polyester Water Beading */}
-                <div className="bg-white p-5 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative">
+                <div className="bg-white p-5 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
                   <div className="flex items-center justify-between w-full mb-3">
                     <span className="px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-xs font-black uppercase">
                       Synthetic Fibre (Polyester Polymer)
@@ -409,17 +434,40 @@ export function RaincoatMission() {
 
                   {/* Real Photo with Live Waterproof Droplets Transformation */}
                   <div className="w-52 h-52 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center">
-                    <img
-                      src={testedWater.b ? polyesterRaincoatWaterproofImg : polyesterRaincoatDryImg}
-                      alt="Synthetic Raincoat Experiment"
-                      className="w-full h-full object-contain p-1 transition-all duration-500"
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={testedWater.b ? 'waterproof' : 'dry'}
+                        src={testedWater.b ? polyesterRaincoatWaterproofImg : polyesterRaincoatDryImg}
+                        alt="Synthetic Raincoat Experiment"
+                        initial={{ opacity: 0.4, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0.4, scale: 1.04 }}
+                        transition={{ duration: 0.6, ease: 'easeOut' }}
+                        className="w-full h-full object-contain p-1"
+                      />
+                    </AnimatePresence>
+
+                    {/* Spray Shower Particle Wave Effect */}
+                    {isSprayingB && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: [0, 1, 0], scale: [0.8, 1.4, 1.8] }}
+                        transition={{ duration: 0.7 }}
+                        className="absolute inset-0 bg-sky-400/20 rounded-2xl pointer-events-none flex items-center justify-center text-4xl"
+                      >
+                        🚿✨💧
+                      </motion.div>
+                    )}
                   </div>
 
                   <button
                     onClick={() => {
                       sounds.splash();
-                      setTestedWater((prev) => ({ ...prev, b: true }));
+                      setIsSprayingB(true);
+                      setTimeout(() => {
+                        setTestedWater((prev) => ({ ...prev, b: true }));
+                        setIsSprayingB(false);
+                      }, 400);
                     }}
                     className={`w-full py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       testedWater.b

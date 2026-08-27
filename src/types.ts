@@ -60,4 +60,32 @@ export interface DiscoveryEntry {
   scienceWord: string;
 }
 
-export type PipMood = 'idle' | 'curious' | 'encouraging' | 'thinking' | 'celebrating' | 'hinting' | 'explaining' | 'concerned';
+export type PipState =
+  | 'idle'
+  | 'curious'
+  | 'teaching'
+  | 'listening'
+  | 'thinking'
+  | 'correct'
+  | 'try_again'
+  | 'celebrating'
+  | 'high_five'
+  | 'speaking';
+
+export type PipMood = PipState | 'encouraging' | 'hinting' | 'explaining' | 'concerned';
+
+export type MascotEvent =
+  | 'LESSON_STARTED'
+  | 'QUESTION_SHOWN'
+  | 'ANSWER_SELECTED'
+  | 'ANSWER_CORRECT'
+  | 'ANSWER_INCORRECT'
+  | 'HELP_REQUESTED'
+  | 'LISTENING_STARTED'
+  | 'CHILD_STARTED_SPEAKING'
+  | 'CHILD_FINISHED_SPEAKING'
+  | 'MISSION_COMPLETED'
+  | 'CHAPTER_COMPLETED'
+  | 'MASCOT_CLICKED'
+  | 'HIGH_FIVE_PROMPT'
+  | 'HIGH_FIVE_COMPLETED';

@@ -6,6 +6,8 @@ import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { useParentStore } from '@/stores/parentStore';
 import { useAudioStore } from '@/stores/audioStore';
+import { usePipStore } from '@/stores/pipStore';
+import { Pip } from '@/components/pip/Pip';
 import { missions } from '@/data/missions';
 import { materials } from '@/data/materials';
 import { sounds } from '@/lib/sounds';
@@ -34,6 +36,10 @@ import {
 export const DevDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+
+  const pipStoreState = usePipStore((s) => s.state);
+  const setPipState = usePipStore((s) => s.setState);
+  const pipSpeak = usePipStore((s) => s.speak);
 
   const {
     completedMissions,
@@ -219,7 +225,69 @@ export const DevDrawer: React.FC = () => {
                       </button>
                     </div>
 
-                    {/* ── SECTION 3: "TRY IT WITH ME" SPOTLIGHT CONTROLS ── */}
+                    {/* ── SECTION 3: MASCOT STUDIO PLAYGROUND & STATE MACHINE TESTER ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-violet-500/40">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-violet-300 font-black uppercase tracking-wider flex items-center gap-1.5">
+                          <Sparkles className="w-4 h-4 text-violet-400" />
+                          <span>Mascot State Studio</span>
+                        </span>
+                        <span className="px-2 py-0.5 bg-violet-400/20 text-violet-300 rounded-full text-[10px] font-black uppercase">
+                          State: {pipStoreState}
+                        </span>
+                      </div>
+
+                      {/* Live Character Preview */}
+                      <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-center gap-4 mb-3">
+                        <Pip size="lg" interactive={true} />
+                        <div className="text-[11px] text-slate-400 font-medium">
+                          <p className="text-violet-300 font-bold">✨ Tap Pip to interact!</p>
+                          <p>Supports mouse cursor eyes & expressive ear mechanics.</p>
+                        </div>
+                      </div>
+
+                      {/* State Switcher Grid */}
+                      <div className="grid grid-cols-3 gap-1.5 mb-2">
+                        {[
+                          { id: 'idle', label: 'Idle 🧘' },
+                          { id: 'curious', label: 'Curious 🧐' },
+                          { id: 'teaching', label: 'Teaching 🪄' },
+                          { id: 'listening', label: 'Listening 👂' },
+                          { id: 'thinking', label: 'Thinking 🤔' },
+                          { id: 'correct', label: 'Correct 🎉' },
+                          { id: 'try_again', label: 'Try Again 💡' },
+                          { id: 'celebrating', label: 'Celebrate 🏆' },
+                          { id: 'high_five', label: 'High-Five ✋' },
+                        ].map((st) => (
+                          <button
+                            key={st.id}
+                            onClick={() => {
+                              sounds.pop();
+                              setPipState(st.id as any);
+                            }}
+                            className={`p-2 rounded-xl text-[11px] font-black border text-center transition-all cursor-pointer ${
+                              pipStoreState === st.id
+                                ? 'bg-violet-600 border-violet-400 text-white shadow-md'
+                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                            }`}
+                          >
+                            {st.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          sounds.pop();
+                          pipSpeak("I am Pip, your science learning companion! Let's discover materials together!");
+                        }}
+                        className="w-full py-2 bg-violet-900/60 hover:bg-violet-800 text-violet-200 border border-violet-700/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 text-[11px]"
+                      >
+                        <span>Test Lip-Sync Speech 🗣️</span>
+                      </button>
+                    </div>
+
+                    {/* ── SECTION 4: "TRY IT WITH ME" SPOTLIGHT CONTROLS ── */}
                     <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
                       <span className="text-amber-300 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
                         <Compass className="w-4 h-4 text-amber-400" />

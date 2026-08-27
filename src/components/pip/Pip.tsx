@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { PipMood } from '@/types';
+import type { PipState, PipMood } from '@/types';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useProgressStore } from '@/stores/progressStore';
+import { usePipStore } from '@/stores/pipStore';
 
 export interface PipProps {
   mood?: PipMood;
+  stateOverride?: PipState;
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showGoggles?: boolean;
@@ -14,20 +16,12 @@ export interface PipProps {
   interactive?: boolean;
   outfitOverride?: string;
   headwearOverride?: string;
+  onHighFive?: () => void;
 }
-
-const PIP_QUOTES = [
-  "Pip loves science! Let's explore together! 🔬",
-  "Hehe, that tickles! What are we testing next? ✨",
-  "Synthetic materials are like molecular superpower chains! 🧪",
-  "You're thinking like a real master scientist! ⭐",
-  "Pip's safety gear is calibrated and ready! 🥽",
-  "Did you know nylon was the very first 100% synthetic fibre? 🧵",
-  "Science high-five! Let's keep discovering! ✋",
-];
 
 export const Pip: React.FC<PipProps> = ({
   mood = 'idle',
+  stateOverride,
   className = '',
   size = 'md',
   showGoggles = true,
@@ -35,19 +29,37 @@ export const Pip: React.FC<PipProps> = ({
   interactive = true,
   outfitOverride,
   headwearOverride,
+  onHighFive,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const storeOutfit = useProgressStore((state) => state.equippedOutfit);
-  const storeHeadwear = useProgressStore((state) => state.equippedHeadwear);
+
+  // Store bindings
+  const storeOutfit = useProgressStore((s) => s.equippedOutfit);
+  const storeHeadwear = useProgressStore((s) => s.equippedHeadwear);
+  const storeState = usePipStore((s) => s.state);
+  const isSpeakingStore = usePipStore((s) => s.isSpeaking);
+  const isListeningStore = usePipStore((s) => s.isListening);
+  const isHighFiveReadyStore = usePipStore((s) => s.isHighFiveReady);
+  const handleMascotClick = usePipStore((s) => s.handleMascotClick);
+  const completeHighFive = usePipStore((s) => s.completeHighFive);
+
+  // Active state resolution
+  let currentState: PipState = stateOverride || storeState || 'idle';
+  if (mood && !stateOverride) {
+    if (mood === 'explaining' || mood === 'hinting') currentState = 'teaching';
+    else if (mood === 'concerned') currentState = 'try_again';
+    else if (mood === 'encouraging') currentState = 'correct';
+    else currentState = mood as PipState;
+  }
 
   const currentOutfit = outfitOverride || storeOutfit || 'lab-coat';
   const currentHeadwear = headwearOverride || storeHeadwear || (showGoggles ? 'goggles' : 'none');
 
   const [isBlinking, setIsBlinking] = useState(false);
-  const [tapEffect, setTapEffect] = useState<{ id: number; icon: string; x: number; y: number }[]>([]);
-  const [quoteIndex, setQuoteIndex] = useState(0);
+  const [mouthViseme, setMouthViseme] = useState<'closed' | 'open-small' | 'open-wide' | 'smile'>('smile');
+  const [tapEffect, setTapEffect] = useState<{ id: number; icon: string }[]>([]);
   const [eyeOffset, setEyeOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+  const [highFiveImpact, setHighFiveImpact] = useState(false);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -56,7 +68,7 @@ export const Pip: React.FC<PipProps> = ({
     xl: 'w-44 h-44',
   };
 
-  // ── MOUSE PUPIL TRACKING ENGINE ──
+  // ── 1. MOUSE CURSOR PUPIL TRACKING ──
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -70,116 +82,164 @@ export const Pip: React.FC<PipProps> = ({
 
       if (distance === 0) return;
 
-      // Max eye offset radius in SVG units
-      const maxRadius = 4.8;
-      const factor = Math.min(distance / 25, maxRadius);
-      const moveX = (dx / distance) * factor;
-      const moveY = (dy / distance) * factor;
-
-      setEyeOffset({ x: moveX, y: moveY });
+      const maxRadius = 4.2;
+      const factor = Math.min(distance / 28, maxRadius);
+      setEyeOffset({
+        x: (dx / distance) * factor,
+        y: (dy / distance) * factor,
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Natural blinking interval
+  // ── 2. NATURAL CALM BLINKING (Every 4.5s) ──
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 180);
-    }, 3800);
+      setTimeout(() => setIsBlinking(false), 160);
+    }, 4500);
     return () => clearInterval(blinkInterval);
   }, []);
 
-  const handlePipClick = (e: React.MouseEvent) => {
-    if (!interactive) return;
-    sounds.sparkle();
+  // ── 3. SPEECH LIP-SYNC VISEMES ──
+  useEffect(() => {
+    let visemeTimer: number;
+    if (currentState === 'speaking' || isSpeakingStore) {
+      const visemes: ('closed' | 'open-small' | 'open-wide' | 'smile')[] = [
+        'open-small',
+        'open-wide',
+        'open-small',
+        'smile',
+        'closed',
+      ];
+      let i = 0;
+      visemeTimer = window.setInterval(() => {
+        setMouthViseme(visemes[i % visemes.length]);
+        i++;
+      }, 140);
+    } else {
+      setMouthViseme('smile');
+    }
+    return () => clearInterval(visemeTimer);
+  }, [currentState, isSpeakingStore]);
 
+  // ── 4. CLICK / TAP INTERACTION ──
+  const handleClick = (e: React.MouseEvent) => {
+    if (!interactive) return;
+
+    if (currentState === 'high_five' || isHighFiveReadyStore) {
+      handleHighFiveClick(e);
+      return;
+    }
+
+    const phrase = handleMascotClick();
     const icons = ['⭐', '❤️', '💡', '🧪', '✨', '🥽', '🎉', '🪙'];
     const randomIcon = icons[Math.floor(Math.random() * icons.length)];
     const newId = Date.now() + Math.random();
 
-    setTapEffect((prev) => [...prev.slice(-4), { id: newId, icon: randomIcon, x: 0, y: -20 }]);
+    setTapEffect((prev) => [...prev.slice(-3), { id: newId, icon: randomIcon }]);
     setTimeout(() => {
       setTapEffect((prev) => prev.filter((p) => p.id !== newId));
-    }, 1200);
-
-    const nextQ = (quoteIndex + 1) % PIP_QUOTES.length;
-    setQuoteIndex(nextQ);
-    if (Math.random() > 0.45) {
-      voiceAssistant.speak(PIP_QUOTES[nextQ]);
-    }
+    }, 1100);
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    if (interactive && Math.random() > 0.6) {
-      sounds.pop();
-    }
+  const handleHighFiveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    sounds.fanfare();
+    setHighFiveImpact(true);
+    completeHighFive();
+    if (onHighFive) onHighFive();
+    setTimeout(() => setHighFiveImpact(false), 1200);
   };
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
+  // ── 5. STATE MACHINE ANIMATIONS (CALM DEFAULT, INTENTIONAL MOVEMENT) ──
   const bodyVariants = {
     idle: {
-      y: [0, -6, 0],
-      rotate: [-1, 1, -1],
-      transition: { duration: 2.4, repeat: Infinity, ease: 'easeInOut' },
+      scaleY: [1, 1.018, 1],
+      y: [0, -2, 0],
+      transition: { duration: 3.6, repeat: Infinity, ease: 'easeInOut' },
     },
     curious: {
-      rotate: [-4, 8, -4],
-      y: [0, -8, 0],
-      transition: { duration: 1.6, repeat: Infinity, ease: 'easeInOut' },
+      rotate: [-3, 6, -3],
+      y: -4,
+      transition: { duration: 1.2, ease: 'easeOut' },
     },
-    encouraging: {
-      y: [0, -14, 0],
-      scale: [1, 1.06, 1],
-      transition: { duration: 0.8, repeat: Infinity, ease: 'easeOut' },
+    teaching: {
+      y: [0, -3, 0],
+      rotate: [0, 2, 0],
+      transition: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
+    },
+    listening: {
+      y: 2,
+      scale: 1.03,
+      rotate: -2,
+      transition: { duration: 0.6, ease: 'easeOut' },
     },
     thinking: {
-      rotate: [-6, -2, -6],
-      y: [0, -4, 0],
-      transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+      rotate: -4,
+      y: -3,
+      transition: { duration: 0.8, ease: 'easeInOut' },
+    },
+    correct: {
+      y: [0, -10, 0],
+      scale: [1, 1.08, 1],
+      transition: { duration: 0.7, ease: 'easeOut' },
+    },
+    try_again: {
+      rotate: [-2, 2, -2],
+      y: [0, -2, 0],
+      transition: { duration: 1.4, ease: 'easeInOut' },
     },
     celebrating: {
-      y: [0, -24, 0],
-      rotate: [-8, 8, -8],
+      y: [0, -18, 0],
+      rotate: [-6, 6, -6],
       scale: [1, 1.12, 1],
-      transition: { duration: 0.6, repeat: Infinity, ease: 'easeOut' },
+      transition: { duration: 0.6, repeat: 3, ease: 'easeOut' },
     },
-    hinting: {
-      x: [-4, 6, -4],
-      rotate: [0, 4, 0],
-      transition: { duration: 1.2, repeat: Infinity },
+    high_five: {
+      scale: 1.05,
+      y: -3,
+      transition: { duration: 0.4, ease: 'easeOut' },
     },
-    explaining: {
-      y: [0, -8, 0],
-      scaleX: [1, 1.03, 1],
-      transition: { duration: 1.4, repeat: Infinity },
-    },
-    concerned: {
-      x: [-4, 4, -4, 4, 0],
-      y: [0, -2, 0],
-      transition: { duration: 0.4, repeat: Infinity },
+    speaking: {
+      y: [0, -3, 0],
+      transition: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' },
     },
   };
+
+  const isTeaching = currentState === 'teaching' || showPointerStick;
+  const isListening = currentState === 'listening' || isListeningStore;
+  const isHighFive = currentState === 'high_five' || isHighFiveReadyStore;
 
   return (
     <motion.div
       ref={containerRef}
-      onClick={handlePipClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      whileHover={interactive ? { scale: 1.1, rotate: [0, -4, 4, 0] } : undefined}
-      whileTap={interactive ? { scale: 0.9, rotate: 8 } : undefined}
+      onClick={handleClick}
+      whileHover={interactive ? { scale: 1.05 } : undefined}
+      whileTap={interactive ? { scale: 0.94 } : undefined}
       className={`relative inline-flex items-center justify-center select-none ${interactive ? 'cursor-pointer' : ''} ${sizeClasses[size]} ${className}`}
       variants={bodyVariants}
-      animate={mood}
-      title={interactive ? "Pip looks right at your cursor! Click to interact!" : undefined}
+      animate={currentState}
+      title={interactive ? "Pip the Learning Companion • Tap to interact!" : undefined}
     >
+      {/* ── HIGH-FIVE IMPACT BURST ── */}
+      <AnimatePresence>
+        {highFiveImpact && (
+          <motion.div
+            initial={{ scale: 0, opacity: 1 }}
+            animate={{ scale: 2, opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="absolute z-50 pointer-events-none text-4xl filter drop-shadow-lg"
+          >
+            ✨💥✋⭐
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── FLOATING TAP ICONS ── */}
       <AnimatePresence>
         {tapEffect.map((p) => (
           <motion.span
@@ -196,7 +256,16 @@ export const Pip: React.FC<PipProps> = ({
         ))}
       </AnimatePresence>
 
-      <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg overflow-visible">
+      {/* ── LISTENING ACOUSTIC WAVE AURA ── */}
+      {isListening && (
+        <motion.div
+          animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute inset-0 rounded-full border-4 border-indigo-400/60 bg-indigo-400/10 pointer-events-none z-0 filter blur-[2px]"
+        />
+      )}
+
+      <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg overflow-visible relative z-10">
         <defs>
           <linearGradient id="pipBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#A78BFA" />
@@ -205,6 +274,7 @@ export const Pip: React.FC<PipProps> = ({
           </linearGradient>
           <linearGradient id="pipCoatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="60%" stopColor="#F8FAFC" />
             <stop offset="100%" stopColor="#E2E8F0" />
           </linearGradient>
           <linearGradient id="pipAstroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -239,61 +309,107 @@ export const Pip: React.FC<PipProps> = ({
           </linearGradient>
         </defs>
 
-        {/* Base Shadow */}
+        {/* ── LAYER 1: GROUND SHADOW ── */}
         <ellipse cx="70" cy="128" rx="42" ry="7" fill="#000000" fillOpacity="0.14" />
 
-        {/* Round Body */}
-        <motion.path
+        {/* ── LAYER 2: EXPRESSIVE EARS (ATTENTIVE LISTENING / PERKED) ── */}
+        {/* Left Ear */}
+        <motion.g
+          animate={
+            isListening
+              ? { rotate: 18, x: 4, y: 2 }
+              : currentState === 'curious'
+              ? { rotate: 12, y: -2 }
+              : currentState === 'celebrating' || currentState === 'correct'
+              ? { rotate: [-4, 8, -4], y: -4 }
+              : currentState === 'thinking'
+              ? { rotate: -8, y: 1 }
+              : { rotate: 0, x: 0, y: 0 }
+          }
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ transformOrigin: '32px 30px' }}
+        >
+          <path d="M30 36 C20 22 28 8 36 18 C40 24 38 32 30 36 Z" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2.5" />
+          <path d="M30 30 C25 20 30 14 34 20" stroke="#C4B5FD" strokeWidth="2" strokeLinecap="round" />
+        </motion.g>
+
+        {/* Right Ear */}
+        <motion.g
+          animate={
+            isListening
+              ? { rotate: -18, x: -4, y: 2 }
+              : currentState === 'curious'
+              ? { rotate: -4, y: 1 }
+              : currentState === 'celebrating' || currentState === 'correct'
+              ? { rotate: [4, -8, 4], y: -4 }
+              : currentState === 'thinking'
+              ? { rotate: 12, y: -2 }
+              : { rotate: 0, x: 0, y: 0 }
+          }
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ transformOrigin: '108px 30px' }}
+        >
+          <path d="M110 36 C120 22 112 8 104 18 C100 24 102 32 110 36 Z" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2.5" />
+          <path d="M110 30 C115 20 110 14 106 20" stroke="#C4B5FD" strokeWidth="2" strokeLinecap="round" />
+        </motion.g>
+
+        {/* ── LAYER 3: ROUND MASCOT BODY & HEAD ── */}
+        <path
           d="M70 18 C38 18 20 44 20 76 C20 108 40 124 70 124 C100 124 120 108 120 76 C120 44 102 18 70 18 Z"
           fill="url(#pipBodyGrad)"
           stroke="#4C1D95"
           strokeWidth="3.5"
         />
 
-        {/* Antenna / Spark */}
+        {/* Antenna Spark */}
         <path d="M70 18 Q72 8 76 6" stroke="#5B21B6" strokeWidth="3" strokeLinecap="round" />
         <circle cx="77" cy="6" r="3.5" fill="#FBBF24" stroke="#D97706" strokeWidth="1.5" />
 
-        {/* ── CUSTOMIZABLE OUTFITS ── */}
+        {/* ── LAYER 4: PROPERLY FITTED TAILORED WARDROBE ── */}
         {currentOutfit === 'lab-coat' && (
           <g>
+            {/* Coat Body following natural shoulder contour */}
             <path
-              d="M32 82 C32 108 44 123 70 123 C96 123 108 108 108 82 C98 84 86 86 70 86 C54 86 42 84 32 82 Z"
+              d="M28 82 C28 108 42 123 70 123 C98 123 112 108 112 82 C98 85 86 87 70 87 C54 87 42 85 28 82 Z"
               fill="url(#pipCoatGrad)"
               stroke="#475569"
               strokeWidth="2.5"
             />
-            <path d="M50 84 L70 104 L90 84" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <circle cx="70" cy="109" r="2" fill="#F59E0B" />
-            <circle cx="70" cy="116" r="2" fill="#F59E0B" />
-            <rect x="84" y="97" width="14" height="12" rx="2" fill="#FFFFFF" stroke="#475569" strokeWidth="1.5" />
-            <rect x="88" y="92" width="3" height="7" rx="1.5" fill="#10B981" />
+            {/* Natural V-Neck Lapels */}
+            <path d="M46 84 L70 105 L94 84" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            <circle cx="70" cy="110" r="2" fill="#F59E0B" />
+            <circle cx="70" cy="117" r="2" fill="#F59E0B" />
+            {/* Breast Pocket with Mini Pipette */}
+            <rect x="84" y="96" width="14" height="12" rx="2" fill="#FFFFFF" stroke="#475569" strokeWidth="1.5" />
+            <rect x="88" y="91" width="3.5" height="7" rx="1.5" fill="#10B981" />
           </g>
         )}
 
         {currentOutfit === 'astronaut' && (
           <g>
             <path
-              d="M30 80 C30 110 42 124 70 124 C98 124 110 110 110 80 C98 83 86 85 70 85 C54 85 42 83 30 80 Z"
+              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
               fill="url(#pipAstroGrad)"
               stroke="#075985"
               strokeWidth="3"
             />
-            <rect x="58" y="96" width="24" height="16" rx="4" fill="#0F172A" stroke="#38BDF8" strokeWidth="1.5" />
-            <circle cx="65" cy="104" r="2" fill="#22C55E" />
-            <circle cx="75" cy="104" r="2" fill="#EF4444" />
+            {/* Center Dial & Life Support Badge */}
+            <rect x="56" y="95" width="28" height="18" rx="5" fill="#0F172A" stroke="#38BDF8" strokeWidth="2" />
+            <circle cx="64" cy="104" r="2.5" fill="#22C55E" />
+            <circle cx="76" cy="104" r="2.5" fill="#EF4444" />
           </g>
         )}
 
         {currentOutfit === 'winter-parka' && (
           <g>
             <path
-              d="M30 80 C30 110 42 124 70 124 C98 124 110 110 110 80 C98 83 86 85 70 85 C54 85 42 83 30 80 Z"
+              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
               fill="url(#pipParkaGrad)"
               stroke="#881337"
               strokeWidth="3"
             />
-            <path d="M40 82 C55 92 85 92 100 82" stroke="#FFFFFF" strokeWidth="8" strokeLinecap="round" />
+            {/* Fluffy Fur Collar */}
+            <path d="M38 82 C55 94 85 94 102 82" stroke="#FFFFFF" strokeWidth="9" strokeLinecap="round" />
             <circle cx="70" cy="106" r="3" fill="#FFFFFF" />
             <circle cx="70" cy="116" r="3" fill="#FFFFFF" />
           </g>
@@ -302,7 +418,7 @@ export const Pip: React.FC<PipProps> = ({
         {currentOutfit === 'gold-champion' && (
           <g>
             <path
-              d="M30 80 C30 110 42 124 70 124 C98 124 110 110 110 80 C98 83 86 85 70 85 C54 85 42 83 30 80 Z"
+              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
               fill="url(#pipGoldGrad)"
               stroke="#CA8A04"
               strokeWidth="3"
@@ -315,12 +431,12 @@ export const Pip: React.FC<PipProps> = ({
         {currentOutfit === 'detective' && (
           <g>
             <path
-              d="M30 80 C30 110 42 124 70 124 C98 124 110 110 110 80 C98 83 86 85 70 85 C54 85 42 83 30 80 Z"
+              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
               fill="url(#pipDetectiveGrad)"
               stroke="#92400E"
               strokeWidth="3"
             />
-            <path d="M48 83 L70 102 L92 83" stroke="#78350F" strokeWidth="3" strokeLinecap="round" />
+            <path d="M46 84 L70 104 L94 84" stroke="#78350F" strokeWidth="3" strokeLinecap="round" fill="none" />
             <circle cx="70" cy="112" r="3" fill="#78350F" />
           </g>
         )}
@@ -329,42 +445,54 @@ export const Pip: React.FC<PipProps> = ({
         <ellipse cx="44" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
         <ellipse cx="96" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
 
-        {/* ── INTERACTIVE MOUSE-TRACKING EYES & PUPILS ── */}
+        {/* ── LAYER 5: EYES & PUPILS (INTELLIGENT CURSOR/CONTENT TRACKING) ── */}
         {!isBlinking ? (
           <g>
-            {/* Left Eye White */}
-            <circle cx="52" cy="64" r="9" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
-            {/* Left Pupil (Tracks Mouse Position) */}
+            {/* Left Eye White Base */}
+            <circle cx="52" cy="64" r="9.5" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
+            {/* Left Moving Pupil */}
             <circle cx={52 + eyeOffset.x} cy={64 + eyeOffset.y} r="6" fill="#1E1B4B" />
-            {/* Left Eye Highlights */}
+            {/* Reflections */}
             <circle cx={54 + eyeOffset.x * 0.8} cy={62 + eyeOffset.y * 0.8} r="2.2" fill="#FFFFFF" />
             <circle cx={50 + eyeOffset.x * 0.8} cy={66 + eyeOffset.y * 0.8} r="1.2" fill="#FFFFFF" />
 
-            {/* Right Eye White */}
-            <circle cx="88" cy="64" r="9" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
-            {/* Right Pupil (Tracks Mouse Position) */}
+            {/* Right Eye White Base */}
+            <circle cx="88" cy="64" r="9.5" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
+            {/* Right Moving Pupil */}
             <circle cx={88 + eyeOffset.x} cy={64 + eyeOffset.y} r="6" fill="#1E1B4B" />
-            {/* Right Eye Highlights */}
+            {/* Reflections */}
             <circle cx={90 + eyeOffset.x * 0.8} cy={62 + eyeOffset.y * 0.8} r="2.2" fill="#FFFFFF" />
             <circle cx={86 + eyeOffset.x * 0.8} cy={66 + eyeOffset.y * 0.8} r="1.2" fill="#FFFFFF" />
           </g>
         ) : (
           <g>
-            <path d="M44 64 Q52 70 60 64" stroke="#1E1B4B" strokeWidth="3.5" strokeLinecap="round" />
-            <path d="M80 64 Q88 70 96 64" stroke="#1E1B4B" strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M43 64 Q52 70 61 64" stroke="#1E1B4B" strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M79 64 Q88 70 97 64" stroke="#1E1B4B" strokeWidth="3.5" strokeLinecap="round" />
           </g>
         )}
 
-        {/* Mouth */}
-        {mood === 'concerned' ? (
-          <path d="M62 80 Q70 74 78 80" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
-        ) : mood === 'thinking' ? (
-          <path d="M63 77 Q70 78 77 75" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
+        {/* ── LAYER 6: MOUTH & SPEECH VISEMES ── */}
+        {currentState === 'speaking' || isSpeakingStore ? (
+          mouthViseme === 'open-wide' ? (
+            <ellipse cx="70" cy="78" rx="7" ry="5.5" fill="#BE185D" stroke="#1E1B4B" strokeWidth="2" />
+          ) : mouthViseme === 'open-small' ? (
+            <ellipse cx="70" cy="77" rx="5" ry="3.5" fill="#BE185D" stroke="#1E1B4B" strokeWidth="2" />
+          ) : mouthViseme === 'closed' ? (
+            <line x1="64" y1="76" x2="76" y2="76" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
+          ) : (
+            <path d="M62 74 Q70 82 78 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="#BE185D" />
+          )
+        ) : currentState === 'try_again' ? (
+          <path d="M64 77 Q70 79 76 77" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
+        ) : currentState === 'thinking' ? (
+          <path d="M63 76 Q70 77 77 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
+        ) : currentState === 'listening' ? (
+          <path d="M65 76 Q70 79 75 76" stroke="#1E1B4B" strokeWidth="2.2" strokeLinecap="round" fill="#BE185D" />
         ) : (
           <path d="M62 74 Q70 82 78 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="#BE185D" />
         )}
 
-        {/* ── CUSTOMIZABLE HEADWEAR & GLASSES ── */}
+        {/* ── LAYER 7: HEADWEAR & GLASSES ── */}
         {currentHeadwear === 'goggles' && (
           <g>
             <path d="M22 54 C35 50 105 50 118 54" stroke="#0369A1" strokeWidth="3.5" strokeLinecap="round" />
@@ -409,21 +537,39 @@ export const Pip: React.FC<PipProps> = ({
           </g>
         )}
 
-        {/* ── TEACHER POINTER WAND / STICK ── */}
-        {showPointerStick && (
+        {/* ── LAYER 8: TEACHER POINTER WAND ── */}
+        {isTeaching && (
           <motion.g
-            animate={{ rotate: [-4, 6, -4], y: [0, -3, 0] }}
+            animate={{ rotate: [-3, 7, -3], y: [0, -3, 0] }}
             transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
             style={{ transformOrigin: '25px 95px' }}
           >
-            {/* Pip's Hand */}
             <circle cx="26" cy="94" r="7" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2" />
-            {/* Wooden Pointer Stick */}
             <line x1="26" y1="94" x2="-22" y2="45" stroke="#78350F" strokeWidth="4.5" strokeLinecap="round" />
             <line x1="26" y1="94" x2="-22" y2="45" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
-            {/* Glowing Golden Star Tip */}
             <circle cx="-24" cy="43" r="8" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2" />
             <path d="M-24 38 L-22 42 L-18 43 L-21 46 L-20 50 L-24 47 L-28 50 L-27 46 L-30 43 L-26 42 Z" fill="#EAB308" />
+          </motion.g>
+        )}
+
+        {/* ── LAYER 9: HIGH-FIVE RAISED HAND ── */}
+        {isHighFive && (
+          <motion.g
+            animate={{ scale: [1, 1.15, 1], rotate: [-4, 6, -4] }}
+            transition={{ duration: 1.0, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: '115px 75px' }}
+            onClick={handleHighFiveClick}
+            className="cursor-pointer"
+          >
+            {/* Glowing Target Ring */}
+            <circle cx="122" cy="70" r="16" fill="rgba(245, 158, 11, 0.25)" stroke="#F59E0B" strokeWidth="2" strokeDasharray="3 2" />
+            {/* Raised Hand Arm */}
+            <line x1="105" y1="90" x2="122" y2="70" stroke="#8B5CF6" strokeWidth="9" strokeLinecap="round" />
+            {/* Open Palm */}
+            <circle cx="122" cy="70" r="9" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2.5" />
+            <circle cx="122" cy="62" r="3" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="1.5" />
+            <circle cx="128" cy="65" r="3" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="1.5" />
+            <circle cx="116" cy="65" r="3" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="1.5" />
           </motion.g>
         )}
       </svg>
