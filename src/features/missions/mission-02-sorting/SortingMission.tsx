@@ -18,33 +18,109 @@ import {
   PlasticIllustration,
   RubberIllustration,
 } from '@/components/illustrations/MaterialIllustrations';
-import { Check, Sparkles, AlertCircle, ArrowRight, ShieldCheck, TreePine, Factory } from 'lucide-react';
+import { Check, Sparkles, AlertCircle, ArrowRight, ShieldCheck, TreePine, Factory, Search, ZoomIn } from 'lucide-react';
 
 type Phase = 'HOOK' | 'SORTING' | 'REFLECT' | 'UNDERSTANDING' | 'PRACTICE' | 'APPLY';
 
 interface MaterialItem {
   id: string;
   name: string;
+  emoji: string;
   renderIcon: (className?: string) => React.ReactNode;
   type: 'natural' | 'synthetic';
+  origin: string;
   hint: string;
+  description: string;
 }
 
 const SORTING_ITEMS: MaterialItem[] = [
-  { id: 'cotton', name: 'Cotton Boll', renderIcon: (cls) => <CottonIllustration className={cls} />, type: 'natural', hint: 'Harvested from cotton plants!' },
-  { id: 'wool', name: 'Fluffy Wool', renderIcon: (cls) => <WoolIllustration className={cls} />, type: 'natural', hint: 'Gently sheared from sheep!' },
-  { id: 'silk', name: 'Silk Cocoon', renderIcon: (cls) => <SilkIllustration className={cls} />, type: 'natural', hint: 'Spun by silkworm caterpillars!' },
-  { id: 'wood', name: 'Forest Wood', renderIcon: (cls) => <WoodIllustration className={cls} />, type: 'natural', hint: 'From trees in the forest!' },
-  { id: 'nylon', name: 'Nylon Cord', renderIcon: (cls) => <NylonIllustration className={cls} />, type: 'synthetic', hint: 'Engineered by chemists!' },
-  { id: 'polyester', name: 'Polyester Shirt', renderIcon: (cls) => <PolyesterIllustration className={cls} />, type: 'synthetic', hint: 'Crafted with chemical polymers!' },
-  { id: 'plastic', name: 'Plastic Bottle', renderIcon: (cls) => <PlasticIllustration className={cls} />, type: 'synthetic', hint: 'Moulded in modern factories!' },
-  { id: 'rubber', name: 'Synthetic Tyre', renderIcon: (cls) => <RubberIllustration className={cls} />, type: 'synthetic', hint: 'Manufactured for vehicles!' },
+  {
+    id: 'cotton',
+    name: 'Raw Cotton Boll',
+    emoji: '🌿',
+    renderIcon: (cls) => <CottonIllustration className={cls} />,
+    type: 'natural',
+    origin: 'Cotton Plant Seed Capsule',
+    hint: 'Grown on plant stems in open fields!',
+    description: 'Natural plant cellulose fibers harvested from fluffy white bolls.',
+  },
+  {
+    id: 'wool',
+    name: 'Raw Sheep Wool',
+    emoji: '🐑',
+    renderIcon: (cls) => <WoolIllustration className={cls} />,
+    type: 'natural',
+    origin: 'Animal Fleece (Sheep)',
+    hint: 'Gently sheared from live sheep!',
+    description: 'Natural animal protein keratin fibers that trap body warmth.',
+  },
+  {
+    id: 'silk',
+    name: 'Silkworm Silk Cocoon',
+    emoji: '🪱',
+    renderIcon: (cls) => <SilkIllustration className={cls} />,
+    type: 'natural',
+    origin: 'Spun by Silkworms',
+    hint: 'Spun by silkworm caterpillars!',
+    description: 'Shimmering natural continuous protein filament spun for cocoons.',
+  },
+  {
+    id: 'wood',
+    name: 'Natural Timber Oak Wood',
+    emoji: '🪵',
+    renderIcon: (cls) => <WoodIllustration className={cls} />,
+    type: 'natural',
+    origin: 'Forest Trees (Lignin & Cellulose)',
+    hint: 'From oak and pine trees in forests!',
+    description: 'Rigid natural plant material created through years of sunlight and rain.',
+  },
+  {
+    id: 'nylon',
+    name: 'Nylon Filament Spool',
+    emoji: '🧵',
+    renderIcon: (cls) => <NylonIllustration className={cls} />,
+    type: 'synthetic',
+    origin: 'Petrochemical Polymerization',
+    hint: 'Synthesized by chemists in a lab!',
+    description: 'Man-made continuous polymer chain with extreme tensile strength.',
+  },
+  {
+    id: 'polyester',
+    name: 'Polyester Fabric Roll',
+    emoji: '👕',
+    renderIcon: (cls) => <PolyesterIllustration className={cls} />,
+    type: 'synthetic',
+    origin: 'Petroleum Ester Polymers',
+    hint: 'Synthesized with chemical polymer chains!',
+    description: 'Wrinkle-free hydrophobic plastic fabric crafted in modern factories.',
+  },
+  {
+    id: 'plastic',
+    name: 'Thermoplastic PET Pellets',
+    emoji: '🫙',
+    renderIcon: (cls) => <PlasticIllustration className={cls} />,
+    type: 'synthetic',
+    origin: 'Mouldable Chemical Resins',
+    hint: 'Moulded in chemical factory machines!',
+    description: 'Lightweight thermoplastic resins that soften with heat to take any shape.',
+  },
+  {
+    id: 'rubber',
+    name: 'Synthetic Vulcanized Tyre',
+    emoji: '🛞',
+    renderIcon: (cls) => <RubberIllustration className={cls} />,
+    type: 'synthetic',
+    origin: 'Sulfur Cross-Linked Polymer',
+    hint: 'Engineered for high road friction!',
+    description: 'Heat-resistant synthetic elastomer engineered for vehicle tires.',
+  },
 ];
 
 export function SortingMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [sortedItems, setSortedItems] = useState<Record<string, 'natural' | 'synthetic'>>({});
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [inspectItem, setInspectItem] = useState<MaterialItem | null>(null);
   const [reflectAnswer1, setReflectAnswer1] = useState<number | null>(null);
   const [reflectAnswer2, setReflectAnswer2] = useState<number | null>(null);
   const [practiceSorted, setPracticeSorted] = useState<Record<string, 'natural' | 'synthetic'>>({});
@@ -64,7 +140,6 @@ export function SortingMission() {
       sounds.success();
       setCurrentPhase(phaseOrder[currentStepIndex + 1]);
     } else {
-      // Complete Mission and celebrate
       sounds.fanfare();
       completeMission('mission-02');
       const naturalMaterials = ['cotton', 'wool', 'silk', 'wood'];
@@ -207,7 +282,7 @@ export function SortingMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: SORTING DESK (Interactive Toy Trays with Vector Icons)
+              PHASE 2: SORTING DESK (Interactive Trays with Vector Icons)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'SORTING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
@@ -368,75 +443,75 @@ export function SortingMission() {
           {currentPhase === 'REFLECT' && (
             <div className="w-full max-w-3xl flex flex-col items-center space-y-6">
               <div className="text-center">
-                <h2 className="text-3xl font-black text-slate-800 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  What Did You Discover? 🔍
+                <Pip mood="thinking" size="md" />
+                <h2 className="text-2xl font-black text-slate-800 mt-2 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  What makes the Green group special? 🌿
                 </h2>
-                <p className="text-slate-600 font-bold text-sm">Observe the two groups on the workbench!</p>
+                <p className="text-xs md:text-sm font-bold text-slate-500">
+                  Think about where Cotton, Wool, Silk, and Wood all come from:
+                </p>
               </div>
 
-              {/* Question 1: Nature */}
-              <div className="w-full bg-white p-6 rounded-3xl border-3 border-emerald-200 shadow-lg">
-                <h3 className="font-black text-slate-800 text-base mb-3 flex items-center gap-2">
-                  <span className="text-2xl">🌿</span>
-                  <span>1. What do Cotton, Wool, Silk & Wood all have in common?</span>
-                </h3>
-                <div className="space-y-2.5">
-                  {[
-                    'They come directly from living plants, animals, or trees in nature.',
-                    'They are artificial materials cooked up in chemical factories.',
-                  ].map((opt, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        if (idx === 0) sounds.success();
-                        else sounds.boing();
-                        setReflectAnswer1(idx);
-                      }}
-                      className={`w-full text-left p-4 rounded-2xl border-2 font-extrabold text-sm transition-all cursor-pointer ${
-                        reflectAnswer1 === idx
-                          ? idx === 0
-                            ? 'bg-emerald-500 text-white border-emerald-600 shadow-[0_4px_0_#059669]'
-                            : 'bg-rose-500 text-white border-rose-600 shadow-[0_4px_0_#E11D48]'
-                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 gap-3 w-full max-w-md">
+                {[
+                  { label: 'They are all harvested from plants, animals, or trees! 🌿🐑', correct: true },
+                  { label: 'They are all made in factories with chemicals 🏭', correct: false },
+                  { label: 'They were invented by chemists in 1935 ⚡', correct: false },
+                ].map((opt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      if (opt.correct) {
+                        sounds.success();
+                        setReflectAnswer1(0);
+                      } else {
+                        sounds.boing();
+                      }
+                    }}
+                    className={`p-4 rounded-2xl font-black text-sm border-2 text-left transition-all cursor-pointer ${
+                      reflectAnswer1 === 0 && opt.correct
+                        ? 'bg-emerald-100 border-emerald-500 text-emerald-950 ring-4 ring-emerald-200'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
 
-              {/* Question 2: Synthetic */}
-              <div className="w-full bg-white p-6 rounded-3xl border-3 border-sky-200 shadow-lg">
-                <h3 className="font-black text-slate-800 text-base mb-3 flex items-center gap-2">
-                  <span className="text-2xl">🏭</span>
-                  <span>2. What do Nylon, Polyester & Plastic all have in common?</span>
-                </h3>
-                <div className="space-y-2.5">
-                  {[
-                    'They were invented and created by humans using chemical processes.',
-                    'They grow naturally on bushes and can be harvested like berries.',
-                  ].map((opt, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        if (idx === 0) sounds.success();
-                        else sounds.boing();
-                        setReflectAnswer2(idx);
-                      }}
-                      className={`w-full text-left p-4 rounded-2xl border-2 font-extrabold text-sm transition-all cursor-pointer ${
-                        reflectAnswer2 === idx
-                          ? idx === 0
-                            ? 'bg-sky-500 text-white border-sky-600 shadow-[0_4px_0_#0284C7]'
-                            : 'bg-rose-500 text-white border-rose-600 shadow-[0_4px_0_#E11D48]'
-                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
+              {reflectAnswer1 === 0 && (
+                <div className="w-full flex flex-col items-center space-y-4 pt-4 border-t-2 border-slate-200">
+                  <h3 className="text-xl font-black text-slate-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    And what makes the Blue group special? 🏭
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3 w-full max-w-md">
+                    {[
+                      { label: 'They are made by people using chemical reactions! 🧪', correct: true },
+                      { label: 'They grow directly on trees in nature 🌳', correct: false },
+                      { label: 'They are sheared from sheep fleece 🐑', correct: false },
+                    ].map((opt, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          if (opt.correct) {
+                            sounds.fanfare();
+                            setReflectAnswer2(0);
+                          } else {
+                            sounds.boing();
+                          }
+                        }}
+                        className={`p-4 rounded-2xl font-black text-sm border-2 text-left transition-all cursor-pointer ${
+                          reflectAnswer2 === 0 && opt.correct
+                            ? 'bg-sky-100 border-sky-500 text-sky-950 ring-4 ring-sky-200'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -444,57 +519,30 @@ export function SortingMission() {
               PHASE 4: UNDERSTANDING (Definitions)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'UNDERSTANDING' && (
-            <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="explaining" size="lg" />
-                <PipSpeechBubble
-                  message="Scientists give these two categories special scientific names! Meet Natural & Synthetic!"
-                  isVisible={true}
-                />
-              </div>
-
+            <div className="w-full max-w-3xl flex flex-col items-center space-y-6">
+              <Pip mood="celebrating" size="lg" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                {/* Natural Materials Bento */}
-                <div className="bg-white p-8 rounded-3xl border-4 border-emerald-300 shadow-2xl flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-14 h-14 flex items-center justify-center">
-                      <CottonIllustration className="w-full h-full" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-black uppercase tracking-wider text-emerald-600">Category 1</span>
-                      <h3 className="text-2xl font-black text-emerald-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                        Natural Material
-                      </h3>
-                    </div>
-                  </div>
-                  <p className="text-base text-slate-700 font-bold leading-relaxed mb-6">
-                    A substance that comes straight from nature — gathered from living plants, animals, trees, or minerals in the earth.
+                {/* Natural Card */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-emerald-300 shadow-xl text-center">
+                  <span className="text-4xl mb-2 block">🌿</span>
+                  <h3 className="text-xl font-black text-emerald-900 mb-2">Natural Materials</h3>
+                  <p className="text-xs md:text-sm font-bold text-slate-600 leading-relaxed mb-4">
+                    Materials obtained directly from plants, animals, or the earth without chemical alteration.
                   </p>
-                  <div className="mt-auto pt-4 border-t-2 border-slate-100 flex items-center justify-between text-xs font-black text-slate-500">
-                    <span>Key Specimens:</span>
-                    <span className="text-emerald-700 text-sm">Cotton, Wool, Silk, Wood</span>
+                  <div className="flex justify-center gap-2 text-xs font-black bg-emerald-50 py-2 px-4 rounded-full text-emerald-800">
+                    <span>Cotton • Wool • Silk • Wood</span>
                   </div>
                 </div>
 
-                {/* Synthetic Materials Bento */}
-                <div className="bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-2xl flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-14 h-14 flex items-center justify-center">
-                      <NylonIllustration className="w-full h-full" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-black uppercase tracking-wider text-sky-600">Category 2</span>
-                      <h3 className="text-2xl font-black text-sky-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                        Synthetic Material
-                      </h3>
-                    </div>
-                  </div>
-                  <p className="text-base text-slate-700 font-bold leading-relaxed mb-6">
-                    A man-made substance engineered by humans using chemical reactions in factories — not found ready-made in nature.
+                {/* Synthetic Card */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-sky-300 shadow-xl text-center">
+                  <span className="text-4xl mb-2 block">🏭🧪</span>
+                  <h3 className="text-xl font-black text-sky-900 mb-2">Synthetic Materials</h3>
+                  <p className="text-xs md:text-sm font-bold text-slate-600 leading-relaxed mb-4">
+                    Man-made materials produced by chemists in laboratories using petroleum and chemical polymers.
                   </p>
-                  <div className="mt-auto pt-4 border-t-2 border-slate-100 flex items-center justify-between text-xs font-black text-slate-500">
-                    <span>Key Specimens:</span>
-                    <span className="text-sky-700 text-sm">Nylon, Polyester, Plastic, Acrylic</span>
+                  <div className="flex justify-center gap-2 text-xs font-black bg-sky-50 py-2 px-4 rounded-full text-sky-800">
+                    <span>Nylon • Polyester • Plastic • Acrylic</span>
                   </div>
                 </div>
               </div>
@@ -502,120 +550,97 @@ export function SortingMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 5: SPEED ROUND (No Hints)
+              PHASE 5: PRACTICE
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'PRACTICE' && (
-            <div className="w-full max-w-3xl flex flex-col items-center">
-              <div className="text-center mb-6">
-                <h2 className="text-3xl font-black text-slate-800 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Speed Challenge! ⚡
+            <div className="w-full max-w-3xl flex flex-col items-center space-y-6">
+              <div className="text-center">
+                <Pip mood="encouraging" size="md" />
+                <h2 className="text-2xl font-black text-slate-800 mt-2 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  Speed Match Challenge! ⚡
                 </h2>
-                <p className="text-slate-600 font-bold text-sm">Sort these 4 new materials without any hints!</p>
+                <p className="text-xs md:text-sm font-bold text-slate-500">
+                  Tap a material below, then tap Natural or Synthetic!
+                </p>
               </div>
 
-              {/* Trays */}
-              <div className="grid grid-cols-2 gap-6 w-full mb-6">
+              <div className="grid grid-cols-2 gap-4 w-full mb-4">
                 <button
                   onClick={() => {
                     if (activePracticeItem) {
-                      const targets: Record<string, 'natural' | 'synthetic'> = {
-                        iron: 'natural',
-                        gold: 'natural',
-                        acrylic: 'synthetic',
-                        rayon: 'synthetic',
-                      };
-                      if (targets[activePracticeItem] === 'natural') {
-                        sounds.success();
+                      const mat = [
+                        { id: 'jute', type: 'natural' },
+                        { id: 'rayon', type: 'synthetic' },
+                        { id: 'gold', type: 'natural' },
+                        { id: 'acrylic', type: 'synthetic' },
+                      ].find((m) => m.id === activePracticeItem);
+                      if (mat?.type === 'natural') {
+                        sounds.pop();
                         setPracticeSorted((p) => ({ ...p, [activePracticeItem]: 'natural' }));
                         setActivePracticeItem(null);
                       } else {
                         sounds.boing();
-                        setActivePracticeItem(null);
                       }
                     }
                   }}
-                  className={`p-6 rounded-3xl border-4 flex flex-col items-center justify-center transition-all cursor-pointer ${
-                    activePracticeItem
-                      ? 'border-emerald-500 bg-emerald-100 shadow-xl scale-102 animate-pulse'
-                      : 'border-emerald-300 bg-emerald-50'
-                  }`}
+                  className="p-4 rounded-2xl border-3 border-emerald-400 bg-emerald-50 text-emerald-950 font-black text-sm cursor-pointer shadow-md hover:bg-emerald-100"
                 >
-                  <span className="text-4xl mb-1">🌿</span>
-                  <span className="font-black text-lg text-emerald-800">Natural</span>
+                  🌿 NATURAL
                 </button>
 
                 <button
                   onClick={() => {
                     if (activePracticeItem) {
-                      const targets: Record<string, 'natural' | 'synthetic'> = {
-                        iron: 'natural',
-                        gold: 'natural',
-                        acrylic: 'synthetic',
-                        rayon: 'synthetic',
-                      };
-                      if (targets[activePracticeItem] === 'synthetic') {
-                        sounds.success();
+                      const mat = [
+                        { id: 'jute', type: 'natural' },
+                        { id: 'rayon', type: 'synthetic' },
+                        { id: 'gold', type: 'natural' },
+                        { id: 'acrylic', type: 'synthetic' },
+                      ].find((m) => m.id === activePracticeItem);
+                      if (mat?.type === 'synthetic') {
+                        sounds.pop();
                         setPracticeSorted((p) => ({ ...p, [activePracticeItem]: 'synthetic' }));
                         setActivePracticeItem(null);
                       } else {
                         sounds.boing();
-                        setActivePracticeItem(null);
                       }
                     }
                   }}
-                  className={`p-6 rounded-3xl border-4 flex flex-col items-center justify-center transition-all cursor-pointer ${
-                    activePracticeItem
-                      ? 'border-sky-500 bg-sky-100 shadow-xl scale-102 animate-pulse'
-                      : 'border-sky-300 bg-sky-50'
-                  }`}
+                  className="p-4 rounded-2xl border-3 border-sky-400 bg-sky-50 text-sky-950 font-black text-sm cursor-pointer shadow-md hover:bg-sky-100"
                 >
-                  <span className="text-4xl mb-1">🏭</span>
-                  <span className="font-black text-lg text-sky-800">Synthetic</span>
+                  🏭 SYNTHETIC
                 </button>
               </div>
 
-              {/* 4 Cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full">
                 {[
-                  { id: 'iron', name: 'Iron Ore', icon: <span className="text-5xl">⛏️</span> },
-                  { id: 'gold', name: 'Gold Nugget', icon: <span className="text-5xl">🪙</span> },
-                  { id: 'acrylic', name: 'Acrylic Yarn', icon: <WoolIllustration className="w-12 h-12" /> },
-                  { id: 'rayon', name: 'Rayon Silk', icon: <SilkIllustration className="w-12 h-12" /> },
+                  { id: 'jute', name: 'Jute Sack', icon: '🌾' },
+                  { id: 'rayon', name: 'Rayon Shirt', icon: '✨' },
+                  { id: 'gold', name: 'Gold Mineral', icon: '🪙' },
+                  { id: 'acrylic', name: 'Acrylic Blanket', icon: '🧶' },
                 ].map((item) => {
-                  const isSorted = practiceSorted[item.id] !== undefined;
-                  const isSelected = activePracticeItem === item.id;
-
-                  if (isSorted) return null;
+                  const isDone = practiceSorted[item.id] !== undefined;
+                  if (isDone) return null;
 
                   return (
-                    <motion.button
+                    <button
                       key={item.id}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
                       onClick={() => {
                         sounds.pop();
-                        setActivePracticeItem(isSelected ? null : item.id);
+                        setActivePracticeItem(item.id);
                       }}
-                      className={`p-4 rounded-2xl border-3 flex flex-col items-center transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-amber-500 bg-amber-100 shadow-xl ring-4 ring-amber-300'
-                          : 'bg-white border-slate-200 hover:border-slate-300 shadow-md'
+                      className={`p-4 rounded-2xl border-2 font-black text-xs flex flex-col items-center gap-1 cursor-pointer transition-all ${
+                        activePracticeItem === item.id
+                          ? 'bg-amber-100 border-amber-500 scale-105 ring-4 ring-amber-300'
+                          : 'bg-white border-slate-200 hover:bg-slate-50'
                       }`}
                     >
-                      <div className="w-14 h-14 flex items-center justify-center mb-1">
-                        {item.icon}
-                      </div>
-                      <span className="font-black text-sm text-slate-800">{item.name}</span>
-                    </motion.button>
+                      <span className="text-3xl">{item.icon}</span>
+                      <span>{item.name}</span>
+                    </button>
                   );
                 })}
               </div>
-
-              {Object.keys(practiceSorted).length === 4 && (
-                <div className="mt-6 p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-900 shadow-md">
-                  🎉 Fantastic! 4 out of 4 sorted like a master scientist!
-                </div>
-              )}
             </div>
           )}
 
@@ -623,51 +648,29 @@ export function SortingMission() {
               PHASE 6: APPLY
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
-            <div className="w-full max-w-3xl flex flex-col items-center">
-              <div className="bg-white p-8 rounded-3xl border-4 border-indigo-300 shadow-2xl mb-6 w-full text-center">
-                <span className="text-6xl mb-2 block animate-bounce">🔬🧪</span>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Real-World Scientist Dilemma
-                </h2>
-                <p className="text-base text-slate-600 font-bold leading-relaxed max-w-xl mx-auto">
-                  A team of research chemists invents a super-stretchy material inside a high-tech laboratory by combining petroleum chemicals.
-                  How should they classify this new substance?
-                </p>
-              </div>
+            <div className="w-full max-w-2xl flex flex-col items-center text-center">
+              <Pip mood="thinking" size="lg" />
+              <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                Young Scientist Mastery Challenge! 🏆
+              </h2>
+              <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
+                A chemist synthesizes a brand-new ultra-strong fiber in a laboratory from chemical polymers. How should we classify this new material?
+              </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => {
-                    sounds.fanfare();
-                    handleNextPhase();
-                  }}
-                  className="p-8 rounded-3xl bg-emerald-50 hover:bg-emerald-100 border-4 border-emerald-400 shadow-lg text-center flex flex-col items-center cursor-pointer"
-                >
-                  <div className="w-16 h-16 mb-2 flex items-center justify-center">
-                    <NylonIllustration className="w-full h-full" />
-                  </div>
-                  <span className="font-black text-2xl text-slate-800 mb-1">Synthetic Material</span>
-                  <span className="text-xs font-black text-emerald-700 bg-emerald-200 px-3 py-1 rounded-full">
-                    Created by humans with chemistry ✓
-                  </span>
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <button
                   onClick={() => sounds.boing()}
-                  className="p-8 rounded-3xl bg-white hover:bg-rose-50 border-4 border-slate-200 opacity-60 text-center flex flex-col items-center cursor-pointer"
+                  className="p-5 rounded-3xl border-3 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-black text-sm cursor-pointer"
                 >
-                  <div className="w-16 h-16 mb-2 flex items-center justify-center">
-                    <CottonIllustration className="w-full h-full" />
-                  </div>
-                  <span className="font-black text-2xl text-slate-800 mb-1">Natural Material</span>
-                  <span className="text-xs font-black text-rose-600 bg-rose-100 px-3 py-1 rounded-full">
-                    Incorrect (Not found in nature)
-                  </span>
-                </motion.button>
+                  🌿 Natural Material
+                </button>
+
+                <button
+                  onClick={handleNextPhase}
+                  className="p-5 rounded-3xl border-3 border-emerald-400 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-black text-sm cursor-pointer shadow-lg ring-4 ring-emerald-300 scale-105"
+                >
+                  🏭 Synthetic Material ✨
+                </button>
               </div>
             </div>
           )}
