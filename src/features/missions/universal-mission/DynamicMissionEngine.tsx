@@ -55,6 +55,7 @@ import {
 
 // Real Studio Macro Educational Photography
 import cottonSwatchCleanImg from '@/assets/images/experiments/cotton_swatch_clean.jpg';
+import cottonSwatchWrinkledImg from '@/assets/images/experiments/cotton_swatch_wrinkled.jpg';
 import cottonBurningAshImg from '@/assets/images/experiments/cotton_burning_ash.jpg';
 import polyesterSwatchCleanImg from '@/assets/images/experiments/polyester_swatch_clean.jpg';
 import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
@@ -209,47 +210,102 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Tangible Crumple Sandbox */}
+            {/* Step 1: Tangible Crumple Sandbox with Real Macro Fabric Photography */}
             {currentStepIndex === 1 && (
               <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-400 shadow-xl">
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Interactive Fabric Crumple Rig</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
-                  Tap 'Crumple Fabric' to squeeze both fabrics tightly, then release to see what happens!
+                  Tap 'Squeeze & Crumple Fabrics' to crush both fabric swatches tightly in the press, then release to inspect the wrinkle memory!
                 </p>
 
                 <div className="grid grid-cols-2 gap-6 w-full mb-6">
                   {/* Cotton Swatch */}
-                  <div className="p-5 rounded-2xl bg-slate-50 border-3 border-slate-300 flex flex-col items-center text-center">
-                    <span className="font-black text-slate-900 mb-2">1. Natural Cotton</span>
-                    <div
-                      className={`w-28 h-28 rounded-2xl flex items-center justify-center transition-all duration-500 border-2 border-slate-300 ${
-                        interactiveState.crumpled
-                          ? 'bg-amber-100/90 scale-90 rotate-6 shadow-inner'
-                          : 'bg-amber-50 shadow-md'
-                      }`}
-                    >
-                      <span className="text-4xl">{interactiveState.crumpled ? '🧻' : '👕'}</span>
+                  <div className="p-5 rounded-2xl bg-amber-50/70 border-3 border-amber-300 flex flex-col items-center text-center">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="font-black text-slate-900 text-sm md:text-base">1. Natural Cotton</span>
+                      <span className="text-[10px] font-black bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full">Natural</span>
                     </div>
-                    <span className="text-xs font-bold text-slate-600 mt-3">
-                      {interactiveState.crumpled ? '❌ Deep permanent wrinkles formed!' : 'Smooth unpressed cotton'}
-                    </span>
+                    
+                    <div className="relative w-36 h-36 md:w-40 md:h-40 rounded-2xl overflow-hidden border-3 border-amber-300 bg-white shadow-md p-1 flex items-center justify-center">
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={interactiveState.crumpled ? 'wrinkled' : 'clean'}
+                          src={interactiveState.crumpled ? cottonSwatchWrinkledImg : cottonSwatchCleanImg}
+                          alt="Cotton Swatch"
+                          initial={{ opacity: 0.4, scale: interactiveState.crumpled ? 0.85 : 1.05 }}
+                          animate={{ opacity: 1, scale: interactiveState.crumpled ? 0.95 : 1, rotate: interactiveState.crumpled ? 3 : 0 }}
+                          exit={{ opacity: 0.4 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                          className="w-full h-full object-cover rounded-xl"
+                        />
+                      </AnimatePresence>
+                      
+                      {interactiveState.crumpled && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute top-2 right-2 bg-rose-500 text-white p-1 rounded-full shadow-md"
+                          title="Deep Creases"
+                        >
+                          <AlertTriangle className="w-4 h-4" />
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <div className="mt-3 min-h-[38px] flex flex-col items-center justify-center">
+                      <span className={`text-xs font-black ${interactiveState.crumpled ? 'text-rose-700' : 'text-slate-600'}`}>
+                        {interactiveState.crumpled ? '❌ Deep Permanent Wrinkles Formed!' : 'Smooth unpressed cotton swatch'}
+                      </span>
+                      {interactiveState.crumpled && (
+                        <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full mt-1">
+                          Hydrogen bonds broke & creased ♨️
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Polyester Swatch */}
-                  <div className="p-5 rounded-2xl bg-slate-50 border-3 border-sky-300 flex flex-col items-center text-center">
-                    <span className="font-black text-slate-900 mb-2">2. Synthetic Polyester</span>
-                    <div
-                      className={`w-28 h-28 rounded-2xl flex items-center justify-center transition-all duration-500 border-2 border-sky-300 ${
-                        interactiveState.crumpled
-                          ? 'bg-sky-100 scale-100 shadow-md'
-                          : 'bg-sky-50 shadow-md'
-                      }`}
-                    >
-                      <span className="text-4xl">✨👔</span>
+                  <div className="p-5 rounded-2xl bg-sky-50/70 border-3 border-sky-300 flex flex-col items-center text-center">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="font-black text-slate-900 text-sm md:text-base">2. Synthetic Polyester</span>
+                      <span className="text-[10px] font-black bg-sky-200 text-sky-900 px-2 py-0.5 rounded-full">Synthetic</span>
                     </div>
-                    <span className="text-xs font-bold text-sky-800 mt-3">
-                      {interactiveState.crumpled ? '✓ Springs back 100% wrinkle-free!' : 'Smooth polyester'}
-                    </span>
+
+                    <div className="relative w-36 h-36 md:w-40 md:h-40 rounded-2xl overflow-hidden border-3 border-sky-300 bg-white shadow-md p-1 flex items-center justify-center">
+                      <motion.img
+                        src={polyesterSwatchCleanImg}
+                        alt="Polyester Swatch"
+                        animate={
+                          interactiveState.crumpled
+                            ? { scale: [1, 0.85, 1.05, 1], rotate: [0, -3, 2, 0] }
+                            : { scale: 1, rotate: 0 }
+                        }
+                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                        className="w-full h-full object-cover rounded-xl"
+                      />
+
+                      {interactiveState.crumpled && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute top-2 right-2 bg-emerald-500 text-white p-1 rounded-full shadow-md"
+                          title="Wrinkle-Free Elastic Springs"
+                        >
+                          <Sparkles className="w-4 h-4" />
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <div className="mt-3 min-h-[38px] flex flex-col items-center justify-center">
+                      <span className={`text-xs font-black ${interactiveState.crumpled ? 'text-emerald-700' : 'text-slate-600'}`}>
+                        {interactiveState.crumpled ? '✓ Springs Back 100% Wrinkle-Free!' : 'Smooth synthetic polyester'}
+                      </span>
+                      {interactiveState.crumpled && (
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1">
+                          Elastic polymer chains snapped back ✨
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -264,7 +320,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3.5 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer active:scale-95 transition-all"
                 >
-                  {interactiveState.crumpled ? '🔄 Flatten & Test Again' : '✊ Squeeze & Crumple Fabrics!'}
+                  {interactiveState.crumpled ? '🔄 Smooth Out & Test Again' : '✊ Squeeze & Crumple Fabrics!'}
                 </button>
 
                 {interactiveState[`step_${currentStepIndex}`] && (
