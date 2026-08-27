@@ -29,7 +29,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const { isSfxMuted, isTtsMuted, isBgmMuted, toggleSfx, toggleTts, toggleBgm } = useAudioStore();
   const child = useParentStore((state) => state.child);
   const credits = useProgressStore((state) => state.credits);
-  const startTour = useProgressStore((state) => state.startTour);
+  const startTryWithMe = useProgressStore((state) => state.startTryWithMe);
 
   const handleHomeClick = () => {
     sounds.pop();
@@ -79,18 +79,18 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
           <span className="hidden lg:inline">Arcade</span>
         </button>
 
-        {/* Live Mascot Tour Guide */}
+        {/* "Try It With Me" Spotlight Onboarding Guide */}
         <button
           onClick={() => {
             sounds.pop();
-            startTour();
-            navigate('/chapter-hub');
+            startTryWithMe();
+            navigate('/subjects');
           }}
-          className="p-2 sm:px-2.5 sm:py-1.5 rounded-2xl bg-sky-100 hover:bg-sky-200 border-2 border-sky-300 text-sky-900 font-black text-xs flex items-center gap-1 cursor-pointer shadow-xs active:scale-95 transition-all"
-          title="Launch Mascot-Led Guided Walkthrough"
+          className="p-2 sm:px-2.5 sm:py-1.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 border-2 border-amber-500 text-slate-950 font-black text-xs flex items-center gap-1 cursor-pointer shadow-md active:scale-95 transition-all"
+          title="Launch 'Try It With Me' Interactive Spotlight Walkthrough"
         >
-          <Compass className="w-4 h-4 text-sky-600 animate-pulse" />
-          <span className="hidden lg:inline">Tour</span>
+          <Compass className="w-4 h-4 text-slate-950 animate-pulse" />
+          <span className="hidden lg:inline">Try With Me 🪄</span>
         </button>
 
         {/* BGM Music Toggle */}

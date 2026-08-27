@@ -44,8 +44,8 @@ export const DevDrawer: React.FC = () => {
     unlockedOutfits,
     unlockedHeadwear,
     unlockItem,
-    startTour,
-    endTour,
+    startTryWithMe,
+    endTryWithMe,
   } = useProgressStore();
 
   const { discoveries, addDiscovery, resetDiscoveries } = useDiscoveryStore();
@@ -219,36 +219,36 @@ export const DevDrawer: React.FC = () => {
                       </button>
                     </div>
 
-                    {/* ── SECTION 3: MASCOT GUIDED TOUR CONTROLS ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-sky-500/40">
-                      <span className="text-sky-300 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
-                        <Compass className="w-4 h-4 text-sky-400" />
-                        <span>Live Mascot Tour Controller</span>
+                    {/* ── SECTION 3: "TRY IT WITH ME" SPOTLIGHT CONTROLS ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
+                      <span className="text-amber-300 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
+                        <Compass className="w-4 h-4 text-amber-400" />
+                        <span>"Try It With Me" Spotlight Engine</span>
                       </span>
 
                       <div className="grid grid-cols-2 gap-2">
                         <button
                           onClick={() => {
                             sounds.sparkle();
-                            startTour();
+                            startTryWithMe();
                             setIsOpen(false);
-                            navigate('/chapter-hub');
+                            navigate('/subjects');
                           }}
-                          className="py-2.5 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
+                          className="py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 shadow-md active:scale-95"
                         >
-                          <Play className="w-3.5 h-3.5" />
-                          <span>Start Tour 🧭</span>
+                          <Play className="w-3.5 h-3.5 fill-current" />
+                          <span>Launch Guide 🪄</span>
                         </button>
 
                         <button
                           onClick={() => {
                             sounds.pop();
-                            endTour();
+                            endTryWithMe();
                           }}
                           className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Skip Tour</span>
+                          <span>End Guide</span>
                         </button>
                       </div>
                     </div>

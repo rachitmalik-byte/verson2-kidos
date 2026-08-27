@@ -104,7 +104,7 @@ export function ChapterHub() {
     <div className="min-h-screen w-full bg-gradient-to-b from-sky-200 via-indigo-50 to-amber-100 flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative">
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
         {/* ── Top Game Navbar ── */}
-        <div className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
+        <div id="navbar-top-controls" className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
@@ -131,7 +131,7 @@ export function ChapterHub() {
         </div>
 
         {/* ── Chapter Hero Banner with Pre-Lesson Study Hub ── */}
-        <div className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-400 shadow-xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+        <div id="chapter-hero-banner" className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-400 shadow-xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
           <Pip mood="celebrating" size="lg" />
 
           <div className="flex-1 text-center md:text-left">
@@ -242,6 +242,7 @@ export function ChapterHub() {
               return (
                 <motion.div
                   key={m.id}
+                  id={m.id === 'mission-01' ? 'chapter-mission-1-card' : undefined}
                   whileHover={isUnlocked ? { scale: 1.03, y: -3 } : {}}
                   whileTap={isUnlocked ? { scale: 0.97 } : {}}
                   onClick={() => handleMissionClick(m, isUnlocked)}

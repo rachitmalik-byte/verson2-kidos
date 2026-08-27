@@ -15,7 +15,7 @@ import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
 import { DevDrawer } from '@/components/dev/DevDrawer';
 import { GlobalWordExplainer } from '@/components/dictionary/GlobalWordExplainer';
 import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
-import { InteractiveMascotTour } from '@/components/tutorial/InteractiveMascotTour';
+import { TryWithMeEngine } from '@/components/try-with-me/TryWithMeEngine';
 
 export function App() {
   return (
@@ -52,8 +52,8 @@ export function App() {
         {/* Global Interactive Science Storybook & Field Guide */}
         <FieldGuideModal />
 
-        {/* Global Live Mascot Flying Guided Tour */}
-        <InteractiveMascotTour />
+        {/* Global "Try It With Me" Limelight Spotlight Engine */}
+        <TryWithMeEngine />
 
         {/* Global Text-Selection Smart Dictionary & Audio Explainer */}
         <GlobalWordExplainer />

@@ -10,6 +10,7 @@ export interface PipProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showGoggles?: boolean;
+  showPointerStick?: boolean;
   interactive?: boolean;
   outfitOverride?: string;
   headwearOverride?: string;
@@ -30,6 +31,7 @@ export const Pip: React.FC<PipProps> = ({
   className = '',
   size = 'md',
   showGoggles = true,
+  showPointerStick = false,
   interactive = true,
   outfitOverride,
   headwearOverride,
@@ -358,6 +360,24 @@ export const Pip: React.FC<PipProps> = ({
             <path d="M56 22 L84 22" stroke="#FBBF24" strokeWidth="2.5" />
             <circle cx="70" cy="4" r="4" fill="#FBBF24" />
           </g>
+        )}
+
+        {/* ── TEACHER POINTER WAND / STICK ── */}
+        {showPointerStick && (
+          <motion.g
+            animate={{ rotate: [-4, 6, -4], y: [0, -3, 0] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: '25px 95px' }}
+          >
+            {/* Pip's Little Hand */}
+            <circle cx="26" cy="94" r="7" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2" />
+            {/* Wooden Pointer Stick */}
+            <line x1="26" y1="94" x2="-22" y2="45" stroke="#78350F" strokeWidth="4.5" strokeLinecap="round" />
+            <line x1="26" y1="94" x2="-22" y2="45" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
+            {/* Glowing Golden Star Tip */}
+            <circle cx="-24" cy="43" r="8" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2" />
+            <path d="M-24 38 L-22 42 L-18 43 L-21 46 L-20 50 L-24 47 L-28 50 L-27 46 L-30 43 L-26 42 Z" fill="#EAB308" />
+          </motion.g>
         )}
       </svg>
     </motion.div>

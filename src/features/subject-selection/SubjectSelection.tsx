@@ -153,6 +153,7 @@ export const SubjectSelection: React.FC = () => {
           {SUBJECTS.map((sub) => (
             <motion.div
               key={sub.id}
+              id={sub.id === 'chemistry' ? 'subject-chem-card' : undefined}
               whileHover={{ scale: 1.03, y: -4 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => handleSubjectClick(sub)}
