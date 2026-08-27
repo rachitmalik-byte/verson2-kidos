@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { findVocabWord, generateSmartDefinition, vocabulary, VocabEntry } from '@/data/vocabulary';
+import { lookupWord, DictionaryResult } from '@/lib/dictionaryService';
+import { vocabulary } from '@/data/vocabulary';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { sounds } from '@/lib/sounds';
-import { BookOpen, Volume2, X, Search, Sparkles } from 'lucide-react';
+import { BookOpen, Volume2, X, Search, Loader2 } from 'lucide-react';
 
 interface Position {
   x: number;
@@ -12,19 +13,20 @@ interface Position {
 }
 
 export const GlobalWordExplainer: React.FC = () => {
-  const [selectedEntry, setSelectedEntry] = useState<VocabEntry | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<DictionaryResult | null>(null);
   const [position, setPosition] = useState<Position | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchModal, setShowSearchModal] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const currentRequestRef = useRef<string>('');
 
   useEffect(() => {
-    const checkAndShowDefinition = (text: string, rect?: DOMRect) => {
+    const handleWordLookup = async (text: string, rect?: DOMRect) => {
       const clean = text.trim();
       if (!clean || clean.length > 50 || clean.length < 2) return;
 
-      const found = findVocabWord(clean) || generateSmartDefinition(clean);
-      if (!found) return;
+      currentRequestRef.current = clean;
 
       let x = window.innerWidth / 2;
       let y = window.innerHeight / 2;
@@ -37,11 +39,24 @@ export const GlobalWordExplainer: React.FC = () => {
       }
 
       setPosition({ x, y, isAbove });
-      setSelectedEntry(found);
+      setIsLoading(true);
+      setSelectedEntry(null);
       sounds.pop();
 
-      // Speak word & definition aloud
-      voiceAssistant.speak(`${found.word}. ${found.definition}`);
+      try {
+        const result = await lookupWord(clean);
+        // Only update if this is still the most recent request
+        if (currentRequestRef.current === clean) {
+          setSelectedEntry(result);
+          setIsLoading(false);
+
+          // Speak definition automatically with Pip voice
+          const speechText = `${result.word}. ${result.category}. ${result.definition}`;
+          voiceAssistant.speak(speechText);
+        }
+      } catch {
+        setIsLoading(false);
+      }
     };
 
     const handleSelectionEvent = () => {
@@ -54,7 +69,7 @@ export const GlobalWordExplainer: React.FC = () => {
       try {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        checkAndShowDefinition(text, rect);
+        handleWordLookup(text, rect);
       } catch {}
     };
 
@@ -81,11 +96,11 @@ export const GlobalWordExplainer: React.FC = () => {
 
     const handleDismiss = (e: MouseEvent) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target as Node)) {
-        // Only dismiss if selection is collapsed
         const sel = window.getSelection();
         if (!sel || sel.isCollapsed) {
           setSelectedEntry(null);
           setPosition(null);
+          setIsLoading(false);
           voiceAssistant.stop();
         }
       }
@@ -108,7 +123,7 @@ export const GlobalWordExplainer: React.FC = () => {
     e.stopPropagation();
     sounds.pop();
     if (selectedEntry) {
-      voiceAssistant.speak(`${selectedEntry.word}. ${selectedEntry.definition}`);
+      voiceAssistant.speak(`${selectedEntry.word}. ${selectedEntry.category}. ${selectedEntry.definition}`);
     }
   };
 
@@ -117,19 +132,21 @@ export const GlobalWordExplainer: React.FC = () => {
     sounds.pop();
     setSelectedEntry(null);
     setPosition(null);
+    setIsLoading(false);
     voiceAssistant.stop();
   };
 
-  const filteredVocab = vocabulary.filter((v) =>
-    v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    v.definition.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVocab = vocabulary.filter(
+    (v) =>
+      v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      v.definition.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <>
-      {/* ── Floating Dictionary Popup when text is selected ── */}
+      {/* ── Floating Real Dictionary Popup ── */}
       <AnimatePresence>
-        {selectedEntry && position && (
+        {(selectedEntry || isLoading) && position && (
           <motion.div
             ref={tooltipRef}
             initial={{ opacity: 0, scale: 0.85, y: position.isAbove ? 10 : -10 }}
@@ -150,59 +167,71 @@ export const GlobalWordExplainer: React.FC = () => {
               }`}
             />
 
-            {/* Header with Title + Pronunciation + Audio */}
-            <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3 mb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-amber-100 text-amber-900 rounded-2xl border border-amber-300 shadow-xs">
-                  <BookOpen className="w-4 h-4" />
+            {isLoading ? (
+              <div className="flex items-center justify-center py-6 gap-3 text-slate-600 font-black text-sm">
+                <Loader2 className="w-6 h-6 text-amber-500 animate-spin" />
+                <span>Looking up in dictionary...</span>
+              </div>
+            ) : selectedEntry ? (
+              <>
+                {/* Header with Title + Part of Speech + Audio */}
+                <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 bg-amber-100 text-amber-900 rounded-2xl border border-amber-300 shadow-xs">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                        {selectedEntry.category}
+                      </span>
+                      <h4
+                        className="text-xl font-black text-slate-900 tracking-tight"
+                        style={{ fontFamily: 'Nunito, sans-serif' }}
+                      >
+                        {selectedEntry.word}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={handlePronounce}
+                      className="p-2 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-800 border border-violet-300 transition-all cursor-pointer active:scale-95 shadow-xs"
+                      title="Hear Word & Definition Aloud"
+                    >
+                      <Volume2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={handleClose}
+                      className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
+                      title="Close Dictionary Card"
+                    >
+                      <X className="w-4 h-4 stroke-[3]" />
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                    {selectedEntry.category}
-                  </span>
-                  <h4 className="text-xl font-black text-slate-900 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    {selectedEntry.word}
-                  </h4>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={handlePronounce}
-                  className="p-2 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-800 border border-violet-300 transition-all cursor-pointer active:scale-95 shadow-xs"
-                  title="Hear Word & Definition Aloud"
-                >
-                  <Volume2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleClose}
-                  className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
-                  title="Close Dictionary Card"
-                >
-                  <X className="w-4 h-4 stroke-[3]" />
-                </button>
-              </div>
-            </div>
+                {/* Pronunciation phonetics */}
+                {selectedEntry.pronunciation && (
+                  <div className="text-[11px] font-mono text-slate-500 font-bold mb-2">
+                    🗣️ [{selectedEntry.pronunciation}]
+                  </div>
+                )}
 
-            {/* Pronunciation phonetics */}
-            {selectedEntry.pronunciation && (
-              <div className="text-[11px] font-mono text-slate-400 font-bold mb-2">
-                🗣️ [{selectedEntry.pronunciation}]
-              </div>
-            )}
+                {/* Real Dictionary Definition */}
+                <p className="text-xs sm:text-sm font-extrabold text-slate-800 leading-relaxed mb-3">
+                  {selectedEntry.definition}
+                </p>
 
-            {/* Definition */}
-            <p className="text-xs sm:text-sm font-extrabold text-slate-800 leading-relaxed mb-3">
-              {selectedEntry.definition}
-            </p>
-
-            {/* Example in a sentence */}
-            {selectedEntry.example && (
-              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-[11px] sm:text-xs font-bold text-amber-950">
-                <span className="font-black text-amber-900">Example: </span>
-                {selectedEntry.example}
-              </div>
-            )}
+                {/* Real Sentence Example */}
+                {selectedEntry.example && (
+                  <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-[11px] sm:text-xs font-bold text-amber-950">
+                    <span className="font-black text-amber-900">Example: </span>
+                    "{selectedEntry.example}"
+                  </div>
+                )}
+              </>
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>
@@ -245,7 +274,7 @@ export const GlobalWordExplainer: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
-                  placeholder="Type any word (e.g., Nylon, Latex, Tensile strength)..."
+                  placeholder="Type any word (e.g., Nylon, Latex, Instantly)..."
                   className="w-full p-3.5 pl-11 rounded-2xl border-2 border-slate-300 focus:border-amber-500 focus:ring-4 focus:ring-amber-200 outline-none font-black text-sm text-slate-800 bg-slate-50"
                 />
                 <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
