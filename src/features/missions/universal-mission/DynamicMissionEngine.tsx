@@ -12,6 +12,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { bgmEngine } from '@/lib/bgmEngine';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
+import { InquiryQuestionCard } from '@/components/interactive/InquiryQuestionCard';
 import {
   PlasticIllustration,
   WireIllustration,
@@ -40,8 +41,6 @@ import {
   Clock,
   RotateCcw,
   Lightbulb,
-  CheckCheck,
-  HelpCircle,
 } from 'lucide-react';
 
 export const DynamicMissionEngine: React.FC = () => {
@@ -111,7 +110,6 @@ export const DynamicMissionEngine: React.FC = () => {
     setInteractiveState({});
   };
 
-  // Step completion logic - Always reliable
   const isStepComplete = () => {
     if (interactiveState[`step_${currentStepIndex}`] === true) return true;
     if (
@@ -344,7 +342,7 @@ export const DynamicMissionEngine: React.FC = () => {
         );
 
       /* ─────────────────────────────────────────────────────────────
-         MISSION 6: SUMMER COMFORT (Perspiration & Breathability)
+         MISSION 6: SUMMER COMFORT (Inquiry Question Card)
       ───────────────────────────────────────────────────────────── */
       case 6:
         return (
@@ -370,47 +368,31 @@ export const DynamicMissionEngine: React.FC = () => {
             )}
 
             {currentStepIndex >= 1 && (
-              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-300 shadow-xl text-center flex flex-col items-center">
-                <div className="grid grid-cols-2 gap-4 w-full mb-6">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, pick: 'cotton' });
-                    }}
-                    className={`p-6 rounded-3xl border-3 flex flex-col items-center cursor-pointer transition-all ${
-                      interactiveState.pick === 'cotton'
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <CottonIllustration className="w-16 h-16 mb-2" />
-                    <span className="font-black text-base text-slate-900">100% Cotton Shirt</span>
-                    <span className="text-xs font-bold text-emerald-700 mt-1">Absorbs Sweat & Breathes ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('Synthetic polyester traps body heat and sweat, causing rashes in hot summer!');
-                      setInteractiveState({ [`step_${currentStepIndex}`]: false, pick: 'poly' });
-                    }}
-                    className={`p-6 rounded-3xl border-3 flex flex-col items-center cursor-pointer transition-all ${
-                      interactiveState.pick === 'poly'
-                        ? 'bg-rose-100 border-rose-400'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <PolyesterIllustration className="w-16 h-16 mb-2" />
-                    <span className="font-black text-base text-slate-900">Polyester Shirt</span>
-                    <span className="text-xs font-bold text-rose-600 mt-1">Traps Sweat & Heat ❌</span>
-                  </button>
-                </div>
-                {interactiveState.pick === 'cotton' && (
-                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full text-emerald-950 font-black text-sm">
-                    🎉 Correct! Cotton absorbs perspiration, which evaporates into the air to cool your body!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Summer Heat Outfit Selector"
+                question="You are heading outside in 42°C blazing summer sun. Which shirt will keep your body cool?"
+                scenarioEmoji="☀️👕"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'cotton',
+                    label: '100% Natural Cotton Shirt',
+                    icon: '🌿👕',
+                    isCorrect: true,
+                    explanation: 'Cotton has microscopic pores that absorb perspiration and allow cool air to circulate, cooling your body!',
+                    hint: 'Natural cotton fibres absorb sweat and breathe freely!',
+                  },
+                  {
+                    id: 'poly',
+                    label: 'Synthetic Polyester Shirt',
+                    icon: '👕🧴',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Synthetic polyester does not absorb moisture and traps body heat, causing rashes in hot weather!',
+                  },
+                ]}
+              />
             )}
           </div>
         );
@@ -669,49 +651,33 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 3: Practice Electric Tool Challenge */}
+            {/* Step 3: Practice Electric Tool Challenge without spoiler labels */}
             {currentStepIndex >= 3 && (
-              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center">
-                <span className="text-5xl mb-2">🛠️⚡</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Electrician Tool Challenge!</h3>
-                <p className="text-slate-600 font-bold mb-6 text-sm">
-                  An electrician is fixing high-voltage wall wires. Which screwdriver should she use?
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, pickTool: 'safe' });
-                    }}
-                    className={`p-5 rounded-3xl border-3 text-center cursor-pointer ${
-                      interactiveState.pickTool === 'safe'
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="text-3xl block mb-1">🪛</span>
-                    <span className="font-black text-sm text-slate-900">Plastic-Insulated Handle</span>
-                    <span className="text-xs font-bold text-emerald-700 block mt-1">Blocks 1000V Shocks ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('A bare metal handle conducts electricity right into your hand! Very dangerous!');
-                    }}
-                    className="p-5 rounded-3xl border-3 bg-slate-50 border-slate-200 hover:bg-slate-100 text-center cursor-pointer"
-                  >
-                    <span className="text-3xl block mb-1">🔪</span>
-                    <span className="font-black text-sm text-slate-900">Bare Metal Handle</span>
-                    <span className="text-xs font-bold text-rose-600 block mt-1">Electric Shock Hazard ❌</span>
-                  </button>
-                </div>
-                {interactiveState.pickTool === 'safe' && (
-                  <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-black">
-                    🎉 Brilliant! Always use plastic/rubber insulated tools when working with electricity!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Electrician Tool Challenge"
+                question="An electrician is repairing a 240V live wall socket. Which tool handle should she use to stay safe?"
+                scenarioEmoji="🛠️⚡"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'plastic-handle',
+                    label: 'Screwdriver with Plastic-Moulded Grip',
+                    icon: '🪛🛡️',
+                    isCorrect: true,
+                    explanation: 'Plastic is an electrical insulator! It completely blocks high-voltage electric current from entering the hands.',
+                    hint: 'Look for the material that blocks electricity from passing through!',
+                  },
+                  {
+                    id: 'metal-handle',
+                    label: 'Screwdriver with Solid Steel Metal Grip',
+                    icon: '🔪⚡',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Steel is a metal conductor! Electricity would travel directly through the handle into the body.',
+                  },
+                ]}
+              />
             )}
           </div>
         );
@@ -743,46 +709,33 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Handle Test */}
+            {/* Step 1: Handle Test without spoilers */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-300 shadow-xl text-center flex flex-col items-center">
-                <div className="grid grid-cols-2 gap-4 w-full mb-6">
-                  {[
-                    { id: 'metal', name: 'Iron Metal Handle', correct: false, desc: 'Heats to 100°C in seconds!', icon: '🔥', hint: 'Thermal Conductor — Burns fingers!' },
-                    { id: 'bakelite', name: 'Bakelite Plastic Handle', correct: true, desc: 'Stays 25°C room temp!', icon: '🛡️', hint: 'Thermal Insulator — Safe to lift! ✓' },
-                  ].map((h) => (
-                    <button
-                      key={h.id}
-                      onClick={() => {
-                        if (h.correct) {
-                          sounds.fanfare();
-                          setInteractiveState({ [`step_${currentStepIndex}`]: true, pickedSafe: true });
-                        } else {
-                          sounds.boing();
-                          voiceAssistant.speak('Metal absorbs boiling heat quickly and would burn Pip’s fingers! Try Bakelite plastic!');
-                        }
-                      }}
-                      className={`p-6 rounded-3xl border-4 text-center cursor-pointer transition-all ${
-                        h.correct && interactiveState.pickedSafe
-                          ? 'bg-emerald-50 border-emerald-400 shadow-xl ring-4 ring-emerald-200'
-                          : 'bg-white border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span className="text-3xl block mb-2">{h.icon}</span>
-                      <h4 className="font-black text-base text-slate-900">{h.name}</h4>
-                      <p className="text-xs font-bold text-slate-600 mt-1">{h.desc}</p>
-                      <span className={`text-[11px] font-black mt-2 block ${h.correct ? 'text-emerald-700' : 'text-rose-600'}`}>
-                        {h.hint}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-                {interactiveState.pickedSafe && (
-                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full text-emerald-950 font-black text-sm">
-                    🎉 Pip can lift the kettle safely! Bakelite plastic is a thermosetting polymer that does not conduct heat!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Kettle Handle Material Test"
+                question="The kettle is bubbling with 100°C steam. Which material should Pip choose for the lifting handle?"
+                scenarioEmoji="🫖🌡️"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'bakelite',
+                    label: 'Thermosetting Bakelite Plastic',
+                    icon: '🛡️🫖',
+                    isCorrect: true,
+                    explanation: 'Bakelite plastic is a thermal insulator and does not soften or conduct heat, staying cool at room temperature!',
+                    hint: 'Choose the synthetic polymer known for resisting heat in kitchen appliances!',
+                  },
+                  {
+                    id: 'iron',
+                    label: 'Cast Iron Metal Grip',
+                    icon: '🔥🍳',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Iron is a thermal conductor! Heat from boiling water travels right up the metal handle.',
+                  },
+                ]}
+              />
             )}
 
             {/* Step 2: Understand Thermal Insulation */}
@@ -809,47 +762,31 @@ export const DynamicMissionEngine: React.FC = () => {
 
             {/* Step 3: Apply - Cookware Safety Designer */}
             {currentStepIndex >= 3 && (
-              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-emerald-300 shadow-xl flex flex-col items-center">
-                <span className="text-5xl mb-2">🍲✨</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Cookware Safety Designer Challenge</h3>
-                <p className="text-slate-600 font-bold mb-6 text-sm">
-                  Choose the safest handle design for this high-temperature frying pan:
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, panSafe: true });
-                    }}
-                    className={`p-5 rounded-3xl border-3 text-center cursor-pointer ${
-                      interactiveState.panSafe
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="text-3xl block mb-1">🛡️</span>
-                    <span className="font-black text-sm text-slate-900">Thermosetting Bakelite Grip</span>
-                    <span className="text-xs font-bold text-emerald-700 block mt-1">Cool to touch at 250°C ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('Pure copper handle will burn the chef’s fingers!');
-                    }}
-                    className="p-5 rounded-3xl border-3 bg-slate-50 border-slate-200 hover:bg-slate-100 text-center cursor-pointer"
-                  >
-                    <span className="text-3xl block mb-1">🔥</span>
-                    <span className="font-black text-sm text-slate-900">Bare Copper Metal Grip</span>
-                    <span className="text-xs font-bold text-rose-600 block mt-1">Conducts Heat ❌</span>
-                  </button>
-                </div>
-                {interactiveState.panSafe && (
-                  <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-black">
-                    🎉 Excellent engineering! The pan body heats food while the Bakelite handle protects the chef!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Cookware Safety Designer"
+                question="You are designing a chef frying pan that reaches 250°C on a gas burner. Which handle will protect the chef?"
+                scenarioEmoji="🍲✨"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'bakelite-grip',
+                    label: 'Moulded Bakelite Insulator Grip',
+                    icon: '🛡️👨‍🍳',
+                    isCorrect: true,
+                    explanation: 'Bakelite prevents heat conduction, keeping the chef safe even when cooking over high flames!',
+                    hint: 'Which material blocks heat transfer into the chef’s fingers?',
+                  },
+                  {
+                    id: 'copper-grip',
+                    label: 'Bare Copper Metal Grip',
+                    icon: '🔥🍳',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Copper is one of the fastest heat conductors and will cause serious burns!',
+                  },
+                ]}
+              />
             )}
           </div>
         );
@@ -937,49 +874,33 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 3: Solve - Arjun's Shopping Dilemma */}
+            {/* Step 3: Solve - Arjun's Shopping Dilemma without spoilers */}
             {currentStepIndex === 3 && (
-              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center">
-                <span className="text-5xl mb-2">🛒🛍️</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Arjun's Grocery Dilemma</h3>
-                <p className="text-slate-600 font-bold mb-6 text-sm">
-                  Arjun is buying groceries at the market. Which bag should he use?
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, arjunBag: 'jute' });
-                    }}
-                    className={`p-5 rounded-3xl border-3 text-center cursor-pointer ${
-                      interactiveState.arjunBag === 'jute'
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="text-3xl block mb-1">🌿</span>
-                    <span className="font-black text-sm text-slate-900">Reusable Jute Cloth Bag</span>
-                    <span className="text-xs font-bold text-emerald-700 block mt-1">Zero Plastic Waste ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('Single-use thin plastic bags end up in drains and oceans!');
-                    }}
-                    className="p-5 rounded-3xl border-3 bg-slate-50 border-slate-200 hover:bg-slate-100 text-center cursor-pointer"
-                  >
-                    <span className="text-3xl block mb-1">🛍️</span>
-                    <span className="font-black text-sm text-slate-900">Single-Use Thin Plastic Bag</span>
-                    <span className="text-xs font-bold text-rose-600 block mt-1">Pollutes for 450 Years ❌</span>
-                  </button>
-                </div>
-                {interactiveState.arjunBag === 'jute' && (
-                  <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-black">
-                    🎉 Excellent eco-choice! Reusable cloth and jute bags eliminate single-use plastic pollution!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Arjun's Grocery Shopping Choice"
+                question="Arjun is at the market counter with 5 items. Which bag choice protects our oceans and soil?"
+                scenarioEmoji="🛒🛍️"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'jute-bag',
+                    label: 'Reusable Jute Cloth Tote Bag',
+                    icon: '🌿🛍️',
+                    isCorrect: true,
+                    explanation: 'Jute is a natural, 100% biodegradable plant fibre that can be reused hundreds of times without waste!',
+                    hint: 'Choose the renewable plant material that can be reused over and over!',
+                  },
+                  {
+                    id: 'plastic-bag',
+                    label: 'Single-Use Thin Plastic Carrier Bag',
+                    icon: '🫙⚠️',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Thin plastic bags take 450 years to break down and clog animal habitats and waterways.',
+                  },
+                ]}
+              />
             )}
 
             {/* Step 4: Apply - Environmental 3 R's Pledge */}
@@ -1088,49 +1009,33 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 3: Practice Rubber Match */}
+            {/* Step 3: Practice Rubber Match without spoilers */}
             {currentStepIndex >= 3 && (
-              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center">
-                <span className="text-5xl mb-2">🏎️🎈</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">The Vehicle Tyre Challenge</h3>
-                <p className="text-slate-600 font-bold mb-6 text-sm">
-                  Which rubber should engineers use for high-speed Formula 1 racing car tyres?
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, tyrePick: 'synthetic' });
-                    }}
-                    className={`p-5 rounded-3xl border-3 text-center cursor-pointer ${
-                      interactiveState.tyrePick === 'synthetic'
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="text-3xl block mb-1">🛞</span>
-                    <span className="font-black text-sm text-slate-900">Synthetic Buna Rubber</span>
-                    <span className="text-xs font-bold text-emerald-700 block mt-1">Extreme Friction & Heat Safe ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('Natural latex will melt and blow out at high racing speeds!');
-                    }}
-                    className="p-5 rounded-3xl border-3 bg-slate-50 border-slate-200 hover:bg-slate-100 text-center cursor-pointer"
-                  >
-                    <span className="text-3xl block mb-1">🎈</span>
-                    <span className="font-black text-sm text-slate-900">Pure Natural Latex</span>
-                    <span className="text-xs font-bold text-rose-600 block mt-1">Melts Under Friction ❌</span>
-                  </button>
-                </div>
-                {interactiveState.tyrePick === 'synthetic' && (
-                  <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-black">
-                    🎉 Outstanding! Synthetic rubber gives car tyres high grip, durability, and heat tolerance!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Vehicle Tyre Engineering Challenge"
+                question="Formula 1 race cars travel at 300 km/h with tyres reaching 120°C. Which rubber formulation must engineers specify?"
+                scenarioEmoji="🏎️🛞"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'synthetic-rubber',
+                    label: 'Vulcanized Synthetic Buna Rubber',
+                    icon: '🛞⚙️',
+                    isCorrect: true,
+                    explanation: 'Synthetic rubber combined with vulcanized sulphur creates heat-resistant cross-links that withstand immense road friction!',
+                    hint: 'Which rubber is chemically engineered to withstand extreme heat and friction?',
+                  },
+                  {
+                    id: 'latex-rubber',
+                    label: 'Pure Uncured Tree Latex Sap',
+                    icon: '🌳🎈',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Natural uncured tree latex becomes sticky and melts into liquid under high road friction.',
+                  },
+                ]}
+              />
             )}
           </div>
         );
@@ -1162,44 +1067,33 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Repair Interactive */}
+            {/* Step 1: Repair Interactive without spoilers */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-300 shadow-xl text-center flex flex-col items-center">
-                <div className="grid grid-cols-2 gap-4 w-full mb-6">
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('Tree resin dissolves under high water pressure! Try synthetic epoxy!');
-                    }}
-                    className="p-5 bg-slate-50 hover:bg-slate-100 rounded-2xl border-2 border-slate-200 text-center cursor-pointer"
-                  >
-                    <span className="text-3xl block mb-1">🌲</span>
-                    <span className="font-black text-sm text-slate-900">Pine Tree Resin</span>
-                    <span className="text-xs font-bold text-rose-600 block mt-1">Washes Away Under Pressure ❌</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, fixedPipe: true });
-                    }}
-                    className={`p-5 rounded-2xl border-3 text-center cursor-pointer transition-all ${
-                      interactiveState.fixedPipe
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-white border-slate-200 hover:bg-slate-50'
-                    }`}
-                  >
-                    <span className="text-3xl block mb-1">🧴✨</span>
-                    <span className="font-black text-sm text-slate-900">Synthetic Epoxy Sealant</span>
-                    <span className="text-xs font-bold text-emerald-700 block mt-1">Waterproof Polymer Bond ✓</span>
-                  </button>
-                </div>
-                {interactiveState.fixedPipe && (
-                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full text-emerald-950 font-black text-sm">
-                    🎉 Leak Sealed! Synthetic epoxy forms cross-linked polymer chains that withstand 500 PSI water pressure!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Emergency High-Pressure Pipe Seal"
+                question="Water is blasting out of a cracked plumbing pipe at 80 PSI. Which adhesive will stop the pressurized leak?"
+                scenarioEmoji="🚿🔧"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'epoxy-sealant',
+                    label: 'Synthetic Epoxy Waterproof Sealant',
+                    icon: '🧴✨',
+                    isCorrect: true,
+                    explanation: 'Synthetic epoxy cures into an insoluble cross-linked polymer network that withstands hundreds of pounds of water pressure!',
+                    hint: 'Choose the synthetic adhesive designed for waterproof plumbing repairs!',
+                  },
+                  {
+                    id: 'pine-resin',
+                    label: 'Natural Pine Tree Sticky Resin',
+                    icon: '🌲💧',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Natural tree resin is water-soluble and washes away instantly under high water pressure.',
+                  },
+                ]}
+              />
             )}
 
             {/* Step 2: Understand How Adhesives Work */}
@@ -1222,222 +1116,186 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 3: Practice Glue Match */}
+            {/* Step 3: Practice Glue Match without spoilers */}
             {currentStepIndex >= 3 && (
-              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center">
-                <span className="text-5xl mb-2">🪵🧵</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Adhesive Matcher</h3>
-                <p className="text-slate-600 font-bold mb-6 text-sm">
-                  Which adhesive is specifically designed for woodworking & school paper crafts?
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, gluePick: 'pva' });
-                    }}
-                    className={`p-5 rounded-3xl border-3 text-center cursor-pointer ${
-                      interactiveState.gluePick === 'pva'
-                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="text-3xl block mb-1">🪵</span>
-                    <span className="font-black text-sm text-slate-900">PVA White Wood Glue</span>
-                    <span className="text-xs font-bold text-emerald-700 block mt-1">Bonds Wood & Cellulose Fibres ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.boing();
-                      voiceAssistant.speak('Epoxy resin is for heavy plumbing pipes and metals!');
-                    }}
-                    className="p-5 rounded-3xl border-3 bg-slate-50 border-slate-200 hover:bg-slate-100 text-center cursor-pointer"
-                  >
-                    <span className="text-3xl block mb-1">🔩</span>
-                    <span className="font-black text-sm text-slate-900">Epoxy Pipe Resin</span>
-                    <span className="text-xs font-bold text-rose-600 block mt-1">Heavy Industrial Use ❌</span>
-                  </button>
-                </div>
-                {interactiveState.gluePick === 'pva' && (
-                  <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-black">
-                    🎉 Excellent! PVA glue is perfect for wood, cardboard, and paper crafts!
-                  </div>
-                )}
-              </div>
+              <InquiryQuestionCard
+                title="Adhesive Matcher Challenge"
+                question="You are building a wooden birdhouse and assembling paper crafts. Which adhesive is non-toxic and bonds cellulose wood fibres best?"
+                scenarioEmoji="🪵🧵"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'pva-glue',
+                    label: 'PVA White Wood & Paper Glue',
+                    icon: '🪵🏷️',
+                    isCorrect: true,
+                    explanation: 'Polyvinyl acetate (PVA) absorbs into wood grain and cellulose paper to form a permanent, non-toxic craft bond!',
+                    hint: 'Which white glue is specially formulated for woodworking and school craft projects?',
+                  },
+                  {
+                    id: 'epoxy-resin',
+                    label: 'Heavy Industrial Epoxy Resin',
+                    icon: '🔩🧪',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Industrial epoxy is a heavy chemical compound intended for pipes, engine blocks, and metals.',
+                  },
+                ]}
+              />
             )}
           </div>
         );
 
       /* ─────────────────────────────────────────────────────────────
-         MISSION 13: PIP'S SCIENCE CAMP (6 Steps Grand Finale)
+         MISSION 13: PIP'S SCIENCE CAMP (All 5 Inquiry Challenges Unbiased!)
       ───────────────────────────────────────────────────────────── */
       case 13:
         return (
           <div className="w-full max-w-3xl flex flex-col items-center text-center">
-            {/* Step 0: Challenge 1 - Camp Clothing */}
+            {/* Step 0: Challenge 1 - Camp Clothing without spoilers */}
             {currentStepIndex === 0 && (
-              <div className="bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl w-full">
-                <span className="text-5xl block mb-2">🏕️🌧️</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Challenge 1: Stormy Camp Shelter</h3>
-                <p className="text-sm text-slate-600 font-bold mb-6">
-                  A mountain storm hits camp! Which material will keep your tent 100% dry and waterproof?
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, ch1: 'poly' });
-                    }}
-                    className={`p-5 rounded-2xl border-3 cursor-pointer ${
-                      interactiveState.ch1 === 'poly' ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-200' : 'bg-slate-50 border-slate-200'
-                    }`}
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Synthetic Polyester Tent</span>
-                    <span className="text-xs font-bold text-emerald-700">Waterproof & Quick-Dry ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => sounds.boing()}
-                    className="p-5 rounded-2xl border-3 bg-slate-50 border-slate-200 cursor-pointer"
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Cotton Linen Tent</span>
-                    <span className="text-xs font-bold text-rose-600">Soaks Water & Leaks ❌</span>
-                  </button>
-                </div>
-              </div>
+              <InquiryQuestionCard
+                title="Challenge 1: Stormy Mountain Camp Shelter"
+                question="A sudden mountain rainstorm hits your campsite! Which tent fabric will keep all campers 100% dry and resist mildew?"
+                scenarioEmoji="🏕️🌧️"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'poly-tent',
+                    label: 'Synthetic Polyester Fabric Tent',
+                    icon: '⛺💧',
+                    isCorrect: true,
+                    explanation: 'Polyester fibres are non-porous and hydrophobic, allowing rainwater to roll right off without soaking in!',
+                    hint: 'Think about which fibre is naturally water-repellent and quick drying!',
+                  },
+                  {
+                    id: 'cotton-tent',
+                    label: 'Natural Cotton Linen Fabric Tent',
+                    icon: '🌿⛺',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Cotton absorbs heavy water, gets heavy, and begins leaking in prolonged rain.',
+                  },
+                ]}
+              />
             )}
 
-            {/* Step 1: Challenge 2 - Camp Rope */}
+            {/* Step 1: Challenge 2 - Camp Rope without spoilers */}
             {currentStepIndex === 1 && (
-              <div className="bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl w-full">
-                <span className="text-5xl block mb-2">🧗‍♂️🪢</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Challenge 2: Mountain Climbing</h3>
-                <p className="text-sm text-slate-600 font-bold mb-6">
-                  Which climbing rope has tensile strength stronger than steel wire?
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, ch2: 'nylon' });
-                    }}
-                    className={`p-5 rounded-2xl border-3 cursor-pointer ${
-                      interactiveState.ch2 === 'nylon' ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-200' : 'bg-slate-50 border-slate-200'
-                    }`}
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Synthetic Nylon Rope</span>
-                    <span className="text-xs font-bold text-emerald-700">Holds 2000kg Safely ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => sounds.boing()}
-                    className="p-5 rounded-2xl border-3 bg-slate-50 border-slate-200 cursor-pointer"
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Jute Plant String</span>
-                    <span className="text-xs font-bold text-rose-600">Snaps Under Weight ❌</span>
-                  </button>
-                </div>
-              </div>
+              <InquiryQuestionCard
+                title="Challenge 2: Mountain Climbing Rope"
+                question="You are packing rope to climb a steep 500-meter rocky cliff. Which rope has tensile strength stronger than steel?"
+                scenarioEmoji="🧗‍♂️🪢"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'nylon-rope',
+                    label: 'Braided Synthetic Nylon Rope',
+                    icon: '🪢💪',
+                    isCorrect: true,
+                    explanation: 'Nylon has extraordinary tensile strength, elasticity, and resists abrasion, making it the universal choice for mountain rescue!',
+                    hint: 'Which synthetic fibre was famously proven stronger than steel of the same thickness?',
+                  },
+                  {
+                    id: 'jute-rope',
+                    label: 'Natural Jute Plant Twine String',
+                    icon: '🌾🪢',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Plant twine has low tensile strength and snaps easily under heavy human climbing weight.',
+                  },
+                ]}
+              />
             )}
 
-            {/* Step 2: Challenge 3 - Camp Safety */}
+            {/* Step 2: Challenge 3 - Campfire Safety (FIXED USER ISSUE - NO SPOILERS!) */}
             {currentStepIndex === 2 && (
-              <div className="bg-white p-8 rounded-3xl border-4 border-rose-300 shadow-xl w-full">
-                <span className="text-5xl block mb-2">🔥⛺</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Challenge 3: Campfire Cooking Safety</h3>
-                <p className="text-sm text-slate-600 font-bold mb-6">
-                  What should you wear when cooking marshmallows near the campfire?
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, ch3: 'cotton' });
-                    }}
-                    className={`p-5 rounded-2xl border-3 cursor-pointer ${
-                      interactiveState.ch3 === 'cotton' ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-200' : 'bg-slate-50 border-slate-200'
-                    }`}
-                  >
-                    <span className="font-black text-sm text-slate-900 block">100% Cotton Apron</span>
-                    <span className="text-xs font-bold text-emerald-700">Safe, Does Not Melt ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => sounds.boing()}
-                    className="p-5 rounded-2xl border-3 bg-slate-50 border-slate-200 cursor-pointer"
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Nylon Jacket</span>
-                    <span className="text-xs font-bold text-rose-600">Melting Fire Hazard ❌</span>
-                  </button>
-                </div>
-              </div>
+              <InquiryQuestionCard
+                title="Challenge 3: Campfire Cooking Safety"
+                question="The campsite fire is blazing as you roast marshmallows on skewers. What should you wear near the open flames?"
+                scenarioEmoji="🔥⛺"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'cotton-apron',
+                    label: '100% Natural Cotton Apron',
+                    icon: '🌿👨‍🍳',
+                    isCorrect: true,
+                    explanation: 'Cotton burns slowly to soft gray ash and never melts, keeping your skin safe from severe plastic burns!',
+                    hint: 'Remember which fabric does NOT melt into scalding sticky beads when near fire!',
+                  },
+                  {
+                    id: 'nylon-jacket',
+                    label: 'Synthetic Nylon Windbreaker Jacket',
+                    icon: '🧥🔥',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Synthetic nylon melts instantly near flame and sticks painfully to skin. Never wear near fire!',
+                  },
+                ]}
+              />
             )}
 
-            {/* Step 3: Challenge 4 - Camp Kettle */}
+            {/* Step 3: Challenge 4 - Camp Kettle without spoilers */}
             {currentStepIndex === 3 && (
-              <div className="bg-white p-8 rounded-3xl border-4 border-indigo-300 shadow-xl w-full">
-                <span className="text-5xl block mb-2">🫖🔥</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Challenge 4: Camp Kettle Handle</h3>
-                <p className="text-sm text-slate-600 font-bold mb-6">
-                  Which material handles 100°C steam without heating up?
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, ch4: 'bakelite' });
-                    }}
-                    className={`p-5 rounded-2xl border-3 cursor-pointer ${
-                      interactiveState.ch4 === 'bakelite' ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-200' : 'bg-slate-50 border-slate-200'
-                    }`}
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Bakelite Plastic Handle</span>
-                    <span className="text-xs font-bold text-emerald-700">Thermal Insulator ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => sounds.boing()}
-                    className="p-5 rounded-2xl border-3 bg-slate-50 border-slate-200 cursor-pointer"
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Iron Handle</span>
-                    <span className="text-xs font-bold text-rose-600">Burns Hand ❌</span>
-                  </button>
-                </div>
-              </div>
+              <InquiryQuestionCard
+                title="Challenge 4: Campfire Tea Kettle Handle"
+                question="The campfire kettle is whistling hot with boiling water. Which handle material will keep your fingers completely cool?"
+                scenarioEmoji="🫖🔥"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'bakelite-kettle',
+                    label: 'Thermosetting Bakelite Plastic Grip',
+                    icon: '🛡️🫖',
+                    isCorrect: true,
+                    explanation: 'Bakelite is a thermosetting polymer that blocks thermal conduction, protecting hands from 100°C steam!',
+                    hint: 'Look for the classic thermal insulator used across cookware handles!',
+                  },
+                  {
+                    id: 'iron-kettle',
+                    label: 'Solid Iron Metal Grip',
+                    icon: '🔥🍳',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Iron is a thermal conductor and conducts the blazing heat directly into your palms.',
+                  },
+                ]}
+              />
             )}
 
-            {/* Step 4: Challenge 5 - Leave No Trace */}
+            {/* Step 4: Challenge 5 - Leave No Trace without spoilers */}
             {currentStepIndex === 4 && (
-              <div className="bg-white p-8 rounded-3xl border-4 border-emerald-300 shadow-xl w-full">
-                <span className="text-5xl block mb-2">♻️🌿</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Challenge 5: Leave No Trace Cleanup</h3>
-                <p className="text-sm text-slate-600 font-bold mb-6">
-                  How should young scientists handle camp plastics before heading home?
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, ch5: 'pack' });
-                    }}
-                    className={`p-5 rounded-2xl border-3 cursor-pointer ${
-                      interactiveState.ch5 === 'pack' ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-200' : 'bg-slate-50 border-slate-200'
-                    }`}
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Pack & Recycle in Blue Bins</span>
-                    <span className="text-xs font-bold text-emerald-700">Protects Nature 🌿 ✓</span>
-                  </button>
-
-                  <button
-                    onClick={() => sounds.boing()}
-                    className="p-5 rounded-2xl border-3 bg-slate-50 border-slate-200 cursor-pointer"
-                  >
-                    <span className="font-black text-sm text-slate-900 block">Bury Plastic in Forest Soil</span>
-                    <span className="text-xs font-bold text-rose-600">Pollutes for 450 Years ❌</span>
-                  </button>
-                </div>
-              </div>
+              <InquiryQuestionCard
+                title="Challenge 5: Leave No Trace Planet Cleanup"
+                question="Camp is ending! You have empty snack wrappers, juice bottles, and plastic containers. What is the scientist's duty?"
+                scenarioEmoji="♻️🌿"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'recycle-bins',
+                    label: 'Pack & Recycle in Designated Blue Bins',
+                    icon: '♻️🌱',
+                    isCorrect: true,
+                    explanation: 'Recycling plastics prevents microplastic accumulation and turns discarded polymers into new useful materials!',
+                    hint: 'Which choice follows the 3 R’s (Reduce, Reuse, Recycle) to protect forest wildlife?',
+                  },
+                  {
+                    id: 'bury-soil',
+                    label: 'Bury Plastic Wrappers in Forest Soil',
+                    icon: '🌲⚠️',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Plastics take over 450 years to decay and release toxic microplastics into forest soil and groundwater.',
+                  },
+                ]}
+              />
             )}
 
             {/* Step 5: Grand Graduation Ceremony */}
