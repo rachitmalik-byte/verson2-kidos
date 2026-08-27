@@ -29,6 +29,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const { isSfxMuted, isTtsMuted, isBgmMuted, toggleSfx, toggleTts, toggleBgm } = useAudioStore();
   const child = useParentStore((state) => state.child);
   const credits = useProgressStore((state) => state.credits);
+  const startTour = useProgressStore((state) => state.startTour);
 
   const handleHomeClick = () => {
     sounds.pop();
@@ -72,22 +73,23 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
             setShowArcadeModal(true);
           }}
           className="p-2 sm:px-2.5 sm:py-1.5 rounded-2xl bg-indigo-100 hover:bg-indigo-200 border-2 border-indigo-300 text-indigo-900 font-black text-xs flex items-center gap-1 cursor-pointer shadow-xs active:scale-95 transition-all"
-          title="Play Science Mini-Games in the Arcade"
+          title="Play Classic Games (Snake, Memory Match & Bubbles) in the Arcade"
         >
           <Gamepad2 className="w-4 h-4 text-indigo-600" />
           <span className="hidden lg:inline">Arcade</span>
         </button>
 
-        {/* Trial Tour Guide */}
+        {/* Live Mascot Tour Guide */}
         <button
           onClick={() => {
             sounds.pop();
-            setShowTutorialModal(true);
+            startTour();
+            navigate('/chapter-hub');
           }}
           className="p-2 sm:px-2.5 sm:py-1.5 rounded-2xl bg-sky-100 hover:bg-sky-200 border-2 border-sky-300 text-sky-900 font-black text-xs flex items-center gap-1 cursor-pointer shadow-xs active:scale-95 transition-all"
-          title="Open First-Time Guided Trial Tour"
+          title="Launch Mascot-Led Guided Walkthrough"
         >
-          <Compass className="w-4 h-4 text-sky-600" />
+          <Compass className="w-4 h-4 text-sky-600 animate-pulse" />
           <span className="hidden lg:inline">Tour</span>
         </button>
 

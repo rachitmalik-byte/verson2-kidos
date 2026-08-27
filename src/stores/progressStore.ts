@@ -15,6 +15,10 @@ interface ProgressState {
   unlockedHeadwear: string[];
   hasSeenTutorial: boolean;
   
+  // Mascot-Led Live Tour State
+  isTourActive: boolean;
+  tourStep: number;
+  
   completeMission: (missionId: string) => void;
   setCurrentMission: (missionId: string) => void;
   setCurrentStep: (step: number) => void;
@@ -28,6 +32,11 @@ interface ProgressState {
   equipOutfit: (id: string) => void;
   equipHeadwear: (id: string) => void;
   setHasSeenTutorial: (seen: boolean) => void;
+  
+  // Tour actions
+  startTour: () => void;
+  setTourStep: (step: number) => void;
+  endTour: () => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -44,6 +53,8 @@ export const useProgressStore = create<ProgressState>()(
       unlockedOutfits: ['lab-coat'],
       unlockedHeadwear: ['goggles'],
       hasSeenTutorial: false,
+      isTourActive: false,
+      tourStep: 0,
 
       completeMission: (missionId: string) => {
         const { completedMissions, credits } = get();
@@ -122,6 +133,18 @@ export const useProgressStore = create<ProgressState>()(
         set({ hasSeenTutorial: seen });
       },
 
+      startTour: () => {
+        set({ isTourActive: true, tourStep: 0 });
+      },
+
+      setTourStep: (step: number) => {
+        set({ tourStep: step });
+      },
+
+      endTour: () => {
+        set({ isTourActive: false, tourStep: 0, hasSeenTutorial: true });
+      },
+
       resetProgress: () => {
         set({
           completedMissions: [],
@@ -134,6 +157,8 @@ export const useProgressStore = create<ProgressState>()(
           unlockedOutfits: ['lab-coat'],
           unlockedHeadwear: ['goggles'],
           hasSeenTutorial: false,
+          isTourActive: false,
+          tourStep: 0,
         });
       },
     }),

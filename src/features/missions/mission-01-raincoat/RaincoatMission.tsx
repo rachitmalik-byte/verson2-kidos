@@ -37,6 +37,8 @@ export function RaincoatMission() {
 
   const navigate = useNavigate();
   const completeMission = useProgressStore((state) => state.completeMission);
+  const isTourActive = useProgressStore((state) => state.isTourActive);
+  const endTour = useProgressStore((state) => state.endTour);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
   const phaseOrder: Phase[] = ['HOOK', 'INSPECT', 'CHOOSE', 'UNDERSTANDING', 'PRACTICE', 'APPLY'];
@@ -64,6 +66,7 @@ export function RaincoatMission() {
       setCurrentPhase(phaseOrder[currentStepIndex + 1]);
     } else {
       sounds.fanfare();
+      if (isTourActive) endTour();
       completeMission('mission-01');
       addDiscovery({
         materialId: 'polyester',
@@ -174,6 +177,36 @@ export function RaincoatMission() {
           transition={{ duration: 0.3 }}
           className="w-full flex flex-col items-center justify-center py-4"
         >
+          {/* Assisted Level 1 Walkthrough Banner */}
+          {isTourActive && (
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="w-full max-w-2xl mx-auto mb-4 p-4 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-slate-950 rounded-2xl font-black text-xs md:text-sm shadow-xl flex items-center justify-between gap-3 border-2 border-amber-300"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-slate-950 shrink-0 animate-spin" />
+                <span>
+                  {currentPhase === 'HOOK' && '🌧️ Assisted Tour: Tap either raincoat card above to begin your rain test!'}
+                  {currentPhase === 'INSPECT' && '💧 Assisted Tour: Tap "Pour Rain Water" on both coats to test water resistance!'}
+                  {currentPhase === 'CHOOSE' && '✨ Assisted Tour: Select Raincoat B and pick why it works best!'}
+                  {currentPhase === 'UNDERSTANDING' && '🧱 Assisted Tour: Review the golden rule: Material → Property → Use!'}
+                  {currentPhase === 'PRACTICE' && '🎯 Assisted Tour: Tap an object on the left, then tap its matching superpower on the right!'}
+                  {currentPhase === 'APPLY' && '🪂 Assisted Tour: Select Nylon for Pip’s parachute — it’s strong and lightweight!'}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  endTour();
+                }}
+                className="px-3 py-1.5 bg-slate-950 hover:bg-slate-800 text-white rounded-xl text-xs font-black cursor-pointer shadow-xs shrink-0"
+              >
+                End Tour
+              </button>
+            </motion.div>
+          )}
+
           {/* ════════════════════════════════════════════════════════════════════════
               PHASE 1: HOOK (Storm Arrival)
           ════════════════════════════════════════════════════════════════════════ */}
