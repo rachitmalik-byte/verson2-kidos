@@ -12,6 +12,7 @@ import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/Nylon
 import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafetyMission';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
 import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
+import { MysteryObjectQuiz } from '@/features/mystery-lab/MysteryObjectQuiz';
 import { DevDrawer } from '@/components/dev/DevDrawer';
 import { GlobalWordExplainer } from '@/components/dictionary/GlobalWordExplainer';
 import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
@@ -33,9 +34,10 @@ export function App() {
           <Route path="/parent/pin" element={<ParentPinGate />} />
           <Route path="/parent/dashboard" element={<ParentDashboard />} />
 
-          {/* Chapter Hub & Discovery Journal */}
+          {/* Chapter Hub, Discovery Journal & Mystery Lab */}
           <Route path="/chapter-hub" element={<ChapterHub />} />
           <Route path="/discovery-book" element={<DiscoveryBook />} />
+          <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 
           {/* Chapter 3 Missions */}
           <Route path="/chapter/3" element={<ChapterIntro />} />

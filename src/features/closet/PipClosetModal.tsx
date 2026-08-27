@@ -18,18 +18,21 @@ interface OutfitItem {
 
 const OUTFITS: OutfitItem[] = [
   { id: 'lab-coat', name: 'Classic Scientist Coat', category: 'outfit', cost: 0, icon: '🥼', desc: 'Pip’s official white laboratory jacket with pipette pocket!' },
-  { id: 'astronaut', name: 'Cosmic Spacesuit', category: 'outfit', cost: 40, icon: '👨‍🚀', desc: 'Polymer-sealed spacesuit built for zero-gravity moonwalks!' },
-  { id: 'winter-parka', name: 'Winter Scientist Parka', category: 'outfit', cost: 50, icon: '🧥', desc: 'Acrylic-insulated cozy crimson jacket with fluffy fur collar!' },
-  { id: 'gold-champion', name: 'Champion Gold Robe', category: 'outfit', cost: 80, icon: '🏆', desc: 'Pure gleaming gold coat awarded to master materials scientists!' },
-  { id: 'detective', name: 'Detective Trenchcoat', category: 'outfit', cost: 60, icon: '🕵️', desc: 'Khaki mystery coat with magnifying glass lapel!' },
+  { id: 'detective', name: 'Detective Trenchcoat', category: 'outfit', cost: 40, icon: '🕵️', desc: 'Double-breasted mystery coat with gold buttons and belt!' },
+  { id: 'safari-vest', name: 'Dino Safari Explorer Vest', category: 'outfit', cost: 50, icon: '🦕', desc: 'Khaki field vest with cargo utility pockets and compass!' },
+  { id: 'astronaut', name: 'Cosmic Spacesuit', category: 'outfit', cost: 60, icon: '👨‍🚀', desc: 'Polymer-sealed spacesuit built for zero-gravity moonwalks!' },
+  { id: 'winter-parka', name: 'Winter Scientist Parka', category: 'outfit', cost: 70, icon: '🧥', desc: 'Acrylic-insulated cozy crimson jacket with fluffy fur collar!' },
+  { id: 'gold-champion', name: 'Champion Gold Robe', category: 'outfit', cost: 100, icon: '🏆', desc: 'Pure gleaming gold coat awarded to master materials scientists!' },
 ];
 
 const HEADWEAR: OutfitItem[] = [
   { id: 'goggles', name: 'Safety Goggles', category: 'headwear', cost: 0, icon: '🥽', desc: 'Impact-resistant polycarbonate laboratory goggles!' },
-  { id: 'visor', name: 'Cyber Neon Visor', category: 'headwear', cost: 35, icon: '🥽✨', desc: 'Glowing digital heads-up display scanning molecules!' },
-  { id: 'grad-cap', name: 'Scholar Mortarboard', category: 'headwear', cost: 45, icon: '🎓', desc: 'Prestigious academic cap with golden tassel!' },
-  { id: 'crown', name: 'Royal Gold Crown', category: 'headwear', cost: 70, icon: '👑', desc: 'Sparkling royal crown for science royalty!' },
-  { id: 'party-hat', name: 'Carnival Party Hat', category: 'headwear', cost: 25, icon: '🥳', desc: 'Colorful celebration cone with confetti pompom!' },
+  { id: 'fedora', name: 'Detective Fedora', category: 'headwear', cost: 30, icon: '🎩', desc: 'Classic mystery investigator fedora with dark ribbon!' },
+  { id: 'headphones', name: 'Studio Audio Headset', category: 'headwear', cost: 40, icon: '🎧', desc: 'Cozy cushioned headphones perfect for listening tasks!' },
+  { id: 'party-hat', name: 'Festive Carnival Hat', category: 'headwear', cost: 25, icon: '🥳', desc: 'Colorful celebration cone with fluffy golden pompom!' },
+  { id: 'visor', name: 'Cyber Neon Visor', category: 'headwear', cost: 45, icon: '🥽✨', desc: 'Glowing digital heads-up display scanning molecules!' },
+  { id: 'grad-cap', name: 'Scholar Mortarboard', category: 'headwear', cost: 50, icon: '🎓', desc: 'Prestigious academic cap with golden tassel!' },
+  { id: 'crown', name: 'Royal Gold Crown', category: 'headwear', cost: 80, icon: '👑', desc: 'Sparkling royal crown for science royalty!' },
 ];
 
 export const PipClosetModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({

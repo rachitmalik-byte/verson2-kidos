@@ -82,8 +82,8 @@ export const Pip: React.FC<PipProps> = ({
 
       if (distance === 0) return;
 
-      const maxRadius = 4.2;
-      const factor = Math.min(distance / 28, maxRadius);
+      const maxRadius = 4.0;
+      const factor = Math.min(distance / 30, maxRadius);
       setEyeOffset({
         x: (dx / distance) * factor,
         y: (dy / distance) * factor,
@@ -94,19 +94,19 @@ export const Pip: React.FC<PipProps> = ({
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // ── 2. NATURAL CALM BLINKING (Every 4.5s) ──
+  // ── 2. NATURAL CALM BLINKING (Every 4.8s) ──
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 160);
-    }, 4500);
+      setTimeout(() => setIsBlinking(false), 150);
+    }, 4800);
     return () => clearInterval(blinkInterval);
   }, []);
 
-  // ── 3. SPEECH LIP-SYNC VISEMES ──
+  // ── 3. STRICT SPEECH LIP-SYNC VISEMES (ONLY WHEN ACTUALLY SPEAKING) ──
   useEffect(() => {
-    let visemeTimer: number;
-    if (currentState === 'speaking' || isSpeakingStore) {
+    let visemeTimer: number | undefined;
+    if (currentState === 'speaking' && isSpeakingStore) {
       const visemes: ('closed' | 'open-small' | 'open-wide' | 'smile')[] = [
         'open-small',
         'open-wide',
@@ -118,11 +118,13 @@ export const Pip: React.FC<PipProps> = ({
       visemeTimer = window.setInterval(() => {
         setMouthViseme(visemes[i % visemes.length]);
         i++;
-      }, 140);
+      }, 150);
     } else {
       setMouthViseme('smile');
     }
-    return () => clearInterval(visemeTimer);
+    return () => {
+      if (visemeTimer) clearInterval(visemeTimer);
+    };
   }, [currentState, isSpeakingStore]);
 
   // ── 4. CLICK / TAP INTERACTION ──
@@ -154,16 +156,16 @@ export const Pip: React.FC<PipProps> = ({
     setTimeout(() => setHighFiveImpact(false), 1200);
   };
 
-  // ── 5. STATE MACHINE ANIMATIONS (CALM DEFAULT, INTENTIONAL MOVEMENT) ──
+  // ── 5. CALM STATE MACHINE ANIMATIONS (CALM DEFAULT, INTENTIONAL MOVEMENT) ──
   const bodyVariants = {
     idle: {
-      scaleY: [1, 1.018, 1],
-      y: [0, -2, 0],
-      transition: { duration: 3.6, repeat: Infinity, ease: 'easeInOut' },
+      scaleY: [1, 1.015, 1],
+      y: [0, -1.5, 0],
+      transition: { duration: 3.8, repeat: Infinity, ease: 'easeInOut' },
     },
     curious: {
       rotate: [-3, 6, -3],
-      y: -4,
+      y: -3,
       transition: { duration: 1.2, ease: 'easeOut' },
     },
     teaching: {
@@ -193,8 +195,8 @@ export const Pip: React.FC<PipProps> = ({
       transition: { duration: 1.4, ease: 'easeInOut' },
     },
     celebrating: {
-      y: [0, -18, 0],
-      rotate: [-6, 6, -6],
+      y: [0, -16, 0],
+      rotate: [-5, 5, -5],
       scale: [1, 1.12, 1],
       transition: { duration: 0.6, repeat: 3, ease: 'easeOut' },
     },
@@ -204,7 +206,7 @@ export const Pip: React.FC<PipProps> = ({
       transition: { duration: 0.4, ease: 'easeOut' },
     },
     speaking: {
-      y: [0, -3, 0],
+      y: [0, -2, 0],
       transition: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' },
     },
   };
@@ -217,8 +219,8 @@ export const Pip: React.FC<PipProps> = ({
     <motion.div
       ref={containerRef}
       onClick={handleClick}
-      whileHover={interactive ? { scale: 1.05 } : undefined}
-      whileTap={interactive ? { scale: 0.94 } : undefined}
+      whileHover={interactive ? { scale: 1.04 } : undefined}
+      whileTap={interactive ? { scale: 0.95 } : undefined}
       className={`relative inline-flex items-center justify-center select-none ${interactive ? 'cursor-pointer' : ''} ${sizeClasses[size]} ${className}`}
       variants={bodyVariants}
       animate={currentState}
@@ -259,7 +261,7 @@ export const Pip: React.FC<PipProps> = ({
       {/* ── LISTENING ACOUSTIC WAVE AURA ── */}
       {isListening && (
         <motion.div
-          animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.7, 0.3] }}
+          animate={{ scale: [1, 1.22, 1], opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute inset-0 rounded-full border-4 border-indigo-400/60 bg-indigo-400/10 pointer-events-none z-0 filter blur-[2px]"
         />
@@ -274,25 +276,33 @@ export const Pip: React.FC<PipProps> = ({
           </linearGradient>
           <linearGradient id="pipCoatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="60%" stopColor="#F8FAFC" />
-            <stop offset="100%" stopColor="#E2E8F0" />
+            <stop offset="70%" stopColor="#F1F5F9" />
+            <stop offset="100%" stopColor="#CBD5E1" />
+          </linearGradient>
+          <linearGradient id="pipDetectiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FBBF24" />
+            <stop offset="40%" stopColor="#D97706" />
+            <stop offset="100%" stopColor="#92400E" />
           </linearGradient>
           <linearGradient id="pipAstroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#38BDF8" />
+            <stop offset="60%" stopColor="#0284C7" />
             <stop offset="100%" stopColor="#0369A1" />
           </linearGradient>
           <linearGradient id="pipParkaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#F43F5E" />
+            <stop offset="0%" stopColor="#FB7185" />
+            <stop offset="50%" stopColor="#E11D48" />
             <stop offset="100%" stopColor="#9F1239" />
           </linearGradient>
           <linearGradient id="pipGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FDE047" />
+            <stop offset="0%" stopColor="#FEF08A" />
             <stop offset="50%" stopColor="#EAB308" />
-            <stop offset="100%" stopColor="#CA8A04" />
+            <stop offset="100%" stopColor="#A16207" />
           </linearGradient>
-          <linearGradient id="pipDetectiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D97706" />
-            <stop offset="100%" stopColor="#78350F" />
+          <linearGradient id="pipSafariGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#A3E635" />
+            <stop offset="60%" stopColor="#65A30D" />
+            <stop offset="100%" stopColor="#365314" />
           </linearGradient>
           <radialGradient id="pipCheekGrad" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#F472B6" stopOpacity="0.8" />
@@ -368,76 +378,100 @@ export const Pip: React.FC<PipProps> = ({
         {/* ── LAYER 4: PROPERLY FITTED TAILORED WARDROBE ── */}
         {currentOutfit === 'lab-coat' && (
           <g>
-            {/* Coat Body following natural shoulder contour */}
             <path
-              d="M28 82 C28 108 42 123 70 123 C98 123 112 108 112 82 C98 85 86 87 70 87 C54 87 42 85 28 82 Z"
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
               fill="url(#pipCoatGrad)"
-              stroke="#475569"
+              stroke="#334155"
               strokeWidth="2.5"
             />
-            {/* Natural V-Neck Lapels */}
-            <path d="M46 84 L70 105 L94 84" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            <circle cx="70" cy="110" r="2" fill="#F59E0B" />
-            <circle cx="70" cy="117" r="2" fill="#F59E0B" />
-            {/* Breast Pocket with Mini Pipette */}
-            <rect x="84" y="96" width="14" height="12" rx="2" fill="#FFFFFF" stroke="#475569" strokeWidth="1.5" />
-            <rect x="88" y="91" width="3.5" height="7" rx="1.5" fill="#10B981" />
+            {/* Curved Notched Lapels */}
+            <path d="M44 86 L56 102 L70 93 L84 102 L96 86" stroke="#334155" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="#FFFFFF" />
+            <path d="M70 93 L70 123" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="70" cy="104" r="2.2" fill="#F59E0B" />
+            <circle cx="70" cy="114" r="2.2" fill="#F59E0B" />
+            {/* Pocket with Pen */}
+            <rect x="86" y="98" width="14" height="12" rx="3" fill="#FFFFFF" stroke="#475569" strokeWidth="1.5" />
+            <rect x="90" y="93" width="3" height="7" rx="1.5" fill="#10B981" />
+          </g>
+        )}
+
+        {currentOutfit === 'detective' && (
+          <g>
+            {/* Natural Form-Fitted Double-Breasted Trenchcoat */}
+            <path
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              fill="url(#pipDetectiveGrad)"
+              stroke="#78350F"
+              strokeWidth="2.5"
+            />
+            {/* Dark Storm Lapels */}
+            <path d="M42 86 L54 100 L70 92 L86 100 L98 86" stroke="#78350F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="#92400E" />
+            {/* Double-Breasted Gold Buttons */}
+            <circle cx="62" cy="102" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
+            <circle cx="78" cy="102" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
+            <circle cx="62" cy="112" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
+            <circle cx="78" cy="112" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
+            {/* Waist Belt with Brass Buckle */}
+            <path d="M30 116 C55 120 85 120 110 116" stroke="#78350F" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+            <rect x="64" y="114" width="12" height="7" rx="2" fill="#FDE047" stroke="#78350F" strokeWidth="1.5" />
           </g>
         )}
 
         {currentOutfit === 'astronaut' && (
           <g>
             <path
-              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
               fill="url(#pipAstroGrad)"
               stroke="#075985"
-              strokeWidth="3"
+              strokeWidth="2.5"
             />
-            {/* Center Dial & Life Support Badge */}
-            <rect x="56" y="95" width="28" height="18" rx="5" fill="#0F172A" stroke="#38BDF8" strokeWidth="2" />
-            <circle cx="64" cy="104" r="2.5" fill="#22C55E" />
-            <circle cx="76" cy="104" r="2.5" fill="#EF4444" />
+            {/* Chest Telemetry Computer */}
+            <rect x="52" y="94" width="36" height="20" rx="5" fill="#0F172A" stroke="#38BDF8" strokeWidth="2" />
+            <circle cx="60" cy="104" r="3" fill="#22C55E" className="animate-pulse" />
+            <circle cx="70" cy="104" r="3" fill="#38BDF8" />
+            <circle cx="80" cy="104" r="3" fill="#EF4444" />
           </g>
         )}
 
         {currentOutfit === 'winter-parka' && (
           <g>
             <path
-              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
               fill="url(#pipParkaGrad)"
               stroke="#881337"
-              strokeWidth="3"
+              strokeWidth="2.5"
             />
-            {/* Fluffy Fur Collar */}
-            <path d="M38 82 C55 94 85 94 102 82" stroke="#FFFFFF" strokeWidth="9" strokeLinecap="round" />
-            <circle cx="70" cy="106" r="3" fill="#FFFFFF" />
-            <circle cx="70" cy="116" r="3" fill="#FFFFFF" />
+            {/* Thick Fluffy Fleece Collar */}
+            <path d="M34 86 C55 96 85 96 106 86" stroke="#FFFFFF" strokeWidth="8" strokeLinecap="round" />
+            <circle cx="70" cy="104" r="3" fill="#FEF08A" />
+            <circle cx="70" cy="114" r="3" fill="#FEF08A" />
           </g>
         )}
 
         {currentOutfit === 'gold-champion' && (
           <g>
             <path
-              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
               fill="url(#pipGoldGrad)"
-              stroke="#CA8A04"
-              strokeWidth="3"
+              stroke="#A16207"
+              strokeWidth="2.5"
             />
-            <circle cx="70" cy="104" r="7" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2" />
-            <path d="M70 99 L72 103 L76 104 L73 107 L74 111 L70 108 L66 111 L67 107 L64 104 L68 103 Z" fill="#EAB308" />
+            <circle cx="70" cy="104" r="8" fill="#FEF08A" stroke="#A16207" strokeWidth="2" />
+            <path d="M70 98 L72 102 L77 103 L73 107 L74 112 L70 109 L66 112 L67 107 L63 103 L68 102 Z" fill="#CA8A04" />
           </g>
         )}
 
-        {currentOutfit === 'detective' && (
+        {currentOutfit === 'safari-vest' && (
           <g>
             <path
-              d="M28 80 C28 110 42 124 70 124 C98 124 112 110 112 80 C98 84 86 86 70 86 C54 86 42 84 28 80 Z"
-              fill="url(#pipDetectiveGrad)"
-              stroke="#92400E"
-              strokeWidth="3"
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              fill="url(#pipSafariGrad)"
+              stroke="#365314"
+              strokeWidth="2.5"
             />
-            <path d="M46 84 L70 104 L94 84" stroke="#78350F" strokeWidth="3" strokeLinecap="round" fill="none" />
-            <circle cx="70" cy="112" r="3" fill="#78350F" />
+            <rect x="36" y="98" width="14" height="14" rx="3" fill="#4D7C0F" stroke="#365314" strokeWidth="1.5" />
+            <rect x="90" y="98" width="14" height="14" rx="3" fill="#4D7C0F" stroke="#365314" strokeWidth="1.5" />
+            <path d="M70 90 L70 123" stroke="#FDE047" strokeWidth="2.5" strokeLinecap="round" />
           </g>
         )}
 
@@ -445,7 +479,7 @@ export const Pip: React.FC<PipProps> = ({
         <ellipse cx="44" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
         <ellipse cx="96" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
 
-        {/* ── LAYER 5: EYES & PUPILS (INTELLIGENT CURSOR/CONTENT TRACKING) ── */}
+        {/* ── LAYER 5: EYES & PUPILS (INTELLIGENT CURSOR TRACKING) ── */}
         {!isBlinking ? (
           <g>
             {/* Left Eye White Base */}
@@ -471,8 +505,8 @@ export const Pip: React.FC<PipProps> = ({
           </g>
         )}
 
-        {/* ── LAYER 6: MOUTH & SPEECH VISEMES ── */}
-        {currentState === 'speaking' || isSpeakingStore ? (
+        {/* ── LAYER 6: MOUTH & SPEECH (CALM SMILE WHEN IDLE, MOVES ONLY WHEN SPEAKING) ── */}
+        {currentState === 'speaking' && isSpeakingStore ? (
           mouthViseme === 'open-wide' ? (
             <ellipse cx="70" cy="78" rx="7" ry="5.5" fill="#BE185D" stroke="#1E1B4B" strokeWidth="2" />
           ) : mouthViseme === 'open-small' ? (
@@ -480,16 +514,16 @@ export const Pip: React.FC<PipProps> = ({
           ) : mouthViseme === 'closed' ? (
             <line x1="64" y1="76" x2="76" y2="76" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
           ) : (
-            <path d="M62 74 Q70 82 78 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="#BE185D" />
+            <path d="M62 75 Q70 81 78 75" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
           )
         ) : currentState === 'try_again' ? (
-          <path d="M64 77 Q70 79 76 77" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M64 77 Q70 79 76 77" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
         ) : currentState === 'thinking' ? (
-          <path d="M63 76 Q70 77 77 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M63 76 Q70 77 77 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
         ) : currentState === 'listening' ? (
           <path d="M65 76 Q70 79 75 76" stroke="#1E1B4B" strokeWidth="2.2" strokeLinecap="round" fill="#BE185D" />
         ) : (
-          <path d="M62 74 Q70 82 78 74" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="#BE185D" />
+          <path d="M63 75 Q70 82 77 75" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
         )}
 
         {/* ── LAYER 7: HEADWEAR & GLASSES ── */}
@@ -501,6 +535,16 @@ export const Pip: React.FC<PipProps> = ({
             <circle cx="88" cy="52" r="14" fill="url(#pipGogglesGrad)" stroke="#0284C7" strokeWidth="3" />
             <ellipse cx="84" cy="48" rx="4" ry="2" fill="#FFFFFF" fillOpacity="0.8" />
             <path d="M66 52 Q70 50 74 52" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
+          </g>
+        )}
+
+        {currentHeadwear === 'party-hat' && (
+          <g>
+            {/* Properly Fitted Party Hat Sitting Snugly on Crown */}
+            <polygon points="52,26 70,2 88,26" fill="#EC4899" stroke="#BE185D" strokeWidth="2" />
+            <path d="M57,20 L83,20" stroke="#FBBF24" strokeWidth="3" />
+            <path d="M63,12 L77,12" stroke="#38BDF8" strokeWidth="3" />
+            <circle cx="70" cy="2" r="4.5" fill="#FBBF24" stroke="#D97706" strokeWidth="1.5" />
           </g>
         )}
 
@@ -522,18 +566,26 @@ export const Pip: React.FC<PipProps> = ({
 
         {currentHeadwear === 'crown' && (
           <g>
-            <polygon points="40,32 45,16 58,26 70,10 82,26 95,16 100,32" fill="url(#pipGoldGrad)" stroke="#CA8A04" strokeWidth="2" />
-            <circle cx="45" cy="16" r="2.5" fill="#EF4444" />
-            <circle cx="70" cy="10" r="3" fill="#3B82F6" />
-            <circle cx="95" cy="16" r="2.5" fill="#10B981" />
+            <polygon points="40,28 45,14 58,22 70,8 82,22 95,14 100,28" fill="url(#pipGoldGrad)" stroke="#A16207" strokeWidth="2" />
+            <circle cx="45" cy="14" r="2.5" fill="#EF4444" />
+            <circle cx="70" cy="8" r="3" fill="#3B82F6" />
+            <circle cx="95" cy="14" r="2.5" fill="#10B981" />
           </g>
         )}
 
-        {currentHeadwear === 'party-hat' && (
+        {currentHeadwear === 'fedora' && (
           <g>
-            <polygon points="50,30 70,4 90,30" fill="#EC4899" stroke="#BE185D" strokeWidth="2" />
-            <path d="M56 22 L84 22" stroke="#FBBF24" strokeWidth="2.5" />
-            <circle cx="70" cy="4" r="4" fill="#FBBF24" />
+            <ellipse cx="70" cy="26" rx="42" ry="7" fill="#D97706" stroke="#78350F" strokeWidth="2" />
+            <path d="M46 26 C46 12 56 8 70 8 C84 8 94 12 94 26 Z" fill="#B45309" stroke="#78350F" strokeWidth="2" />
+            <rect x="46" y="22" width="48" height="4" fill="#78350F" />
+          </g>
+        )}
+
+        {currentHeadwear === 'headphones' && (
+          <g>
+            <path d="M24 64 C24 24 116 24 116 64" stroke="#334155" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+            <rect x="18" y="56" width="12" height="22" rx="6" fill="#0EA5E9" stroke="#0369A1" strokeWidth="2" />
+            <rect x="110" y="56" width="12" height="22" rx="6" fill="#0EA5E9" stroke="#0369A1" strokeWidth="2" />
           </g>
         )}
 
@@ -561,11 +613,8 @@ export const Pip: React.FC<PipProps> = ({
             onClick={handleHighFiveClick}
             className="cursor-pointer"
           >
-            {/* Glowing Target Ring */}
             <circle cx="122" cy="70" r="16" fill="rgba(245, 158, 11, 0.25)" stroke="#F59E0B" strokeWidth="2" strokeDasharray="3 2" />
-            {/* Raised Hand Arm */}
             <line x1="105" y1="90" x2="122" y2="70" stroke="#8B5CF6" strokeWidth="9" strokeLinecap="round" />
-            {/* Open Palm */}
             <circle cx="122" cy="70" r="9" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2.5" />
             <circle cx="122" cy="62" r="3" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="1.5" />
             <circle cx="128" cy="65" r="3" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="1.5" />

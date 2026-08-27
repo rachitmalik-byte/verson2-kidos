@@ -48,6 +48,7 @@ export interface Mission {
 export interface ChildProfile {
   name: string;
   grade: string;
+  birthdate?: string; // YYYY-MM-DD
   interests: string[];
   avatar?: string;
 }

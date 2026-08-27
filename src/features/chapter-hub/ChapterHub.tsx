@@ -180,6 +180,18 @@ export function ChapterHub() {
                 <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
                 <span>Field Specimen Journal ({discoveries.length})</span>
               </button>
+
+              <button
+                id="chapter-mystery-quiz-btn"
+                onClick={() => {
+                  sounds.pop();
+                  navigate('/mystery-lab');
+                }}
+                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+              >
+                <Sparkles className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
+                <span>Mystery Specimen Quiz Lab 🔬 (+25🪙)</span>
+              </button>
             </div>
           </div>
         </div>

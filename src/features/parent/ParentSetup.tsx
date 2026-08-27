@@ -47,6 +47,7 @@ export function ParentSetup() {
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
   const [grade, setGrade] = useState('5');
+  const [birthdate, setBirthdate] = useState('2015-06-15');
   const [interests, setSelectedInterests] = useState<string[]>(['inventions', 'microscope']);
   const [pin, setPinState] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
@@ -81,7 +82,7 @@ export function ParentSetup() {
           if (newConfirmPin === pin) {
             sounds.fanfare();
             voiceAssistant.stop();
-            setChild({ name: name.trim() || 'Explorer', grade, interests });
+            setChild({ name: name.trim() || 'Explorer', grade, birthdate, interests });
             setPin(newConfirmPin);
             completeSetup();
             navigate('/chapter-hub');
@@ -204,7 +205,7 @@ export function ParentSetup() {
                 PolyQuest adapts terminology and challenges for Grade 5–6 standards
               </p>
 
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <div className="flex flex-wrap justify-center gap-4 mb-6">
                 {GRADES.map((g) => (
                   <button
                     key={g}
@@ -212,7 +213,7 @@ export function ParentSetup() {
                       sounds.pop();
                       setGrade(g);
                     }}
-                    className={`w-18 h-18 md:w-20 md:h-20 rounded-2xl font-black text-2xl flex flex-col items-center justify-center transition-all cursor-pointer ${
+                    className={`w-16 h-16 md:w-18 md:h-18 rounded-2xl font-black text-xl flex flex-col items-center justify-center transition-all cursor-pointer ${
                       grade === g
                         ? 'btn-3d-emerald scale-105'
                         : 'btn-3d-slate'
@@ -222,6 +223,19 @@ export function ParentSetup() {
                     <span className="text-[10px] uppercase font-bold opacity-80">Grade</span>
                   </button>
                 ))}
+              </div>
+
+              {/* Date of Birth Picker */}
+              <div className="w-full max-w-sm bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 mb-8 text-left shadow-inner">
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+                  🎂 Date of Birth (For Age Adaptation):
+                </label>
+                <input
+                  type="date"
+                  value={birthdate}
+                  onChange={(e) => setBirthdate(e.target.value)}
+                  className="w-full p-3 rounded-xl border-2 border-slate-300 font-black text-sm text-slate-800 bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none"
+                />
               </div>
 
               <button
