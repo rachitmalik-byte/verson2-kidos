@@ -7,7 +7,8 @@ import { CheckCircle2, HelpCircle, Sparkles, Lightbulb } from 'lucide-react';
 export interface InquiryOption {
   id: string;
   label: string;
-  icon: string;
+  icon?: string;
+  image?: string;
   isCorrect: boolean;
   explanation: string;
   hint: string;
@@ -17,6 +18,8 @@ interface InquiryQuestionCardProps {
   title: string;
   question: string;
   scenarioEmoji?: string;
+  scenarioImage?: string;
+  sceneIllustration?: React.ReactNode;
   options: InquiryOption[];
   onSuccess: () => void;
   isCompleted?: boolean;
@@ -26,6 +29,8 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
   title,
   question,
   scenarioEmoji = '🔬',
+  scenarioImage,
+  sceneIllustration,
   options,
   onSuccess,
   isCompleted = false,
@@ -56,7 +61,7 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
 
   return (
     <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl md:rounded-[36px] border-4 border-slate-200 shadow-xl flex flex-col items-center text-center relative overflow-hidden">
-      {/* Floating XP Reward Burst (ADHD Dopamine Feedback) */}
+      {/* Floating XP Reward Burst */}
       <AnimatePresence>
         {showXpReward && (
           <motion.div
@@ -71,8 +76,19 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Scenario Icon & Header */}
-      <span className="text-5xl mb-2 block">{scenarioEmoji}</span>
+      {/* Optional Scene Illustration or Photo Banner */}
+      {sceneIllustration ? (
+        <div className="w-full mb-4 rounded-2xl overflow-hidden shadow-md">
+          {sceneIllustration}
+        </div>
+      ) : scenarioImage ? (
+        <div className="w-44 h-44 rounded-2xl overflow-hidden mb-4 border-2 border-slate-100 shadow-md">
+          <img src={scenarioImage} alt={title} className="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <span className="text-5xl mb-2 block">{scenarioEmoji}</span>
+      )}
+
       <h3
         className="text-xl md:text-2xl font-black text-slate-900 mb-2"
         style={{ fontFamily: 'Nunito, sans-serif' }}
@@ -83,7 +99,7 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
         {question}
       </p>
 
-      {/* Neutral, Balanced Inquiry Options (No Spoilers Before Selection!) */}
+      {/* Neutral, Balanced Inquiry Options */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
         {options.map((opt) => {
           const isSelected = selectedId === opt.id;
@@ -103,7 +119,13 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
                   : 'bg-slate-50/80 hover:bg-white border-slate-200 hover:border-sky-300 text-slate-800 shadow-xs'
               }`}
             >
-              <span className="text-4xl mb-2 block">{opt.icon}</span>
+              {opt.image ? (
+                <div className="w-20 h-20 rounded-xl overflow-hidden mb-2 border border-slate-200 shadow-xs">
+                  <img src={opt.image} alt={opt.label} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                opt.icon && <span className="text-4xl mb-2 block">{opt.icon}</span>
+              )}
               <span
                 className="font-black text-base md:text-lg block tracking-tight"
                 style={{ fontFamily: 'Nunito, sans-serif' }}

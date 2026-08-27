@@ -82,8 +82,23 @@ class VoiceAssistantEngine {
       if (custom) return custom;
     }
 
+    // Prioritize en-US-AnaNeural by default
+    const anaMatch = this.voices.find(
+      (v) =>
+        v.name.includes('en-US-AnaNeural') ||
+        v.name.toLowerCase().includes('ana online') ||
+        v.name.toLowerCase().includes('ana neural') ||
+        (v.name.toLowerCase().includes('ana') && v.lang.startsWith('en'))
+    );
+    if (anaMatch && !state.selectedVoiceName) {
+      return anaMatch;
+    }
+
     const priorityVoices = [
+      'en-US-AnaNeural',
       'Microsoft Ana Online (Natural)',
+      'Microsoft Ana Neural',
+      'Ana',
       'Microsoft Jenny Online (Natural)',
       'Microsoft Aria Online (Natural)',
       'Microsoft Guy Online (Natural)',

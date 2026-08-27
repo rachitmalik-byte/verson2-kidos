@@ -14,6 +14,12 @@ import { bgmEngine } from '@/lib/bgmEngine';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { InquiryQuestionCard } from '@/components/interactive/InquiryQuestionCard';
 import {
+  HighPressurePipeLeakSim,
+  RaceCarTireFrictionSim,
+  MolecularVulcanizationSim,
+  EpoxySyringeMixerSim,
+} from '@/components/interactive/ScenarioSimulators';
+import {
   PlasticIllustration,
   WireIllustration,
   KettleIllustration,
@@ -320,8 +326,8 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 3: Inquiry Challenge without spoilers */}
-            {currentStepIndex >= 3 && (
+            {/* Step 4: Winter Wardrobe Challenge */}
+            {currentStepIndex === 4 && (
               <InquiryQuestionCard
                 title="Winter Wardrobe Challenge"
                 question="You need a lightweight, warm sweater for mountain camping that won't get ruined by clothes moths. Which synthetic fabric mimics wool perfectly?"
@@ -344,6 +350,35 @@ export const DynamicMissionEngine: React.FC = () => {
                     isCorrect: false,
                     explanation: '',
                     hint: 'Rayon mimics silky cool party dresses, not warm winter sweaters!',
+                  },
+                ]}
+              />
+            )}
+
+            {/* Step 5+: Dress for the Occasion Challenge */}
+            {currentStepIndex >= 5 && (
+              <InquiryQuestionCard
+                title="Formal Wedding Party Dress"
+                question="A fashion designer needs a shiny, lustrous dress fabric with the elegant sheen of silk, but affordable and durable. Which fabric fits?"
+                scenarioEmoji="👗✨"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'rayon',
+                    label: 'Rayon (Artificial Silk from Wood Pulp)',
+                    icon: '✨👗',
+                    isCorrect: true,
+                    explanation: 'Rayon has a luxurious silk-like gloss and drape, made by chemically regenerating plant cellulose!',
+                    hint: 'Look for the regenerated fiber historically called "artificial silk"!',
+                  },
+                  {
+                    id: 'jute',
+                    label: 'Coarse Natural Jute Sack Cloth',
+                    icon: '🌾🥔',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Jute is rough and stiff, used for potato sacks rather than formal dresses.',
                   },
                 ]}
               />
@@ -452,8 +487,61 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 2: Socratic Rule & Inquiry Challenge */}
-            {currentStepIndex >= 2 && (
+            {/* Step 2: Molecular Reaction & Safety Golden Rule */}
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-400 shadow-xl text-center flex flex-col items-center">
+                <span className="text-5xl mb-3 block">🔬🔥</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Molecular Reaction: Why Synthetics Melt</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
+                  Synthetic fibres are long chemical polymer chains made from petroleum. When exposed to heat, the polymer chains collapse into a hot liquid plastic puddle that clings to skin.
+                </p>
+                <div className="p-5 bg-rose-100 border-2 border-rose-300 rounded-2xl w-full text-left font-black text-xs text-rose-950 mb-4">
+                  <span className="block text-sm mb-1">🚨 Safety Golden Rule:</span>
+                  Never wear synthetic clothes (Nylon, Polyester, Rayon) while cooking in the kitchen or lighting festival firecrackers!
+                </div>
+                <button
+                  onClick={() => {
+                    sounds.sparkle();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white font-black text-sm rounded-2xl cursor-pointer"
+                >
+                  I Understand the Safety Rule! 🛡️
+                </button>
+              </div>
+            )}
+
+            {/* Step 3: Kitchen Master Chef Apron */}
+            {currentStepIndex === 3 && (
+              <InquiryQuestionCard
+                title="Kitchen Master Chef Safety Apron"
+                question="A professional chef is frying food near open gas flames. Which apron material will protect him from fire accidents?"
+                scenarioEmoji="👨‍🍳🍳"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'cotton-apron',
+                    label: '100% Thick Cotton Canvas Apron',
+                    icon: '🌿👨‍🍳',
+                    isCorrect: true,
+                    explanation: 'Cotton canvas does not melt when exposed to sparks, preventing severe molten plastic burns!',
+                    hint: 'Choose the natural fibre that chars into ash rather than melting into sticky liquid!',
+                  },
+                  {
+                    id: 'nylon-apron',
+                    label: 'Thin Synthetic Nylon Windbreaker Apron',
+                    icon: '🧥🔥',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Thin nylon catches heat in seconds and melts directly onto the skin.',
+                  },
+                ]}
+              />
+            )}
+
+            {/* Step 4+: Diwali Fireworks Safety Challenge */}
+            {currentStepIndex >= 4 && (
               <InquiryQuestionCard
                 title="Diwali Fireworks Safety Challenge"
                 question="You are helping your family light sparklers during a festival celebration. Which outfit is safe to wear near flames?"
@@ -464,7 +552,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'cotton-kurta',
                     label: '100% Natural Cotton Kurta / Dress',
-                    icon: '🌿👨‍🍳',
+                    icon: '🌿✨',
                     isCorrect: true,
                     explanation: 'Cotton does not melt when exposed to heat, preventing severe plastic adhesion burns!',
                     hint: 'Which material burns to harmless ash without melting into hot sticky beads?',
@@ -472,7 +560,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'nylon-kurta',
                     label: 'Synthetic Polyester / Nylon Party Outfit',
-                    icon: '🧥🔥',
+                    icon: '👗🔥',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Synthetics melt in a split second and stick tightly to skin. Never wear near fire!',
@@ -556,30 +644,50 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 2+: Inquiry Challenge */}
-            {currentStepIndex >= 2 && (
+            {/* Step 2: Microscopic Porosity Cross-Section */}
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl text-center flex flex-col items-center">
+                <span className="text-5xl mb-3 block">🔬💨</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Microscopic Porosity Cross-Section</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
+                  Cotton fibres have hollow microscopic pores (lumens) that wick liquid sweat away from your skin through capillary action, evaporating in the breeze and cooling you down!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.sparkle();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
+                >
+                  Got It! Capillary Evaporation Rules! 💨
+                </button>
+              </div>
+            )}
+
+            {/* Step 3+: Inquiry Challenge */}
+            {currentStepIndex >= 3 && (
               <InquiryQuestionCard
-                title="Summer Heat Outfit Selector"
-                question="You are playing soccer outside in 42°C heat. Which shirt will keep your body cool by letting sweat evaporate?"
-                scenarioEmoji="⚽☀️"
+                title="Summer Marathon Runner Outfit"
+                question="You are running a 5K race in 38°C outdoor summer heat. Which outfit will keep your body temperature lowest?"
+                scenarioEmoji="🏃‍♂️☀️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'cotton',
-                    label: '100% Natural Cotton Jersey',
+                    label: '100% Breathable Cotton Jersey',
                     icon: '🌿👕',
                     isCorrect: true,
-                    explanation: 'Cotton has microscopic pores that absorb perspiration and let cool air pass through, lowering body temperature!',
-                    hint: 'Choose the natural fibre known for breathability and sweat absorption!',
+                    explanation: 'Cotton absorbs sweat immediately and lets air circulate, preventing heat exhaustion!',
+                    hint: 'Choose the natural fibre with microscopic pores for sweat evaporation!',
                   },
                   {
                     id: 'poly',
-                    label: 'Synthetic Polyester Shirt',
-                    icon: '👕🧴',
+                    label: 'Synthetic Plastic Rain Jacket',
+                    icon: '🧥⚠️',
                     isCorrect: false,
                     explanation: '',
-                    hint: 'Synthetic polyester does not absorb moisture, trapping body heat and causing skin rashes.',
+                    hint: 'Non-porous synthetics trap hot sweat against your skin, causing overheating.',
                   },
                 ]}
               />
@@ -720,14 +828,15 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {currentStepIndex >= 3 && (
+            {/* Step 3: Thermoplastics vs Thermosets */}
+            {currentStepIndex === 3 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-300 shadow-xl text-center flex flex-col items-center">
                 <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 shadow-md">
                   <img src={thermosetPlugSwitchImg} alt="Thermoset Wall Switch" className="w-full h-full object-cover" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Plastic Superpower Review!</h3>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Thermoplastics vs Thermosets</h3>
                 <p className="text-sm text-slate-600 font-bold mb-6">
-                  Because plastics are non-reactive, lightweight, and easily moulded, they are used for electrical wire coating, water bottles, and lightweight luggage!
+                  Thermoplastics (like PET bottles) can be remelted and recycled over and over. But Thermoset plastics (like Bakelite wall switches) stay permanently rigid and never melt!
                 </p>
                 <button
                   onClick={() => {
@@ -739,6 +848,35 @@ export const DynamicMissionEngine: React.FC = () => {
                   Confirm Plastic Mastery 🎯
                 </button>
               </div>
+            )}
+
+            {/* Step 4+: Inquiry Challenge */}
+            {currentStepIndex >= 4 && (
+              <InquiryQuestionCard
+                title="Chemical Storage Bottle Selector"
+                question="A chemistry lab needs containers to store acidic liquids for 5 years. Why do they pick plastic bottles instead of iron cans?"
+                scenarioEmoji="🧴🧪"
+                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
+                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
+                options={[
+                  {
+                    id: 'non-reactive',
+                    label: 'Plastic is Chemically Non-Reactive & Non-Rusting',
+                    icon: '🛡️🧪',
+                    isCorrect: true,
+                    explanation: 'Plastics do not react with water, air, or acids, making them perfect for safe chemical storage!',
+                    hint: 'Which property prevents plastic from corroding or rusting over time?',
+                  },
+                  {
+                    id: 'rusting-metal',
+                    label: 'Iron Cans that Rust and Corrode',
+                    icon: '🛢️⚠️',
+                    isCorrect: false,
+                    explanation: '',
+                    hint: 'Iron reacts with water and acids, rusting through and spilling dangerous chemicals.',
+                  },
+                ]}
+              />
             )}
           </div>
         );
@@ -861,8 +999,30 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 2+: Inquiry Challenge */}
-            {currentStepIndex >= 2 && (
+            {/* Step 2: PVC Extrusion Safety Lab */}
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-300 shadow-xl text-center flex flex-col items-center">
+                <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 shadow-md">
+                  <img src={pvcInsulatedCableImg} alt="PVC Insulated Cable" className="w-full h-full object-cover" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">PVC Extrusion Safety Lab</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
+                  In electrical cable factories, molten PVC (Polyvinyl Chloride) plastic is extruded smoothly over the central copper wire to build an impenetrable insulating jacket.
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.sparkle();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
+                >
+                  Jacket Extrusion Verified ⚡
+                </button>
+              </div>
+            )}
+
+            {/* Step 3+: Inquiry Challenge */}
+            {currentStepIndex >= 3 && (
               <InquiryQuestionCard
                 title="Electrician Tool Challenge"
                 question="An electrician is repairing a 240V live wall socket. Which tool handle should she use to stay safe?"
@@ -981,7 +1141,28 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {currentStepIndex >= 2 && (
+            {/* Step 2: Molecular Heat Conduction */}
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-300 shadow-xl text-center flex flex-col items-center">
+                <span className="text-5xl mb-3 block">🌡️🥘</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Molecular Heat Conduction</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
+                  Metals conduct heat because free electrons vibrate rapidly across their crystal lattice. But Bakelite's densely cross-linked polymer network traps heat vibrations in place!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.sparkle();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
+                >
+                  Thermal Conduction Mastered 🔥
+                </button>
+              </div>
+            )}
+
+            {/* Step 3+: Inquiry Challenge */}
+            {currentStepIndex >= 3 && (
               <InquiryQuestionCard
                 title="Cookware Safety Designer"
                 question="You are designing a chef frying pan that reaches 250°C on a gas burner. Which handle will protect the chef?"
@@ -1158,8 +1339,73 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 2+: Inquiry Challenge */}
-            {currentStepIndex >= 2 && (
+            {/* Step 2: Understand Biodegradable vs Non-Biodegradable */}
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-emerald-300 shadow-xl text-center flex flex-col items-center">
+                <span className="text-5xl mb-3 block">🌿🔬</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Biodegradable vs Non-Biodegradable</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
+                  Materials that break down naturally by microbes and fungi are <strong>BIODEGRADABLE</strong> (cotton, wood, fruit peel). Synthetic plastics are <strong>NON-BIODEGRADABLE</strong> and last over 450 years.
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.sparkle();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-2xl cursor-pointer"
+                >
+                  I Understand the Science Terms! 🌿
+                </button>
+              </div>
+            )}
+
+            {/* Step 3: The 4 R's Circular Economy Challenge */}
+            {currentStepIndex === 3 && (
+              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-teal-400 shadow-xl">
+                <h3 className="text-2xl font-black text-slate-900 mb-2">The 4 R's Circular Economy Challenge!</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
+                  Tap each action to master the 4 R's that protect Earth's soil and oceans:
+                </p>
+                <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                  {[
+                    { id: 'reduce', title: '1. REDUCE', desc: 'Use less single-use plastic packaging', icon: '📉' },
+                    { id: 'reuse', title: '2. REUSE', desc: 'Carry reusable bottles and cloth totes', icon: '🔄' },
+                    { id: 'recycle', title: '3. RECYCLE', desc: 'Sort plastics into blue recycling bins', icon: '♻️' },
+                    { id: 'refuse', title: '4. REFUSE', desc: 'Say no to single-use plastic straws', icon: '🚫' },
+                  ].map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => {
+                        sounds.pop();
+                        setInteractiveState((p) => {
+                          const next = { ...p, [r.id]: true };
+                          if (['reduce', 'reuse', 'recycle', 'refuse'].every((k) => next[k])) {
+                            next[`step_${currentStepIndex}`] = true;
+                          }
+                          return next;
+                        });
+                      }}
+                      className={`p-4 rounded-2xl border-2 text-center cursor-pointer transition-all ${
+                        interactiveState[r.id] ? 'bg-teal-50 border-teal-500 shadow-md' : 'bg-slate-50 border-slate-200'
+                      }`}
+                    >
+                      <span className="text-3xl mb-1 block">{r.icon}</span>
+                      <span className="font-black text-sm text-slate-900 block">{r.title}</span>
+                      <span className="text-[11px] font-bold text-slate-600">{r.desc}</span>
+                      {interactiveState[r.id] && <span className="text-xs font-black text-emerald-600 mt-1 block">✓ Mastered</span>}
+                    </button>
+                  ))}
+                </div>
+                {interactiveState[`step_${currentStepIndex}`] && (
+                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
+                    🎉 Outstanding! All 4 R's mastered! Tap Next Step → for the final eco-challenge!
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 4+: Inquiry Challenge */}
+            {currentStepIndex >= 4 && (
               <InquiryQuestionCard
                 title="Arjun's Grocery Shopping Choice"
                 question="Arjun is at the market counter with 5 items. Which bag choice protects our oceans and soil?"
@@ -1190,7 +1436,7 @@ export const DynamicMissionEngine: React.FC = () => {
         );
 
       /* ─────────────────────────────────────────────────────────────
-         MISSION 11: STRETCH LAB (Tensile Rubber & Friction Rig)
+         MISSION 11: STRETCH LAB (Race Car Tires & Synthetic Rubber)
       ───────────────────────────────────────────────────────────── */
       case 11:
         return (
@@ -1200,9 +1446,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={vulcanizedCarTireTreadImg} alt="Vulcanized Car Tire" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">The Stretchy Rubber Mystery! 🛞</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Race Track Rubber Mystery! 🏎️🛞</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
-                  Natural rubber comes from milky tree sap (latex). Synthetic rubber is formulated with petrochemicals to handle race car speed and blazing friction!
+                  Natural rubber comes from milky tree latex. But racing cars at 300 km/h heat tyres up to 160°C! How did chemists transform rubber into high-grip racing tyres?
                 </p>
                 <button
                   onClick={() => {
@@ -1212,15 +1458,27 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Rubber Test Bench 🔬
+                  Enter Tire Friction Lab 🛞
                 </button>
               </div>
             )}
 
-            {currentStepIndex >= 1 && (
+            {currentStepIndex === 1 && (
+              <div className="w-full max-w-3xl flex flex-col items-center">
+                <RaceCarTireFrictionSim onTested={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })} />
+              </div>
+            )}
+
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-3xl flex flex-col items-center">
+                <MolecularVulcanizationSim onCompleted={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })} />
+              </div>
+            )}
+
+            {currentStepIndex >= 3 && (
               <InquiryQuestionCard
-                title="Vehicle Tyre Engineering Challenge"
-                question="Formula 1 race cars travel at 300 km/h with tyres reaching 120°C. Which rubber formulation must engineers specify?"
+                title="Formula 1 Grand Prix Tire Engineering"
+                question="Formula 1 race cars travel at 300 km/h with tyres reaching 160°C. Which rubber formulation must engineers specify?"
                 scenarioEmoji="🏎️🛞"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
@@ -1230,8 +1488,8 @@ export const DynamicMissionEngine: React.FC = () => {
                     label: 'Vulcanized Synthetic Buna Rubber Tire',
                     icon: '🛞⚙️',
                     isCorrect: true,
-                    explanation: 'Synthetic rubber combined with vulcanized sulphur creates heat-resistant cross-links that withstand immense road friction!',
-                    hint: 'Which rubber is chemically engineered to withstand extreme heat and friction?',
+                    explanation: 'Synthetic rubber combined with vulcanized sulphur creates heat-resistant 3D cross-links that withstand immense road friction!',
+                    hint: 'Which rubber is chemically engineered with sulfur cross-links to withstand extreme heat and friction?',
                   },
                   {
                     id: 'latex-rubber',
@@ -1239,7 +1497,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     icon: '🌳🎈',
                     isCorrect: false,
                     explanation: '',
-                    hint: 'Natural uncured tree latex becomes sticky and melts into liquid under high road friction.',
+                    hint: 'Natural uncured tree latex becomes sticky and melts into liquid paste under high road friction.',
                   },
                 ]}
               />
@@ -1258,9 +1516,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={epoxyResinAdhesiveGlueImg} alt="Epoxy Adhesive Sealant" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">The Emergency Repair Station! 🧴</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Emergency Repair Station! 🧪🔧</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
-                  A high-pressure water pipe cracked! Water is spraying everywhere! Let's choose the right synthetic adhesive to seal it!
+                  A high-pressure plumbing pipe cracked! Water is blasting out at 80 PSI! Let's choose the right synthetic adhesive to seal the leak!
                 </p>
                 <button
                   onClick={() => {
@@ -1275,29 +1533,41 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {currentStepIndex >= 1 && (
+            {currentStepIndex === 1 && (
+              <div className="w-full max-w-3xl flex flex-col items-center">
+                <HighPressurePipeLeakSim onSealed={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })} />
+              </div>
+            )}
+
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-3xl flex flex-col items-center">
+                <EpoxySyringeMixerSim onMixed={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })} />
+              </div>
+            )}
+
+            {currentStepIndex >= 3 && (
               <InquiryQuestionCard
-                title="Emergency High-Pressure Pipe Seal"
-                question="Water is blasting out of a cracked plumbing pipe at 80 PSI. Which adhesive will stop the pressurized leak?"
-                scenarioEmoji="🚿🔧"
+                title="Aerospace Spacecraft Heat-Shield Repair"
+                question="A spacecraft re-entering Earth's atmosphere experiences intense 1,500°C friction heat and mechanical vibration. Which adhesive bonds heat-shield tiles to the fuselage?"
+                scenarioEmoji="🚀🛡️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
-                    id: 'epoxy-sealant',
-                    label: 'Synthetic Epoxy Waterproof Sealant',
-                    icon: '🧴✨',
+                    id: 'structural-epoxy',
+                    label: 'High-Temperature Synthetic Structural Epoxy',
+                    icon: '🧪🚀',
                     isCorrect: true,
-                    explanation: 'Synthetic epoxy cures into an insoluble cross-linked polymer network that withstands hundreds of pounds of water pressure!',
-                    hint: 'Choose the synthetic adhesive designed for waterproof plumbing repairs!',
+                    explanation: 'Cross-linked synthetic polymer epoxies resist extreme thermal shock and hold space tiles securely during atmospheric re-entry!',
+                    hint: 'Which adhesive cures into a cross-linked polymer network engineered for high-stress aerospace engineering?',
                   },
                   {
-                    id: 'pine-resin',
-                    label: 'Natural Pine Tree Sticky Resin',
-                    icon: '🌲💧',
+                    id: 'wheat-paste',
+                    label: 'Natural Flour & Water Starch Paste',
+                    icon: '🌾🍞',
                     isCorrect: false,
                     explanation: '',
-                    hint: 'Natural tree resin is water-soluble and washes away instantly under high water pressure.',
+                    hint: 'Organic flour paste burns to ash at 180°C and has virtually zero water or shear resistance.',
                   },
                 ]}
               />
