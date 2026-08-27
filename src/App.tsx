@@ -10,6 +10,7 @@ import { RaincoatMission } from '@/features/missions/mission-01-raincoat/Raincoa
 import { SortingMission } from '@/features/missions/mission-02-sorting/SortingMission';
 import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/NylonStrengthMission';
 import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafetyMission';
+import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
 import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
 import { MysteryObjectQuiz } from '@/features/mystery-lab/MysteryObjectQuiz';
@@ -45,6 +46,7 @@ export function App() {
           <Route path="/chapter/3/mission/2" element={<SortingMission />} />
           <Route path="/chapter/3/mission/3" element={<NylonStrengthMission />} />
           <Route path="/chapter/3/mission/4" element={<FireSafetyMission />} />
+          <Route path="/chapter/3/mission/8" element={<WireMission />} />
           <Route path="/chapter/3/mission/:missionNum" element={<DynamicMissionEngine />} />
 
           {/* Fallback */}
