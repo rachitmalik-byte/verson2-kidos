@@ -63,6 +63,18 @@ import copperWireMacroImg from '@/assets/images/wire/copper_wire_macro.jpg';
 import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
 import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
 import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
+import boilingTeaKettleSteamImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
+import bakelitePanHandleImg from '@/assets/images/experiments/bakelite_pan_handle.jpg';
+import castIronScorchingHandleImg from '@/assets/images/experiments/cast_iron_scorching_handle.jpg';
+import summerSweatCottonShirtImg from '@/assets/images/experiments/summer_sweat_cotton_shirt.jpg';
+import polyesterSportShirtImg from '@/assets/images/experiments/polyester_sport_shirt.jpg';
+import petWaterBottleMoldingImg from '@/assets/images/experiments/pet_water_bottle_molding.jpg';
+import thermosetPlugSwitchImg from '@/assets/images/experiments/thermoset_plug_switch.jpg';
+import polycottonBlendFabricImg from '@/assets/images/experiments/polycotton_blend_fabric.jpg';
+import rubberTreeTappingLatexImg from '@/assets/images/experiments/rubber_tree_tapping_latex.jpg';
+import vulcanizedCarTireTreadImg from '@/assets/images/experiments/vulcanized_car_tire_tread.jpg';
+import epoxyResinAdhesiveGlueImg from '@/assets/images/experiments/epoxy_resin_adhesive_glue.jpg';
+import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy_jump.jpg';
 
 export const DynamicMissionEngine: React.FC = () => {
   const { missionNum } = useParams<{ missionNum: string }>();
@@ -470,7 +482,9 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 0: Hook */}
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl">
-                <Sun className="w-20 h-20 text-amber-500 mx-auto mb-3 animate-spin" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={summerSweatCottonShirtImg} alt="Cotton Shirt in Sun" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The 42°C Scorching Summer Mystery</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base leading-relaxed">
                   When you run outside in the summer sun, your body perspires (sweats) to cool you down. But why does wearing a synthetic shirt feel like wrapping yourself in plastic wrap?
@@ -488,7 +502,7 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Evaporative Cooling Sandbox */}
+            {/* Step 1: Evaporative Cooling Sandbox with Real Photos */}
             {currentStepIndex === 1 && (
               <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Perspiration & Evaporation Simulator</h3>
@@ -500,23 +514,23 @@ export const DynamicMissionEngine: React.FC = () => {
                   {/* Cotton */}
                   <div className="p-5 bg-emerald-50 rounded-2xl border-3 border-emerald-300 text-center flex flex-col items-center">
                     <span className="font-black text-slate-900 mb-2">1. Natural Cotton</span>
-                    <div className="w-28 h-28 rounded-2xl bg-white border-2 border-emerald-300 flex flex-col items-center justify-center p-2">
-                      <span className="text-3xl">{interactiveState.sprayed ? '💨🌿' : '🌿👕'}</span>
-                      <span className="text-[10px] font-black text-emerald-800 mt-1">
-                        {interactiveState.sprayed ? 'Pores Absorb & Evaporate Cool Air!' : 'Dry Cotton Pores'}
-                      </span>
+                    <div className="w-36 h-36 rounded-2xl bg-white border-2 border-emerald-300 overflow-hidden shadow-md p-1 flex items-center justify-center">
+                      <img src={summerSweatCottonShirtImg} alt="Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
                     </div>
+                    <span className="text-[11px] font-bold text-emerald-800 mt-2">
+                      {interactiveState.sprayed ? '✓ Absorbs Perspiration & Cools Skin!' : 'Porous natural plant cellulose'}
+                    </span>
                   </div>
 
                   {/* Polyester */}
                   <div className="p-5 bg-rose-50 rounded-2xl border-3 border-rose-300 text-center flex flex-col items-center">
                     <span className="font-black text-slate-900 mb-2">2. Synthetic Polyester</span>
-                    <div className="w-28 h-28 rounded-2xl bg-white border-2 border-rose-300 flex flex-col items-center justify-center p-2">
-                      <span className="text-3xl">{interactiveState.sprayed ? '💧🥵' : '👕🧴'}</span>
-                      <span className="text-[10px] font-black text-rose-700 mt-1">
-                        {interactiveState.sprayed ? 'Traps Hot Sweat Pockets!' : 'Non-porous plastic'}
-                      </span>
+                    <div className="w-36 h-36 rounded-2xl bg-white border-2 border-rose-300 overflow-hidden shadow-md p-1 flex items-center justify-center">
+                      <img src={polyesterSportShirtImg} alt="Polyester Shirt" className="w-full h-full object-cover rounded-xl" />
                     </div>
+                    <span className="text-[11px] font-bold text-rose-700 mt-2">
+                      {interactiveState.sprayed ? '⚠️ Traps Hot Sweat & Heat Pockets!' : 'Non-porous synthetic polymer'}
+                    </span>
                   </div>
                 </div>
 
@@ -571,7 +585,9 @@ export const DynamicMissionEngine: React.FC = () => {
           <div className="w-full max-w-4xl flex flex-col items-center">
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl">
-                <PlasticIllustration className="w-24 h-24 mx-auto mb-3" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={petWaterBottleMoldingImg} alt="Plastic Bottle Molding" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">Why is Plastic Everywhere?</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   Look around! Water bottles, chair legs, charging cords, and toys are all made of plastic. What gives synthetic plastic its superpowers?
@@ -631,7 +647,9 @@ export const DynamicMissionEngine: React.FC = () => {
 
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-300 shadow-xl flex flex-col items-center text-center">
-                <span className="text-5xl mb-2">🔄🏭</span>
+                <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 shadow-md">
+                  <img src={petWaterBottleMoldingImg} alt="Moulded Plastic" className="w-full h-full object-cover" />
+                </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">
                   Interactive Heat & Pressure Moulding Simulator!
                 </h3>
@@ -684,9 +702,8 @@ export const DynamicMissionEngine: React.FC = () => {
                 </div>
                 {interactiveState.pressureApplied && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full">
-                    <span className="text-4xl block mb-1">🦆✨</span>
                     <span className="font-black text-sm text-emerald-950 block">
-                      Moulding Complete! A perfect toy duck popped out of the press!
+                      ✨ Moulding Complete! High-strength thermoplastic bottle formed!
                     </span>
                   </div>
                 )}
@@ -695,7 +712,9 @@ export const DynamicMissionEngine: React.FC = () => {
 
             {currentStepIndex >= 3 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-300 shadow-xl text-center flex flex-col items-center">
-                <span className="text-5xl mb-2">💡🎯</span>
+                <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 shadow-md">
+                  <img src={thermosetPlugSwitchImg} alt="Thermoset Wall Switch" className="w-full h-full object-cover" />
+                </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Plastic Superpower Review!</h3>
                 <p className="text-sm text-slate-600 font-bold mb-6">
                   Because plastics are non-reactive, lightweight, and easily moulded, they are used for electrical wire coating, water bottles, and lightweight luggage!
@@ -723,7 +742,9 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 0: Hook */}
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl">
-                <WireIllustration className="w-24 h-24 mx-auto mb-3" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={copperWireMacroImg} alt="Copper Wire" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The Bare Wire Mystery! ⚡</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   Pip is building an electrical circuit. Why do electric wires always have shiny copper inside and soft plastic on the outside?
@@ -749,7 +770,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   Tap each material to place it into the open electrical circuit and see if the lightbulb glows!
                 </p>
 
-                {/* Circuit Lightbulb Display */}
+                {/* Circuit Lightbulb Display with Real Lightbulb Photo */}
                 <div className="p-6 bg-slate-900 rounded-3xl w-full max-w-md mb-6 flex items-center justify-around text-white border-4 border-slate-700">
                   <div className="text-center">
                     <span className="text-3xl block">🔋</span>
@@ -766,29 +787,27 @@ export const DynamicMissionEngine: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="text-center">
-                    <span
-                      className={`text-4xl block transition-all duration-300 ${
-                        interactiveState.conducts
-                          ? 'filter drop-shadow-[0_0_20px_#FBBF24] scale-125'
-                          : 'opacity-40 grayscale'
-                      }`}
-                    >
-                      💡
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-400">
+                  <div className="flex flex-col items-center">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 flex items-center justify-center p-1">
+                      {interactiveState.conducts ? (
+                        <img src={lightbulbGlowingBrightImg} alt="Bulb Lit" className="w-full h-full object-cover rounded-xl filter drop-shadow-[0_0_15px_#FBBF24]" />
+                      ) : (
+                        <Lightbulb className="w-8 h-8 text-slate-600" />
+                      )}
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 mt-1">
                       {interactiveState.conducts ? 'LIGHTS UP! ✓' : 'Dark (Off)'}
                     </span>
                   </div>
                 </div>
 
-                {/* Material Selectors */}
+                {/* Material Selectors with Real Photos */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full mb-4">
                   {[
-                    { id: 'copper', name: 'Copper Wire', icon: '⚡', conducts: true, type: 'Conductor' },
-                    { id: 'steel', name: 'Steel Key', icon: '🔑', conducts: true, type: 'Conductor' },
-                    { id: 'plastic', name: 'Plastic Straw', icon: '🥤', conducts: false, type: 'Insulator' },
-                    { id: 'rubber', name: 'Rubber Eraser', icon: '🧽', conducts: false, type: 'Insulator' },
+                    { id: 'copper', name: 'Copper Wire', image: copperWireMacroImg, conducts: true, type: 'Conductor' },
+                    { id: 'steel', name: 'Steel Key', image: copperWireMacroImg, conducts: true, type: 'Conductor' },
+                    { id: 'plastic', name: 'Plastic Straw', image: pvcInsulatedCableImg, conducts: false, type: 'Insulator' },
+                    { id: 'rubber', name: 'Rubber Eraser', image: pvcInsulatedCableImg, conducts: false, type: 'Insulator' },
                   ].map((mat) => (
                     <button
                       key={mat.id}
@@ -807,13 +826,15 @@ export const DynamicMissionEngine: React.FC = () => {
                           return next;
                         });
                       }}
-                      className={`p-3.5 rounded-2xl border-2 text-center cursor-pointer transition-all ${
+                      className={`p-3.5 rounded-2xl border-2 text-center cursor-pointer transition-all flex flex-col items-center ${
                         interactiveState[mat.id]
                           ? 'bg-amber-100 border-amber-500 font-black'
                           : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
-                      <span className="text-2xl block mb-1">{mat.icon}</span>
+                      <div className="w-14 h-14 rounded-xl overflow-hidden mb-1 border border-slate-200">
+                        <img src={mat.image} alt={mat.name} className="w-full h-full object-cover" />
+                      </div>
                       <span className="text-xs font-black text-slate-900 block">{mat.name}</span>
                       <span className={`text-[10px] font-bold ${mat.conducts ? 'text-amber-700' : 'text-sky-700'}`}>
                         {mat.type}
@@ -869,7 +890,9 @@ export const DynamicMissionEngine: React.FC = () => {
           <div className="w-full max-w-4xl flex flex-col items-center">
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-rose-300 shadow-xl">
-                <KettleIllustration className="w-24 h-24 mx-auto mb-3" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={boilingTeaKettleSteamImg} alt="Boiling Tea Kettle" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">Save Pip's Hand! 🫖</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   The tea kettle is boiling at 100°C! The pot is made of metal to boil water fast, but what material will keep the handle cool?
@@ -887,32 +910,65 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
+            {/* Step 1: Real Photo Handle Test Bench */}
             {currentStepIndex === 1 && (
-              <InquiryQuestionCard
-                title="Kettle Handle Material Test"
-                question="The kettle is bubbling with 100°C steam. Which material should Pip choose for the lifting handle?"
-                scenarioEmoji="🫖🌡️"
-                isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
-                onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
-                options={[
-                  {
-                    id: 'bakelite',
-                    label: 'Thermosetting Bakelite Plastic',
-                    icon: '🛡️🫖',
-                    isCorrect: true,
-                    explanation: 'Bakelite plastic is a thermal insulator and does not soften or conduct heat, staying cool at room temperature!',
-                    hint: 'Choose the synthetic polymer known for resisting heat in kitchen appliances!',
-                  },
-                  {
-                    id: 'iron',
-                    label: 'Cast Iron Metal Grip',
-                    icon: '🔥🍳',
-                    isCorrect: false,
-                    explanation: '',
-                    hint: 'Iron is a thermal conductor! Heat from boiling water travels right up the metal handle.',
-                  },
-                ]}
-              />
+              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Kettle Handle Material Test</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
+                  The kettle is bubbling with 100°C steam. Tap each handle to test its temperature and see which keeps Pip's hand safe!
+                </p>
+
+                <div className="grid grid-cols-2 gap-6 w-full mb-6">
+                  {/* Bakelite Handle */}
+                  <button
+                    onClick={() => {
+                      sounds.success();
+                      setInteractiveState((p) => ({ ...p, testedBakelite: true, [`step_${currentStepIndex}`]: true }));
+                    }}
+                    className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer ${
+                      interactiveState.testedBakelite
+                        ? 'bg-emerald-50 border-emerald-500 ring-4 ring-emerald-300 shadow-xl scale-102'
+                        : 'bg-white border-slate-200 hover:border-amber-300 shadow-md'
+                    }`}
+                  >
+                    <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 bg-slate-50 p-1">
+                      <img src={bakelitePanHandleImg} alt="Bakelite Pan Handle" className="w-full h-full object-cover rounded-xl" />
+                    </div>
+                    <span className="font-black text-sm text-slate-900">1. Thermosetting Bakelite Plastic</span>
+                    <span className="text-[11px] font-black text-emerald-800 bg-emerald-200 px-3 py-0.5 rounded-full mt-2">
+                      {interactiveState.testedBakelite ? '✓ Temperature: 26°C (Cool & Safe!)' : 'Tap to Test Temperature'}
+                    </span>
+                  </button>
+
+                  {/* Cast Iron Handle */}
+                  <button
+                    onClick={() => {
+                      sounds.boing();
+                      voiceAssistant.speak('Ouch! Cast iron conducts scorching 100°C heat straight from the boiling water!');
+                      setInteractiveState((p) => ({ ...p, testedIron: true }));
+                    }}
+                    className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer ${
+                      interactiveState.testedIron
+                        ? 'bg-rose-50 border-rose-500 ring-4 ring-rose-300 shadow-xl'
+                        : 'bg-white border-slate-200 hover:border-amber-300 shadow-md'
+                    }`}
+                  >
+                    <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 bg-slate-50 p-1">
+                      <img src={castIronScorchingHandleImg} alt="Cast Iron Handle" className="w-full h-full object-cover rounded-xl" />
+                    </div>
+                    <span className="font-black text-sm text-slate-900">2. Bare Cast Iron Metal Grip</span>
+                    <span className="text-[11px] font-black text-rose-800 bg-rose-200 px-3 py-0.5 rounded-full mt-2">
+                      {interactiveState.testedIron ? '⚠️ Temperature: 98°C (Scorching Hot!)' : 'Tap to Test Temperature'}
+                    </span>
+                  </button>
+                </div>
+
+                {interactiveState.testedBakelite && (
+                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
+                    🎉 Perfect Science Choice! Bakelite is a thermosetting plastic insulator that does not soften or conduct heat, protecting Pip’s fingers!
+                  </div>
+                )}
+              </div>
             )}
 
             {currentStepIndex >= 2 && (
@@ -954,10 +1010,12 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 0: Hook */}
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-emerald-300 shadow-xl">
-                <Layers className="w-24 h-24 text-sky-500 mx-auto mb-3" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={naturalWoodTimberImg} alt="Decaying Wood in Soil" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The 500-Year Underground Time Travel</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
-                  What happens when trash is buried underground? Why does an apple core vanish in days while a plastic bottle stays forever?
+                  What happens when trash is buried underground? Why does natural wood vanish in weeks while synthetic plastic stays for 500 years?
                 </p>
                 <button
                   onClick={() => {
@@ -972,7 +1030,7 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Time Slider Sandbox */}
+            {/* Step 1: Time Slider Sandbox with Real Photos */}
             {currentStepIndex === 1 && (
               <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl">
                 <h3 className="text-2xl font-black text-slate-900 mb-2">500-Year Soil Decay Simulator</h3>
@@ -1007,25 +1065,25 @@ export const DynamicMissionEngine: React.FC = () => {
                   />
                 </div>
 
-                {/* Soil Observation Box */}
+                {/* Soil Observation Box with Real Photos */}
                 <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300 text-center">
-                    <span className="font-black text-xs text-slate-900 block mb-1">1. Organic Banana Peel</span>
-                    <span className="text-4xl block my-1">
-                      {(interactiveState.timeStep ?? 0) === 0 ? '🍌' : '🌱✨'}
-                    </span>
+                  <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300 text-center flex flex-col items-center">
+                    <span className="font-black text-xs text-slate-900 block mb-2">1. Organic Natural Wood</span>
+                    <div className="w-28 h-28 rounded-xl overflow-hidden mb-2 border border-slate-200">
+                      <img src={naturalWoodTimberImg} alt="Wood" className="w-full h-full object-cover" />
+                    </div>
                     <span className="text-xs font-bold text-emerald-800">
                       {(interactiveState.timeStep ?? 0) === 0
-                        ? 'Fresh Peel'
-                        : 'Decomposed into Fertile Compost! ✓'}
+                        ? 'Fresh Natural Timber'
+                        : 'Decomposed into Fertile Soil Compost! ✓'}
                     </span>
                   </div>
 
-                  <div className="p-4 bg-rose-50 rounded-2xl border-2 border-rose-300 text-center">
-                    <span className="font-black text-xs text-slate-900 block mb-1">2. Plastic Water Bottle</span>
-                    <span className="text-4xl block my-1">
-                      {(interactiveState.timeStep ?? 0) < 3 ? '🫙' : '⚠️🧪'}
-                    </span>
+                  <div className="p-4 bg-rose-50 rounded-2xl border-2 border-rose-300 text-center flex flex-col items-center">
+                    <span className="font-black text-xs text-slate-900 block mb-2">2. Synthetic Plastic Pellets</span>
+                    <div className="w-28 h-28 rounded-xl overflow-hidden mb-2 border border-slate-200">
+                      <img src={plasticPetPelletsImg} alt="Plastic Pellets" className="w-full h-full object-cover" />
+                    </div>
                     <span className="text-xs font-bold text-rose-700">
                       {(interactiveState.timeStep ?? 0) < 3
                         ? '100% Intact & Undigested!'
@@ -1081,7 +1139,9 @@ export const DynamicMissionEngine: React.FC = () => {
           <div className="w-full max-w-4xl flex flex-col items-center">
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl">
-                <RubberIllustration className="w-24 h-24 mx-auto mb-3" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={vulcanizedCarTireTreadImg} alt="Vulcanized Car Tire" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The Stretchy Rubber Mystery! 🛞</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   Natural rubber comes from milky tree sap (latex). Synthetic rubber is formulated with petrochemicals to handle race car speed and blazing friction!
@@ -1109,7 +1169,7 @@ export const DynamicMissionEngine: React.FC = () => {
                 options={[
                   {
                     id: 'synthetic-rubber',
-                    label: 'Vulcanized Synthetic Buna Rubber',
+                    label: 'Vulcanized Synthetic Buna Rubber Tire',
                     icon: '🛞⚙️',
                     isCorrect: true,
                     explanation: 'Synthetic rubber combined with vulcanized sulphur creates heat-resistant cross-links that withstand immense road friction!',
@@ -1137,7 +1197,9 @@ export const DynamicMissionEngine: React.FC = () => {
           <div className="w-full max-w-4xl flex flex-col items-center">
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl">
-                <Wrench className="w-24 h-24 text-amber-500 mx-auto mb-3" />
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
+                  <img src={epoxyResinAdhesiveGlueImg} alt="Epoxy Adhesive Sealant" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The Emergency Repair Station! 🧴</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   A high-pressure water pipe cracked! Water is spraying everywhere! Let's choose the right synthetic adhesive to seal it!
@@ -1334,7 +1396,9 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 5: Grand Graduation Ceremony + Home Quest */}
             {currentStepIndex >= 5 && (
               <div className="flex flex-col items-center">
-                <Trophy className="w-28 h-28 text-amber-500 mx-auto mb-4 animate-bounce" />
+                <div className="w-56 h-56 rounded-3xl overflow-hidden mb-4 border-4 border-amber-400 shadow-2xl">
+                  <img src={parachuteCanopyJumpImg} alt="Graduation Skydive" className="w-full h-full object-cover" />
+                </div>
                 <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                   Grand Science Champion! 🏕️
                 </h2>
