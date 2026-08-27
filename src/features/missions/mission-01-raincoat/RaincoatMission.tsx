@@ -18,6 +18,7 @@ import {
   WoodIllustration,
 } from '@/components/illustrations/MaterialIllustrations';
 import { Droplet, Sparkles, Check, ArrowRight, ShieldCheck, Feather, Sun, AlertCircle, Lightbulb } from 'lucide-react';
+import { bgmEngine } from '@/lib/bgmEngine';
 
 type Phase = 'HOOK' | 'INSPECT' | 'CHOOSE' | 'UNDERSTANDING' | 'PRACTICE' | 'APPLY';
 
@@ -41,6 +42,20 @@ export function RaincoatMission() {
   const phaseOrder: Phase[] = ['HOOK', 'INSPECT', 'CHOOSE', 'UNDERSTANDING', 'PRACTICE', 'APPLY'];
   const currentStepIndex = phaseOrder.indexOf(currentPhase);
   const totalSteps = phaseOrder.length;
+
+  // Dynamic Case-Themed BGM Track Switching
+  React.useEffect(() => {
+    if (currentPhase === 'HOOK' || currentPhase === 'INSPECT') {
+      bgmEngine.setTrack('rainy-storm');
+    } else if (currentPhase === 'PRACTICE') {
+      bgmEngine.setTrack('high-energy-sprint');
+    } else if (currentPhase === 'APPLY') {
+      bgmEngine.setTrack('sky-rescue');
+    } else {
+      bgmEngine.setTrack('playful-lab');
+    }
+  }, [currentPhase]);
+
 
   const handleNextPhase = () => {
     setFeedback(null);

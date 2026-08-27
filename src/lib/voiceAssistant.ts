@@ -1,9 +1,10 @@
 // ─── Emotive Human-like Voice Assistant Engine ───
-// Expressive sentence inflection (curiosity on '?', enthusiasm on '!'), breath pauses, and top-tier neural voices
+// Synchronized word boundaries, custom voice & pace settings, and dynamic BGM audio ducking
 import { useAudioStore } from '@/stores/audioStore';
+import { bgmEngine } from '@/lib/bgmEngine';
 
 export type SpeakingListener = (isSpeaking: boolean) => void;
-export type WordBoundaryListener = (charIndex: number, spokenText: string) => void;
+export type WordBoundaryListener = (charIndex: number, spokenText: string, wordIndex?: number) => void;
 
 class VoiceAssistantEngine {
   private voices: SpeechSynthesisVoice[] = [];
@@ -20,12 +21,16 @@ class VoiceAssistantEngine {
         this.initVoices();
       };
 
-      // Global interaction unlock listener
+      // Global interaction unlock listener (also starts default BGM on first interaction!)
       const unlock = () => {
         if (!this.isUnlocked) {
           this.isUnlocked = true;
           try {
             window.speechSynthesis.resume();
+            const state = useAudioStore.getState();
+            if (!state.isBgmMuted && !bgmEngine.getIsPlaying()) {
+              bgmEngine.start(state.currentBgmTrack);
+            }
           } catch {}
           window.removeEventListener('click', unlock);
           window.removeEventListener('touchstart', unlock);
@@ -52,10 +57,23 @@ class VoiceAssistantEngine {
     this.voices = window.speechSynthesis.getVoices();
   }
 
-  // Selects the most friendly, natural, and expressive human voice available
+  getAllVoices(): SpeechSynthesisVoice[] {
+    if (this.voices.length === 0) {
+      this.initVoices();
+    }
+    return this.voices.filter((v) => v.lang.startsWith('en'));
+  }
+
+  // Selects the user-selected voice or the highest quality natural human voice
   getBestHumanVoice(): SpeechSynthesisVoice | null {
     if (this.voices.length === 0) {
       this.initVoices();
+    }
+
+    const state = useAudioStore.getState();
+    if (state.selectedVoiceName) {
+      const custom = this.voices.find((v) => v.name === state.selectedVoiceName);
+      if (custom) return custom;
     }
 
     const priorityVoices = [
@@ -89,7 +107,6 @@ class VoiceAssistantEngine {
       if (match) return match;
     }
 
-    // Fallback: English voice without legacy robotic desktop moniker
     const nonRobotic = this.voices.find(
       (v) =>
         v.lang.startsWith('en') &&
@@ -121,10 +138,12 @@ class VoiceAssistantEngine {
 
   private notifySpeaking(speaking: boolean) {
     this.listeners.forEach((cb) => cb(speaking));
+    // Dynamic BGM Ducking: Lower music volume when Pip is talking
+    bgmEngine.duck(speaking);
   }
 
-  private notifyBoundary(charIndex: number, text: string) {
-    this.boundaryListeners.forEach((cb) => cb(charIndex, text));
+  private notifyBoundary(charIndex: number, text: string, wordIndex?: number) {
+    this.boundaryListeners.forEach((cb) => cb(charIndex, text, wordIndex));
   }
 
   private clearFallbackTimer() {
@@ -134,7 +153,7 @@ class VoiceAssistantEngine {
     }
   }
 
-  // Speaks with natural friendly human prosody, emotional pauses, and pitch inflection
+  // Speaks with custom speed/pitch preferences, emotional prosody, and exact word sync
   speak(text: string, onEnd?: () => void) {
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || this.isMuted()) {
       if (onEnd) onEnd();
@@ -143,7 +162,7 @@ class VoiceAssistantEngine {
 
     this.stop();
 
-    // Clean emojis & format conversational breathing pauses
+    // Clean emojis & normalize whitespace
     const cleanedText = text
       .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
       .replace(/\.\.\./g, ', ')
@@ -164,25 +183,29 @@ class VoiceAssistantEngine {
       utterance.voice = voice;
     }
 
-    // Dynamic Pitch & Rate contour based on emotional punctuation
+    const state = useAudioStore.getState();
+    const baseRate = state.ttsSpeed || 0.94;
+    const basePitch = state.ttsPitch || 1.08;
+
     const isQuestion = cleanedText.includes('?');
     const isExcited = cleanedText.includes('!');
 
     if (isQuestion) {
-      utterance.rate = 0.93; // Deliberate questioning cadence
-      utterance.pitch = 1.14; // Rising inflection for curiosity
+      utterance.rate = baseRate * 0.98;
+      utterance.pitch = basePitch * 1.06;
     } else if (isExcited) {
-      utterance.rate = 0.96; // Energetic storytelling
-      utterance.pitch = 1.12; // Cheerful enthusiasm
+      utterance.rate = baseRate * 1.02;
+      utterance.pitch = basePitch * 1.04;
     } else {
-      utterance.rate = 0.94; // Warm, friendly conversational pace
-      utterance.pitch = 1.08; // Friendly, engaging tone
+      utterance.rate = baseRate;
+      utterance.pitch = basePitch;
     }
 
     utterance.volume = 1.0;
 
     let receivedNativeBoundary = false;
 
+    // Native browser word boundary event
     utterance.onboundary = (event) => {
       receivedNativeBoundary = true;
       this.notifyBoundary(event.charIndex, cleanedText);
@@ -190,18 +213,18 @@ class VoiceAssistantEngine {
 
     utterance.onstart = () => {
       this.notifySpeaking(true);
-      this.notifyBoundary(0, cleanedText);
+      this.notifyBoundary(0, cleanedText, 0);
 
-      // Smooth fallback timer for mobile webkit browsers
+      // Smooth fallback timer
       const words = cleanedText.split(/\s+/);
       let wordIdx = 0;
       let charPos = 0;
-      const msPerWord = 320;
+      const msPerWord = Math.max(180, Math.round(300 / baseRate));
 
       this.clearFallbackTimer();
       this.fallbackTimer = window.setInterval(() => {
         if (!receivedNativeBoundary && wordIdx < words.length) {
-          this.notifyBoundary(charPos, cleanedText);
+          this.notifyBoundary(charPos, cleanedText, wordIdx);
           charPos += words[wordIdx].length + 1;
           wordIdx++;
         }
@@ -211,7 +234,7 @@ class VoiceAssistantEngine {
     const cleanup = () => {
       this.clearFallbackTimer();
       this.notifySpeaking(false);
-      this.notifyBoundary(-1, '');
+      this.notifyBoundary(-1, '', -1);
       if (onEnd) onEnd();
     };
 
@@ -233,7 +256,7 @@ class VoiceAssistantEngine {
         window.speechSynthesis.cancel();
       } catch {}
       this.notifySpeaking(false);
-      this.notifyBoundary(-1, '');
+      this.notifyBoundary(-1, '', -1);
     }
   }
 }

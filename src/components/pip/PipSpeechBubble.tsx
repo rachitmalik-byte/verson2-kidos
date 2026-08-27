@@ -17,8 +17,9 @@ export interface PipSpeechBubbleProps {
 interface WordToken {
   text: string;
   isSpace: boolean;
-  start: number;
-  end: number;
+  cleanStart: number;
+  cleanEnd: number;
+  wordIndex: number;
   cleanWord: string;
 }
 
@@ -28,30 +29,39 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   onComplete,
   className = '',
   speakerName = 'Pip',
-  autoSpeak = true, // Default to true: Pip speaks automatically like a friend!
+  autoSpeak = true,
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [activeCharIndex, setActiveCharIndex] = useState<number>(-1);
+  const [activeWordIndex, setActiveWordIndex] = useState<number>(-1);
   const isTtsMuted = useAudioStore((state) => state.isTtsMuted);
   const toggleTts = useAudioStore((state) => state.toggleTts);
 
-  // Parse message into interactive word tokens with character offsets
+  // Parse message into synchronized interactive word tokens
   const wordTokens: WordToken[] = useMemo(() => {
     const tokens: WordToken[] = [];
-    let currentPos = 0;
-    const parts = message.split(/(\s+)/);
+    let cleanPos = 0;
+    let wordCounter = 0;
+    const rawParts = message.split(/(\s+)/);
 
-    for (const part of parts) {
+    for (const part of rawParts) {
       const isSpace = /^\s+$/.test(part);
-      const cleanWord = part.replace(/^[^\w]+|[^\w]+$/g, '');
+      const cleanWord = part
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+        .replace(/^[^\w]+|[^\w]+$/g, '');
+
+      const cleanLength = isSpace ? 1 : part.length;
+
       tokens.push({
         text: part,
         isSpace,
-        start: currentPos,
-        end: currentPos + part.length,
+        cleanStart: cleanPos,
+        cleanEnd: cleanPos + cleanLength,
+        wordIndex: isSpace || !cleanWord ? -1 : wordCounter++,
         cleanWord,
       });
-      currentPos += part.length;
+
+      cleanPos += cleanLength;
     }
     return tokens;
   }, [message]);
@@ -59,11 +69,17 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   useEffect(() => {
     const speakListener = (speaking: boolean) => {
       setIsSpeaking(speaking);
-      if (!speaking) setActiveCharIndex(-1);
+      if (!speaking) {
+        setActiveCharIndex(-1);
+        setActiveWordIndex(-1);
+      }
     };
 
-    const boundaryListener = (charIndex: number) => {
+    const boundaryListener = (charIndex: number, _spokenText: string, wordIdx?: number) => {
       setActiveCharIndex(charIndex);
+      if (typeof wordIdx === 'number' && wordIdx >= 0) {
+        setActiveWordIndex(wordIdx);
+      }
     };
 
     voiceAssistant.addListener(speakListener);
@@ -80,11 +96,11 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
     if (!isVisible) {
       voiceAssistant.stop();
       setActiveCharIndex(-1);
+      setActiveWordIndex(-1);
       return;
     }
 
     if (autoSpeak && !isTtsMuted) {
-      // Small timeout to allow component mount and transition
       const timer = setTimeout(() => {
         voiceAssistant.speak(message, onComplete);
       }, 150);
@@ -170,26 +186,28 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
             </div>
           </div>
 
-          {/* Interactive Synchronized Word-by-Word Caption Highlighting */}
+          {/* Synchronized Karaoke Word-by-Word Caption Highlighting */}
           <div className="text-slate-800 font-extrabold text-base md:text-lg leading-relaxed select-text">
             {wordTokens.map((token, idx) => {
               if (token.isSpace) {
                 return <span key={idx}>{token.text}</span>;
               }
 
+              // Check if token matches active character offset OR active word index
               const isWordSpoken =
                 isSpeaking &&
-                activeCharIndex >= 0 &&
-                token.start <= activeCharIndex &&
-                activeCharIndex < token.end;
+                ((activeCharIndex >= 0 &&
+                  token.cleanStart <= activeCharIndex &&
+                  activeCharIndex < token.cleanEnd) ||
+                  (activeWordIndex >= 0 && token.wordIndex === activeWordIndex));
 
               return (
                 <span
                   key={idx}
                   onClick={(e) => handleWordClick(e, token)}
-                  className={`inline-block transition-all duration-150 cursor-pointer rounded-lg px-0.5 ${
+                  className={`inline-block transition-all duration-100 cursor-pointer rounded-lg px-0.5 ${
                     isWordSpoken
-                      ? 'bg-amber-300 text-slate-950 font-black scale-105 shadow-xs ring-2 ring-amber-400 z-10'
+                      ? 'bg-amber-300 text-slate-950 font-black scale-108 shadow-sm ring-2 ring-amber-400 z-10'
                       : 'hover:bg-amber-100 hover:text-slate-950'
                   }`}
                   title="Click to hear word pronunciation"
