@@ -35,6 +35,8 @@ export function RaincoatMission() {
   const [testedWater, setTestedWater] = useState<{ a: boolean; b: boolean }>({ a: false, b: false });
   const [isSprayingA, setIsSprayingA] = useState(false);
   const [isSprayingB, setIsSprayingB] = useState(false);
+  const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'cotton' | 'polyester'>('cotton');
+  const [microscopeZoomLevel, setMicroscopeZoomLevel] = useState<number>(250);
   const [finalChoice, setFinalChoice] = useState<'A' | 'B' | null>(null);
   const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
   const [matches, setMatches] = useState<Record<string, string>>({});
@@ -398,23 +400,23 @@ export function RaincoatMission() {
 
                   {testedWater.a && (
                     <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-3 bg-amber-50 p-3 rounded-2xl border border-amber-200 w-full flex items-center gap-3"
+                      initial={{ opacity: 0, scale: 0.95, y: 8 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      className="mt-4 bg-gradient-to-b from-amber-50 to-rose-50 p-4 rounded-3xl border-3 border-amber-300 w-full flex flex-col items-center text-center shadow-md"
                     >
-                      <img
-                        src={personWetCottonImg}
-                        alt="Child drenched in cotton coat"
-                        className="w-16 h-16 rounded-xl object-cover border border-amber-300 shadow-xs shrink-0"
-                      />
-                      <div className="text-left">
-                        <span className="font-black text-xs text-rose-700 block">
-                          Result: Child Gets Soaked! 🥶
-                        </span>
-                        <span className="text-[11px] font-bold text-slate-600 block mt-0.5 leading-tight">
-                          Natural cotton fibers drink up rain like a sponge, turning heavy and wet!
-                        </span>
+                      <div className="w-36 h-36 md:w-44 md:h-44 rounded-2xl overflow-hidden border-3 border-rose-300 shadow-md mb-2 bg-white flex items-center justify-center p-1">
+                        <img
+                          src={personWetCottonImg}
+                          alt="Child drenched in cotton coat"
+                          className="w-full h-full object-contain"
+                        />
                       </div>
+                      <span className="font-black text-xs md:text-sm text-rose-700 block">
+                        🥶 RESULT: Child Gets Soaked & Cold!
+                      </span>
+                      <p className="text-[11px] font-bold text-slate-600 mt-1 leading-snug max-w-xs">
+                        Water soaked straight through the natural cotton fibers! The clothes and skin underneath are completely wet.
+                      </p>
                     </motion.div>
                   )}
                 </div>
@@ -481,23 +483,23 @@ export function RaincoatMission() {
 
                   {testedWater.b && (
                     <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-3 bg-sky-50 p-3 rounded-2xl border border-sky-200 w-full flex items-center gap-3"
+                      initial={{ opacity: 0, scale: 0.95, y: 8 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      className="mt-4 bg-gradient-to-b from-sky-50 to-emerald-50 p-4 rounded-3xl border-3 border-sky-300 w-full flex flex-col items-center text-center shadow-md"
                     >
-                      <img
-                        src={personDryRaincoatImg}
-                        alt="Child dry in synthetic raincoat"
-                        className="w-16 h-16 rounded-xl object-cover border border-sky-300 shadow-xs shrink-0"
-                      />
-                      <div className="text-left">
-                        <span className="font-black text-xs text-emerald-700 block">
-                          Result: Child Stays 100% Dry! 😄
-                        </span>
-                        <span className="text-[11px] font-bold text-slate-600 block mt-0.5 leading-tight">
-                          Synthetic polyester fibers are hydrophobic. Rain beads into drops and slides off!
-                        </span>
+                      <div className="w-36 h-36 md:w-44 md:h-44 rounded-2xl overflow-hidden border-3 border-emerald-300 shadow-md mb-2 bg-white flex items-center justify-center p-1">
+                        <img
+                          src={personDryRaincoatImg}
+                          alt="Child dry in synthetic raincoat"
+                          className="w-full h-full object-contain"
+                        />
                       </div>
+                      <span className="font-black text-xs md:text-sm text-emerald-700 block">
+                        😄 RESULT: Child Stays 100% Cozy & Dry!
+                      </span>
+                      <p className="text-[11px] font-bold text-slate-600 mt-1 leading-snug max-w-xs">
+                        Raindrops formed round beads and rolled right off the coat like an invisible shield!
+                      </p>
                     </motion.div>
                   )}
                 </div>
@@ -593,56 +595,143 @@ export function RaincoatMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 4: UNDERSTANDING (Microscope Fabric Evidence + Science Law)
+              PHASE 4: UNDERSTANDING (Interactive Microscope Lab Stage + Science Law)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'UNDERSTANDING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
                 <Pip mood="celebrating" size="lg" />
                 <PipSpeechBubble
-                  message="Look closely under the microscope! You discovered the Golden Law of Materials Science!"
+                  message="Let's place both fabrics under the high-powered microscope! Tap the buttons below to switch specimens and zoom in!"
                   isVisible={true}
                 />
               </div>
 
-              {/* Real Microscope Zoom Comparison */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mb-6">
-                <div className="bg-white p-5 rounded-3xl border-3 border-amber-300 shadow-md flex items-center gap-4">
-                  <img
-                    src={cottonFabricZoomImg}
-                    alt="Cotton Microscope Zoom"
-                    className="w-24 h-24 rounded-2xl object-cover border-2 border-amber-200 shadow-sm shrink-0"
-                  />
-                  <div>
-                    <span className="text-[10px] font-black uppercase text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-                      🔬 Natural Cotton Under Zoom
-                    </span>
-                    <h4 className="font-black text-sm text-slate-800 mt-1">Porous Absorbent Weave</h4>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">
-                      Open natural fibres pull in water molecules like a sponge — ideal for bath towels!
-                    </p>
+              {/* ── IMMERSIVE INTERACTIVE MICROSCOPE STAGE ── */}
+              <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">
+                {/* Header & Reticle HUD */}
+                <div className="flex items-center justify-between w-full mb-4 z-10 flex-wrap gap-2">
+                  <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-500/50 px-3 py-1 rounded-full flex items-center gap-1.5">
+                    <ZoomIn className="w-4 h-4 text-amber-400 animate-pulse" />
+                    <span>Optical Fabric Microscope Studio</span>
+                  </span>
+
+                  {/* Magnification Zoom Selector */}
+                  <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
+                    {[
+                      { level: 100, label: '100x' },
+                      { level: 250, label: '250x' },
+                      { level: 500, label: '500x' },
+                    ].map((z) => (
+                      <button
+                        key={z.level}
+                        onClick={() => {
+                          sounds.pop();
+                          setMicroscopeZoomLevel(z.level);
+                        }}
+                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          microscopeZoomLevel === z.level
+                            ? 'bg-amber-400 text-slate-950 shadow-md scale-105'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {z.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                <div className="bg-white p-5 rounded-3xl border-3 border-sky-300 shadow-md flex items-center gap-4">
-                  <img
-                    src={polyesterFabricZoomImg}
-                    alt="Polyester Microscope Zoom"
-                    className="w-24 h-24 rounded-2xl object-cover border-2 border-sky-200 shadow-sm shrink-0"
-                  />
-                  <div>
-                    <span className="text-[10px] font-black uppercase text-sky-700 bg-sky-100 px-2 py-0.5 rounded-full">
-                      🔬 Synthetic Polyester Under Zoom
-                    </span>
-                    <h4 className="font-black text-sm text-slate-800 mt-1">Hydrophobic Beading Weave</h4>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">
-                      Tightly bonded polymer chains repel water droplets — ideal for raincoats & umbrellas!
-                    </p>
+                {/* Microscope Lens Viewport */}
+                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 ring-4 ring-amber-400/80 my-2 flex items-center justify-center">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
+                      src={activeMicroscopeSpecimen === 'cotton' ? cottonFabricZoomImg : polyesterFabricZoomImg}
+                      alt="Microscope Specimen"
+                      initial={{ scale: 0.8, opacity: 0.3 }}
+                      animate={{
+                        scale: microscopeZoomLevel === 100 ? 1.05 : microscopeZoomLevel === 250 ? 1.45 : 2.0,
+                        opacity: 1,
+                      }}
+                      exit={{ scale: 1.2, opacity: 0.3 }}
+                      transition={{ type: 'spring', damping: 20, stiffness: 180 }}
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                    />
+                  </AnimatePresence>
+
+                  {/* Optical Reticle Crosshairs & Grid Lines */}
+                  <div className="absolute inset-0 pointer-events-none border border-cyan-400/30 rounded-full flex items-center justify-center">
+                    <div className="w-full h-[1px] bg-cyan-400/30 absolute" />
+                    <div className="h-full w-[1px] bg-cyan-400/30 absolute" />
+                    <div className="w-24 h-24 rounded-full border border-cyan-400/40 absolute" />
+                    <div className="w-44 h-44 rounded-full border border-cyan-400/20 absolute" />
                   </div>
+
+                  {/* Glass Reflection Flare */}
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent rounded-full" />
                 </div>
+
+                {/* Specimen Switcher Buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg mt-4 z-10">
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      setActiveMicroscopeSpecimen('cotton');
+                    }}
+                    className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
+                      activeMicroscopeSpecimen === 'cotton'
+                        ? 'bg-amber-400 border-amber-300 text-slate-950 shadow-lg scale-102 ring-4 ring-amber-400/40'
+                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <span>🌿 Examine Natural Cotton</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      setActiveMicroscopeSpecimen('polyester');
+                    }}
+                    className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
+                      activeMicroscopeSpecimen === 'polyester'
+                        ? 'bg-sky-400 border-sky-300 text-slate-950 shadow-lg scale-102 ring-4 ring-sky-400/40'
+                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <span>⚡ Examine Synthetic Polyester</span>
+                  </button>
+                </div>
+
+                {/* Explanatory Callout Box */}
+                <motion.div
+                  key={activeMicroscopeSpecimen}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-4 rounded-2xl bg-slate-900 border border-slate-800 w-full max-w-xl text-center z-10"
+                >
+                  {activeMicroscopeSpecimen === 'cotton' ? (
+                    <div>
+                      <span className="font-black text-xs md:text-sm text-amber-300 block mb-1">
+                        🔬 Natural Cotton: Porous Spongy Network 🧽
+                      </span>
+                      <p className="text-xs text-slate-300 font-bold leading-relaxed">
+                        Notice the open woven plant fibers! Natural cotton threads have microscopic channels that pull in water molecules and trap them inside like a sponge.
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <span className="font-black text-xs md:text-sm text-sky-300 block mb-1">
+                        🔬 Synthetic Polyester: Hydrophobic Shield 🛡️
+                      </span>
+                      <p className="text-xs text-slate-300 font-bold leading-relaxed">
+                        Notice the tight, smooth synthetic polymer weave! Water cannot penetrate the surface tension — raindrops are forced to bead into perfect spheres and roll right off!
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
               </div>
 
-              {/* Golden Science Law */}
+              {/* ── THE GOLDEN SCIENCE LAW ── */}
               <div className="w-full bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-300 shadow-xl">
                 <h3 className="text-center text-xs font-black uppercase tracking-widest text-sky-600 mb-6 bg-sky-100 px-4 py-1.5 rounded-full w-fit mx-auto">
                   ⚡ The Golden Science Law
