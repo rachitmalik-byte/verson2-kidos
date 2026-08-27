@@ -41,6 +41,12 @@ class VoiceAssistantEngine {
       window.addEventListener('click', unlock, { passive: true });
       window.addEventListener('touchstart', unlock, { passive: true });
       window.addEventListener('keydown', unlock, { passive: true });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          this.stop();
+        }
+      });
     }
   }
 

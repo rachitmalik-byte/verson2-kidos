@@ -10,6 +10,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
 import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
+import { FirstTimeTutorialOverlay } from '@/components/tutorial/FirstTimeTutorialOverlay';
 import {
   RaincoatSyntheticIllustration,
   CottonIllustration,
@@ -78,6 +79,8 @@ export function ChapterHub() {
   const child = useParentStore((state) => state.child);
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
+  const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
+  const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
 
   const totalStars = completedMissions.length * 3 + discoveries.length * 2;
   const isAllComplete = completedMissions.length === missions.length;
@@ -312,6 +315,9 @@ export function ChapterHub() {
           </div>
         </div>
       </div>
+
+      {/* First-Time Guided Tutorial Tour */}
+      <FirstTimeTutorialOverlay isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
     </div>
   );
 }

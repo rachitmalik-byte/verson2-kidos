@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -244,6 +245,13 @@ export const FieldGuideModal: React.FC = () => {
     sounds.pop();
     setCurrentTimestamp(seconds);
   };
+
+  const location = useLocation();
+  const isChapterOrLessonOpen =
+    location.pathname.startsWith('/chapter/') ||
+    location.pathname.startsWith('/discovery-book');
+
+  if (!isChapterOrLessonOpen) return null;
 
   return (
     <>

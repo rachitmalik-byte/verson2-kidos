@@ -31,6 +31,25 @@ class BgmEngine {
   private step = 0;
   private isMuted = false;
   private baseVolume = 0.35;
+  private wasPlayingBeforeTabSwitch = false;
+
+  constructor() {
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (this.isPlaying) {
+            this.wasPlayingBeforeTabSwitch = true;
+            this.stop();
+          }
+        } else {
+          if (this.wasPlayingBeforeTabSwitch) {
+            this.wasPlayingBeforeTabSwitch = false;
+            this.start(this.currentTrackId);
+          }
+        }
+      });
+    }
+  }
 
   private initContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
