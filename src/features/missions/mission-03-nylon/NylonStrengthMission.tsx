@@ -9,6 +9,7 @@ import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 import cottonThreadBreakingImg from '@/assets/images/experiments/cotton_thread_breaking.jpg';
 import nylonRopeHeavyWeightImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
 import nylonParachuteSkyImg from '@/assets/images/raincoat/nylon_parachute_sky.jpg';
@@ -21,6 +22,7 @@ type Phase = 'HOOK' | 'TENSILE_TEST' | 'MICROSCOPE' | 'APPLY';
 export function NylonStrengthMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [weightKg, setWeightKg] = useState(2);
+  const [isTestingTensile, setIsTestingTensile] = useState(false);
   const [testedThreads, setTestedThreads] = useState<Record<string, { snapped: boolean; max: number }>>({});
   const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'cotton' | 'nylon'>('cotton');
   const [microscopeZoomLevel, setMicroscopeZoomLevel] = useState<number>(250);
@@ -106,15 +108,20 @@ export function NylonStrengthMission() {
     const thread = THREADS.find((t) => t.id === threadId);
     if (!thread) return;
 
-    if (kg > thread.max) {
-      sounds.tensionSnap();
-      setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: true, max: thread.max } }));
-      voiceAssistant.speak(`Snap! The ${thread.name} snapped at ${kg} kilograms because its natural fibers pulled apart!`);
-    } else {
-      sounds.success();
-      setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: false, max: thread.max } }));
-      voiceAssistant.speak(`The ${thread.name} holds ${kg} kilograms with zero strain!`);
-    }
+    setIsTestingTensile(true);
+
+    setTimeout(() => {
+      if (kg > thread.max) {
+        sounds.tensionSnap();
+        setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: true, max: thread.max } }));
+        voiceAssistant.speak(`Snap! The ${thread.name} snapped at ${kg} kilograms because its natural fibers pulled apart!`);
+      } else {
+        sounds.success();
+        setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: false, max: thread.max } }));
+        voiceAssistant.speak(`The ${thread.name} holds ${kg} kilograms with zero strain!`);
+      }
+      setIsTestingTensile(false);
+    }, 600);
   };
 
   return (
@@ -172,11 +179,11 @@ export function NylonStrengthMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: TENSILE LAB (Weight Drop Sandbox)
+              PHASE 2: TENSILE LAB (Weight Drop Sandbox with Focus Spotlight)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'TENSILE_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4 mb-4">
                 <Pip mood="explaining" size="lg" />
                 <PipSpeechBubble
                   message="Hang different cast-iron weights on both cords to test their breaking limit!"
@@ -209,94 +216,103 @@ export function NylonStrengthMission() {
                 ))}
               </div>
 
-              {/* Dual Test Rig Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
-                {/* Cotton Test Rig */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-2">
-                    Natural Cotton Thread
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-500 mb-3">Plant Cellulose Fibers</span>
+              {/* Dual Test Rig Cards Wrapped in Focus Spotlight */}
+              <ExperimentFocusSpotlight
+                isActive={isTestingTensile}
+                activeLabel={`🏋️ Testing ${weightKg}kg Tension Stress...`}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {/* Cotton Test Rig */}
+                  <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                    <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
+                      Natural Cotton Thread
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 mb-3">Plant Cellulose Fibers</span>
 
-                  {/* Real Photo Experiment View */}
-                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
-                    <img
-                      src={cottonThreadBreakingImg}
-                      alt="Cotton Thread Snap Experiment"
-                      className="w-full h-full object-contain"
-                    />
-                    {testedThreads['cotton']?.snapped && (
-                      <div className="absolute inset-0 bg-rose-500/20 backdrop-blur-[1px] flex items-center justify-center">
-                        <span className="text-4xl animate-bounce">🧵💥</span>
-                      </div>
+                    {/* Real Photo Experiment View with Strain Vibration */}
+                    <motion.div
+                      animate={isTestingTensile ? { x: [-3, 3, -3, 3, 0] } : {}}
+                      transition={{ duration: 0.2, repeat: 3 }}
+                      className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2"
+                    >
+                      <img
+                        src={cottonThreadBreakingImg}
+                        alt="Cotton Thread Snap Experiment"
+                        className="w-full h-full object-contain"
+                      />
+                      {testedThreads['cotton']?.snapped && (
+                        <div className="absolute inset-0 bg-rose-500/20 backdrop-blur-[1px] flex items-center justify-center">
+                          <span className="text-4xl animate-bounce">🧵💥</span>
+                        </div>
+                      )}
+                    </motion.div>
+
+                    <button
+                      onClick={() => handleApplyWeight('cotton', weightKg)}
+                      className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
+                    >
+                      <Dumbbell className="w-4 h-4" />
+                      <span>Hang {weightKg} kg Weight on Cotton</span>
+                    </button>
+
+                    {testedThreads['cotton'] && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs ${
+                          testedThreads['cotton'].snapped
+                            ? 'bg-rose-50 border-rose-300 text-rose-700'
+                            : 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                        }`}
+                      >
+                        {testedThreads['cotton'].snapped
+                          ? `💥 SNAPPED! Cotton broke under ${weightKg}kg (Limit: 2kg)`
+                          : `✅ Cotton held ${weightKg}kg successfully!`}
+                      </motion.div>
                     )}
                   </div>
 
-                  <button
-                    onClick={() => handleApplyWeight('cotton', weightKg)}
-                    className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    <Dumbbell className="w-4 h-4" />
-                    <span>Hang {weightKg} kg Weight on Cotton</span>
-                  </button>
+                  {/* Synthetic Nylon Test Rig */}
+                  <div className="bg-white p-6 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                    <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-1">
+                      Synthetic Nylon Cord
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 mb-3">Long Polymer Molecular Chains</span>
 
-                  {testedThreads['cotton'] && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={`mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs ${
-                        testedThreads['cotton'].snapped
-                          ? 'bg-rose-50 border-rose-300 text-rose-700'
-                          : 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                      }`}
+                    {/* Real Photo Experiment View */}
+                    <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                      <img
+                        src={nylonRopeHeavyWeightImg}
+                        alt="Nylon Cord 25lb Dumbbell Test"
+                        className="w-full h-full object-contain"
+                      />
+                      {testedThreads['nylon'] && !testedThreads['nylon'].snapped && (
+                        <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2.5 py-0.5 rounded-full text-xs font-black shadow-md">
+                          ✨ Holds Effortlessly!
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => handleApplyWeight('nylon', weightKg)}
+                      className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-sky-500 hover:bg-sky-600 text-white shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
-                      {testedThreads['cotton'].snapped
-                        ? `💥 SNAPPED! Cotton broke under ${weightKg}kg (Limit: 2kg)`
-                        : `✅ Cotton held ${weightKg}kg successfully!`}
-                    </motion.div>
-                  )}
-                </div>
+                      <Dumbbell className="w-4 h-4" />
+                      <span>Hang {weightKg} kg Weight on Nylon</span>
+                    </button>
 
-                {/* Synthetic Nylon Test Rig */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                  <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-2">
-                    Synthetic Nylon Cord
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-500 mb-3">Long Polymer Molecular Chains</span>
-
-                  {/* Real Photo Experiment View */}
-                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
-                    <img
-                      src={nylonRopeHeavyWeightImg}
-                      alt="Nylon Cord 25lb Dumbbell Test"
-                      className="w-full h-full object-contain"
-                    />
-                    {testedThreads['nylon'] && !testedThreads['nylon'].snapped && (
-                      <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2.5 py-0.5 rounded-full text-xs font-black shadow-md">
-                        ✨ Holds Effortlessly!
-                      </div>
+                    {testedThreads['nylon'] && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs bg-emerald-50 border-emerald-300 text-emerald-700"
+                      >
+                        🌟 UNSTOPPABLE! Nylon holds {weightKg}kg with zero strain!
+                      </motion.div>
                     )}
                   </div>
-
-                  <button
-                    onClick={() => handleApplyWeight('nylon', weightKg)}
-                    className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-sky-500 hover:bg-sky-600 text-white shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    <Dumbbell className="w-4 h-4" />
-                    <span>Hang {weightKg} kg Weight on Nylon</span>
-                  </button>
-
-                  {testedThreads['nylon'] && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs bg-emerald-50 border-emerald-300 text-emerald-700"
-                    >
-                      🌟 UNSTOPPABLE! Nylon holds {weightKg}kg with zero strain!
-                    </motion.div>
-                  )}
                 </div>
-              </div>
+              </ExperimentFocusSpotlight>
             </div>
           )}
 

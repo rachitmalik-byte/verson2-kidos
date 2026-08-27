@@ -15,6 +15,7 @@ import {
 } from '@/components/illustrations/MaterialIllustrations';
 import { Droplet, Sparkles, Check, ArrowRight, ShieldCheck, Feather, Sun, AlertCircle, Lightbulb, ZoomIn } from 'lucide-react';
 import { bgmEngine } from '@/lib/bgmEngine';
+import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 
 // Real Minimal Isolated Photography Assets
 import cottonCoatDryImg from '@/assets/images/raincoat/cotton_coat_dry.jpg';
@@ -337,7 +338,11 @@ export function RaincoatMission() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+              <ExperimentFocusSpotlight
+                isActive={isSprayingA || isSprayingB}
+                activeLabel="💧 Water Spray Absorption & Beading Test..."
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 {/* Coat A Test Card: Cotton Absorption */}
                 <div className="bg-white p-5 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
                   <div className="flex items-center justify-between w-full mb-3">
@@ -504,8 +509,9 @@ export function RaincoatMission() {
                   )}
                 </div>
               </div>
-            </div>
-          )}
+            </ExperimentFocusSpotlight>
+          </div>
+        )}
 
           {/* ════════════════════════════════════════════════════════════════════════
               PHASE 3: CHOOSE & REASON (Backed by Real Evidence)

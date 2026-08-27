@@ -9,6 +9,7 @@ import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 import cottonBurningAshImg from '@/assets/images/experiments/cotton_burning_ash.jpg';
 import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
 import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
@@ -93,7 +94,7 @@ export function FireSafetyMission() {
       setBurnedCotton(true);
       setIsIgnitingCotton(false);
       voiceAssistant.speak('Look at that! Natural cotton burns like paper and turns into soft, harmless gray ash!');
-    }, 450);
+    }, 600);
   };
 
   const triggerBurnPolyester = () => {
@@ -103,7 +104,7 @@ export function FireSafetyMission() {
       setBurnedPolyester(true);
       setIsIgnitingPolyester(false);
       voiceAssistant.speak('Watch out! Synthetic polyester shrinks, curls, and melts into a hot sticky plastic bead!');
-    }, 450);
+    }, 600);
   };
 
   return (
@@ -160,11 +161,11 @@ export function FireSafetyMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: BURN TEST SANDBOX (Real Fabric Flame Reactions)
+              PHASE 2: BURN TEST SANDBOX (with Focus Mode Spotlight)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'BURN_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4 mb-4">
                 <Pip mood="explaining" size="lg" />
                 <PipSpeechBubble
                   message="Ignite both fabric swatches on the ceramic lab plate to see how natural fibers vs synthetic plastics react to heat!"
@@ -172,94 +173,121 @@ export function FireSafetyMission() {
                 />
               </div>
 
-              {/* Dual Flame Experiment Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
-                {/* Cotton Flame Test */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
-                    Natural Cotton (Plant Cellulose)
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-500 mb-3">Burns cleanly without melting</span>
+              {/* Dual Flame Experiment Cards Wrapped in Focus Spotlight */}
+              <ExperimentFocusSpotlight
+                isActive={isIgnitingCotton || isIgnitingPolyester}
+                activeLabel="🔥 Flame Thermal Breakdown Test in Progress..."
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {/* Cotton Flame Test */}
+                  <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                    <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
+                      Natural Cotton (Plant Cellulose)
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 mb-3">Burns cleanly without melting</span>
 
-                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
-                    <img
-                      src={cottonBurningAshImg}
-                      alt="Cotton Burning into Soft Ash"
-                      className="w-full h-full object-contain"
-                    />
-                    {isIgnitingCotton && (
-                      <div className="absolute inset-0 bg-amber-500/30 flex items-center justify-center text-4xl animate-ping">
-                        🔥
-                      </div>
+                    <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={burnedCotton ? 'burned' : 'clean'}
+                          src={cottonBurningAshImg}
+                          alt="Cotton Burning into Soft Ash"
+                          initial={{ opacity: 0.5, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.5 }}
+                          className="w-full h-full object-contain"
+                        />
+                      </AnimatePresence>
+                      {isIgnitingCotton && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: [0, 1, 0], scale: [0.8, 1.3, 1.6] }}
+                          transition={{ duration: 0.6 }}
+                          className="absolute inset-0 bg-amber-500/30 rounded-2xl flex items-center justify-center text-5xl pointer-events-none"
+                        >
+                          🔥✨
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={triggerBurnCotton}
+                      className={`w-full py-3.5 mt-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        burnedCotton
+                          ? 'bg-amber-100 text-amber-900 border-2 border-amber-300'
+                          : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md active:scale-95'
+                      }`}
+                    >
+                      <Flame className="w-4 h-4 text-amber-900" />
+                      <span>{burnedCotton ? '✅ Result: Soft Gray Ash' : 'Test Cotton in Flame! 🔥'}</span>
+                    </button>
+
+                    {burnedCotton && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 p-3 rounded-2xl bg-amber-50 border border-amber-300 text-slate-800 text-xs font-bold text-center"
+                      >
+                        🌱 Cotton behaves like wood and paper: it burns cleanly into light crumbly ash that easily brushes away!
+                      </motion.div>
                     )}
                   </div>
 
-                  <button
-                    onClick={triggerBurnCotton}
-                    className={`w-full py-3.5 mt-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
-                      burnedCotton
-                        ? 'bg-amber-100 text-amber-900 border-2 border-amber-300'
-                        : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md active:scale-95'
-                    }`}
-                  >
-                    <Flame className="w-4 h-4 text-amber-900" />
-                    <span>{burnedCotton ? '✅ Result: Soft Gray Ash' : 'Test Cotton in Flame! 🔥'}</span>
-                  </button>
+                  {/* Polyester Flame Test */}
+                  <div className="bg-white p-6 rounded-3xl border-4 border-rose-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                    <span className="px-3 py-1 bg-rose-100 text-rose-900 rounded-full text-xs font-black uppercase mb-1">
+                      Synthetic Polyester (Plastic Polymer)
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 mb-3">Melts into hot molten plastic</span>
 
-                  {burnedCotton && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-3 p-3 rounded-2xl bg-amber-50 border border-amber-300 text-slate-800 text-xs font-bold text-center"
+                    <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={burnedPolyester ? 'melted' : 'clean'}
+                          src={polyesterMeltingBeadImg}
+                          alt="Polyester Melting into Hard Bead"
+                          initial={{ opacity: 0.5, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.5 }}
+                          className="w-full h-full object-contain"
+                        />
+                      </AnimatePresence>
+                      {isIgnitingPolyester && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: [0, 1, 0], scale: [0.8, 1.3, 1.6] }}
+                          transition={{ duration: 0.6 }}
+                          className="absolute inset-0 bg-rose-500/30 rounded-2xl flex items-center justify-center text-5xl pointer-events-none"
+                        >
+                          🔥⚠️
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={triggerBurnPolyester}
+                      className={`w-full py-3.5 mt-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        burnedPolyester
+                          ? 'bg-rose-100 text-rose-900 border-2 border-rose-300'
+                          : 'bg-rose-500 hover:bg-rose-600 text-white shadow-md active:scale-95'
+                      }`}
                     >
-                      🌱 Cotton behaves like wood and paper: it burns cleanly into light crumbly ash that easily brushes away!
-                    </motion.div>
-                  )}
-                </div>
+                      <Flame className="w-4 h-4 text-white" />
+                      <span>{burnedPolyester ? '⚠️ Result: Molten Plastic Bead' : 'Test Polyester in Flame! 🔥'}</span>
+                    </button>
 
-                {/* Polyester Flame Test */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-rose-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                  <span className="px-3 py-1 bg-rose-100 text-rose-900 rounded-full text-xs font-black uppercase mb-1">
-                    Synthetic Polyester (Plastic Polymer)
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-500 mb-3">Melts into hot molten plastic</span>
-
-                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
-                    <img
-                      src={polyesterMeltingBeadImg}
-                      alt="Polyester Melting into Hard Bead"
-                      className="w-full h-full object-contain"
-                    />
-                    {isIgnitingPolyester && (
-                      <div className="absolute inset-0 bg-rose-500/30 flex items-center justify-center text-4xl animate-ping">
-                        🔥
-                      </div>
+                    {burnedPolyester && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 p-3 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 text-xs font-bold text-center"
+                      >
+                        ⚠️ DANGER: Polyester is petroleum plastic! High heat causes it to melt into scalding sticky black beads that glue to skin!
+                      </motion.div>
                     )}
                   </div>
-
-                  <button
-                    onClick={triggerBurnPolyester}
-                    className={`w-full py-3.5 mt-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
-                      burnedPolyester
-                        ? 'bg-rose-100 text-rose-900 border-2 border-rose-300'
-                        : 'bg-rose-500 hover:bg-rose-600 text-white shadow-md active:scale-95'
-                    }`}
-                  >
-                    <Flame className="w-4 h-4 text-white" />
-                    <span>{burnedPolyester ? '⚠️ Result: Molten Plastic Bead' : 'Test Polyester in Flame! 🔥'}</span>
-                  </button>
-
-                  {burnedPolyester && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-3 p-3 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 text-xs font-bold text-center"
-                    >
-                      ⚠️ DANGER: Polyester is petroleum plastic! High heat causes it to melt into scalding sticky black beads that glue to skin!
-                    </motion.div>
-                  )}
                 </div>
-              </div>
+              </ExperimentFocusSpotlight>
             </div>
           )}
 
