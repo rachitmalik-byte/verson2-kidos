@@ -157,6 +157,8 @@ class BgmEngine {
       'rainy-storm': ['G4', 'C5', 'E5', 'D5', 'B4', 'D5', 'G5', 'E5', 'A4', 'C5', 'E5', 'D5', 'F4', 'A4', 'C5', 'B4'],
       'mystery-investigation': ['E5', 'G5', 'B5', 'G5', 'D5', 'F5', 'A5', 'F5', 'C5', 'E5', 'A5', 'E5', 'D5', 'F5', 'B5', 'G5'],
       'high-energy-sprint': ['C5', 'C5', 'G5', 'G5', 'A5', 'A5', 'G5', '', 'F5', 'F5', 'E5', 'E5', 'D5', 'D5', 'C5', ''],
+      'sky-rescue': ['C5', 'G5', 'E5', 'C6', 'G5', 'B5', 'D6', 'G5', 'A5', 'E6', 'C6', 'A5', 'F5', 'C6', 'A5', 'F5'],
+      'carnival-celebration': ['C5', 'E5', 'G5', 'C6', 'E6', 'C6', 'G5', 'E5', 'A5', 'C6', 'E6', 'C6', 'G5', 'E5', 'D5', 'C5'],
       'cosmic-explorer': ['C5', 'G5', 'E5', 'C6', 'G5', 'B5', 'D6', 'G5', 'A5', 'E6', 'C6', 'A5', 'F5', 'C6', 'A5', 'F5'],
       'chill-study': ['E5', '', 'G5', '', 'D5', '', 'F5', '', 'C5', '', 'E5', '', 'A4', '', 'C5', ''],
     };
@@ -187,6 +189,22 @@ class BgmEngine {
         this.playStep();
       }
     }, intervalMs);
+  }
+
+  // Alias play to start
+  play(trackId?: string) {
+    this.start(trackId || this.currentTrackId);
+  }
+
+  setTrack(trackId: string) {
+    this.currentTrackId = trackId;
+    if (this.isPlaying) {
+      this.start(trackId);
+    }
+  }
+
+  getCurrentTrack() {
+    return this.currentTrackId;
   }
 
   stop() {
