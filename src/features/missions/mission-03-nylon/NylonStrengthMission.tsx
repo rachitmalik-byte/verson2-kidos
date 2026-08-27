@@ -10,7 +10,11 @@ import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
+
+// Real Studio Macro Educational Photography (Clean Before & After Pairs)
+import cottonThreadIntactImg from '@/assets/images/experiments/cotton_thread_intact.jpg';
 import cottonThreadBreakingImg from '@/assets/images/experiments/cotton_thread_breaking.jpg';
+import nylonCordIntactImg from '@/assets/images/experiments/nylon_cord_intact.jpg';
 import nylonRopeHeavyWeightImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
 import nylonParachuteSkyImg from '@/assets/images/raincoat/nylon_parachute_sky.jpg';
 import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
@@ -167,6 +171,25 @@ export function NylonStrengthMission() {
                 <span className="text-sky-600 font-black">Nylon cord</span>?
               </p>
 
+              {/* Clean Intact Specimen Preview */}
+              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-8">
+                <div className="bg-white p-4 rounded-3xl border-3 border-amber-300 shadow-md flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-2xl overflow-hidden mb-2 bg-slate-50 border border-slate-100 p-1">
+                    <img src={cottonThreadIntactImg} alt="Intact Cotton Thread" className="w-full h-full object-cover rounded-xl" />
+                  </div>
+                  <span className="font-black text-xs text-slate-800">1. Natural Cotton</span>
+                  <span className="text-[10px] font-bold text-amber-700">Short Plant Cellulose Fibers</span>
+                </div>
+
+                <div className="bg-white p-4 rounded-3xl border-3 border-sky-300 shadow-md flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-2xl overflow-hidden mb-2 bg-slate-50 border border-slate-100 p-1">
+                    <img src={nylonCordIntactImg} alt="Intact Nylon Cord" className="w-full h-full object-cover rounded-xl" />
+                  </div>
+                  <span className="font-black text-xs text-slate-800">2. Synthetic Nylon</span>
+                  <span className="text-[10px] font-bold text-sky-700">Continuous Polymer Cables</span>
+                </div>
+              </div>
+
               <button
                 onClick={handleNextPhase}
                 className="bg-amber-400 border-2 border-amber-600 shadow-[0_6px_0_#D97706] active:translate-y-1.5 active:shadow-none text-slate-900 font-black text-xl py-4 px-12 rounded-3xl hover:bg-amber-300 transition-all cursor-pointer flex items-center gap-2"
@@ -179,7 +202,7 @@ export function NylonStrengthMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: TENSILE LAB (Weight Drop Sandbox with Focus Spotlight)
+              PHASE 2: TENSILE LAB (Weight Drop Sandbox with True Before/After)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'TENSILE_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
@@ -227,19 +250,30 @@ export function NylonStrengthMission() {
                     <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
                       Natural Cotton Thread
                     </span>
-                    <span className="text-[11px] font-bold text-slate-500 mb-3">Plant Cellulose Fibers</span>
+                    <span className="text-[11px] font-bold text-slate-500 mb-3">
+                      {testedThreads['cotton']?.snapped
+                        ? `💥 Snapped under ${weightKg}kg load`
+                        : 'Intact thread suspended on test hook'}
+                    </span>
 
-                    {/* Real Photo Experiment View with Strain Vibration */}
+                    {/* Real Photo with True Before/After */}
                     <motion.div
                       animate={isTestingTensile ? { x: [-3, 3, -3, 3, 0] } : {}}
                       transition={{ duration: 0.2, repeat: 3 }}
                       className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2"
                     >
-                      <img
-                        src={cottonThreadBreakingImg}
-                        alt="Cotton Thread Snap Experiment"
-                        className="w-full h-full object-contain"
-                      />
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={testedThreads['cotton']?.snapped ? 'cotton-snapped' : 'cotton-intact'}
+                          src={testedThreads['cotton']?.snapped ? cottonThreadBreakingImg : cottonThreadIntactImg}
+                          alt={testedThreads['cotton']?.snapped ? 'Cotton Thread Snapped' : 'Cotton Thread Intact'}
+                          initial={{ opacity: 0.4, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0.4, scale: 1.05 }}
+                          transition={{ duration: 0.4 }}
+                          className="w-full h-full object-cover rounded-xl"
+                        />
+                      </AnimatePresence>
                       {testedThreads['cotton']?.snapped && (
                         <div className="absolute inset-0 bg-rose-500/20 backdrop-blur-[1px] flex items-center justify-center">
                           <span className="text-4xl animate-bounce">🧵💥</span>
@@ -266,7 +300,7 @@ export function NylonStrengthMission() {
                         }`}
                       >
                         {testedThreads['cotton'].snapped
-                          ? `💥 SNAPPED! Cotton broke under ${weightKg}kg (Limit: 2kg)`
+                          ? `💥 SNAPPED! Cotton broke under ${weightKg}kg (Natural fibers separated)`
                           : `✅ Cotton held ${weightKg}kg successfully!`}
                       </motion.div>
                     )}
@@ -277,15 +311,26 @@ export function NylonStrengthMission() {
                     <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-1">
                       Synthetic Nylon Cord
                     </span>
-                    <span className="text-[11px] font-bold text-slate-500 mb-3">Long Polymer Molecular Chains</span>
+                    <span className="text-[11px] font-bold text-slate-500 mb-3">
+                      {testedThreads['nylon']
+                        ? `✨ Holds ${weightKg}kg with zero strain`
+                        : 'Intact polymer cord on test hook'}
+                    </span>
 
-                    {/* Real Photo Experiment View */}
+                    {/* Real Photo with True Before/After */}
                     <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
-                      <img
-                        src={nylonRopeHeavyWeightImg}
-                        alt="Nylon Cord 25lb Dumbbell Test"
-                        className="w-full h-full object-contain"
-                      />
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={testedThreads['nylon'] ? 'nylon-heavy' : 'nylon-intact'}
+                          src={testedThreads['nylon'] ? nylonRopeHeavyWeightImg : nylonCordIntactImg}
+                          alt={testedThreads['nylon'] ? 'Nylon Holding Heavy Weight' : 'Intact Nylon Cord'}
+                          initial={{ opacity: 0.4, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0.4, scale: 1.05 }}
+                          transition={{ duration: 0.4 }}
+                          className="w-full h-full object-cover rounded-xl"
+                        />
+                      </AnimatePresence>
                       {testedThreads['nylon'] && !testedThreads['nylon'].snapped && (
                         <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2.5 py-0.5 rounded-full text-xs font-black shadow-md">
                           ✨ Holds Effortlessly!

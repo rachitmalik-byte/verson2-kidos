@@ -14,6 +14,8 @@ import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFoc
 // Real Macro Studio Photography
 import copperWireMacroImg from '@/assets/images/wire/copper_wire_macro.jpg';
 import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
+import steelKeyMacroImg from '@/assets/images/wire/steel_key_macro.jpg';
+import rubberEraserMacroImg from '@/assets/images/wire/rubber_eraser_macro.jpg';
 import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
 import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
 import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
@@ -72,7 +74,7 @@ const SPECIMENS: TestSpecimen[] = [
     id: 'steel',
     name: 'Polished Steel Key',
     category: 'Metal Conductor',
-    image: copperWireMacroImg,
+    image: steelKeyMacroImg,
     conducts: true,
     material: 'Iron-carbon metallic alloy lattice',
     hint: 'Metals have a sea of free electrons that carry current!',
@@ -82,7 +84,7 @@ const SPECIMENS: TestSpecimen[] = [
     id: 'rubber',
     name: 'Vulcanized Rubber Eraser',
     category: 'Plastic Insulator',
-    image: pvcInsulatedCableImg,
+    image: rubberEraserMacroImg,
     conducts: false,
     material: 'Cross-linked elastomer polymer matrix',
     hint: 'Rubber tightly resists any electric current passing through!',
