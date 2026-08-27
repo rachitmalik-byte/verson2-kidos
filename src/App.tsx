@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { RoleSelection } from '@/features/role-selection/RoleSelection';
+import { SubjectSelection } from '@/features/subject-selection/SubjectSelection';
 import { ParentSetup } from '@/features/parent/ParentSetup';
 import { ParentPinGate } from '@/features/parent/ParentPinGate';
 import { ParentDashboard } from '@/features/parent/ParentDashboard';
@@ -22,6 +23,9 @@ export function App() {
         <Routes>
           {/* Entry */}
           <Route path="/" element={<RoleSelection />} />
+
+          {/* Subject Hub */}
+          <Route path="/subjects" element={<SubjectSelection />} />
 
           {/* Parent Portal */}
           <Route path="/parent/setup" element={<ParentSetup />} />

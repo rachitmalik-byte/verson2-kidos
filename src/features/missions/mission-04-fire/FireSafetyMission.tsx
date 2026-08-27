@@ -48,7 +48,7 @@ export function FireSafetyMission() {
       });
       setShowCelebration(true);
       setTimeout(() => {
-        navigate('/chapter-hub');
+        navigate('/chapter/3/mission/5');
       }, 2400);
     }
   };

@@ -22,7 +22,7 @@ export function RoleSelection() {
     if (!isSetUp) {
       navigate('/parent/setup');
     } else {
-      navigate('/chapter-hub');
+      navigate('/subjects');
     }
   };
 

@@ -74,7 +74,11 @@ export const DynamicMissionEngine: React.FC = () => {
       completeMission(mission.id);
       setShowCelebration(true);
       setTimeout(() => {
-        navigate('/chapter-hub');
+        if (mission.number < 13) {
+          navigate(`/chapter/3/mission/${mission.number + 1}`);
+        } else {
+          navigate('/chapter-hub');
+        }
       }, 2400);
     }
   };

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useParentStore } from '@/stores/parentStore';
@@ -8,6 +9,7 @@ import { Pip } from '@/components/pip/Pip';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
+import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
 import {
   RaincoatSyntheticIllustration,
   CottonIllustration,
@@ -24,6 +26,7 @@ import {
   Settings,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   Lock,
   CheckCircle2,
   Star,
@@ -33,6 +36,8 @@ import {
   Sun,
   Layers,
   Compass,
+  Tv,
+  FlaskConical,
 } from 'lucide-react';
 
 const renderMissionIllustration = (missionId: string, className = 'w-12 h-12 md:w-14 md:h-14') => {
@@ -60,222 +65,246 @@ const renderMissionIllustration = (missionId: string, className = 'w-12 h-12 md:
     case 'mission-11':
       return <RubberIllustration className={className} />;
     case 'mission-12':
-      return <ParachuteIllustration className={className} />;
+      return <span className="text-4xl">🧴</span>;
     case 'mission-13':
-      return <Trophy className={`${className} text-amber-500`} />;
+      return <ParachuteIllustration className={className} />;
     default:
-      return <Sparkles className={`${className} text-amber-500`} />;
+      return <Sparkles className={className} />;
   }
 };
 
-export const ChapterHub = () => {
+export function ChapterHub() {
   const navigate = useNavigate();
   const child = useParentStore((state) => state.child);
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 
-  const completedCount = completedMissions.length;
-  const totalMissions = missions.length;
-  const starsCount = completedCount * 3 + discoveries.length * 2;
+  const totalStars = completedMissions.length * 3 + discoveries.length * 2;
+  const isAllComplete = completedMissions.length === missions.length;
 
-  const handleLogoClick = () => {
+  const handleMissionClick = (mission: (typeof missions)[0], isUnlocked: boolean) => {
     sounds.pop();
-    voiceAssistant.stop();
-    navigate('/');
+    if (isUnlocked) {
+      voiceAssistant.stop();
+      if (mission.number <= 4) {
+        navigate(`/chapter/3/mission/${mission.number}`);
+      } else {
+        navigate(`/chapter/3/mission/${mission.number}`);
+      }
+    } else {
+      sounds.boing();
+      voiceAssistant.speak(`Complete Mission ${mission.number - 1} first to unlock this hands-on experiment!`);
+    }
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-200 via-indigo-50 to-emerald-100 pt-6 md:pt-10 pb-20 md:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden flex flex-col justify-between">
-      <div className="w-full max-w-5xl mx-auto flex flex-col gap-6 md:gap-8">
-        {/* ── Top Game Status Bar (Click Logo to Home + Audio Controls) ── */}
-        <header className="w-full bg-white/95 backdrop-blur-md rounded-3xl border-3 border-slate-200 p-4 sm:p-5 md:p-6 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Logo / Player Profile (Click to Go Home) */}
-          <button
-            onClick={handleLogoClick}
-            className="flex items-center gap-3 sm:gap-4 text-left cursor-pointer group w-full sm:w-auto justify-between sm:justify-start"
-            title="Click to return to Home"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-fuchsia-500 text-white flex items-center justify-center text-xl md:text-3xl font-black shadow-lg border-2 border-white group-hover:scale-105 transition-transform flex-shrink-0">
-                {child?.name ? child.name.charAt(0).toUpperCase() : 'P'}
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] md:text-[11px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
-                    POLYQUEST 🔬
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-500">Grade {child?.grade || '5'}</span>
-                </div>
-                <h1 className="text-lg md:text-2xl font-black text-slate-900 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  {child?.name || 'Explorer'}
-                </h1>
-              </div>
-            </div>
-
-            <div className="sm:hidden text-xs font-black text-sky-600 bg-sky-50 px-2.5 py-1 rounded-xl border border-sky-200">
-              Home 🏠
-            </div>
-          </button>
-
-          {/* Action Badges & Audio Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-center w-full sm:w-auto">
-            {/* Live SFX and Voice Toggles */}
-            <AudioNavBarControls showProfile={false} />
-
-            {/* Star Counter */}
-            <div className="flex items-center gap-1 px-3 py-1.5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-900 font-black text-xs sm:text-sm">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-              <span>{starsCount} ⭐</span>
-            </div>
-
-            {/* Field Journal */}
+    <div className="min-h-screen w-full bg-gradient-to-b from-sky-200 via-indigo-50 to-amber-100 flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative">
+      <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
+        {/* ── Top Game Navbar ── */}
+        <div className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => {
                 sounds.pop();
                 voiceAssistant.stop();
-                navigate('/discovery-book');
+                navigate('/subjects');
               }}
-              className="flex items-center gap-1 px-3 py-2 rounded-2xl btn-3d-indigo text-white font-black text-xs cursor-pointer"
+              className="px-3 py-1.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 border border-slate-300 cursor-pointer transition-all active:scale-95"
+              title="Return to Subjects"
             >
-              <BookOpen className="w-4 h-4" />
-              <span className="hidden sm:inline">Journal</span> ({discoveries.length})
+              <ArrowLeft className="w-4 h-4 stroke-[3]" />
+              <span className="hidden sm:inline">Subjects</span>
             </button>
 
-            {/* Parent Area */}
-            <button
-              onClick={() => {
-                sounds.pop();
-                voiceAssistant.stop();
-                navigate('/parent/pin');
-              }}
-              className="p-2 sm:p-2.5 rounded-2xl btn-3d-slate text-slate-700 font-bold cursor-pointer"
-              title="Parent Controls & Dashboard"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-          </div>
-        </header>
-
-        {/* ── Featured Chapter Hero Stage ── */}
-        <div className="w-full bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 rounded-3xl p-5 sm:p-8 md:p-10 text-white shadow-2xl border-4 border-white/80 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="max-w-lg z-10 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <span className="bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                Active Chapter Quest
+            <div className="flex items-center gap-2 ml-1">
+              <FlaskConical className="w-5 h-5 text-amber-500" />
+              <span className="font-black text-sm text-slate-800 hidden md:inline">
+                Chemistry & Materials
               </span>
-              <span className="text-sky-100 text-xs font-bold">Chapter 3</span>
+            </div>
+          </div>
+
+          <AudioNavBarControls showProfile={true} />
+        </div>
+
+        {/* ── Chapter Hero Banner with Pre-Lesson Study Hub ── */}
+        <div className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-400 shadow-xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+          <Pip mood="celebrating" size="lg" />
+
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
+              <span className="px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider">
+                Chapter 3 • Active Curriculum
+              </span>
+              <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                <span>{totalStars} Science Stars</span>
+              </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight mb-2 sm:mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              The World of Synthetic Materials
-            </h2>
-
-            <p className="text-sky-100 text-xs sm:text-sm md:text-base font-bold leading-relaxed mb-5 sm:mb-6">
-              Step into Pip's science lab! Test raincoats, stretch super-nylon, test flame safety, sort polymers, and discover chemistry!
+            <h1
+              className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight"
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
+              The World of Synthetic Materials 🧪
+            </h1>
+            <p className="text-xs md:text-sm font-bold text-slate-600 mt-1 max-w-xl">
+              Welcome back, {child?.name || 'Young Scientist'}! Prepare with the illustrated stories & video lessons below, then master all 13 interactive lab missions!
             </p>
 
-            <button
-              onClick={() => {
-                sounds.fanfare();
-                voiceAssistant.stop();
-                navigate('/chapter/3');
-              }}
-              className="btn-3d-amber text-slate-950 font-black text-base sm:text-lg py-3.5 px-6 sm:px-8 rounded-2xl cursor-pointer inline-flex items-center gap-2"
-            >
-              <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-              <span>{completedCount > 0 ? 'Continue Adventure' : 'Start Chapter Quest!'}</span>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[3]" />
-            </button>
-          </div>
+            {/* Quick Actions: Field Storybook & Video Lab & Journal */}
+            <div className="flex flex-wrap gap-2.5 mt-4 justify-center md:justify-start">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  navigate('/chapter/3');
+                }}
+                className="px-4 py-2 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Play Chapter Intro 🎬</span>
+              </button>
 
-          <div className="flex flex-col items-center z-10 flex-shrink-0">
-            <Pip mood="celebrating" size="xl" />
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  navigate('/discovery-book');
+                }}
+                className="px-4 py-2 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Field Specimen Journal ({discoveries.length})</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* ── Gamified Adventure Trail (Board Game Stage) ── */}
-        <div className="w-full bg-white rounded-3xl border-4 border-slate-200 p-4 sm:p-6 md:p-10 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 pb-4 border-b-2 border-slate-100 gap-3 text-center sm:text-left">
-            <div>
-              <div className="flex items-center justify-center sm:justify-start gap-2">
-                <Sparkles className="w-5 h-5 text-amber-500 fill-amber-400" />
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Chapter 3 Adventure Trail
-                </h3>
-              </div>
-              <p className="text-xs md:text-sm font-bold text-slate-500 mt-0.5">
-                Tap your active mission stepping-stone to jump right into the experiment!
-              </p>
-            </div>
+        {/* ── Chapters Roadmap Preview (Multi-Chapter Structure) ── */}
+        <div className="space-y-3">
+          <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">
+            Chemistry Course Modules & Chapters
+          </h3>
 
-            <div className="text-xs md:text-sm font-black bg-emerald-100 text-emerald-800 px-4 py-2 rounded-2xl border-2 border-emerald-300 shadow-xs">
-              {completedCount} of {totalMissions} Missions Complete
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { num: 'Ch 1', title: 'States of Matter: Solids & Gases', status: 'Coming Soon', active: false },
+              { num: 'Ch 2', title: 'Pure Substances & Mixtures', status: 'Coming Soon', active: false },
+              { num: 'Ch 3', title: 'Synthetic Materials & Polymers', status: 'ACTIVE (13 Missions)', active: true },
+              { num: 'Ch 4', title: 'Acids, Bases & Neutralization', status: 'Coming Soon', active: false },
+            ].map((ch) => (
+              <div
+                key={ch.num}
+                className={`p-3.5 rounded-2xl border-2 flex flex-col justify-between ${
+                  ch.active
+                    ? 'bg-amber-50 border-amber-400 shadow-md ring-2 ring-amber-300'
+                    : 'bg-white/80 border-slate-200 opacity-60'
+                }`}
+              >
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                    {ch.num}
+                  </span>
+                  <span className="font-extrabold text-xs text-slate-800 leading-tight block mt-0.5">
+                    {ch.title}
+                  </span>
+                </div>
+                <span
+                  className={`text-[10px] font-black uppercase tracking-wider mt-2.5 px-2 py-0.5 rounded-md w-fit ${
+                    ch.active ? 'bg-amber-400 text-slate-950' : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  {ch.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 13 Interactive Mission Stepping-Stone Trail ── */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base md:text-lg font-black text-slate-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              Chapter 3 Interactive Mission Trail 🗺️
+            </h3>
+            <span className="text-xs font-black text-slate-500">
+              {completedMissions.length} / {missions.length} Missions Completed
+            </span>
           </div>
 
-          {/* Stepping Stones Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
-            {missions.map((mission, index) => {
-              const isCompleted = completedMissions.includes(mission.id);
-              const isCurrent = index === 0 ? !isCompleted : completedMissions.includes(missions[index - 1].id) && !isCompleted;
-              const isLocked = !isCompleted && !isCurrent;
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {missions.map((m, index) => {
+              const isCompleted = completedMissions.includes(m.id);
+              const isUnlocked = index === 0 || completedMissions.includes(missions[index - 1]?.id);
 
               return (
                 <motion.div
-                  key={mission.id}
-                  whileHover={!isLocked ? { scale: 1.02, y: -3 } : {}}
-                  whileTap={!isLocked ? { scale: 0.98 } : {}}
-                  onClick={() => {
-                    if (!isLocked) {
-                      sounds.pop();
-                      voiceAssistant.stop();
-                      navigate(`/chapter/3/mission/${mission.number}`);
-                    } else {
-                      sounds.boing();
-                    }
-                  }}
-                  className={`p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-3.5 sm:gap-4 relative cursor-pointer ${
-                    isCurrent
-                      ? 'bg-amber-50/95 border-amber-500 shadow-xl ring-4 ring-amber-300/80 scale-101'
-                      : isCompleted
-                      ? 'bg-emerald-50/80 border-emerald-300 shadow-md hover:bg-emerald-100/80'
-                      : 'bg-slate-50 border-slate-200 opacity-60 cursor-not-allowed'
+                  key={m.id}
+                  whileHover={isUnlocked ? { scale: 1.03, y: -3 } : {}}
+                  whileTap={isUnlocked ? { scale: 0.97 } : {}}
+                  onClick={() => handleMissionClick(m, isUnlocked)}
+                  className={`p-5 rounded-3xl border-3 transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden bg-white ${
+                    isCompleted
+                      ? 'border-emerald-400 shadow-md bg-emerald-50/40'
+                      : isUnlocked
+                      ? 'border-amber-400 shadow-lg ring-4 ring-amber-300/40'
+                      : 'border-slate-200 opacity-60 bg-slate-50 cursor-not-allowed'
                   }`}
                 >
-                  {/* Stepping Stone Illustration */}
-                  <div
-                    className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center p-1.5 flex-shrink-0 shadow-md ${
-                      isCurrent
-                        ? 'bg-amber-400 border-2 border-amber-600 animate-bounce'
-                        : isCompleted
-                        ? 'bg-emerald-500 border-2 border-emerald-600'
-                        : 'bg-slate-200 border-2 border-slate-300'
-                    }`}
-                  >
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center shadow-xs">
+                      {renderMissionIllustration(m.id)}
+                    </div>
+
                     {isCompleted ? (
-                      <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-white stroke-[2.5]" />
-                    ) : isLocked ? (
-                      <Lock className="w-5 h-5 text-slate-400" />
+                      <div className="flex items-center gap-1 bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-black">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Done ⭐⭐⭐</span>
+                      </div>
+                    ) : isUnlocked ? (
+                      <span className="px-2.5 py-1 bg-amber-400 text-slate-950 rounded-full text-xs font-black">
+                        Ready!
+                      </span>
                     ) : (
-                      renderMissionIllustration(mission.id, 'w-full h-full')
+                      <div className="p-1.5 bg-slate-200 rounded-xl text-slate-500">
+                        <Lock className="w-3.5 h-3.5" />
+                      </div>
                     )}
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-slate-200 text-slate-700 px-2 py-0.5 rounded">
-                        M{mission.number}
-                      </span>
-                      {isCurrent && (
-                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white px-2 py-0.5 rounded animate-pulse">
-                          Play!
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="font-black text-slate-900 text-sm sm:text-base truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                      {mission.title}
+                  {/* Mission Title & Topic */}
+                  <div className="space-y-1 mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                      Mission {m.number}
+                    </span>
+                    <h4
+                      className="text-base font-black text-slate-900 leading-snug"
+                      style={{ fontFamily: 'Nunito, sans-serif' }}
+                    >
+                      {m.title}
                     </h4>
-                    <p className="text-[11px] sm:text-xs font-bold text-slate-500 truncate">{mission.subtitle}</p>
+                    <p className="text-xs font-bold text-slate-500 leading-snug">
+                      {m.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Bottom Action */}
+                  <div className="pt-3 border-t-2 border-slate-100 flex items-center justify-between">
+                    <div className="flex gap-1">
+                      {m.concepts.slice(0, 2).map((c) => (
+                        <span key={c} className="text-[9px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div
+                      className={`p-1.5 rounded-xl font-black ${
+                        isUnlocked ? 'bg-amber-400 text-slate-950' : 'bg-slate-200 text-slate-400'
+                      }`}
+                    >
+                      <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
                   </div>
                 </motion.div>
               );
@@ -285,4 +314,4 @@ export const ChapterHub = () => {
       </div>
     </div>
   );
-};
+}
