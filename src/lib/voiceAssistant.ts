@@ -1,5 +1,5 @@
 // ─── Emotive Human-like Voice Assistant Engine ───
-// High-grade Natural Neural voice selection, friendly prosody, auto-narration & word boundary tracking
+// Expressive sentence inflection (curiosity on '?', enthusiasm on '!'), breath pauses, and top-tier neural voices
 import { useAudioStore } from '@/stores/audioStore';
 
 export type SpeakingListener = (isSpeaking: boolean) => void;
@@ -58,13 +58,11 @@ class VoiceAssistantEngine {
       this.initVoices();
     }
 
-    const friendlyNaturalVoices = [
-      // Child-friendly and highly natural online neural voices
+    const priorityVoices = [
       'Microsoft Ana Online (Natural)',
       'Microsoft Jenny Online (Natural)',
       'Microsoft Aria Online (Natural)',
       'Microsoft Guy Online (Natural)',
-      'Microsoft Christopher Online (Natural)',
       'Google US English',
       'Google UK English Female',
       'en-US-Neural2-F',
@@ -81,8 +79,7 @@ class VoiceAssistantEngine {
       'Neural',
     ];
 
-    // 1. Try to find top priority natural voice
-    for (const name of friendlyNaturalVoices) {
+    for (const name of priorityVoices) {
       const match = this.voices.find(
         (v) =>
           v.lang.startsWith('en') &&
@@ -92,15 +89,16 @@ class VoiceAssistantEngine {
       if (match) return match;
     }
 
-    // 2. Fallback to any English voice that is NOT an old robotic desktop synthesizer
-    const nonRoboticEnglish = this.voices.find(
+    // Fallback: English voice without legacy robotic desktop moniker
+    const nonRobotic = this.voices.find(
       (v) =>
         v.lang.startsWith('en') &&
         !v.name.toLowerCase().includes('david desktop') &&
         !v.name.toLowerCase().includes('mark desktop') &&
-        !v.name.toLowerCase().includes('hazel desktop')
+        !v.name.toLowerCase().includes('hazel desktop') &&
+        !v.name.toLowerCase().includes('zira desktop')
     );
-    if (nonRoboticEnglish) return nonRoboticEnglish;
+    if (nonRobotic) return nonRobotic;
 
     return this.voices.find((v) => v.lang.startsWith('en')) || this.voices[0] || null;
   }
@@ -136,7 +134,7 @@ class VoiceAssistantEngine {
     }
   }
 
-  // Speaks with natural friendly prosody, emotional pauses, and word-by-word tracking
+  // Speaks with natural friendly human prosody, emotional pauses, and pitch inflection
   speak(text: string, onEnd?: () => void) {
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || this.isMuted()) {
       if (onEnd) onEnd();
@@ -145,7 +143,7 @@ class VoiceAssistantEngine {
 
     this.stop();
 
-    // Clean emojis & format conversational pauses for natural human breathing
+    // Clean emojis & format conversational breathing pauses
     const cleanedText = text
       .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
       .replace(/\.\.\./g, ', ')
@@ -166,14 +164,25 @@ class VoiceAssistantEngine {
       utterance.voice = voice;
     }
 
-    // Friendly, enthusiastic, non-robotic rate & pitch
-    utterance.rate = 0.94; // Warm, clear storytelling pace
-    utterance.pitch = 1.08; // Friendly, encouraging, youthful pitch
+    // Dynamic Pitch & Rate contour based on emotional punctuation
+    const isQuestion = cleanedText.includes('?');
+    const isExcited = cleanedText.includes('!');
+
+    if (isQuestion) {
+      utterance.rate = 0.93; // Deliberate questioning cadence
+      utterance.pitch = 1.14; // Rising inflection for curiosity
+    } else if (isExcited) {
+      utterance.rate = 0.96; // Energetic storytelling
+      utterance.pitch = 1.12; // Cheerful enthusiasm
+    } else {
+      utterance.rate = 0.94; // Warm, friendly conversational pace
+      utterance.pitch = 1.08; // Friendly, engaging tone
+    }
+
     utterance.volume = 1.0;
 
     let receivedNativeBoundary = false;
 
-    // Real-time word boundary synchronization
     utterance.onboundary = (event) => {
       receivedNativeBoundary = true;
       this.notifyBoundary(event.charIndex, cleanedText);
