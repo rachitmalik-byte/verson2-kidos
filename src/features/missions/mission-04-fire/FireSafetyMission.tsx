@@ -47,7 +47,7 @@ export function FireSafetyMission() {
       setCurrentPhase(phaseOrder[currentStepIndex + 1]);
     } else {
       sounds.fanfare();
-      completeMission('mission-04');
+      completeMission('mission-05');
       addDiscovery({
         materialId: 'fire-safety',
         discoveredAt: Date.now(),
@@ -57,7 +57,7 @@ export function FireSafetyMission() {
       });
       setShowCelebration(true);
       setTimeout(() => {
-        navigate('/chapter/3/mission/5');
+        navigate('/chapter/3/mission/6');
       }, 2400);
     }
   };
@@ -113,9 +113,9 @@ export function FireSafetyMission() {
 
   return (
     <MissionLayout
-      missionId="mission-04"
-      missionNumber={4}
-      missionTitle="Fire Safety & Heat Lab"
+      missionId="mission-05"
+      missionNumber={5}
+      missionTitle="Fire Safety Station"
       currentStep={currentStepIndex + 1}
       totalSteps={totalSteps}
       isStepComplete={isStepComplete()}

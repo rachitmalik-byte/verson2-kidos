@@ -47,6 +47,23 @@ import {
   Sliders,
 } from 'lucide-react';
 
+// Real Studio Macro Educational Photography
+import cottonSwatchCleanImg from '@/assets/images/experiments/cotton_swatch_clean.jpg';
+import cottonBurningAshImg from '@/assets/images/experiments/cotton_burning_ash.jpg';
+import polyesterSwatchCleanImg from '@/assets/images/experiments/polyester_swatch_clean.jpg';
+import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
+import polyesterFabricRollImg from '@/assets/images/specimens/polyester_fabric_roll.jpg';
+import syntheticAcrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
+import silkwormSilkCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
+import rawCottonBollImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
+import sheepWoolFleeceImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
+import naturalWoodTimberImg from '@/assets/images/specimens/natural_wood_timber.jpg';
+import plasticPetPelletsImg from '@/assets/images/specimens/plastic_pet_pellets.jpg';
+import copperWireMacroImg from '@/assets/images/wire/copper_wire_macro.jpg';
+import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
+import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
+import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
+
 export const DynamicMissionEngine: React.FC = () => {
   const { missionNum } = useParams<{ missionNum: string }>();
   const navigate = useNavigate();
@@ -239,9 +256,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
-                    { id: 'rayon', name: 'Rayon (Artificial Silk)', origin: 'From Wood Pulp', desc: 'Mimics expensive silk! Soft, smooth, and drapes elegantly.', icon: '✨' },
-                    { id: 'acrylic', name: 'Acrylic (Artificial Wool)', origin: 'From Petrochemicals', desc: 'Mimics warm wool! Lightweight, fluffy, and moths cannot eat it.', icon: '🧶' },
-                    { id: 'polyester', name: 'Polyester (Terylene)', origin: 'Polymer Ester Chains', desc: '100% wrinkle-free, washes easily, and dries in minutes.', icon: '👕' },
+                    { id: 'rayon', name: 'Rayon (Artificial Silk)', origin: 'From Wood Pulp', desc: 'Mimics expensive silk! Soft, smooth, and drapes elegantly.', image: silkwormSilkCocoonImg },
+                    { id: 'acrylic', name: 'Acrylic (Artificial Wool)', origin: 'From Petrochemicals', desc: 'Mimics warm wool! Lightweight, fluffy, and moths cannot eat it.', image: syntheticAcrylicYarnImg },
+                    { id: 'polyester', name: 'Polyester (Terylene)', origin: 'Polymer Ester Chains', desc: '100% wrinkle-free, washes easily, and dries in minutes.', image: polyesterFabricRollImg },
                   ].map((f) => {
                     const isPicked = interactiveState[f.id];
                     return (
@@ -257,11 +274,13 @@ export const DynamicMissionEngine: React.FC = () => {
                             return next;
                           });
                         }}
-                        className={`p-5 rounded-3xl border-3 text-left transition-all cursor-pointer ${
+                        className={`p-5 rounded-3xl border-3 text-left transition-all cursor-pointer flex flex-col items-center text-center ${
                           isPicked ? 'bg-sky-100 border-sky-500 shadow-md ring-4 ring-sky-200' : 'bg-white border-slate-200 hover:bg-slate-50'
                         }`}
                       >
-                        <span className="text-3xl block mb-2">{f.icon}</span>
+                        <div className="w-24 h-24 rounded-2xl overflow-hidden mb-3 border border-slate-100 shadow-inner bg-slate-50 p-1">
+                          <img src={f.image} alt={f.name} className="w-full h-full object-cover rounded-xl" />
+                        </div>
                         <h4 className="font-black text-base text-slate-900">{f.name}</h4>
                         <span className="text-[10px] font-black text-sky-700 bg-sky-200 px-2.5 py-0.5 rounded-full mt-1 inline-block">
                           {f.origin}
@@ -337,7 +356,7 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Controlled Burner Reaction Simulator */}
+            {/* Step 1: Controlled Burner Reaction Simulator with Real Photos */}
             {currentStepIndex === 1 && (
               <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-400 shadow-xl">
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Controlled Flame Burner Chamber</h3>
@@ -349,21 +368,19 @@ export const DynamicMissionEngine: React.FC = () => {
                   {/* Cotton Burn Test */}
                   <div className="p-5 bg-emerald-50/70 border-3 border-emerald-300 rounded-2xl flex flex-col items-center text-center">
                     <span className="font-black text-slate-900 mb-2">1. 100% Natural Cotton</span>
-                    <div
-                      className={`w-28 h-28 rounded-2xl flex flex-col items-center justify-center transition-all duration-700 border-2 ${
-                        interactiveState.burnedCotton
-                          ? 'bg-slate-200 border-slate-400 shadow-inner'
-                          : 'bg-white border-emerald-300 shadow-md'
-                      }`}
-                    >
-                      <span className="text-4xl">{interactiveState.burnedCotton ? '🌫️' : '🌿👕'}</span>
-                      {interactiveState.burnedCotton && (
-                        <span className="text-[10px] font-black text-slate-600 mt-1">Crumbly Gray Ash</span>
-                      )}
+                    <div className="w-36 h-36 rounded-2xl overflow-hidden border-2 border-emerald-300 bg-white shadow-md p-1 flex items-center justify-center">
+                      <img
+                        src={interactiveState.burnedCotton ? cottonBurningAshImg : cottonSwatchCleanImg}
+                        alt="Cotton Swatch"
+                        className="w-full h-full object-cover rounded-xl"
+                      />
                     </div>
+                    <span className="text-[11px] font-bold text-slate-600 mt-2">
+                      {interactiveState.burnedCotton ? '✓ Soft Gray Ash (Harmless)' : 'Clean unburned cotton swatch'}
+                    </span>
                     <button
                       onClick={() => {
-                        sounds.success();
+                        sounds.flameIgnite();
                         setInteractiveState((p) => {
                           const next = { ...p, burnedCotton: true };
                           if (next.burnedPoly) next[`step_${currentStepIndex}`] = true;
@@ -379,21 +396,19 @@ export const DynamicMissionEngine: React.FC = () => {
                   {/* Polyester Melt Test */}
                   <div className="p-5 bg-rose-50/70 border-3 border-rose-300 rounded-2xl flex flex-col items-center text-center">
                     <span className="font-black text-slate-900 mb-2">2. Synthetic Polyester</span>
-                    <div
-                      className={`w-28 h-28 rounded-2xl flex flex-col items-center justify-center transition-all duration-700 border-2 ${
-                        interactiveState.burnedPoly
-                          ? 'bg-rose-100 border-rose-500 shadow-inner animate-pulse'
-                          : 'bg-white border-rose-300 shadow-md'
-                      }`}
-                    >
-                      <span className="text-4xl">{interactiveState.burnedPoly ? '🫗⚠️' : '👕🧴'}</span>
-                      {interactiveState.burnedPoly && (
-                        <span className="text-[10px] font-black text-rose-700 mt-1">Sticky Molten Beads!</span>
-                      )}
+                    <div className="w-36 h-36 rounded-2xl overflow-hidden border-2 border-rose-300 bg-white shadow-md p-1 flex items-center justify-center">
+                      <img
+                        src={interactiveState.burnedPoly ? polyesterMeltingBeadImg : polyesterSwatchCleanImg}
+                        alt="Polyester Swatch"
+                        className="w-full h-full object-cover rounded-xl"
+                      />
                     </div>
+                    <span className="text-[11px] font-bold text-rose-700 mt-2">
+                      {interactiveState.burnedPoly ? '⚠️ Sticky Molten Plastic Beads!' : 'Clean unburned polyester swatch'}
+                    </span>
                     <button
                       onClick={() => {
-                        sounds.boing();
+                        sounds.flameIgnite();
                         setInteractiveState((p) => {
                           const next = { ...p, burnedPoly: true };
                           if (next.burnedCotton) next[`step_${currentStepIndex}`] = true;

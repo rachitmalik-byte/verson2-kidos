@@ -45,7 +45,7 @@ export function App() {
           <Route path="/chapter/3/mission/1" element={<RaincoatMission />} />
           <Route path="/chapter/3/mission/2" element={<SortingMission />} />
           <Route path="/chapter/3/mission/3" element={<NylonStrengthMission />} />
-          <Route path="/chapter/3/mission/4" element={<FireSafetyMission />} />
+          <Route path="/chapter/3/mission/5" element={<FireSafetyMission />} />
           <Route path="/chapter/3/mission/8" element={<WireMission />} />
           <Route path="/chapter/3/mission/:missionNum" element={<DynamicMissionEngine />} />
 
