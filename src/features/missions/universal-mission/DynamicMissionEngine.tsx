@@ -40,6 +40,9 @@ import {
   AlertTriangle,
   Droplet,
   CheckCircle2,
+  Clock,
+  RotateCcw,
+  Lightbulb,
 } from 'lucide-react';
 
 export const DynamicMissionEngine: React.FC = () => {
@@ -60,7 +63,6 @@ export const DynamicMissionEngine: React.FC = () => {
     setInteractiveState({});
     sounds.pop();
 
-    // Set BGM theme
     if (missionNumber === 5) bgmEngine.setTrack('rainy-storm');
     else if (missionNumber === 6) bgmEngine.setTrack('chill-study');
     else if (missionNumber === 7) bgmEngine.setTrack('playful-lab');
@@ -110,9 +112,7 @@ export const DynamicMissionEngine: React.FC = () => {
     setInteractiveState({});
   };
 
-  // Robust step completion - NEVER traps student
   const isStepComplete = () => {
-    // If interactive state for this step is marked done, or step is inherently observational
     if (interactiveState[`step_${currentStepIndex}`] === true) return true;
     if (
       currentStep.type === 'hook' ||
@@ -574,19 +574,35 @@ export const DynamicMissionEngine: React.FC = () => {
       case 8:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
+            {/* Step 0: Hook */}
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl">
                 <WireIllustration className="w-24 h-24 mx-auto mb-3" />
-                <h2 className="text-3xl font-black text-slate-900 mb-2">What Keeps Electricity Safe? ⚡</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Bare Wire Mystery! ⚡</h2>
                 <p className="text-slate-600 font-bold mb-6">
-                  Inside charging cables flows powerful electrical current. Assemble a safe wire!
+                  Pip is building an electrical circuit. Why do electric wires always have shiny copper inside and soft plastic on the outside?
                 </p>
+                <button
+                  onClick={() => {
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
+                  }}
+                  className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
+                >
+                  Assemble Safe Wire 🛡️
+                </button>
               </div>
             )}
 
-            {currentStepIndex >= 1 && (
-              <div className="w-full flex flex-col items-center">
-                <div className="grid grid-cols-2 gap-6 w-full max-w-xl mb-6">
+            {/* Step 1: Interactive Wire Assembler */}
+            {currentStepIndex === 1 && (
+              <div className="w-full flex flex-col items-center max-w-2xl">
+                <div className="flex items-center gap-4 mb-6">
+                  <Pip mood="thinking" size="lg" />
+                  <PipSpeechBubble message="Assemble a safe electrical wire! Place copper inside for electricity, and plastic outside for safety!" isVisible={true} />
+                </div>
+                <div className="grid grid-cols-2 gap-6 w-full mb-6">
                   <button
                     onClick={() => {
                       sounds.success();
@@ -597,7 +613,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       });
                     }}
                     className={`p-6 rounded-3xl border-3 flex flex-col items-center transition-all cursor-pointer ${
-                      interactiveState.copper ? 'bg-amber-100 border-amber-500 shadow-md' : 'bg-white border-slate-200'
+                      interactiveState.copper ? 'bg-amber-100 border-amber-500 shadow-md ring-4 ring-amber-200' : 'bg-white border-slate-200 hover:bg-slate-50'
                     }`}
                   >
                     <span className="text-4xl mb-1">⚡</span>
@@ -617,7 +633,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       });
                     }}
                     className={`p-6 rounded-3xl border-3 flex flex-col items-center transition-all cursor-pointer ${
-                      interactiveState.plastic ? 'bg-sky-100 border-sky-500 shadow-md' : 'bg-white border-slate-200'
+                      interactiveState.plastic ? 'bg-sky-100 border-sky-500 shadow-md ring-4 ring-sky-200' : 'bg-white border-slate-200 hover:bg-slate-50'
                     }`}
                   >
                     <span className="text-4xl mb-1">🛡️</span>
@@ -634,74 +650,257 @@ export const DynamicMissionEngine: React.FC = () => {
                 )}
               </div>
             )}
+
+            {/* Step 2: Understand Conductors & Insulators */}
+            {currentStepIndex === 2 && (
+              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl">
+                <span className="text-5xl block mb-2">⚡🛡️</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Conductors vs Insulators</h3>
+                <p className="text-slate-600 font-bold mb-6 text-sm leading-relaxed">
+                  A <span className="text-amber-600 font-black">Conductor</span> (like Copper metal) lets electric charges race through freely. An <span className="text-sky-600 font-black">Insulator</span> (like PVC Plastic) traps electricity so it never touches your skin!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-amber-400 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer"
+                >
+                  Understood Conductor & Insulator Law! ✓
+                </button>
+              </div>
+            )}
+
+            {/* Step 3: Practice Electric Tool Challenge */}
+            {currentStepIndex >= 3 && (
+              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center">
+                <span className="text-5xl mb-2">🛠️⚡</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Electrician Tool Challenge!</h3>
+                <p className="text-slate-600 font-bold mb-6 text-sm">
+                  An electrician is fixing high-voltage wall wires. Which screwdriver should she use?
+                </p>
+                <div className="grid grid-cols-2 gap-4 w-full mb-4">
+                  <button
+                    onClick={() => {
+                      sounds.fanfare();
+                      setInteractiveState({ [`step_${currentStepIndex}`]: true, pickTool: 'safe' });
+                    }}
+                    className={`p-5 rounded-3xl border-3 text-center cursor-pointer ${
+                      interactiveState.pickTool === 'safe'
+                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
+                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span className="text-3xl block mb-1">🪛</span>
+                    <span className="font-black text-sm text-slate-900">Plastic-Insulated Handle</span>
+                    <span className="text-xs font-bold text-emerald-700 block mt-1">Blocks 1000V Shocks ✓</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      sounds.boing();
+                      voiceAssistant.speak('A bare metal handle conducts electricity right into your hand! Very dangerous!');
+                    }}
+                    className="p-5 rounded-3xl border-3 bg-slate-50 border-slate-200 hover:bg-slate-100 text-center cursor-pointer"
+                  >
+                    <span className="text-3xl block mb-1">🔪</span>
+                    <span className="font-black text-sm text-slate-900">Bare Metal Handle</span>
+                    <span className="text-xs font-bold text-rose-600 block mt-1">Electric Shock Hazard ❌</span>
+                  </button>
+                </div>
+                {interactiveState.pickTool === 'safe' && (
+                  <div className="p-3 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-black">
+                    🎉 Brilliant! Always use plastic/rubber insulated tools when working with electricity!
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
 
       /* ─────────────────────────────────────────────────────────────
-         MISSION 9: SAVE PIP'S HAND! (Kettle Handle)
+         MISSION 9: SAVE PIP'S HAND! (Thermal Kettle Handle)
       ───────────────────────────────────────────────────────────── */
       case 9:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
-            <div className="text-center max-w-2xl mb-6">
-              <KettleIllustration className="w-24 h-24 mx-auto mb-3" />
-              <h2 className="text-3xl font-black text-slate-900 mb-2">Save Pip's Hand! 🫖</h2>
-              <p className="text-slate-600 font-bold">
-                The tea kettle is boiling at 100°C! Which material should we attach to the handle so Pip can lift it safely without burning his fingers?
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-4 w-full max-w-xl">
-              {[
-                { id: 'metal', name: 'Iron Metal Handle', correct: false, hint: 'Burns hand! (Thermal Conductor)' },
-                { id: 'bakelite', name: 'Bakelite Plastic Handle', correct: true, hint: 'Safe! (Thermal Insulator) ✓' },
-              ].map((h) => (
+            {/* Step 0: Hook */}
+            {currentStepIndex === 0 && (
+              <div className="text-center max-w-2xl">
+                <KettleIllustration className="w-24 h-24 mx-auto mb-3" />
+                <h2 className="text-3xl font-black text-slate-900 mb-2">Save Pip's Hand! 🫖</h2>
+                <p className="text-slate-600 font-bold mb-6">
+                  The tea kettle is boiling at 100°C! The pot is made of metal to boil water fast, but what material will keep the handle cool?
+                </p>
                 <button
-                  key={h.id}
                   onClick={() => {
-                    if (h.correct) {
-                      sounds.fanfare();
-                      setInteractiveState({ [`step_${currentStepIndex}`]: true, pickedSafe: true });
-                    } else {
-                      sounds.boing();
-                      voiceAssistant.speak('Metal absorbs boiling heat quickly and would burn Pip’s fingers! Try Bakelite plastic!');
-                    }
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
                   }}
-                  className={`p-6 rounded-3xl border-4 text-center cursor-pointer transition-all ${
-                    h.correct && interactiveState.pickedSafe
-                      ? 'bg-emerald-50 border-emerald-400 shadow-xl'
-                      : 'bg-white border-slate-200 hover:bg-slate-50'
-                  }`}
+                  className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  <h4 className="font-black text-base text-slate-900">{h.name}</h4>
-                  <span className="text-xs font-bold text-slate-500 mt-1 block">{h.hint}</span>
+                  Test Kettle Handle Materials 🌡️
                 </button>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* Step 1: Handle Test */}
+            {currentStepIndex === 1 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-300 shadow-xl text-center flex flex-col items-center">
+                <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                  {[
+                    { id: 'metal', name: 'Iron Metal Handle', correct: false, desc: 'Heats to 100°C in seconds!', icon: '🔥', hint: 'Thermal Conductor — Burns fingers!' },
+                    { id: 'bakelite', name: 'Bakelite Plastic Handle', correct: true, desc: 'Stays 25°C room temp!', icon: '🛡️', hint: 'Thermal Insulator — Safe to lift! ✓' },
+                  ].map((h) => (
+                    <button
+                      key={h.id}
+                      onClick={() => {
+                        if (h.correct) {
+                          sounds.fanfare();
+                          setInteractiveState({ [`step_${currentStepIndex}`]: true, pickedSafe: true });
+                        } else {
+                          sounds.boing();
+                          voiceAssistant.speak('Metal absorbs boiling heat quickly and would burn Pip’s fingers! Try Bakelite plastic!');
+                        }
+                      }}
+                      className={`p-6 rounded-3xl border-4 text-center cursor-pointer transition-all ${
+                        h.correct && interactiveState.pickedSafe
+                          ? 'bg-emerald-50 border-emerald-400 shadow-xl ring-4 ring-emerald-200'
+                          : 'bg-white border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span className="text-3xl block mb-2">{h.icon}</span>
+                      <h4 className="font-black text-base text-slate-900">{h.name}</h4>
+                      <p className="text-xs font-bold text-slate-600 mt-1">{h.desc}</p>
+                      <span className={`text-[11px] font-black mt-2 block ${h.correct ? 'text-emerald-700' : 'text-rose-600'}`}>
+                        {h.hint}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {interactiveState.pickedSafe && (
+                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full text-emerald-950 font-black text-sm">
+                    🎉 Pip can lift the kettle safely! Bakelite plastic is a thermosetting polymer that does not conduct heat!
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 2: Understand Thermal Insulation */}
+            {currentStepIndex >= 2 && (
+              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl flex flex-col items-center">
+                <span className="text-5xl mb-2">🍳🛡️</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Thermal Engineering in the Kitchen</h3>
+                <p className="text-slate-600 font-bold mb-6 text-sm leading-relaxed">
+                  Frying pans and pressure cookers combine TWO materials: <br />
+                  1. <span className="text-amber-600 font-black">Aluminium/Steel base</span> (Thermal Conductor) to cook food evenly. <br />
+                  2. <span className="text-sky-600 font-black">Bakelite Plastic handle</span> (Thermal Insulator) to protect chef hands!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.fanfare();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-amber-400 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer"
+                >
+                  Mastered Thermal Insulation! ✓
+                </button>
+              </div>
+            )}
           </div>
         );
 
       /* ─────────────────────────────────────────────────────────────
-         MISSION 10: THE PLASTIC PROBLEM (3 R's & Microplastics)
+         MISSION 10: THE PLASTIC PROBLEM (Time Tunnel & Microplastics)
       ───────────────────────────────────────────────────────────── */
       case 10:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
-            <div className="text-center max-w-2xl mb-6">
-              <Layers className="w-24 h-24 text-sky-500 mx-auto mb-3" />
-              <h2 className="text-3xl font-black text-slate-900 mb-2">The Plastic Challenge 🌍</h2>
-              <p className="text-slate-600 font-bold">
-                Plastics do not rot or decay naturally. Over 450 years, they break down into tiny microplastics. We must practice the 3 Rs: Reduce, Reuse, and Recycle!
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                sounds.fanfare();
-                setInteractiveState({ [`step_${currentStepIndex}`]: true });
-              }}
-              className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer"
-            >
-              Take the 3 R's Planet Pledge 🌿
-            </button>
+            {/* Step 0: Hook */}
+            {currentStepIndex === 0 && (
+              <div className="text-center max-w-2xl">
+                <Layers className="w-24 h-24 text-sky-500 mx-auto mb-3" />
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Plastic Challenge 🌍</h2>
+                <p className="text-slate-600 font-bold mb-6">
+                  Because plastics never rot, every piece of plastic ever made still exists somewhere on Earth! Let's travel through the Time Tunnel!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
+                  }}
+                  className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
+                >
+                  Enter Soil Time Tunnel ⏳
+                </button>
+              </div>
+            )}
+
+            {/* Step 1: Time Tunnel Interactive */}
+            {currentStepIndex === 1 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-emerald-300 shadow-xl text-center flex flex-col items-center">
+                <h3 className="text-xl font-black text-slate-900 mb-3">Underground Time Decay Test</h3>
+                <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                  <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-200 text-center">
+                    <span className="text-4xl block mb-1">🍌</span>
+                    <span className="font-black text-sm text-slate-900">Banana Peel</span>
+                    <span className="text-xs text-emerald-700 font-bold block mt-1">Biodegradable</span>
+                    <span className="text-[10px] bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full mt-2 inline-block">
+                      Rots in 2 Weeks ✓
+                    </span>
+                  </div>
+
+                  <div className="p-4 bg-rose-50 rounded-2xl border-2 border-rose-200 text-center">
+                    <span className="text-4xl block mb-1">🫙</span>
+                    <span className="font-black text-sm text-slate-900">Plastic Bottle</span>
+                    <span className="text-xs text-rose-600 font-bold block mt-1">Non-Biodegradable</span>
+                    <span className="text-[10px] bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full mt-2 inline-block">
+                      Takes 450+ Years! ⚠️
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    sounds.fanfare();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer"
+                >
+                  I Understand Biodegradability ✓
+                </button>
+              </div>
+            )}
+
+            {/* Step 2+: Environmental 3 R's Pledge */}
+            {currentStepIndex >= 2 && (
+              <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-emerald-400 shadow-xl flex flex-col items-center">
+                <span className="text-5xl mb-2">♻️🌱</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">The 3 R's Planet Pledge</h3>
+                <div className="grid grid-cols-3 gap-2 w-full my-4 text-xs font-black">
+                  <div className="p-3 bg-emerald-100 text-emerald-900 rounded-2xl">
+                    1. REDUCE <br /> Use metal bottles
+                  </div>
+                  <div className="p-3 bg-sky-100 text-sky-900 rounded-2xl">
+                    2. REUSE <br /> Carry cloth bags
+                  </div>
+                  <div className="p-3 bg-amber-100 text-amber-900 rounded-2xl">
+                    3. RECYCLE <br /> Sort blue bins
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    sounds.fanfare();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-emerald-500 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer"
+                >
+                  Take the Planet Pledge 🌿
+                </button>
+              </div>
+            )}
           </div>
         );
 
@@ -711,22 +910,53 @@ export const DynamicMissionEngine: React.FC = () => {
       case 11:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
-            <div className="text-center max-w-2xl mb-6">
-              <RubberIllustration className="w-24 h-24 mx-auto mb-3" />
-              <h2 className="text-3xl font-black text-slate-900 mb-2">Natural Latex vs Synthetic Rubber 🛞</h2>
-              <p className="text-slate-600 font-bold">
-                Natural rubber comes from tree sap (latex). Synthetic rubber is engineered in factories to handle heavy trucks, high temperatures, and immense friction!
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                sounds.success();
-                setInteractiveState({ [`step_${currentStepIndex}`]: true });
-              }}
-              className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer"
-            >
-              Test Rubber Elasticity & Friction ✓
-            </button>
+            {currentStepIndex === 0 && (
+              <div className="text-center max-w-2xl">
+                <RubberIllustration className="w-24 h-24 mx-auto mb-3" />
+                <h2 className="text-3xl font-black text-slate-900 mb-2">Natural Latex vs Synthetic Rubber 🛞</h2>
+                <p className="text-slate-600 font-bold mb-6">
+                  Natural rubber comes from milky tree sap (latex). Synthetic rubber is formulated with petrochemicals to handle race car speed and blazing friction!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
+                  }}
+                  className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
+                >
+                  Enter Rubber Test Bench 🔬
+                </button>
+              </div>
+            )}
+
+            {currentStepIndex >= 1 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-300 shadow-xl text-center flex flex-col items-center">
+                <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                  <div className="p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-200">
+                    <span className="text-4xl block mb-1">🌳</span>
+                    <h4 className="font-black text-sm text-slate-900">Natural Rubber (Latex)</h4>
+                    <p className="text-xs font-bold text-slate-500 mt-1">Soft & stretchy for balloons & erasers</p>
+                  </div>
+
+                  <div className="p-5 bg-sky-50 rounded-2xl border-2 border-sky-200">
+                    <span className="text-4xl block mb-1">🛞</span>
+                    <h4 className="font-black text-sm text-slate-900">Synthetic Buna Rubber</h4>
+                    <p className="text-xs font-bold text-slate-500 mt-1">Resists 200°C friction for car tyres!</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    sounds.fanfare();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                  }}
+                  className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer"
+                >
+                  Test Friction & Stretch ✓
+                </button>
+              </div>
+            )}
           </div>
         );
 
@@ -736,22 +966,64 @@ export const DynamicMissionEngine: React.FC = () => {
       case 12:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
-            <div className="text-center max-w-2xl mb-6">
-              <Wrench className="w-24 h-24 text-amber-500 mx-auto mb-3" />
-              <h2 className="text-3xl font-black text-slate-900 mb-2">Synthetic Adhesives & Super Glues 🧴</h2>
-              <p className="text-slate-600 font-bold">
-                Synthetic adhesives create unbreakable molecular seals that can even stop high-pressure pipe leaks!
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                sounds.fanfare();
-                setInteractiveState({ [`step_${currentStepIndex}`]: true });
-              }}
-              className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer"
-            >
-              Seal Broken Pipe with Super Glue! 🧪
-            </button>
+            {currentStepIndex === 0 && (
+              <div className="text-center max-w-2xl">
+                <Wrench className="w-24 h-24 text-amber-500 mx-auto mb-3" />
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Emergency Repair Station! 🧴</h2>
+                <p className="text-slate-600 font-bold mb-6">
+                  A high-pressure water pipe cracked! Water is spraying everywhere! Let's choose the right synthetic adhesive to seal it!
+                </p>
+                <button
+                  onClick={() => {
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
+                  }}
+                  className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
+                >
+                  Start Pipe Repair 🔧
+                </button>
+              </div>
+            )}
+
+            {currentStepIndex >= 1 && (
+              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-300 shadow-xl text-center flex flex-col items-center">
+                <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                  <button
+                    onClick={() => {
+                      sounds.boing();
+                      voiceAssistant.speak('Tree resin dissolves under high water pressure! Try synthetic epoxy!');
+                    }}
+                    className="p-5 bg-slate-50 hover:bg-slate-100 rounded-2xl border-2 border-slate-200 text-center cursor-pointer"
+                  >
+                    <span className="text-3xl block mb-1">🌲</span>
+                    <span className="font-black text-sm text-slate-900">Pine Tree Resin</span>
+                    <span className="text-xs font-bold text-rose-600 block mt-1">Washes Away Under Pressure ❌</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      sounds.fanfare();
+                      setInteractiveState({ [`step_${currentStepIndex}`]: true, fixedPipe: true });
+                    }}
+                    className={`p-5 rounded-2xl border-3 text-center cursor-pointer transition-all ${
+                      interactiveState.fixedPipe
+                        ? 'bg-emerald-100 border-emerald-500 shadow-md ring-4 ring-emerald-200'
+                        : 'bg-white border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span className="text-3xl block mb-1">🧴✨</span>
+                    <span className="font-black text-sm text-slate-900">Synthetic Epoxy Sealant</span>
+                    <span className="text-xs font-bold text-emerald-700 block mt-1">Waterproof Polymer Bond ✓</span>
+                  </button>
+                </div>
+                {interactiveState.fixedPipe && (
+                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full text-emerald-950 font-black text-sm">
+                    🎉 Leak Sealed! Synthetic epoxy forms cross-linked polymer chains that withstand 500 PSI water pressure!
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
 
@@ -762,45 +1034,35 @@ export const DynamicMissionEngine: React.FC = () => {
         return (
           <div className="w-full max-w-3xl flex flex-col items-center text-center">
             <Trophy className="w-28 h-28 text-amber-500 mx-auto mb-4 animate-bounce" />
-            <h2 className="text-4xl font-black text-slate-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
               Grand Science Champion Camp! 🏕️
             </h2>
-            <p className="text-base text-slate-600 font-bold mb-6 max-w-lg mx-auto">
-              You've tested raincoats, stretched super-nylon, explored polymers, and mastered fire safety! You are now an official Master of Synthetic Materials!
+            <p className="text-sm md:text-base text-slate-600 font-bold mb-6 max-w-lg mx-auto">
+              You've tested raincoats, stretched super-nylon, explored polymers, mastered electrical insulation, and passed fire safety! You are now an official Master of Synthetic Materials!
             </p>
-            <div className="p-6 bg-amber-50 rounded-3xl border-3 border-amber-300 w-full max-w-md mb-6">
+            <div className="p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl border-4 border-amber-300 w-full max-w-md mb-6 shadow-xl">
               <div className="text-2xl font-black text-amber-900 mb-1">🏆 Master Scientist Certificate</div>
               <p className="text-xs font-bold text-amber-700">13 of 13 Missions Mastered</p>
+              <div className="flex items-center justify-center gap-1 mt-3">
+                {[...Array(5)].map((_, i) => (
+                  <Sparkles key={i} className="w-5 h-5 text-amber-500 fill-amber-400" />
+                ))}
+              </div>
             </div>
             <button
               onClick={() => {
                 sounds.fanfare();
                 setInteractiveState({ [`step_${currentStepIndex}`]: true });
               }}
-              className="px-8 py-3 bg-amber-400 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer"
+              className="px-10 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-base rounded-2xl shadow-xl cursor-pointer active:scale-95"
             >
-              Claim Scientist Master Badge ⭐
+              Claim Master Scientist Trophy ⭐
             </button>
           </div>
         );
 
       default:
-        return (
-          <div className="w-full max-w-3xl flex flex-col items-center text-center">
-            <Pip mood="celebrating" size="xl" />
-            <h2 className="text-3xl font-black text-slate-900 mb-2 mt-4">{mission.title}</h2>
-            <p className="text-slate-600 font-bold mb-6 max-w-lg">{mission.subtitle}</p>
-            <button
-              onClick={() => {
-                sounds.success();
-                setInteractiveState({ [`step_${currentStepIndex}`]: true });
-              }}
-              className="btn-3d-amber text-slate-950 font-black text-base py-3 px-8 rounded-2xl cursor-pointer"
-            >
-              Start Experiment Phase ✓
-            </button>
-          </div>
-        );
+        return null;
     }
   };
 
