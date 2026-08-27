@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { lookupWord, DictionaryResult } from '@/lib/dictionaryService';
 import { vocabulary } from '@/data/vocabulary';
@@ -142,7 +143,9 @@ export const GlobalWordExplainer: React.FC = () => {
       v.definition.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <>
       {/* ── Floating Real Dictionary Popup ── */}
       <AnimatePresence>
@@ -158,7 +161,7 @@ export const GlobalWordExplainer: React.FC = () => {
               top: `${position.y}px`,
               transform: position.isAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0%)',
             }}
-            className="fixed z-50 w-80 sm:w-96 bg-white p-5 rounded-3xl border-4 border-amber-400 shadow-2xl font-sans pointer-events-auto"
+            className="fixed z-[100000] w-80 sm:w-96 bg-white p-5 rounded-3xl border-4 border-amber-400 shadow-2xl font-sans pointer-events-auto"
           >
             {/* Arrow Tail */}
             <div
@@ -245,13 +248,13 @@ export const GlobalWordExplainer: React.FC = () => {
               animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowSearchModal(false)}
-              className="fixed inset-0 bg-black z-50 backdrop-blur-xs"
+              className="fixed inset-0 bg-black/50 z-[100000] backdrop-blur-xs"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg bg-white rounded-3xl border-4 border-amber-400 shadow-2xl p-6 font-sans"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100000] w-full max-w-lg bg-white rounded-3xl border-4 border-amber-400 shadow-2xl p-6 font-sans"
             >
               <div className="flex items-center justify-between pb-3 border-b-2 border-slate-100 mb-4">
                 <div className="flex items-center gap-2">
@@ -304,6 +307,7 @@ export const GlobalWordExplainer: React.FC = () => {
           </>
         )}
       </AnimatePresence>
-    </>
+    </>,
+    document.body
   );
 };

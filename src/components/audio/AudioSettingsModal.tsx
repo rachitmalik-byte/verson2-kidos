@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Music,
@@ -71,26 +72,28 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
     setBgmTrack('playful-lab');
   };
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
+            animate={{ opacity: 0.6 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-950 z-50 backdrop-blur-xs"
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
           />
 
           {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            exit={{ opacity: 0, scale: 0.92, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed inset-3 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-50 bg-white rounded-3xl md:rounded-[36px] border-4 md:border-6 border-violet-400 shadow-2xl flex flex-col max-w-2xl w-full max-h-[90vh] overflow-hidden font-sans"
+            className="relative z-10 bg-white rounded-3xl md:rounded-[36px] border-4 md:border-6 border-violet-400 shadow-2xl flex flex-col max-w-2xl w-full max-h-[90vh] overflow-hidden font-sans"
           >
             {/* Header */}
             <div className="p-4 md:p-5 bg-gradient-to-r from-violet-600 to-indigo-700 text-white flex items-center justify-between shadow-md">
@@ -334,8 +337,9 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               </button>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

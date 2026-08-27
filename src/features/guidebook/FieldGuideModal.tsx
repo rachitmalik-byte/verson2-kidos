@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen,
@@ -260,26 +261,28 @@ export const FieldGuideModal: React.FC = () => {
       </motion.button>
 
       {/* ── Modal Storybook & Video Theatre ── */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              exit={{ opacity: 0 }}
-              onClick={handleClose}
-              className="fixed inset-0 bg-slate-950 z-50 backdrop-blur-xs"
-            />
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
+              <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 md:p-8">
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.7 }}
+                  exit={{ opacity: 0 }}
+                  onClick={handleClose}
+                  className="fixed inset-0 bg-slate-950/75 backdrop-blur-md"
+                />
 
-            {/* Reader Container */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-              className="fixed inset-3 md:inset-8 z-50 bg-white rounded-3xl md:rounded-[36px] border-4 md:border-6 border-amber-400 shadow-2xl flex flex-col overflow-hidden font-sans max-w-5xl mx-auto"
-            >
+                {/* Reader Container */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.92, y: 20 }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 280 }}
+                  className="relative z-10 bg-white rounded-3xl md:rounded-[36px] border-4 md:border-6 border-amber-400 shadow-2xl flex flex-col overflow-hidden font-sans max-w-5xl w-full max-h-[92vh]"
+                >
               {/* Header with Segmented Mode Switcher */}
               <div className="p-4 md:p-5 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-3 shadow-md border-b-2 border-slate-800">
                 <div className="flex items-center gap-3">
@@ -595,9 +598,11 @@ export const FieldGuideModal: React.FC = () => {
                 </div>
               )}
             </motion.div>
-          </>
+          </div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+    )}
     </>
   );
 };
