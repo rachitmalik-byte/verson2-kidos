@@ -13,6 +13,7 @@ import { DynamicMissionEngine } from '@/features/missions/universal-mission/Dyna
 import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
 import { DevDrawer } from '@/components/dev/DevDrawer';
 import { GlobalWordExplainer } from '@/components/dictionary/GlobalWordExplainer';
+import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
 
 export function App() {
   return (
@@ -42,6 +43,9 @@ export function App() {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+
+        {/* Global Interactive Science Storybook & Field Guide */}
+        <FieldGuideModal />
 
         {/* Global Text-Selection Smart Dictionary & Audio Explainer */}
         <GlobalWordExplainer />

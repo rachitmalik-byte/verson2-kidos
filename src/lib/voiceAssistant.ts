@@ -1,5 +1,5 @@
 // ─── Emotive Human-like Voice Assistant Engine ───
-// Synchronized word-by-word caption boundary events, natural neural voices, and audio controls
+// High-grade Natural Neural voice selection, friendly prosody, auto-narration & word boundary tracking
 import { useAudioStore } from '@/stores/audioStore';
 
 export type SpeakingListener = (isSpeaking: boolean) => void;
@@ -52,34 +52,55 @@ class VoiceAssistantEngine {
     this.voices = window.speechSynthesis.getVoices();
   }
 
+  // Selects the most friendly, natural, and expressive human voice available
   getBestHumanVoice(): SpeechSynthesisVoice | null {
     if (this.voices.length === 0) {
       this.initVoices();
     }
 
-    const priorityNames = [
+    const friendlyNaturalVoices = [
+      // Child-friendly and highly natural online neural voices
+      'Microsoft Ana Online (Natural)',
       'Microsoft Jenny Online (Natural)',
       'Microsoft Aria Online (Natural)',
-      'Microsoft Ana Online (Natural)',
       'Microsoft Guy Online (Natural)',
+      'Microsoft Christopher Online (Natural)',
+      'Google US English',
+      'Google UK English Female',
+      'en-US-Neural2-F',
+      'en-US-Journey-F',
+      'en-US-Wavenet-C',
+      'Samantha (Enhanced)',
+      'Samantha',
+      'Karen (Enhanced)',
+      'Karen',
+      'Victoria',
       'Jenny',
       'Aria',
       'Natural',
       'Neural',
-      'Google US English',
-      'Google UK English Female',
-      'Samantha (Enhanced)',
-      'Samantha',
-      'Victoria',
-      'Zira',
     ];
 
-    for (const name of priorityNames) {
+    // 1. Try to find top priority natural voice
+    for (const name of friendlyNaturalVoices) {
       const match = this.voices.find(
-        (v) => v.lang.startsWith('en') && v.name.toLowerCase().includes(name.toLowerCase())
+        (v) =>
+          v.lang.startsWith('en') &&
+          v.name.toLowerCase().includes(name.toLowerCase()) &&
+          !v.name.toLowerCase().includes('desktop')
       );
       if (match) return match;
     }
+
+    // 2. Fallback to any English voice that is NOT an old robotic desktop synthesizer
+    const nonRoboticEnglish = this.voices.find(
+      (v) =>
+        v.lang.startsWith('en') &&
+        !v.name.toLowerCase().includes('david desktop') &&
+        !v.name.toLowerCase().includes('mark desktop') &&
+        !v.name.toLowerCase().includes('hazel desktop')
+    );
+    if (nonRoboticEnglish) return nonRoboticEnglish;
 
     return this.voices.find((v) => v.lang.startsWith('en')) || this.voices[0] || null;
   }
@@ -115,7 +136,7 @@ class VoiceAssistantEngine {
     }
   }
 
-  // Speaks with natural human prosody, breath pauses, and word-by-word boundary tracking
+  // Speaks with natural friendly prosody, emotional pauses, and word-by-word tracking
   speak(text: string, onEnd?: () => void) {
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || this.isMuted()) {
       if (onEnd) onEnd();
@@ -124,9 +145,12 @@ class VoiceAssistantEngine {
 
     this.stop();
 
+    // Clean emojis & format conversational pauses for natural human breathing
     const cleanedText = text
       .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
       .replace(/\.\.\./g, ', ')
+      .replace(/—/g, ', ')
+      .replace(/\s+/g, ' ')
       .trim();
 
     if (!cleanedText) {
@@ -142,13 +166,14 @@ class VoiceAssistantEngine {
       utterance.voice = voice;
     }
 
-    utterance.rate = 0.92; // Natural conversational cadence
-    utterance.pitch = 1.06; // Warm and friendly for children
+    // Friendly, enthusiastic, non-robotic rate & pitch
+    utterance.rate = 0.94; // Warm, clear storytelling pace
+    utterance.pitch = 1.08; // Friendly, encouraging, youthful pitch
     utterance.volume = 1.0;
 
     let receivedNativeBoundary = false;
 
-    // Native browser word-by-word boundary synchronization
+    // Real-time word boundary synchronization
     utterance.onboundary = (event) => {
       receivedNativeBoundary = true;
       this.notifyBoundary(event.charIndex, cleanedText);
@@ -158,11 +183,11 @@ class VoiceAssistantEngine {
       this.notifySpeaking(true);
       this.notifyBoundary(0, cleanedText);
 
-      // Estimated fallback timer in case browser doesn't dispatch onboundary
+      // Smooth fallback timer for mobile webkit browsers
       const words = cleanedText.split(/\s+/);
       let wordIdx = 0;
       let charPos = 0;
-      const msPerWord = 330; // ~180 wpm at 0.92 rate
+      const msPerWord = 320;
 
       this.clearFallbackTimer();
       this.fallbackTimer = window.setInterval(() => {

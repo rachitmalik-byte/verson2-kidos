@@ -28,7 +28,7 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   onComplete,
   className = '',
   speakerName = 'Pip',
-  autoSpeak = false,
+  autoSpeak = true, // Default to true: Pip speaks automatically like a friend!
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [activeCharIndex, setActiveCharIndex] = useState<number>(-1);
@@ -75,6 +75,7 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
     };
   }, []);
 
+  // Hands-free auto narration on step entry / message change
   useEffect(() => {
     if (!isVisible) {
       voiceAssistant.stop();
@@ -82,12 +83,14 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
       return;
     }
 
-    sounds.pop();
     if (autoSpeak && !isTtsMuted) {
-      voiceAssistant.speak(message);
+      // Small timeout to allow component mount and transition
+      const timer = setTimeout(() => {
+        voiceAssistant.speak(message, onComplete);
+      }, 150);
+      return () => clearTimeout(timer);
     }
-    if (onComplete) onComplete();
-  }, [isVisible, message, autoSpeak, isTtsMuted, onComplete]);
+  }, [isVisible, message, autoSpeak, isTtsMuted]);
 
   const handleReplay = (e: React.MouseEvent) => {
     e.stopPropagation();
