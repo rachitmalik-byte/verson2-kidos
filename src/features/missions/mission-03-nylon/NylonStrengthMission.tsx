@@ -12,15 +12,18 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import cottonThreadBreakingImg from '@/assets/images/experiments/cotton_thread_breaking.jpg';
 import nylonRopeHeavyWeightImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
 import nylonParachuteSkyImg from '@/assets/images/raincoat/nylon_parachute_sky.jpg';
+import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
+import polyesterFabricZoomImg from '@/assets/images/raincoat/polyester_fabric_zoom.jpg';
 import { Sparkles, ArrowRight, ShieldCheck, Scale, Dumbbell, Zap, Check, AlertCircle, ZoomIn } from 'lucide-react';
 
-type Phase = 'HOOK' | 'TENSILE_TEST' | 'COMPARE' | 'APPLY';
+type Phase = 'HOOK' | 'TENSILE_TEST' | 'MICROSCOPE' | 'APPLY';
 
 export function NylonStrengthMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [weightKg, setWeightKg] = useState(2);
   const [testedThreads, setTestedThreads] = useState<Record<string, { snapped: boolean; max: number }>>({});
-  const [activeThread, setActiveThread] = useState<string>('cotton');
+  const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'cotton' | 'nylon'>('cotton');
+  const [microscopeZoomLevel, setMicroscopeZoomLevel] = useState<number>(250);
   const [showCelebration, setShowCelebration] = useState(false);
   const [applyAnswer, setApplyAnswer] = useState<string | null>(null);
 
@@ -28,7 +31,7 @@ export function NylonStrengthMission() {
   const completeMission = useProgressStore((state) => state.completeMission);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
-  const phaseOrder: Phase[] = ['HOOK', 'TENSILE_TEST', 'COMPARE', 'APPLY'];
+  const phaseOrder: Phase[] = ['HOOK', 'TENSILE_TEST', 'MICROSCOPE', 'APPLY'];
   const currentStepIndex = phaseOrder.indexOf(currentPhase);
   const totalSteps = phaseOrder.length;
 
@@ -73,7 +76,7 @@ export function NylonStrengthMission() {
         return true;
       case 'TENSILE_TEST':
         return Object.keys(testedThreads).length >= 2;
-      case 'COMPARE':
+      case 'MICROSCOPE':
         return true;
       case 'APPLY':
         return applyAnswer === 'nylon';
@@ -298,20 +301,145 @@ export function NylonStrengthMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 3: COMPARE (Why is Nylon So Strong?)
+              PHASE 3: OPTICAL MICROSCOPE STUDIO + GOLDEN SCIENCE LAW
           ════════════════════════════════════════════════════════════════════════ */}
-          {currentPhase === 'COMPARE' && (
+          {currentPhase === 'MICROSCOPE' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
                 <Pip mood="celebrating" size="lg" />
                 <PipSpeechBubble
-                  message="Look at why Nylon is so strong! Continuous polymer chains act like unbreakable steel cables at the molecular scale!"
+                  message="Look at both fibers under high magnification! See how polymer chains form unbreakable molecular cables!"
                   isVisible={true}
                 />
               </div>
 
+              {/* ── OPTICAL MICROSCOPE STAGE ── */}
+              <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">
+                <div className="flex items-center justify-between w-full mb-4 z-10 flex-wrap gap-2">
+                  <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-500/50 px-3 py-1 rounded-full flex items-center gap-1.5">
+                    <ZoomIn className="w-4 h-4 text-amber-400 animate-pulse" />
+                    <span>Molecular Fiber Tensile Studio</span>
+                  </span>
+
+                  <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
+                    {[
+                      { level: 100, label: '100x' },
+                      { level: 250, label: '250x' },
+                      { level: 500, label: '500x' },
+                    ].map((z) => (
+                      <button
+                        key={z.level}
+                        onClick={() => {
+                          sounds.pop();
+                          setMicroscopeZoomLevel(z.level);
+                        }}
+                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          microscopeZoomLevel === z.level
+                            ? 'bg-amber-400 text-slate-950 shadow-md scale-105'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {z.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Microscope Lens Viewport */}
+                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 ring-4 ring-amber-400/80 my-2 flex items-center justify-center">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
+                      src={activeMicroscopeSpecimen === 'cotton' ? cottonFabricZoomImg : polyesterFabricZoomImg}
+                      alt="Microscope Specimen"
+                      initial={{ scale: 0.8, opacity: 0.3 }}
+                      animate={{
+                        scale: microscopeZoomLevel === 100 ? 1.05 : microscopeZoomLevel === 250 ? 1.45 : 2.0,
+                        opacity: 1,
+                      }}
+                      exit={{ scale: 1.2, opacity: 0.3 }}
+                      transition={{ type: 'spring', damping: 20, stiffness: 180 }}
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                    />
+                  </AnimatePresence>
+
+                  <div className="absolute inset-0 pointer-events-none border border-cyan-400/30 rounded-full flex items-center justify-center">
+                    <div className="w-full h-[1px] bg-cyan-400/30 absolute" />
+                    <div className="h-full w-[1px] bg-cyan-400/30 absolute" />
+                    <div className="w-24 h-24 rounded-full border border-cyan-400/40 absolute" />
+                  </div>
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent rounded-full" />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg mt-4 z-10">
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      setActiveMicroscopeSpecimen('cotton');
+                    }}
+                    className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
+                      activeMicroscopeSpecimen === 'cotton'
+                        ? 'bg-amber-400 border-amber-300 text-slate-950 shadow-lg scale-102 ring-4 ring-amber-400/40'
+                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <span>🌿 Cotton: Short Plant Staples</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      setActiveMicroscopeSpecimen('nylon');
+                    }}
+                    className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
+                      activeMicroscopeSpecimen === 'nylon'
+                        ? 'bg-sky-400 border-sky-300 text-slate-950 shadow-lg scale-102 ring-4 ring-sky-400/40'
+                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <span>⚡ Nylon: Long Polymer Cables</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* ── THE GOLDEN SCIENCE LAW ── */}
+              <div className="w-full bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-300 shadow-xl mb-6">
+                <h3 className="text-center text-xs font-black uppercase tracking-widest text-sky-600 mb-6 bg-sky-100 px-4 py-1.5 rounded-full w-fit mx-auto">
+                  ⚡ The Golden Science Law
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                  <div className="p-5 rounded-3xl bg-amber-50 border-3 border-amber-300 text-center flex flex-col items-center shadow-md">
+                    <span className="text-4xl mb-2">🧱</span>
+                    <span className="font-black text-slate-800 text-base">1. MATERIAL</span>
+                    <p className="text-xs font-bold text-slate-500 mt-0.5">What it is MADE OF</p>
+                    <span className="text-[11px] font-black text-amber-900 bg-amber-200 px-3 py-0.5 rounded-full mt-2">
+                      Synthetic Nylon Polymer
+                    </span>
+                  </div>
+
+                  <div className="p-5 rounded-3xl bg-sky-50 border-3 border-sky-300 text-center flex flex-col items-center shadow-md">
+                    <span className="text-4xl mb-2">⚡</span>
+                    <span className="font-black text-slate-800 text-base">2. PROPERTY</span>
+                    <p className="text-xs font-bold text-slate-500 mt-0.5">What it CAN DO</p>
+                    <span className="text-[11px] font-black text-sky-900 bg-sky-200 px-3 py-0.5 rounded-full mt-2">
+                      High Tensile Strength & Elastic
+                    </span>
+                  </div>
+
+                  <div className="p-5 rounded-3xl bg-emerald-50 border-3 border-emerald-300 text-center flex flex-col items-center shadow-md">
+                    <span className="text-4xl mb-2">🎯</span>
+                    <span className="font-black text-slate-800 text-base">3. USE</span>
+                    <p className="text-xs font-bold text-slate-500 mt-0.5">What it is USED FOR</p>
+                    <span className="text-[11px] font-black text-emerald-900 bg-emerald-200 px-3 py-0.5 rounded-full mt-2">
+                      Climbing Ropes & Parachutes
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {/* Real World Life-Saving Application Card */}
-              <div className="w-full bg-slate-900 text-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col md:flex-row items-center gap-6 mb-6">
+              <div className="w-full bg-slate-900 text-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col md:flex-row items-center gap-6">
                 <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-lg shrink-0">
                   <img
                     src={nylonParachuteSkyImg}
