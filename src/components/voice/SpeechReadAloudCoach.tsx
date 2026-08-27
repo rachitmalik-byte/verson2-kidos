@@ -22,28 +22,34 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
   icon,
 }) => {
   const [isListening, setIsListening] = useState(false);
-  const [spokenWords, setSpokenWords] = useState<Set<number>>(new Set());
+  const [spokenIndices, setSpokenIndices] = useState<Set<number>>(new Set());
   const [completed, setCompleted] = useState(isCompleted);
+  const [liveTranscript, setLiveTranscript] = useState('');
   const [micSupported, setMicSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
 
-  // Normalize words into tokens
-  const words = React.useMemo(() => {
-    return sentence.split(/\s+/).map((w) => ({
+  // Normalize words into clean individual tokens
+  const wordTokens = React.useMemo(() => {
+    return sentence.split(/\s+/).map((w, idx) => ({
+      index: idx,
       raw: w,
-      clean: w.toLowerCase().replace(/^[^\w]+|[^\w]+$/g, ''),
+      clean: w.toLowerCase().replace(/[^a-z0-9]/gi, ''),
     }));
   }, [sentence]);
 
+  // Sync external completed state
   useEffect(() => {
-    if (isCompleted) {
+    if (isCompleted && !completed) {
       setCompleted(true);
-      setSpokenWords(new Set(words.map((_, i) => i)));
+      setSpokenIndices(new Set(wordTokens.map((_, i) => i)));
     }
-  }, [isCompleted, words]);
+  }, [isCompleted, completed, wordTokens]);
 
-  // Speech Recognition Initializer
-  useEffect(() => {
+  // Clean phonetic matching helper
+  const cleanWord = (w: string) => w.toLowerCase().replace(/[^a-z0-9]/gi, '');
+
+  const startListening = () => {
+    sounds.pop();
     if (typeof window === 'undefined') return;
 
     const SpeechRec =
@@ -54,106 +60,115 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
       return;
     }
 
-    const recognition = new SpeechRec();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
-
-    recognition.onresult = (event: any) => {
-      let fullTranscript = '';
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        fullTranscript += event.results[i][0].transcript + ' ';
-      }
-
-      const spokenTokens = fullTranscript.toLowerCase().split(/\s+/);
-
-      setSpokenWords((prev) => {
-        const next = new Set(prev);
-        words.forEach((w, idx) => {
-          if (!w.clean) return;
-          // Match if token exists in spoken transcript
-          if (
-            spokenTokens.some(
-              (st) => st.includes(w.clean) || w.clean.includes(st) || st.slice(0, 4) === w.clean.slice(0, 4)
-            )
-          ) {
-            next.add(idx);
-          }
-        });
-
-        // Check if at least 70% of words were spoken
-        const targetWordCount = words.filter((w) => w.clean.length > 2).length;
-        const matchedSignificant = words.filter((w, i) => next.has(i) && w.clean.length > 2).length;
-
-        if (matchedSignificant >= Math.ceil(targetWordCount * 0.7) && !completed) {
-          setCompleted(true);
-          sounds.fanfare();
-          onComplete();
-          if (recognitionRef.current) {
-            try {
-              recognitionRef.current.stop();
-            } catch {}
-          }
-          setIsListening(false);
-        }
-
-        return next;
-      });
-    };
-
-    recognition.onerror = () => {
-      setIsListening(false);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognitionRef.current = recognition;
-
-    return () => {
+    try {
+      // Stop any existing session
       if (recognitionRef.current) {
         try {
-          recognitionRef.current.stop();
+          recognitionRef.current.abort();
         } catch {}
       }
-    };
-  }, [words, onComplete, completed]);
 
-  const toggleListening = () => {
-    sounds.pop();
-    if (!micSupported) {
-      // Fallback: Pip speaks and auto-completes
-      voiceAssistant.speak(sentence, () => {
-        setCompleted(true);
-        setSpokenWords(new Set(words.map((_, i) => i)));
-        onComplete();
-      });
-      return;
-    }
+      const recognition = new SpeechRec();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 3;
 
-    if (isListening) {
-      try {
-        recognitionRef.current?.stop();
-      } catch {}
-      setIsListening(false);
-    } else {
-      try {
-        recognitionRef.current?.start();
+      recognition.onstart = () => {
         setIsListening(true);
-      } catch {
+        setLiveTranscript('Listening... Speak now!');
+      };
+
+      recognition.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript + ' ';
+        }
+
+        const spokenWords = transcript
+          .toLowerCase()
+          .split(/\s+/)
+          .map(cleanWord)
+          .filter((w) => w.length > 0);
+
+        setLiveTranscript(transcript.trim());
+
+        // Sequential & Strict Keyword Matching
+        setSpokenIndices((prev) => {
+          const next = new Set(prev);
+
+          wordTokens.forEach((token, tIdx) => {
+            if (!token.clean) return;
+
+            // Strict match: spoken word is identical or exact prefix (for endings like -ed, -s, -ing)
+            const isMatch = spokenWords.some((sw) => {
+              if (sw === token.clean) return true;
+              if (token.clean.length >= 4 && sw.startsWith(token.clean.slice(0, 4))) return true;
+              if (sw.length >= 4 && token.clean.startsWith(sw.slice(0, 4))) return true;
+              return false;
+            });
+
+            if (isMatch) {
+              next.add(tIdx);
+            }
+          });
+
+          // Check completion: At least 85% of words must be spoken
+          const totalKeyWords = wordTokens.filter((w) => w.clean.length > 1).length;
+          const matchedKeyWords = wordTokens.filter((w, i) => next.has(i) && w.clean.length > 1).length;
+
+          if (matchedKeyWords >= Math.ceil(totalKeyWords * 0.85) && !completed) {
+            setCompleted(true);
+            setIsListening(false);
+            sounds.fanfare();
+            try {
+              recognition.stop();
+            } catch {}
+            onComplete();
+          }
+
+          return next;
+        });
+      };
+
+      recognition.onerror = (e: any) => {
+        if (e.error !== 'no-speech') {
+          setIsListening(false);
+        }
+      };
+
+      recognition.onend = () => {
         setIsListening(false);
-      }
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      setIsListening(false);
     }
   };
 
-  const handlePipRead = () => {
+  const stopListening = () => {
     sounds.pop();
-    voiceAssistant.speak(sentence, () => {
-      setCompleted(true);
-      setSpokenWords(new Set(words.map((_, i) => i)));
-      onComplete();
-    });
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {}
+    }
+    setIsListening(false);
+  };
+
+  const handleReset = () => {
+    sounds.pop();
+    setCompleted(false);
+    setSpokenIndices(new Set());
+    setLiveTranscript('');
+    stopListening();
+  };
+
+  const handlePipListen = () => {
+    sounds.pop();
+    voiceAssistant.speak(sentence);
   };
 
   return (
@@ -162,7 +177,7 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
         completed
           ? 'bg-emerald-50 border-emerald-400 shadow-md ring-4 ring-emerald-200'
           : isListening
-          ? 'bg-amber-50 border-amber-400 shadow-xl ring-4 ring-amber-300 animate-pulse'
+          ? 'bg-amber-50 border-amber-400 shadow-xl ring-4 ring-amber-300'
           : 'bg-white border-slate-200 hover:border-sky-300 shadow-sm'
       }`}
     >
@@ -190,27 +205,27 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
           </span>
         ) : isListening ? (
           <span className="px-3 py-1 bg-rose-500 text-white rounded-full text-xs font-black animate-pulse flex items-center gap-1 shadow-md">
-            <Mic className="w-3.5 h-3.5" />
+            <Mic className="w-3.5 h-3.5 animate-spin" />
             <span>Listening... Speak!</span>
           </span>
         ) : (
-          <span className="px-2.5 py-1 bg-sky-100 text-sky-800 rounded-full text-[11px] font-bold">
-            Read aloud
+          <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[11px] font-bold">
+            Tap mic to read
           </span>
         )}
       </div>
 
-      {/* Synchronized Word Highlighting sentence */}
-      <div className="my-3 text-sm md:text-base font-extrabold text-slate-800 leading-relaxed bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200">
-        {words.map((w, idx) => {
-          const isSpoken = spokenWords.has(idx);
+      {/* Target Sentence with Individual Word Glow upon speech */}
+      <div className="my-3 text-sm md:text-base font-extrabold text-slate-800 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        {wordTokens.map((w) => {
+          const isSpoken = spokenIndices.has(w.index);
 
           return (
             <span
-              key={idx}
-              className={`inline-block mr-1.5 px-1 py-0.5 rounded-md transition-all duration-200 ${
+              key={w.index}
+              className={`inline-block mr-1.5 px-1.5 py-0.5 rounded-lg transition-all duration-150 ${
                 isSpoken
-                  ? 'bg-emerald-300 text-slate-950 font-black scale-105 shadow-xs ring-2 ring-emerald-400'
+                  ? 'bg-emerald-400 text-slate-950 font-black scale-105 shadow-xs ring-2 ring-emerald-500'
                   : 'text-slate-700'
               }`}
             >
@@ -220,43 +235,60 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
         })}
       </div>
 
-      {/* Action Buttons: Mic Tap & Listen Fallback */}
-      <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-        <button
-          onClick={toggleListening}
-          className={`flex-1 py-2.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 shadow-xs ${
-            completed
-              ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
-              : isListening
-              ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-md'
-              : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md'
-          }`}
-        >
-          {completed ? (
-            <>
-              <Check className="w-4 h-4 text-emerald-700 stroke-[3]" />
-              <span>Read Successfully!</span>
-            </>
-          ) : isListening ? (
-            <>
-              <MicOff className="w-4 h-4 animate-spin" />
-              <span>Stop Mic</span>
-            </>
-          ) : (
-            <>
-              <Mic className="w-4 h-4 text-slate-950" />
-              <span>Tap to Speak Aloud 🎙️</span>
-            </>
-          )}
-        </button>
+      {/* Live Speech Recognition Feedback Subtitle */}
+      {isListening && liveTranscript && (
+        <div className="mb-3 px-3 py-1.5 bg-amber-100/80 rounded-xl text-xs font-mono text-amber-900 border border-amber-300 truncate">
+          🎙️ Heard: <span className="font-bold">"{liveTranscript}"</span>
+        </div>
+      )}
 
-        <button
-          onClick={handlePipRead}
-          className="p-2.5 bg-slate-100 hover:bg-slate-200 text-violet-700 rounded-2xl border border-slate-200 cursor-pointer"
-          title="Have Pip read this pointer aloud"
-        >
-          <Volume2 className="w-4 h-4" />
-        </button>
+      {/* Action Controls */}
+      <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+        {!completed ? (
+          <>
+            {!isListening ? (
+              <button
+                onClick={startListening}
+                className="flex-1 py-2.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-black text-xs md:text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
+              >
+                <Mic className="w-4 h-4 text-slate-950" />
+                <span>Tap Mic & Read Aloud 🎙️</span>
+              </button>
+            ) : (
+              <button
+                onClick={stopListening}
+                className="flex-1 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-black text-xs md:text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all animate-pulse"
+              >
+                <MicOff className="w-4 h-4" />
+                <span>Stop Listening</span>
+              </button>
+            )}
+
+            <button
+              onClick={handlePipListen}
+              className="p-2.5 bg-slate-100 hover:bg-slate-200 text-violet-700 rounded-2xl border border-slate-200 cursor-pointer"
+              title="Have Pip pronounce this sentence"
+            >
+              <Volume2 className="w-4 h-4" />
+            </button>
+          </>
+        ) : (
+          <div className="flex items-center justify-between w-full">
+            <span className="text-xs font-black text-emerald-800 flex items-center gap-1">
+              <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
+              <span>Sentence Spoken Accurately!</span>
+            </span>
+
+            <button
+              onClick={handleReset}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer"
+              title="Retry reading practice"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Retry</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
