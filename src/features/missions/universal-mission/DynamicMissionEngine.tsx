@@ -59,8 +59,18 @@ import rawCottonBollImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
 import sheepWoolFleeceImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
 import naturalWoodTimberImg from '@/assets/images/specimens/natural_wood_timber.jpg';
 import plasticPetPelletsImg from '@/assets/images/specimens/plastic_pet_pellets.jpg';
+import woodDecayDay1Img from '@/assets/images/decay/wood_day1.jpg';
+import woodDecay2WeeksImg from '@/assets/images/decay/wood_2weeks.jpg';
+import woodDecay100YrsImg from '@/assets/images/decay/wood_100yrs.jpg';
+import woodDecay450YrsImg from '@/assets/images/decay/wood_450yrs.jpg';
+import plasticDecayDay1Img from '@/assets/images/decay/plastic_day1.jpg';
+import plasticDecay2WeeksImg from '@/assets/images/decay/plastic_2weeks.jpg';
+import plasticDecay100YrsImg from '@/assets/images/decay/plastic_100yrs.jpg';
+import plasticDecay450YrsImg from '@/assets/images/decay/plastic_450yrs.jpg';
 import copperWireMacroImg from '@/assets/images/wire/copper_wire_macro.jpg';
 import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
+import steelKeyMacroImg from '@/assets/images/wire/steel_key_macro.jpg';
+import rubberEraserMacroImg from '@/assets/images/wire/rubber_eraser_macro.jpg';
 import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
 import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
 import boilingTeaKettleSteamImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
@@ -805,9 +815,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full mb-4">
                   {[
                     { id: 'copper', name: 'Copper Wire', image: copperWireMacroImg, conducts: true, type: 'Conductor' },
-                    { id: 'steel', name: 'Steel Key', image: copperWireMacroImg, conducts: true, type: 'Conductor' },
-                    { id: 'plastic', name: 'Plastic Straw', image: pvcInsulatedCableImg, conducts: false, type: 'Insulator' },
-                    { id: 'rubber', name: 'Rubber Eraser', image: pvcInsulatedCableImg, conducts: false, type: 'Insulator' },
+                    { id: 'steel', name: 'Steel Key', image: steelKeyMacroImg, conducts: true, type: 'Conductor' },
+                    { id: 'plastic', name: 'PVC Cable Plastic', image: pvcInsulatedCableImg, conducts: false, type: 'Insulator' },
+                    { id: 'rubber', name: 'Rubber Eraser', image: rubberEraserMacroImg, conducts: false, type: 'Insulator' },
                   ].map((mat) => (
                     <button
                       key={mat.id}
@@ -1065,32 +1075,80 @@ export const DynamicMissionEngine: React.FC = () => {
                   />
                 </div>
 
-                {/* Soil Observation Box with Real Photos */}
-                <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                  <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300 text-center flex flex-col items-center">
-                    <span className="font-black text-xs text-slate-900 block mb-2">1. Organic Natural Wood</span>
-                    <div className="w-28 h-28 rounded-xl overflow-hidden mb-2 border border-slate-200">
-                      <img src={naturalWoodTimberImg} alt="Wood" className="w-full h-full object-cover" />
-                    </div>
-                    <span className="text-xs font-bold text-emerald-800">
-                      {(interactiveState.timeStep ?? 0) === 0
-                        ? 'Fresh Natural Timber'
-                        : 'Decomposed into Fertile Soil Compost! ✓'}
-                    </span>
-                  </div>
+                {/* Soil Observation Box with Progressive Real Photos */}
+                {(() => {
+                  const step = interactiveState.timeStep ?? 0;
+                  const woodStages = [
+                    { img: woodDecayDay1Img, label: 'Fresh Natural Timber', desc: 'Solid organic cellulose block' },
+                    { img: woodDecay2WeeksImg, label: 'Moist & Softening Wood', desc: 'Microbes & fungi start breaking down fibers' },
+                    { img: woodDecay100YrsImg, label: 'Rotting Mossy Humus', desc: 'Organic matter crumbling into rich compost' },
+                    { img: woodDecay450YrsImg, label: 'Fertile Soil Compost! ✓', desc: 'Completely recycled back to nature' },
+                  ];
+                  const plasticStages = [
+                    { img: plasticDecayDay1Img, label: 'Shiny Blue Polymer Pellets', desc: 'Brand new synthetic hydrocarbon chains' },
+                    { img: plasticDecay2WeeksImg, label: '100% Intact & Waterproof', desc: 'Zero microbial decay, water beads off' },
+                    { img: plasticDecay100YrsImg, label: 'Still Undigested in Dirt!', desc: 'Cracked by sunlight, but never eaten by bacteria' },
+                    { img: plasticDecay450YrsImg, label: 'Shattered Microplastics! ⚠️', desc: 'Never biodegrades, pollutes soil & water forever' },
+                  ];
+                  const currentWood = woodStages[step] || woodStages[0];
+                  const currentPlastic = plasticStages[step] || plasticStages[0];
 
-                  <div className="p-4 bg-rose-50 rounded-2xl border-2 border-rose-300 text-center flex flex-col items-center">
-                    <span className="font-black text-xs text-slate-900 block mb-2">2. Synthetic Plastic Pellets</span>
-                    <div className="w-28 h-28 rounded-xl overflow-hidden mb-2 border border-slate-200">
-                      <img src={plasticPetPelletsImg} alt="Plastic Pellets" className="w-full h-full object-cover" />
+                  return (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full mb-4">
+                      <div className="p-5 bg-emerald-50 rounded-3xl border-3 border-emerald-300 text-center flex flex-col items-center shadow-md">
+                        <span className="font-black text-xs uppercase tracking-wider text-emerald-950 block mb-2">
+                          1. Organic Natural Wood
+                        </span>
+                        <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-emerald-200 shadow-inner bg-white">
+                          <AnimatePresence mode="wait">
+                            <motion.img
+                              key={`wood-decay-${step}`}
+                              src={currentWood.img}
+                              alt={currentWood.label}
+                              initial={{ opacity: 0.3, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0.3, scale: 1.05 }}
+                              transition={{ duration: 0.3 }}
+                              className="w-full h-full object-cover"
+                            />
+                          </AnimatePresence>
+                        </div>
+                        <span className="text-xs font-black text-emerald-900 mb-0.5">
+                          {currentWood.label}
+                        </span>
+                        <span className="text-[11px] font-bold text-emerald-700">
+                          {currentWood.desc}
+                        </span>
+                      </div>
+
+                      <div className="p-5 bg-rose-50 rounded-3xl border-3 border-rose-300 text-center flex flex-col items-center shadow-md">
+                        <span className="font-black text-xs uppercase tracking-wider text-rose-950 block mb-2">
+                          2. Synthetic Plastic Pellets
+                        </span>
+                        <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-rose-200 shadow-inner bg-white">
+                          <AnimatePresence mode="wait">
+                            <motion.img
+                              key={`plastic-decay-${step}`}
+                              src={currentPlastic.img}
+                              alt={currentPlastic.label}
+                              initial={{ opacity: 0.3, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0.3, scale: 1.05 }}
+                              transition={{ duration: 0.3 }}
+                              className="w-full h-full object-cover"
+                            />
+                          </AnimatePresence>
+                        </div>
+                        <span className="text-xs font-black text-rose-900 mb-0.5">
+                          {currentPlastic.label}
+                        </span>
+                        <span className="text-[11px] font-bold text-rose-700">
+                          {currentPlastic.desc}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-xs font-bold text-rose-700">
-                      {(interactiveState.timeStep ?? 0) < 3
-                        ? '100% Intact & Undigested!'
-                        : 'Shattered into Microplastics! ⚠️'}
-                    </span>
-                  </div>
-                </div>
+                  );
+                })()}
 
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
