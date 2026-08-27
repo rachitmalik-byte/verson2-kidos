@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -14,6 +14,14 @@ export interface PipSpeechBubbleProps {
   autoSpeak?: boolean;
 }
 
+interface WordToken {
+  text: string;
+  isSpace: boolean;
+  start: number;
+  end: number;
+  cleanWord: string;
+}
+
 export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   message,
   isVisible,
@@ -23,20 +31,54 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   autoSpeak = false,
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [activeCharIndex, setActiveCharIndex] = useState<number>(-1);
   const isTtsMuted = useAudioStore((state) => state.isTtsMuted);
   const toggleTts = useAudioStore((state) => state.toggleTts);
 
+  // Parse message into interactive word tokens with character offsets
+  const wordTokens: WordToken[] = useMemo(() => {
+    const tokens: WordToken[] = [];
+    let currentPos = 0;
+    const parts = message.split(/(\s+)/);
+
+    for (const part of parts) {
+      const isSpace = /^\s+$/.test(part);
+      const cleanWord = part.replace(/^[^\w]+|[^\w]+$/g, '');
+      tokens.push({
+        text: part,
+        isSpace,
+        start: currentPos,
+        end: currentPos + part.length,
+        cleanWord,
+      });
+      currentPos += part.length;
+    }
+    return tokens;
+  }, [message]);
+
   useEffect(() => {
-    const listener = (speaking: boolean) => setIsSpeaking(speaking);
-    voiceAssistant.addListener(listener);
+    const speakListener = (speaking: boolean) => {
+      setIsSpeaking(speaking);
+      if (!speaking) setActiveCharIndex(-1);
+    };
+
+    const boundaryListener = (charIndex: number) => {
+      setActiveCharIndex(charIndex);
+    };
+
+    voiceAssistant.addListener(speakListener);
+    voiceAssistant.addBoundaryListener(boundaryListener);
+
     return () => {
-      voiceAssistant.removeListener(listener);
+      voiceAssistant.removeListener(speakListener);
+      voiceAssistant.removeBoundaryListener(boundaryListener);
     };
   }, []);
 
   useEffect(() => {
     if (!isVisible) {
       voiceAssistant.stop();
+      setActiveCharIndex(-1);
       return;
     }
 
@@ -57,6 +99,13 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
     e.stopPropagation();
     sounds.pop();
     toggleTts();
+  };
+
+  const handleWordClick = (e: React.MouseEvent, token: WordToken) => {
+    e.stopPropagation();
+    if (token.isSpace || !token.cleanWord) return;
+    sounds.pop();
+    voiceAssistant.speak(token.cleanWord);
   };
 
   return (
@@ -118,10 +167,35 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
             </div>
           </div>
 
-          {/* Speech Message Body */}
-          <p className="text-slate-800 font-extrabold text-base md:text-lg leading-relaxed">
-            {message}
-          </p>
+          {/* Interactive Synchronized Word-by-Word Caption Highlighting */}
+          <div className="text-slate-800 font-extrabold text-base md:text-lg leading-relaxed select-text">
+            {wordTokens.map((token, idx) => {
+              if (token.isSpace) {
+                return <span key={idx}>{token.text}</span>;
+              }
+
+              const isWordSpoken =
+                isSpeaking &&
+                activeCharIndex >= 0 &&
+                token.start <= activeCharIndex &&
+                activeCharIndex < token.end;
+
+              return (
+                <span
+                  key={idx}
+                  onClick={(e) => handleWordClick(e, token)}
+                  className={`inline-block transition-all duration-150 cursor-pointer rounded-lg px-0.5 ${
+                    isWordSpoken
+                      ? 'bg-amber-300 text-slate-950 font-black scale-105 shadow-xs ring-2 ring-amber-400 z-10'
+                      : 'hover:bg-amber-100 hover:text-slate-950'
+                  }`}
+                  title="Click to hear word pronunciation"
+                >
+                  {token.text}
+                </span>
+              );
+            })}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
