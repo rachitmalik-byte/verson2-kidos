@@ -8,17 +8,18 @@ import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
-import {
-  CottonIllustration,
-  WoolIllustration,
-  SilkIllustration,
-  WoodIllustration,
-  NylonIllustration,
-  PolyesterIllustration,
-  PlasticIllustration,
-  RubberIllustration,
-} from '@/components/illustrations/MaterialIllustrations';
-import { Check, Sparkles, AlertCircle, ArrowRight, ShieldCheck, TreePine, Factory, Search, ZoomIn } from 'lucide-react';
+
+// Real Studio Macro Educational Photography
+import rawCottonBollImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
+import sheepWoolFleeceImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
+import naturalWoodTimberImg from '@/assets/images/specimens/natural_wood_timber.jpg';
+import silkwormSilkCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
+import nylonThreadSpoolImg from '@/assets/images/specimens/nylon_thread_spool.jpg';
+import polyesterFabricRollImg from '@/assets/images/specimens/polyester_fabric_roll.jpg';
+import plasticPetPelletsImg from '@/assets/images/specimens/plastic_pet_pellets.jpg';
+import syntheticAcrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
+
+import { Check, Sparkles, AlertCircle, ArrowRight, ShieldCheck, TreePine, Factory, Search, ZoomIn, X } from 'lucide-react';
 
 type Phase = 'HOOK' | 'SORTING' | 'REFLECT' | 'UNDERSTANDING' | 'PRACTICE' | 'APPLY';
 
@@ -26,7 +27,7 @@ interface MaterialItem {
   id: string;
   name: string;
   emoji: string;
-  renderIcon: (className?: string) => React.ReactNode;
+  image: string;
   type: 'natural' | 'synthetic';
   origin: string;
   hint: string;
@@ -38,7 +39,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'cotton',
     name: 'Raw Cotton Boll',
     emoji: '🌿',
-    renderIcon: (cls) => <CottonIllustration className={cls} />,
+    image: rawCottonBollImg,
     type: 'natural',
     origin: 'Cotton Plant Seed Capsule',
     hint: 'Grown on plant stems in open fields!',
@@ -48,7 +49,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'wool',
     name: 'Raw Sheep Wool',
     emoji: '🐑',
-    renderIcon: (cls) => <WoolIllustration className={cls} />,
+    image: sheepWoolFleeceImg,
     type: 'natural',
     origin: 'Animal Fleece (Sheep)',
     hint: 'Gently sheared from live sheep!',
@@ -58,7 +59,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'silk',
     name: 'Silkworm Silk Cocoon',
     emoji: '🪱',
-    renderIcon: (cls) => <SilkIllustration className={cls} />,
+    image: silkwormSilkCocoonImg,
     type: 'natural',
     origin: 'Spun by Silkworms',
     hint: 'Spun by silkworm caterpillars!',
@@ -68,7 +69,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'wood',
     name: 'Natural Timber Oak Wood',
     emoji: '🪵',
-    renderIcon: (cls) => <WoodIllustration className={cls} />,
+    image: naturalWoodTimberImg,
     type: 'natural',
     origin: 'Forest Trees (Lignin & Cellulose)',
     hint: 'From oak and pine trees in forests!',
@@ -78,7 +79,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'nylon',
     name: 'Nylon Filament Spool',
     emoji: '🧵',
-    renderIcon: (cls) => <NylonIllustration className={cls} />,
+    image: nylonThreadSpoolImg,
     type: 'synthetic',
     origin: 'Petrochemical Polymerization',
     hint: 'Synthesized by chemists in a lab!',
@@ -88,7 +89,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'polyester',
     name: 'Polyester Fabric Roll',
     emoji: '👕',
-    renderIcon: (cls) => <PolyesterIllustration className={cls} />,
+    image: polyesterFabricRollImg,
     type: 'synthetic',
     origin: 'Petroleum Ester Polymers',
     hint: 'Synthesized with chemical polymer chains!',
@@ -98,21 +99,21 @@ const SORTING_ITEMS: MaterialItem[] = [
     id: 'plastic',
     name: 'Thermoplastic PET Pellets',
     emoji: '🫙',
-    renderIcon: (cls) => <PlasticIllustration className={cls} />,
+    image: plasticPetPelletsImg,
     type: 'synthetic',
     origin: 'Mouldable Chemical Resins',
     hint: 'Moulded in chemical factory machines!',
     description: 'Lightweight thermoplastic resins that soften with heat to take any shape.',
   },
   {
-    id: 'rubber',
-    name: 'Synthetic Vulcanized Tyre',
-    emoji: '🛞',
-    renderIcon: (cls) => <RubberIllustration className={cls} />,
+    id: 'acrylic',
+    name: 'Synthetic Acrylic Yarn',
+    emoji: '🧶',
+    image: syntheticAcrylicYarnImg,
     type: 'synthetic',
-    origin: 'Sulfur Cross-Linked Polymer',
-    hint: 'Engineered for high road friction!',
-    description: 'Heat-resistant synthetic elastomer engineered for vehicle tires.',
+    origin: 'Polyacrylonitrile Chemical Polymer',
+    hint: 'Artificial wool substitute made from petroleum!',
+    description: 'Man-made warm synthetic yarn engineered to mimic wool without sheep.',
   },
 ];
 
@@ -143,7 +144,7 @@ export function SortingMission() {
       sounds.fanfare();
       completeMission('mission-02');
       const naturalMaterials = ['cotton', 'wool', 'silk', 'wood'];
-      const syntheticMaterials = ['nylon', 'polyester', 'plastic', 'synthetic-rubber'];
+      const syntheticMaterials = ['nylon', 'polyester', 'plastic', 'acrylic'];
 
       naturalMaterials.forEach((id) => {
         addDiscovery({
@@ -159,7 +160,7 @@ export function SortingMission() {
         addDiscovery({
           materialId: id,
           discoveredAt: Date.now(),
-          properties: ['Synthetic', 'Chemical Process'],
+          properties: ['Synthetic', 'Man-Made'],
           uses: [],
           scienceWord: 'Synthetic material',
         });
@@ -167,7 +168,7 @@ export function SortingMission() {
 
       setShowCelebration(true);
       setTimeout(() => {
-        navigate('/chapter-hub');
+        navigate('/chapter/3/mission/3');
       }, 2400);
     }
   };
@@ -181,18 +182,12 @@ export function SortingMission() {
 
   const handleRedo = () => {
     sounds.pop();
-    if (currentPhase === 'SORTING') {
-      setSortedItems({});
-      setActiveItem(null);
-    }
-    if (currentPhase === 'REFLECT') {
-      setReflectAnswer1(null);
-      setReflectAnswer2(null);
-    }
-    if (currentPhase === 'PRACTICE') {
-      setPracticeSorted({});
-      setActivePracticeItem(null);
-    }
+    setSortedItems({});
+    setActiveItem(null);
+    setReflectAnswer1(null);
+    setReflectAnswer2(null);
+    setPracticeSorted({});
+    setActivePracticeItem(null);
   };
 
   const isStepComplete = () => {
@@ -208,22 +203,33 @@ export function SortingMission() {
       case 'PRACTICE':
         return Object.keys(practiceSorted).length === 4;
       case 'APPLY':
-        return false;
+        return true;
       default:
         return false;
     }
   };
 
-  const handleSortItem = (zone: 'natural' | 'synthetic') => {
+  const handleCardClick = (item: MaterialItem) => {
+    sounds.pop();
+    if (activeItem === item.id) {
+      setActiveItem(null);
+    } else {
+      setActiveItem(item.id);
+    }
+  };
+
+  const handleZoneClick = (zoneType: 'natural' | 'synthetic') => {
     if (!activeItem) return;
     const item = SORTING_ITEMS.find((i) => i.id === activeItem);
-    if (item && item.type === zone) {
+    if (!item) return;
+
+    if (item.type === zoneType) {
       sounds.pop();
-      setSortedItems((prev) => ({ ...prev, [activeItem]: zone }));
+      setSortedItems((prev) => ({ ...prev, [item.id]: zoneType }));
       setActiveItem(null);
     } else {
       sounds.boing();
-      setActiveItem(null);
+      setInspectItem(item);
     }
   };
 
@@ -231,14 +237,14 @@ export function SortingMission() {
     <MissionLayout
       missionId="mission-02"
       missionNumber={2}
-      missionTitle="The Sorting Desk"
+      missionTitle="The Sorting Desk: Nature vs Factory"
       currentStep={currentStepIndex + 1}
       totalSteps={totalSteps}
       isStepComplete={isStepComplete()}
       onNext={handleNextPhase}
       onPrev={handlePrevPhase}
       onRedo={handleRedo}
-      themeGradient="from-emerald-100 via-teal-50 to-sky-100"
+      themeGradient="from-emerald-100 via-amber-50 to-sky-100"
     >
       <CelebrationOverlay
         isVisible={showCelebration}
@@ -256,19 +262,28 @@ export function SortingMission() {
           className="w-full flex-1 flex flex-col items-center justify-center py-4"
         >
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 1: HOOK
+              PHASE 1: HOOK (The Mixed-Up Workbench)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <Pip mood="thinking" size="xl" />
+              <Pip mood="curious" size="xl" />
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Pip's Workbench is in Chaos! 🔬
+                The Scientist's Sorting Desk! 🔬
               </h2>
-              <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-8">
-                Eight mystery specimens are jumbled up on the laboratory table! Can you help Pip sort which ones come from{' '}
-                <span className="text-emerald-600 font-black">Mother Nature</span> and which were{' '}
-                <span className="text-sky-600 font-black">Made by People</span>?
+              <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
+                Pip's laboratory desk is piled high with real materials from all around the world! Some were grown by{' '}
+                <span className="text-emerald-700 font-black">Mother Nature</span>, while others were synthesized by{' '}
+                <span className="text-sky-700 font-black">Chemists in Factories</span>. Can you sort them into the right scientific trays?
               </p>
+
+              {/* Real Specimen Gallery Preview */}
+              <div className="grid grid-cols-4 gap-3 w-full max-w-lg mb-8">
+                {[rawCottonBollImg, sheepWoolFleeceImg, nylonThreadSpoolImg, polyesterFabricRollImg].map((img, i) => (
+                  <div key={i} className="w-full aspect-square rounded-2xl overflow-hidden border-3 border-slate-200 shadow-sm bg-white p-1">
+                    <img src={img} alt="Specimen" className="w-full h-full object-cover rounded-xl" />
+                  </div>
+                ))}
+              </div>
 
               <button
                 onClick={handleNextPhase}
@@ -282,362 +297,146 @@ export function SortingMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: SORTING DESK (Interactive Trays with Vector Icons)
+              PHASE 2: REAL SPECIMEN SORTING DESK (8 High-Res Photos)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'SORTING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              {/* Two Big Cartoon Trays */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
-                {/* Natural Tray */}
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  onClick={() => handleSortItem('natural')}
-                  className={`p-6 rounded-3xl border-4 transition-all cursor-pointer flex flex-col min-h-[170px] relative overflow-hidden ${
+              <div className="flex items-center gap-4 mb-4">
+                <Pip mood="explaining" size="lg" />
+                <PipSpeechBubble
+                  message="Tap any real specimen photo below, then tap the tray where it belongs!"
+                  isVisible={true}
+                />
+              </div>
+
+              {/* ── TWO SCIENTIFIC SORTING TRAYS ── */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
+                {/* Natural Zone Tray */}
+                <button
+                  onClick={() => handleZoneClick('natural')}
+                  className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
                     activeItem
-                      ? 'border-emerald-500 bg-emerald-100/90 shadow-2xl ring-6 ring-emerald-300 scale-102 animate-pulse'
-                      : 'border-emerald-400 bg-emerald-50 shadow-md'
+                      ? 'bg-emerald-50 border-emerald-400 ring-4 ring-emerald-300/60 shadow-xl hover:scale-101'
+                      : 'bg-emerald-50/70 border-emerald-300 shadow-md'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-black uppercase tracking-wider bg-emerald-200 text-emerald-900 px-3 py-1 rounded-full flex items-center gap-1.5">
-                      <TreePine className="w-3.5 h-3.5" />
-                      <span>FROM NATURE</span>
-                    </span>
-                    <span className="text-xs font-black text-emerald-700">
-                      {Object.values(sortedItems).filter((t) => t === 'natural').length} sorted
-                    </span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <TreePine className="w-6 h-6 text-emerald-600" />
+                    <h3 className="font-black text-lg text-emerald-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      🌿 FROM NATURE (Natural)
+                    </h3>
                   </div>
+                  <span className="text-xs font-bold text-emerald-700">
+                    Plants, Animals, Trees & Earth Minerals
+                  </span>
 
-                  {/* Specimen Badges inside tray */}
-                  <div className="flex flex-wrap gap-2 flex-1 items-start">
-                    {Object.entries(sortedItems)
-                      .filter(([_, type]) => type === 'natural')
-                      .map(([id]) => {
-                        const item = SORTING_ITEMS.find((i) => i.id === id);
-                        return (
-                          <span
-                            key={id}
-                            className="bg-white text-slate-800 font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs border border-emerald-200 flex items-center gap-2 animate-bounce"
-                          >
-                            <div className="w-6 h-6">{item?.renderIcon('w-full h-full')}</div>
-                            <span>{item?.name}</span>
-                          </span>
-                        );
-                      })}
-                  </div>
-
-                  {activeItem && (
-                    <div className="text-center font-black text-xs text-emerald-800 bg-white/90 py-1.5 px-3 rounded-full mt-2 shadow-xs">
-                      👉 Tap here if this item comes from Nature!
-                    </div>
-                  )}
-                </motion.div>
-
-                {/* Synthetic Tray */}
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  onClick={() => handleSortItem('synthetic')}
-                  className={`p-6 rounded-3xl border-4 transition-all cursor-pointer flex flex-col min-h-[170px] relative overflow-hidden ${
-                    activeItem
-                      ? 'border-sky-500 bg-sky-100/90 shadow-2xl ring-6 ring-sky-300 scale-102 animate-pulse'
-                      : 'border-sky-400 bg-sky-50 shadow-md'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-black uppercase tracking-wider bg-sky-200 text-sky-900 px-3 py-1 rounded-full flex items-center gap-1.5">
-                      <Factory className="w-3.5 h-3.5" />
-                      <span>MADE BY PEOPLE</span>
-                    </span>
-                    <span className="text-xs font-black text-sky-700">
-                      {Object.values(sortedItems).filter((t) => t === 'synthetic').length} sorted
-                    </span>
-                  </div>
-
-                  {/* Specimen Badges inside tray */}
-                  <div className="flex flex-wrap gap-2 flex-1 items-start">
-                    {Object.entries(sortedItems)
-                      .filter(([_, type]) => type === 'synthetic')
-                      .map(([id]) => {
-                        const item = SORTING_ITEMS.find((i) => i.id === id);
-                        return (
-                          <span
-                            key={id}
-                            className="bg-white text-slate-800 font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs border border-sky-200 flex items-center gap-2 animate-bounce"
-                          >
-                            <div className="w-6 h-6">{item?.renderIcon('w-full h-full')}</div>
-                            <span>{item?.name}</span>
-                          </span>
-                        );
-                      })}
-                  </div>
-
-                  {activeItem && (
-                    <div className="text-center font-black text-xs text-sky-800 bg-white/90 py-1.5 px-3 rounded-full mt-2 shadow-xs">
-                      👉 Tap here if this item was Made by People!
-                    </div>
-                  )}
-                </motion.div>
-              </div>
-
-              {/* Status Header */}
-              <div className="text-center font-black text-xs text-slate-500 uppercase tracking-widest mb-3">
-                {SORTING_ITEMS.length - Object.keys(sortedItems).length} specimens remaining to sort
-              </div>
-
-              {/* Cards Deck */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full">
-                {SORTING_ITEMS.map((item) => {
-                  const isSorted = sortedItems[item.id] !== undefined;
-                  const isSelected = activeItem === item.id;
-
-                  if (isSorted) return null;
-
-                  return (
-                    <motion.button
-                      key={item.id}
-                      whileHover={{ scale: 1.05, y: -3 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        sounds.pop();
-                        setActiveItem(isSelected ? null : item.id);
-                      }}
-                      className={`p-4 rounded-2xl border-3 flex flex-col items-center text-center cursor-pointer transition-all ${
-                        isSelected
-                          ? 'border-amber-500 bg-amber-100/90 shadow-xl ring-4 ring-amber-300 scale-105'
-                          : 'border-slate-200 bg-white hover:bg-slate-50 shadow-md'
-                      }`}
-                    >
-                      <div className="w-16 h-16 mb-2 flex items-center justify-center">
-                        {item.renderIcon('w-full h-full')}
-                      </div>
-                      <span className="font-black text-sm text-slate-800">{item.name}</span>
-                      <span className="text-[11px] font-bold text-slate-500 mt-0.5">{item.hint}</span>
-                    </motion.button>
-                  );
-                })}
-              </div>
-
-              {Object.keys(sortedItems).length === SORTING_ITEMS.length && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="mt-6 p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center shadow-lg"
-                >
-                  <p className="text-base font-black text-emerald-900 mb-2">
-                    🎉 Outstanding! All 8 specimens placed into the right trays!
-                  </p>
-                  <button
-                    onClick={handleNextPhase}
-                    className="bg-amber-400 border-2 border-amber-600 shadow-[0_4px_0_#D97706] active:translate-y-1 text-slate-900 font-black text-sm py-2.5 px-8 rounded-full cursor-pointer"
-                  >
-                    See What They Have In Common →
-                  </button>
-                </motion.div>
-              )}
-            </div>
-          )}
-
-          {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 3: REFLECT
-          ════════════════════════════════════════════════════════════════════════ */}
-          {currentPhase === 'REFLECT' && (
-            <div className="w-full max-w-3xl flex flex-col items-center space-y-6">
-              <div className="text-center">
-                <Pip mood="thinking" size="md" />
-                <h2 className="text-2xl font-black text-slate-800 mt-2 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  What makes the Green group special? 🌿
-                </h2>
-                <p className="text-xs md:text-sm font-bold text-slate-500">
-                  Think about where Cotton, Wool, Silk, and Wood all come from:
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 w-full max-w-md">
-                {[
-                  { label: 'They are all harvested from plants, animals, or trees! 🌿🐑', correct: true },
-                  { label: 'They are all made in factories with chemicals 🏭', correct: false },
-                  { label: 'They were invented by chemists in 1935 ⚡', correct: false },
-                ].map((opt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      if (opt.correct) {
-                        sounds.success();
-                        setReflectAnswer1(0);
-                      } else {
-                        sounds.boing();
-                      }
-                    }}
-                    className={`p-4 rounded-2xl font-black text-sm border-2 text-left transition-all cursor-pointer ${
-                      reflectAnswer1 === 0 && opt.correct
-                        ? 'bg-emerald-100 border-emerald-500 text-emerald-950 ring-4 ring-emerald-200'
-                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-
-              {reflectAnswer1 === 0 && (
-                <div className="w-full flex flex-col items-center space-y-4 pt-4 border-t-2 border-slate-200">
-                  <h3 className="text-xl font-black text-slate-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    And what makes the Blue group special? 🏭
-                  </h3>
-                  <div className="grid grid-cols-1 gap-3 w-full max-w-md">
-                    {[
-                      { label: 'They are made by people using chemical reactions! 🧪', correct: true },
-                      { label: 'They grow directly on trees in nature 🌳', correct: false },
-                      { label: 'They are sheared from sheep fleece 🐑', correct: false },
-                    ].map((opt, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          if (opt.correct) {
-                            sounds.fanfare();
-                            setReflectAnswer2(0);
-                          } else {
-                            sounds.boing();
-                          }
-                        }}
-                        className={`p-4 rounded-2xl font-black text-sm border-2 text-left transition-all cursor-pointer ${
-                          reflectAnswer2 === 0 && opt.correct
-                            ? 'bg-sky-100 border-sky-500 text-sky-950 ring-4 ring-sky-200'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                        }`}
+                  {/* Sorted Count */}
+                  <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                    {SORTING_ITEMS.filter((i) => sortedItems[i.id] === 'natural').map((item) => (
+                      <span
+                        key={item.id}
+                        className="px-3 py-1 bg-white rounded-full text-xs font-black text-emerald-900 border border-emerald-300 shadow-xs flex items-center gap-1"
                       >
-                        {opt.label}
-                      </button>
+                        <span>{item.emoji}</span>
+                        <span>{item.name}</span>
+                      </span>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 4: UNDERSTANDING (Definitions)
-          ════════════════════════════════════════════════════════════════════════ */}
-          {currentPhase === 'UNDERSTANDING' && (
-            <div className="w-full max-w-3xl flex flex-col items-center space-y-6">
-              <Pip mood="celebrating" size="lg" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                {/* Natural Card */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-emerald-300 shadow-xl text-center">
-                  <span className="text-4xl mb-2 block">🌿</span>
-                  <h3 className="text-xl font-black text-emerald-900 mb-2">Natural Materials</h3>
-                  <p className="text-xs md:text-sm font-bold text-slate-600 leading-relaxed mb-4">
-                    Materials obtained directly from plants, animals, or the earth without chemical alteration.
-                  </p>
-                  <div className="flex justify-center gap-2 text-xs font-black bg-emerald-50 py-2 px-4 rounded-full text-emerald-800">
-                    <span>Cotton • Wool • Silk • Wood</span>
-                  </div>
-                </div>
-
-                {/* Synthetic Card */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-sky-300 shadow-xl text-center">
-                  <span className="text-4xl mb-2 block">🏭🧪</span>
-                  <h3 className="text-xl font-black text-sky-900 mb-2">Synthetic Materials</h3>
-                  <p className="text-xs md:text-sm font-bold text-slate-600 leading-relaxed mb-4">
-                    Man-made materials produced by chemists in laboratories using petroleum and chemical polymers.
-                  </p>
-                  <div className="flex justify-center gap-2 text-xs font-black bg-sky-50 py-2 px-4 rounded-full text-sky-800">
-                    <span>Nylon • Polyester • Plastic • Acrylic</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 5: PRACTICE
-          ════════════════════════════════════════════════════════════════════════ */}
-          {currentPhase === 'PRACTICE' && (
-            <div className="w-full max-w-3xl flex flex-col items-center space-y-6">
-              <div className="text-center">
-                <Pip mood="encouraging" size="md" />
-                <h2 className="text-2xl font-black text-slate-800 mt-2 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Speed Match Challenge! ⚡
-                </h2>
-                <p className="text-xs md:text-sm font-bold text-slate-500">
-                  Tap a material below, then tap Natural or Synthetic!
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 w-full mb-4">
-                <button
-                  onClick={() => {
-                    if (activePracticeItem) {
-                      const mat = [
-                        { id: 'jute', type: 'natural' },
-                        { id: 'rayon', type: 'synthetic' },
-                        { id: 'gold', type: 'natural' },
-                        { id: 'acrylic', type: 'synthetic' },
-                      ].find((m) => m.id === activePracticeItem);
-                      if (mat?.type === 'natural') {
-                        sounds.pop();
-                        setPracticeSorted((p) => ({ ...p, [activePracticeItem]: 'natural' }));
-                        setActivePracticeItem(null);
-                      } else {
-                        sounds.boing();
-                      }
-                    }
-                  }}
-                  className="p-4 rounded-2xl border-3 border-emerald-400 bg-emerald-50 text-emerald-950 font-black text-sm cursor-pointer shadow-md hover:bg-emerald-100"
-                >
-                  🌿 NATURAL
                 </button>
 
+                {/* Synthetic Zone Tray */}
                 <button
-                  onClick={() => {
-                    if (activePracticeItem) {
-                      const mat = [
-                        { id: 'jute', type: 'natural' },
-                        { id: 'rayon', type: 'synthetic' },
-                        { id: 'gold', type: 'natural' },
-                        { id: 'acrylic', type: 'synthetic' },
-                      ].find((m) => m.id === activePracticeItem);
-                      if (mat?.type === 'synthetic') {
-                        sounds.pop();
-                        setPracticeSorted((p) => ({ ...p, [activePracticeItem]: 'synthetic' }));
-                        setActivePracticeItem(null);
-                      } else {
-                        sounds.boing();
-                      }
-                    }
-                  }}
-                  className="p-4 rounded-2xl border-3 border-sky-400 bg-sky-50 text-sky-950 font-black text-sm cursor-pointer shadow-md hover:bg-sky-100"
+                  onClick={() => handleZoneClick('synthetic')}
+                  className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
+                    activeItem
+                      ? 'bg-sky-50 border-sky-400 ring-4 ring-sky-300/60 shadow-xl hover:scale-101'
+                      : 'bg-sky-50/70 border-sky-300 shadow-md'
+                  }`}
                 >
-                  🏭 SYNTHETIC
+                  <div className="flex items-center gap-2 mb-2">
+                    <Factory className="w-6 h-6 text-sky-600" />
+                    <h3 className="font-black text-lg text-sky-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      🏭 MADE BY CHEMISTS (Synthetic)
+                    </h3>
+                  </div>
+                  <span className="text-xs font-bold text-sky-700">
+                    Chemical Polymerization & Man-Made Resins
+                  </span>
+
+                  {/* Sorted Count */}
+                  <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                    {SORTING_ITEMS.filter((i) => sortedItems[i.id] === 'synthetic').map((item) => (
+                      <span
+                        key={item.id}
+                        className="px-3 py-1 bg-white rounded-full text-xs font-black text-sky-900 border border-sky-300 shadow-xs flex items-center gap-1"
+                      >
+                        <span>{item.emoji}</span>
+                        <span>{item.name}</span>
+                      </span>
+                    ))}
+                  </div>
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full">
-                {[
-                  { id: 'jute', name: 'Jute Sack', icon: '🌾' },
-                  { id: 'rayon', name: 'Rayon Shirt', icon: '✨' },
-                  { id: 'gold', name: 'Gold Mineral', icon: '🪙' },
-                  { id: 'acrylic', name: 'Acrylic Blanket', icon: '🧶' },
-                ].map((item) => {
-                  const isDone = practiceSorted[item.id] !== undefined;
-                  if (isDone) return null;
+              {/* ── 8 REAL STUDIO SPECIMEN CARDS ── */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full">
+                {SORTING_ITEMS.map((item) => {
+                  const isSorted = Boolean(sortedItems[item.id]);
+                  const isSelected = activeItem === item.id;
 
                   return (
-                    <button
+                    <motion.div
                       key={item.id}
-                      onClick={() => {
-                        sounds.pop();
-                        setActivePracticeItem(item.id);
-                      }}
-                      className={`p-4 rounded-2xl border-2 font-black text-xs flex flex-col items-center gap-1 cursor-pointer transition-all ${
-                        activePracticeItem === item.id
-                          ? 'bg-amber-100 border-amber-500 scale-105 ring-4 ring-amber-300'
-                          : 'bg-white border-slate-200 hover:bg-slate-50'
+                      whileHover={{ scale: isSorted ? 1 : 1.03, y: isSorted ? 0 : -3 }}
+                      whileTap={{ scale: isSorted ? 1 : 0.97 }}
+                      onClick={() => !isSorted && handleCardClick(item)}
+                      className={`p-3.5 rounded-3xl border-3 flex flex-col items-center text-center cursor-pointer transition-all relative overflow-hidden ${
+                        isSorted
+                          ? 'opacity-40 bg-slate-100 border-slate-300 cursor-default'
+                          : isSelected
+                          ? 'bg-amber-100 border-amber-500 shadow-2xl ring-4 ring-amber-300 scale-103'
+                          : 'bg-white border-slate-200 hover:border-amber-300 shadow-md'
                       }`}
                     >
-                      <span className="text-3xl">{item.icon}</span>
-                      <span>{item.name}</span>
-                    </button>
+                      {/* Real Photo */}
+                      <div className="w-full aspect-square rounded-2xl overflow-hidden border-2 border-slate-100 shadow-inner bg-slate-50 mb-2 p-1 relative flex items-center justify-center">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover rounded-xl"
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            sounds.pop();
+                            setInspectItem(item);
+                          }}
+                          className="absolute bottom-1.5 right-1.5 p-1 bg-slate-900/80 text-white rounded-lg text-[10px] flex items-center gap-0.5 shadow-md cursor-pointer hover:bg-slate-900"
+                          title="Inspect Specimen under Magnifier"
+                        >
+                          <Search className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      <h4 className="font-black text-xs md:text-sm text-slate-800 leading-snug">
+                        {item.name}
+                      </h4>
+                      <span className="text-[10px] font-bold text-slate-500 mt-0.5 truncate w-full">
+                        {item.origin}
+                      </span>
+
+                      {isSelected && (
+                        <span className="mt-2 text-[10px] font-black text-amber-900 bg-amber-200 px-2 py-0.5 rounded-full animate-bounce">
+                          Tap a Tray Above 👆
+                        </span>
+                      )}
+
+                      {isSorted && (
+                        <div className="absolute top-2 right-2 bg-emerald-500 text-white p-1 rounded-full shadow-md">
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
+                      )}
+                    </motion.div>
                   );
                 })}
               </div>
@@ -645,36 +444,203 @@ export function SortingMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 6: APPLY
+              PHASE 3: REFLECT (Scientific Observation)
           ════════════════════════════════════════════════════════════════════════ */}
-          {currentPhase === 'APPLY' && (
+          {currentPhase === 'REFLECT' && (
+            <div className="w-full max-w-3xl flex flex-col items-center">
+              <Pip mood="thinking" size="lg" />
+              <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2 text-center" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                Scientific Observation Time! 🔍
+              </h2>
+
+              <div className="bg-white p-6 rounded-3xl border-3 border-slate-200 shadow-lg w-full mb-6">
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+                  Question 1: Nature Tray
+                </span>
+                <p className="text-sm md:text-base font-bold text-slate-800 mt-3 mb-4">
+                  What do Cotton, Wool, Silk, and Wood ALL have in common?
+                </p>
+
+                <div className="flex flex-col gap-2.5">
+                  {[
+                    'They are grown naturally by living plants, animals, and trees 🌱',
+                    'They were invented by chemists inside laboratories 🧪',
+                    'They are all made from melted plastic beads 🫙',
+                  ].map((option, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        sounds.pop();
+                        setReflectAnswer1(idx);
+                      }}
+                      className={`p-3.5 rounded-2xl border-2 font-black text-xs md:text-sm text-left transition-all cursor-pointer ${
+                        reflectAnswer1 === idx
+                          ? idx === 0
+                            ? 'bg-emerald-100 border-emerald-500 text-emerald-900 shadow-md'
+                            : 'bg-rose-100 border-rose-400 text-rose-900'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-3xl border-3 border-slate-200 shadow-lg w-full mb-6">
+                <span className="text-xs font-black uppercase tracking-wider text-sky-700 bg-sky-100 px-3 py-1 rounded-full">
+                  Question 2: Synthetic Tray
+                </span>
+                <p className="text-sm md:text-base font-bold text-slate-800 mt-3 mb-4">
+                  What do Nylon, Polyester, Plastic, and Acrylic ALL have in common?
+                </p>
+
+                <div className="flex flex-col gap-2.5">
+                  {[
+                    'They are synthesized by people using chemicals and polymer chains 🏭',
+                    'They grow on oak trees in forest valleys 🌳',
+                    'They are harvested directly from sheep and caterpillars 🐑',
+                  ].map((option, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        sounds.pop();
+                        setReflectAnswer2(idx);
+                      }}
+                      className={`p-3.5 rounded-2xl border-2 font-black text-xs md:text-sm text-left transition-all cursor-pointer ${
+                        reflectAnswer2 === idx
+                          ? idx === 0
+                            ? 'bg-sky-100 border-sky-500 text-sky-900 shadow-md'
+                            : 'bg-rose-100 border-rose-400 text-rose-900'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 4: UNDERSTANDING (The Core Science Law)
+          ════════════════════════════════════════════════════════════════════════ */}
+          {currentPhase === 'UNDERSTANDING' && (
+            <div className="w-full max-w-3xl flex flex-col items-center text-center">
+              <Pip mood="celebrating" size="lg" />
+              <h2 className="text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                The Two Great Kingdoms of Materials 👑
+              </h2>
+              <p className="text-base text-slate-600 font-bold mb-8">
+                Now you understand the primary rule of material science!
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
+                <div className="bg-emerald-50 p-6 rounded-3xl border-4 border-emerald-300 shadow-xl flex flex-col items-center">
+                  <span className="text-5xl mb-3">🌿</span>
+                  <h3 className="text-xl font-black text-emerald-950">Natural Materials</h3>
+                  <p className="text-xs font-bold text-slate-600 mt-2 leading-relaxed">
+                    Materials harvested straight from living organisms (plants, animals) or extracted from the earth without chemical restructuring.
+                  </p>
+                  <span className="mt-4 text-[11px] font-black text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">
+                    Examples: Cotton, Wool, Silk, Wood, Leather
+                  </span>
+                </div>
+
+                <div className="bg-sky-50 p-6 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center">
+                  <span className="text-5xl mb-3">🏭</span>
+                  <h3 className="text-xl font-black text-sky-950">Synthetic Materials</h3>
+                  <p className="text-xs font-bold text-slate-600 mt-2 leading-relaxed">
+                    Materials synthesized artificially in chemical laboratories and industrial reactors by joining small molecules into giant polymer chains.
+                  </p>
+                  <span className="mt-4 text-[11px] font-black text-sky-900 bg-sky-200 px-3 py-1 rounded-full">
+                    Examples: Nylon, Polyester, Plastic, Acrylic, Teflon
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 5: PRACTICE & APPLY
+          ════════════════════════════════════════════════════════════════════════ */}
+          {(currentPhase === 'PRACTICE' || currentPhase === 'APPLY') && (
             <div className="w-full max-w-2xl flex flex-col items-center text-center">
               <Pip mood="thinking" size="lg" />
               <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Young Scientist Mastery Challenge! 🏆
+                Mastery Challenge: The Lab Invention 🔬
               </h2>
               <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
-                A chemist synthesizes a brand-new ultra-strong fiber in a laboratory from chemical polymers. How should we classify this new material?
+                A chemist mixes petroleum compounds in a test tube to invent an unbreakable new plastic bottle. Is this material Natural or Synthetic?
               </p>
 
-              <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="grid grid-cols-2 gap-4 w-full mb-6">
                 <button
                   onClick={() => sounds.boing()}
-                  className="p-5 rounded-3xl border-3 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-black text-sm cursor-pointer"
+                  className="p-5 rounded-3xl border-3 border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-black text-base transition-all cursor-pointer flex flex-col items-center gap-2"
                 >
-                  🌿 Natural Material
+                  <span className="text-4xl">🌿</span>
+                  <span>Natural</span>
                 </button>
 
                 <button
-                  onClick={handleNextPhase}
-                  className="p-5 rounded-3xl border-3 border-emerald-400 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-black text-sm cursor-pointer shadow-lg ring-4 ring-emerald-300 scale-105"
+                  onClick={() => {
+                    sounds.fanfare();
+                    handleNextPhase();
+                  }}
+                  className="p-5 rounded-3xl border-3 border-sky-400 bg-sky-100 hover:bg-sky-200 text-sky-950 font-black text-base shadow-xl ring-4 ring-sky-300 scale-105 transition-all cursor-pointer flex flex-col items-center gap-2"
                 >
-                  🏭 Synthetic Material ✨
+                  <span className="text-4xl">🏭✨</span>
+                  <span>Synthetic (Man-Made)</span>
                 </button>
               </div>
             </div>
           )}
         </motion.div>
+      </AnimatePresence>
+
+      {/* ── HIGH-RES MAGNIFIER MODAL FOR SPECIMENS ── */}
+      <AnimatePresence>
+        {inspectItem && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setInspectItem(null)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+            />
+
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="relative z-10 bg-white rounded-3xl p-6 max-w-sm w-full border-4 border-amber-300 shadow-2xl flex flex-col items-center text-center"
+            >
+              <button
+                onClick={() => setInspectItem(null)}
+                className="absolute top-4 right-4 p-1.5 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-slate-100 shadow-inner bg-slate-50 mb-3 p-1 flex items-center justify-center">
+                <img src={inspectItem.image} alt={inspectItem.name} className="w-full h-full object-cover rounded-xl" />
+              </div>
+
+              <h3 className="text-lg font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                {inspectItem.name}
+              </h3>
+              <span className="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-0.5 rounded-full mt-1">
+                {inspectItem.origin}
+              </span>
+              <p className="text-xs font-bold text-slate-600 mt-3 leading-relaxed">
+                {inspectItem.description}
+              </p>
+            </motion.div>
+          </div>
+        )}
       </AnimatePresence>
     </MissionLayout>
   );

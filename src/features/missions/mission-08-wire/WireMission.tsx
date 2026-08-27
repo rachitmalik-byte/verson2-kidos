@@ -10,9 +10,15 @@ import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
-import { WireIllustration } from '@/components/illustrations/MaterialIllustrations';
+
+// Real Macro Studio Photography
+import copperWireMacroImg from '@/assets/images/wire/copper_wire_macro.jpg';
+import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
+import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
+import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
 import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
 import polyesterFabricZoomImg from '@/assets/images/raincoat/polyester_fabric_zoom.jpg';
+
 import {
   Zap,
   ShieldCheck,
@@ -34,7 +40,7 @@ interface TestSpecimen {
   id: string;
   name: string;
   category: 'Metal Conductor' | 'Plastic Insulator';
-  icon: string;
+  image: string;
   conducts: boolean;
   material: string;
   hint: string;
@@ -46,37 +52,37 @@ const SPECIMENS: TestSpecimen[] = [
     id: 'copper',
     name: 'Raw Copper Metal Wire',
     category: 'Metal Conductor',
-    icon: '⚡',
+    image: copperWireMacroImg,
     conducts: true,
     material: 'Red-orange metallic copper atoms with free valence electrons',
     hint: 'Electrons flow like water through copper metal!',
     scienceDetail: 'Copper is an exceptional electrical conductor with minimal electrical resistance.',
   },
   {
-    id: 'steel',
-    name: 'Polished Steel Key',
-    category: 'Metal Conductor',
-    icon: '🔑',
-    conducts: true,
-    material: 'Iron-carbon metallic alloy lattice',
-    hint: 'Metals have a sea of free electrons that carry current!',
-    scienceDetail: 'Steel conducts electricity, though with slightly more resistance than copper.',
-  },
-  {
     id: 'pvc-plastic',
     name: 'Flexible PVC Plastic Sheath',
     category: 'Plastic Insulator',
-    icon: '🥤',
+    image: pvcInsulatedCableImg,
     conducts: false,
     material: 'Polyvinyl Chloride (PVC) synthetic polymer chain',
     hint: 'Plastic locks all electrons tightly inside covalent chemical bonds!',
     scienceDetail: 'PVC plastic is a high-grade electrical insulator that blocks up to 10,000 Volts.',
   },
   {
+    id: 'steel',
+    name: 'Polished Steel Key',
+    category: 'Metal Conductor',
+    image: copperWireMacroImg,
+    conducts: true,
+    material: 'Iron-carbon metallic alloy lattice',
+    hint: 'Metals have a sea of free electrons that carry current!',
+    scienceDetail: 'Steel conducts electricity, though with slightly more resistance than copper.',
+  },
+  {
     id: 'rubber',
     name: 'Vulcanized Rubber Eraser',
     category: 'Plastic Insulator',
-    icon: '🧽',
+    image: pvcInsulatedCableImg,
     conducts: false,
     material: 'Cross-linked elastomer polymer matrix',
     hint: 'Rubber tightly resists any electric current passing through!',
@@ -86,7 +92,7 @@ const SPECIMENS: TestSpecimen[] = [
 
 export function WireMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
-  const [activeSpecimenId, setActiveSpecimenId] = useState<string | null>(null);
+  const [activeSpecimenId, setActiveSpecimenId] = useState<string | null>('copper');
   const [testedSpecimens, setTestedSpecimens] = useState<Record<string, boolean>>({});
   const [isCircuitFlowing, setIsCircuitFlowing] = useState(false);
   const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'copper' | 'pvc'>('copper');
@@ -175,7 +181,7 @@ export function WireMission() {
     }, 900);
   };
 
-  const activeSpecimen = SPECIMENS.find((s) => s.id === activeSpecimenId);
+  const activeSpecimen = SPECIMENS.find((s) => s.id === activeSpecimenId) || SPECIMENS[0];
 
   return (
     <MissionLayout
@@ -206,10 +212,10 @@ export function WireMission() {
           className="w-full flex-1 flex flex-col items-center justify-center py-4"
         >
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 1: HOOK (The Bare Wire Mystery)
+              PHASE 1: HOOK (The Bare Wire Mystery - Real Photo Comparison)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
-            <div className="w-full max-w-3xl flex flex-col items-center text-center">
+            <div className="w-full max-w-4xl flex flex-col items-center text-center">
               <Pip mood="curious" size="xl" />
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 The Live Wire & Shockproof Shield Mystery! ⚡
@@ -220,20 +226,42 @@ export function WireMission() {
                 <span className="text-sky-600 font-black">PVC plastic</span> on the outside! Why do we need both?
               </p>
 
-              {/* Cable Cutaway Comparison */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-lg mb-8">
-                <div className="bg-white p-5 rounded-3xl border-3 border-amber-300 shadow-md flex flex-col items-center text-center">
-                  <span className="text-4xl mb-2">⚡🪢</span>
-                  <span className="font-black text-slate-800 text-sm">1. Inside Core: Copper Metal</span>
-                  <span className="text-xs font-bold text-amber-700 mt-1">Conducts Electricity ⚡</span>
-                  <span className="text-[11px] font-bold text-slate-500 mt-0.5">Allows power to travel from wall to appliance</span>
+              {/* Real Studio Photo Comparison Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl mb-8">
+                {/* Copper Metal Photo Card */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-amber-300 shadow-xl flex flex-col items-center text-center overflow-hidden">
+                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-2">
+                    1. Inside Core: Pure Copper Wire
+                  </span>
+                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 bg-slate-50 flex items-center justify-center p-2">
+                    <img
+                      src={copperWireMacroImg}
+                      alt="Raw Copper Metallic Wire Strands"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  <span className="text-sm font-black text-amber-800 mt-2">Electrical Conductor ⚡</span>
+                  <p className="text-xs font-bold text-slate-500 mt-1 max-w-xs leading-snug">
+                    Red-orange metallic atoms with free valence electrons that let electrical current stream effortlessly!
+                  </p>
                 </div>
 
-                <div className="bg-white p-5 rounded-3xl border-3 border-sky-300 shadow-md flex flex-col items-center text-center">
-                  <span className="text-4xl mb-2">🛡️🥤</span>
-                  <span className="font-black text-slate-800 text-sm">2. Outside Layer: PVC Plastic</span>
-                  <span className="text-xs font-bold text-sky-700 mt-1">Electrical Insulator 🛡️</span>
-                  <span className="text-[11px] font-bold text-slate-500 mt-0.5">Blocks current from shocking your hands!</span>
+                {/* PVC Plastic Insulation Photo Card */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center text-center overflow-hidden">
+                  <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-2">
+                    2. Outside Layer: PVC Plastic Sheath
+                  </span>
+                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 bg-slate-50 flex items-center justify-center p-2">
+                    <img
+                      src={pvcInsulatedCableImg}
+                      alt="Colorful PVC Insulated Multi-Core Cable"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  <span className="text-sm font-black text-sky-800 mt-2">Electrical Insulator 🛡️</span>
+                  <p className="text-xs font-bold text-slate-500 mt-1 max-w-xs leading-snug">
+                    Polymer chains lock all electrons tightly in place, shielding human hands from lethal 240V shocks!
+                  </p>
                 </div>
               </div>
 
@@ -265,7 +293,7 @@ export function WireMission() {
               <ExperimentFocusSpotlight
                 isActive={isCircuitFlowing}
                 activeLabel={
-                  activeSpecimen?.conducts
+                  activeSpecimen.conducts
                     ? '⚡ Live Electricity Flowing Through Conductor...'
                     : '🛡️ Plastic Insulator Blocking Electric Current...'
                 }
@@ -285,9 +313,9 @@ export function WireMission() {
                   </div>
 
                   {/* Circuit Physical Schematic Layout */}
-                  <div className="w-full max-w-2xl bg-slate-900/90 rounded-2xl p-6 border-2 border-slate-700 flex flex-col md:flex-row items-center justify-between gap-6 relative">
+                  <div className="w-full max-w-3xl bg-slate-900/90 rounded-2xl p-6 border-2 border-slate-700 flex flex-col md:flex-row items-center justify-between gap-6 relative">
                     {/* Left: 12V Power Battery */}
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center shrink-0">
                       <div className="w-16 h-20 rounded-xl bg-gradient-to-b from-amber-500 to-amber-700 border-2 border-amber-300 flex flex-col items-center justify-center shadow-lg relative">
                         <div className="w-6 h-2 bg-slate-300 rounded-t-sm absolute -top-2" />
                         <Battery className="w-6 h-6 text-slate-950" />
@@ -298,7 +326,7 @@ export function WireMission() {
 
                     {/* Connecting Wire Left with Moving Electricity Pulse */}
                     <div className="hidden md:flex flex-1 h-2 bg-slate-800 rounded-full relative overflow-hidden">
-                      {activeSpecimen?.conducts && (
+                      {activeSpecimen.conducts && (
                         <motion.div
                           animate={{ x: ['-100%', '100%'] }}
                           transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
@@ -307,44 +335,36 @@ export function WireMission() {
                       )}
                     </div>
 
-                    {/* Center: The Active Test Gap with Alligator Clips */}
-                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-dashed border-amber-400/80 bg-slate-950/80 min-w-[200px] text-center relative">
+                    {/* Center: The Active Test Gap with Real Specimen Photo */}
+                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-dashed border-amber-400/80 bg-slate-950/80 min-w-[220px] text-center relative">
                       <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider mb-2">
                         [ Alligator Test Clips ]
                       </span>
 
-                      <AnimatePresence mode="wait">
-                        {activeSpecimen ? (
-                          <motion.div
-                            key={activeSpecimen.id}
-                            initial={{ scale: 0.7, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.7, opacity: 0 }}
-                            className="flex flex-col items-center"
-                          >
-                            <span className="text-4xl my-1">{activeSpecimen.icon}</span>
-                            <span className="font-black text-xs text-white">{activeSpecimen.name}</span>
-                            <span
-                              className={`text-[10px] font-black px-2 py-0.5 rounded-full mt-1.5 ${
-                                activeSpecimen.conducts
-                                  ? 'bg-amber-400 text-slate-950 shadow-[0_0_10px_#FBBF24]'
-                                  : 'bg-emerald-500 text-slate-950 shadow-[0_0_10px_#10B981]'
-                              }`}
-                            >
-                              {activeSpecimen.conducts ? '⚡ CONDUCTOR (Flows)' : '🛡️ INSULATOR (Blocks)'}
-                            </span>
-                          </motion.div>
-                        ) : (
-                          <div className="py-4 text-xs font-bold text-slate-500">
-                            👈 Tap a material below to insert here!
-                          </div>
-                        )}
-                      </AnimatePresence>
+                      <div className="flex flex-col items-center">
+                        <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-slate-700 shadow-md mb-2 bg-slate-900">
+                          <img
+                            src={activeSpecimen.image}
+                            alt={activeSpecimen.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <span className="font-black text-xs text-white">{activeSpecimen.name}</span>
+                        <span
+                          className={`text-[10px] font-black px-2 py-0.5 rounded-full mt-1.5 ${
+                            activeSpecimen.conducts
+                              ? 'bg-amber-400 text-slate-950 shadow-[0_0_10px_#FBBF24]'
+                              : 'bg-emerald-500 text-slate-950 shadow-[0_0_10px_#10B981]'
+                          }`}
+                        >
+                          {activeSpecimen.conducts ? '⚡ CONDUCTOR (Current Flows)' : '🛡️ INSULATOR (Current Blocked)'}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Connecting Wire Right with Moving Electricity Pulse */}
                     <div className="hidden md:flex flex-1 h-2 bg-slate-800 rounded-full relative overflow-hidden">
-                      {activeSpecimen?.conducts && (
+                      {activeSpecimen.conducts && (
                         <motion.div
                           animate={{ x: ['-100%', '100%'] }}
                           transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
@@ -353,68 +373,53 @@ export function WireMission() {
                       )}
                     </div>
 
-                    {/* Right: The Tungsten Filament Indicator Lamp */}
-                    <div className="flex flex-col items-center">
-                      <motion.div
-                        animate={
-                          activeSpecimen?.conducts
-                            ? {
-                                scale: [1, 1.15, 1],
-                                filter: [
-                                  'drop-shadow(0 0 15px #FBBF24)',
-                                  'drop-shadow(0 0 35px #F59E0B)',
-                                  'drop-shadow(0 0 15px #FBBF24)',
-                                ],
-                              }
-                            : {}
-                        }
-                        transition={{ duration: 0.5, repeat: Infinity }}
-                        className={`w-16 h-20 rounded-2xl flex flex-col items-center justify-center border-2 transition-all ${
-                          activeSpecimen?.conducts
-                            ? 'bg-amber-300 border-amber-100 text-slate-950 shadow-[0_0_30px_#FBBF24]'
-                            : 'bg-slate-800 border-slate-700 text-slate-500'
-                        }`}
-                      >
-                        <Lightbulb
-                          className={`w-8 h-8 ${
-                            activeSpecimen?.conducts
-                              ? 'text-amber-950 fill-amber-400'
-                              : 'text-slate-600'
-                          }`}
-                        />
-                        <span className="text-[9px] font-black uppercase mt-1">
-                          {activeSpecimen?.conducts ? 'LIGHTS UP! ✓' : 'DARK (OFF)'}
-                        </span>
-                      </motion.div>
-                      <span className="text-[11px] font-black text-slate-400 mt-2">Test Indicator</span>
+                    {/* Right: The Tungsten Filament Indicator Lamp with Real Glowing Photo */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-lg relative bg-slate-950 flex items-center justify-center p-1">
+                        {activeSpecimen.conducts ? (
+                          <motion.img
+                            src={lightbulbGlowingBrightImg}
+                            alt="Tungsten Lightbulb Glowing Bright"
+                            initial={{ scale: 0.9, opacity: 0.5 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="w-full h-full object-cover rounded-xl filter drop-shadow-[0_0_20px_#FBBF24]"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center justify-center text-slate-600">
+                            <Lightbulb className="w-10 h-10" />
+                            <span className="text-[9px] font-black uppercase text-slate-500 mt-1">Dark (Off)</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-[11px] font-black text-slate-400 mt-2">
+                        {activeSpecimen.conducts ? '✨ 100% LIGHTS UP!' : 'Dark (Current Blocked)'}
+                      </span>
                     </div>
                   </div>
 
                   {/* Live Science Feedback Banner */}
-                  {activeSpecimen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={`mt-4 p-4 rounded-2xl w-full text-center text-xs font-bold border-2 ${
-                        activeSpecimen.conducts
-                          ? 'bg-amber-950/70 border-amber-400 text-amber-200'
-                          : 'bg-emerald-950/70 border-emerald-400 text-emerald-200'
-                      }`}
-                    >
-                      {activeSpecimen.conducts ? (
-                        <span>
-                          ⚡ <strong>ELECTRICAL CONDUCTOR:</strong> {activeSpecimen.name} contains free electrons that carry electrical charge instantly into the lamp!
-                        </span>
-                      ) : (
-                        <span>
-                          🛡️ <strong>ELECTRICAL INSULATOR:</strong> {activeSpecimen.name} tightly locks its electrons in place, completely shielding against electric shocks!
-                        </span>
-                      )}
-                    </motion.div>
-                  )}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`mt-4 p-4 rounded-2xl w-full text-center text-xs font-bold border-2 ${
+                      activeSpecimen.conducts
+                        ? 'bg-amber-950/70 border-amber-400 text-amber-200'
+                        : 'bg-emerald-950/70 border-emerald-400 text-emerald-200'
+                    }`}
+                  >
+                    {activeSpecimen.conducts ? (
+                      <span>
+                        ⚡ <strong>ELECTRICAL CONDUCTOR:</strong> {activeSpecimen.name} contains free electrons that carry electrical charge instantly into the lamp!
+                      </span>
+                    ) : (
+                      <span>
+                        🛡️ <strong>ELECTRICAL INSULATOR:</strong> {activeSpecimen.name} tightly locks its electrons in place, completely shielding against electric shocks!
+                      </span>
+                    )}
+                  </motion.div>
                 </div>
 
-                {/* ── 4 TACTILE SPECIMEN CARDS TO TEST ── */}
+                {/* ── 4 TACTILE SPECIMEN CARDS WITH REAL PHOTOS ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 w-full">
                   {SPECIMENS.map((s) => {
                     const isTested = testedSpecimens[s.id];
@@ -432,8 +437,12 @@ export function WireMission() {
                             : 'bg-white border-slate-200 hover:bg-slate-50 shadow-md'
                         }`}
                       >
-                        <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-3xl mb-2">
-                          {s.icon}
+                        <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-slate-100 shadow-xs mb-2 bg-slate-50 flex items-center justify-center p-1">
+                          <img
+                            src={s.image}
+                            alt={s.name}
+                            className="w-full h-full object-cover rounded-xl"
+                          />
                         </div>
                         <h4 className="font-black text-sm text-slate-800">{s.name}</h4>
                         <span className="text-[10px] font-bold text-slate-500 mt-1 line-clamp-2">
@@ -592,7 +601,7 @@ export function WireMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 4: APPLY (The Electrician Tool Decision)
+              PHASE 4: APPLY (The Electrician Tool Decision with Real Photo)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
             <div className="w-full max-w-2xl flex flex-col items-center text-center">
@@ -603,6 +612,20 @@ export function WireMission() {
               <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
                 An electrician needs to repair a 240V high-voltage home wall socket. Which screwdriver grip is certified safe against fatal shocks?
               </p>
+
+              {/* Real Photo of Electrician Insulated Tools */}
+              <div className="w-full max-w-md bg-white p-4 rounded-3xl border-3 border-amber-300 shadow-lg mb-6 flex flex-col items-center">
+                <div className="w-full h-44 rounded-2xl overflow-hidden border-2 border-slate-100 shadow-inner bg-slate-50 flex items-center justify-center p-1">
+                  <img
+                    src={electricianToolsSafetyImg}
+                    alt="Certified Insulated Electrician Tools"
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                </div>
+                <span className="text-xs font-black text-slate-700 mt-2">
+                  🛡️ Certified 10,000V Insulated Tool Grips
+                </span>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
                 <button
