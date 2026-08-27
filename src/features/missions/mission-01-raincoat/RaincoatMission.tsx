@@ -220,7 +220,7 @@ export function RaincoatMission() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-2">
+              <div id="mission-testing-rig" className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-2">
                 {/* Coat A: Cotton */}
                 <motion.div
                   whileHover={{ scale: 1.03, y: -4 }}

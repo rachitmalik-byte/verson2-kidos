@@ -42,6 +42,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
       <div className={`flex items-center gap-1.5 sm:gap-2 flex-wrap ${className}`}>
         {/* PolyCredits Balance Badge (Click to open Pip's Wardrobe) */}
         <button
+          id="navbar-credits-btn"
           onClick={() => {
             sounds.pop();
             setShowClosetModal(true);
@@ -55,6 +56,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
 
         {/* Pip's Closet & Wardrobe */}
         <button
+          id="navbar-closet-btn"
           onClick={() => {
             sounds.pop();
             setShowClosetModal(true);
@@ -68,6 +70,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
 
         {/* Science Arcade */}
         <button
+          id="navbar-arcade-btn"
           onClick={() => {
             sounds.pop();
             setShowArcadeModal(true);
@@ -146,6 +149,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
 
         {/* Audio Studio Modal Trigger */}
         <button
+          id="navbar-audio-studio-btn"
           onClick={() => {
             sounds.pop();
             setShowSettingsModal(true);

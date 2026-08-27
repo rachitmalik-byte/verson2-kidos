@@ -158,6 +158,7 @@ export function ChapterHub() {
             {/* Quick Actions: Field Storybook & Video Lab & Journal */}
             <div className="flex flex-wrap gap-2.5 mt-4 justify-center md:justify-start">
               <button
+                id="chapter-intro-btn"
                 onClick={() => {
                   sounds.pop();
                   navigate('/chapter/3');
@@ -169,6 +170,7 @@ export function ChapterHub() {
               </button>
 
               <button
+                id="chapter-journal-btn"
                 onClick={() => {
                   sounds.pop();
                   navigate('/discovery-book');
@@ -183,7 +185,7 @@ export function ChapterHub() {
         </div>
 
         {/* ── Chapters Roadmap Preview (Multi-Chapter Structure) ── */}
-        <div className="space-y-3">
+        <div id="chapter-modules-grid" className="space-y-3">
           <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">
             Chemistry Course Modules & Chapters
           </h3>
@@ -224,7 +226,7 @@ export function ChapterHub() {
         </div>
 
         {/* ── 13 Interactive Mission Stepping-Stone Trail ── */}
-        <div className="space-y-4">
+        <div id="chapter-missions-trail" className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-base md:text-lg font-black text-slate-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
               Chapter 3 Interactive Mission Trail 🗺️

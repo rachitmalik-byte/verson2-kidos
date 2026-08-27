@@ -130,7 +130,7 @@ export const SubjectSelection: React.FC = () => {
         </div>
 
         {/* Mascot Banner */}
-        <div className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-xl flex flex-col md:flex-row items-center gap-6">
+        <div id="subject-intro-banner" className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-xl flex flex-col md:flex-row items-center gap-6">
           <Pip mood="celebrating" size="lg" />
           <div className="flex-1 text-center md:text-left">
             <span className="px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-2">
@@ -149,7 +149,7 @@ export const SubjectSelection: React.FC = () => {
         </div>
 
         {/* Subjects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div id="subject-grid-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {SUBJECTS.map((sub) => (
             <motion.div
               key={sub.id}

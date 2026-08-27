@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PipMood } from '@/types';
 import { sounds } from '@/lib/sounds';
@@ -36,6 +36,7 @@ export const Pip: React.FC<PipProps> = ({
   outfitOverride,
   headwearOverride,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const storeOutfit = useProgressStore((state) => state.equippedOutfit);
   const storeHeadwear = useProgressStore((state) => state.equippedHeadwear);
 
@@ -45,6 +46,8 @@ export const Pip: React.FC<PipProps> = ({
   const [isBlinking, setIsBlinking] = useState(false);
   const [tapEffect, setTapEffect] = useState<{ id: number; icon: string; x: number; y: number }[]>([]);
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const [eyeOffset, setEyeOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -52,6 +55,33 @@ export const Pip: React.FC<PipProps> = ({
     lg: 'w-32 h-32',
     xl: 'w-44 h-44',
   };
+
+  // ── MOUSE PUPIL TRACKING ENGINE ──
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const pipCenterX = rect.left + rect.width / 2;
+      const pipCenterY = rect.top + rect.height / 2;
+
+      const dx = e.clientX - pipCenterX;
+      const dy = e.clientY - pipCenterY;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance === 0) return;
+
+      // Max eye offset radius in SVG units
+      const maxRadius = 4.8;
+      const factor = Math.min(distance / 25, maxRadius);
+      const moveX = (dx / distance) * factor;
+      const moveY = (dy / distance) * factor;
+
+      setEyeOffset({ x: moveX, y: moveY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   // Natural blinking interval
   useEffect(() => {
@@ -80,6 +110,17 @@ export const Pip: React.FC<PipProps> = ({
     if (Math.random() > 0.45) {
       voiceAssistant.speak(PIP_QUOTES[nextQ]);
     }
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (interactive && Math.random() > 0.6) {
+      sounds.pop();
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   const bodyVariants = {
@@ -128,74 +169,73 @@ export const Pip: React.FC<PipProps> = ({
 
   return (
     <motion.div
+      ref={containerRef}
       onClick={handlePipClick}
-      whileHover={interactive ? { scale: 1.08, rotate: [0, -3, 3, 0] } : undefined}
-      whileTap={interactive ? { scale: 0.92, rotate: 10 } : undefined}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      whileHover={interactive ? { scale: 1.1, rotate: [0, -4, 4, 0] } : undefined}
+      whileTap={interactive ? { scale: 0.9, rotate: 8 } : undefined}
       className={`relative inline-flex items-center justify-center select-none ${interactive ? 'cursor-pointer' : ''} ${sizeClasses[size]} ${className}`}
       variants={bodyVariants}
       animate={mood}
-      title={interactive ? "Click to play with Pip!" : undefined}
+      title={interactive ? "Pip looks right at your cursor! Click to interact!" : undefined}
     >
       <AnimatePresence>
         {tapEffect.map((p) => (
           <motion.span
             key={p.id}
-            initial={{ opacity: 1, y: 0, scale: 0.6 }}
-            animate={{ opacity: 0, y: -45, scale: 1.4, x: (Math.random() - 0.5) * 40 }}
+            initial={{ opacity: 1, y: 0, scale: 0.5 }}
+            animate={{ opacity: 0, y: -45, scale: 1.4 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="absolute -top-3 text-2xl pointer-events-none z-30 filter drop-shadow-md"
+            transition={{ duration: 1.1, ease: 'easeOut' }}
+            className="absolute text-2xl pointer-events-none z-50 select-none filter drop-shadow-md"
+            style={{ top: '10%' }}
           >
             {p.icon}
           </motion.span>
         ))}
       </AnimatePresence>
 
-      <svg
-        viewBox="0 0 140 140"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full filter drop-shadow-xl"
-      >
+      <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg overflow-visible">
         <defs>
-          <radialGradient id="pipBodyGrad" cx="40%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#DDD6FE" />
-            <stop offset="50%" stopColor="#A78BFA" />
-            <stop offset="85%" stopColor="#7C3AED" />
-            <stop offset="100%" stopColor="#5B21B6" />
-          </radialGradient>
-          <linearGradient id="pipCoatGrad" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="pipBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#A78BFA" />
+            <stop offset="50%" stopColor="#8B5CF6" />
+            <stop offset="100%" stopColor="#6D28D9" />
+          </linearGradient>
+          <linearGradient id="pipCoatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
             <stop offset="100%" stopColor="#E2E8F0" />
           </linearGradient>
-          <linearGradient id="pipAstroGrad" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="pipAstroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#38BDF8" />
             <stop offset="100%" stopColor="#0369A1" />
           </linearGradient>
-          <linearGradient id="pipParkaGrad" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="pipParkaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#F43F5E" />
             <stop offset="100%" stopColor="#9F1239" />
           </linearGradient>
-          <linearGradient id="pipGoldGrad" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id="pipGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FDE047" />
             <stop offset="50%" stopColor="#EAB308" />
             <stop offset="100%" stopColor="#CA8A04" />
           </linearGradient>
-          <linearGradient id="pipDetectiveGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FDE68A" />
-            <stop offset="100%" stopColor="#D97706" />
+          <linearGradient id="pipDetectiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#D97706" />
+            <stop offset="100%" stopColor="#78350F" />
           </linearGradient>
-          <linearGradient id="pipGogglesGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#0284C7" stopOpacity="0.9" />
-          </linearGradient>
-          <linearGradient id="pipVisorGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.9" />
-          </linearGradient>
-          <linearGradient id="pipCheekGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FDA4AF" />
-            <stop offset="100%" stopColor="#FB7185" />
+          <radialGradient id="pipCheekGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#F472B6" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#F472B6" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="pipGogglesGrad" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.85" />
+            <stop offset="60%" stopColor="#38BDF8" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#0284C7" stopOpacity="0.75" />
+          </radialGradient>
+          <linearGradient id="pipVisorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#22D3EE" />
+            <stop offset="100%" stopColor="#0284C7" />
           </linearGradient>
         </defs>
 
@@ -253,7 +293,6 @@ export const Pip: React.FC<PipProps> = ({
               stroke="#881337"
               strokeWidth="3"
             />
-            {/* Fur Collar */}
             <path d="M40 82 C55 92 85 92 100 82" stroke="#FFFFFF" strokeWidth="8" strokeLinecap="round" />
             <circle cx="70" cy="106" r="3" fill="#FFFFFF" />
             <circle cx="70" cy="116" r="3" fill="#FFFFFF" />
@@ -265,7 +304,7 @@ export const Pip: React.FC<PipProps> = ({
             <path
               d="M30 80 C30 110 42 124 70 124 C98 124 110 110 110 80 C98 83 86 85 70 85 C54 85 42 83 30 80 Z"
               fill="url(#pipGoldGrad)"
-              stroke="#854D0E"
+              stroke="#CA8A04"
               strokeWidth="3"
             />
             <circle cx="70" cy="104" r="7" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2" />
@@ -290,21 +329,29 @@ export const Pip: React.FC<PipProps> = ({
         <ellipse cx="44" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
         <ellipse cx="96" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
 
-        {/* Eyes */}
+        {/* ── INTERACTIVE MOUSE-TRACKING EYES & PUPILS ── */}
         {!isBlinking ? (
           <g>
-            <circle cx="52" cy="64" r="8" fill="#1E1B4B" />
-            <circle cx="55" cy="61" r="3" fill="#FFFFFF" />
-            <circle cx="50" cy="66" r="1.5" fill="#FFFFFF" />
+            {/* Left Eye White */}
+            <circle cx="52" cy="64" r="9" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
+            {/* Left Pupil (Tracks Mouse Position) */}
+            <circle cx={52 + eyeOffset.x} cy={64 + eyeOffset.y} r="6" fill="#1E1B4B" />
+            {/* Left Eye Highlights */}
+            <circle cx={54 + eyeOffset.x * 0.8} cy={62 + eyeOffset.y * 0.8} r="2.2" fill="#FFFFFF" />
+            <circle cx={50 + eyeOffset.x * 0.8} cy={66 + eyeOffset.y * 0.8} r="1.2" fill="#FFFFFF" />
 
-            <circle cx="88" cy="64" r="8" fill="#1E1B4B" />
-            <circle cx="91" cy="61" r="3" fill="#FFFFFF" />
-            <circle cx="86" cy="66" r="1.5" fill="#FFFFFF" />
+            {/* Right Eye White */}
+            <circle cx="88" cy="64" r="9" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
+            {/* Right Pupil (Tracks Mouse Position) */}
+            <circle cx={88 + eyeOffset.x} cy={64 + eyeOffset.y} r="6" fill="#1E1B4B" />
+            {/* Right Eye Highlights */}
+            <circle cx={90 + eyeOffset.x * 0.8} cy={62 + eyeOffset.y * 0.8} r="2.2" fill="#FFFFFF" />
+            <circle cx={86 + eyeOffset.x * 0.8} cy={66 + eyeOffset.y * 0.8} r="1.2" fill="#FFFFFF" />
           </g>
         ) : (
           <g>
-            <path d="M44 64 Q52 69 60 64" stroke="#1E1B4B" strokeWidth="3" strokeLinecap="round" />
-            <path d="M80 64 Q88 69 96 64" stroke="#1E1B4B" strokeWidth="3" strokeLinecap="round" />
+            <path d="M44 64 Q52 70 60 64" stroke="#1E1B4B" strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M80 64 Q88 70 96 64" stroke="#1E1B4B" strokeWidth="3.5" strokeLinecap="round" />
           </g>
         )}
 
@@ -369,7 +416,7 @@ export const Pip: React.FC<PipProps> = ({
             transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
             style={{ transformOrigin: '25px 95px' }}
           >
-            {/* Pip's Little Hand */}
+            {/* Pip's Hand */}
             <circle cx="26" cy="94" r="7" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2" />
             {/* Wooden Pointer Stick */}
             <line x1="26" y1="94" x2="-22" y2="45" stroke="#78350F" strokeWidth="4.5" strokeLinecap="round" />
