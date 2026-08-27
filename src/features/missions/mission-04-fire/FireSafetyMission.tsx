@@ -8,27 +8,27 @@ import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
-import {
-  CottonIllustration,
-  PolyesterIllustration,
-  RaincoatSyntheticIllustration,
-} from '@/components/illustrations/MaterialIllustrations';
-import { Flame, ShieldAlert, Sun, ArrowRight, Check, AlertTriangle } from 'lucide-react';
+import { voiceAssistant } from '@/lib/voiceAssistant';
+import cottonBurningAshImg from '@/assets/images/experiments/cotton_burning_ash.jpg';
+import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
+import { Flame, ShieldAlert, Sun, ArrowRight, Check, AlertTriangle, Sparkles, ShieldCheck } from 'lucide-react';
 
-type Phase = 'HOOK' | 'BURN_TEST' | 'SUMMER_TEST' | 'APPLY';
+type Phase = 'HOOK' | 'BURN_TEST' | 'SAFETY_REASON' | 'APPLY';
 
 export function FireSafetyMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [burnedCotton, setBurnedCotton] = useState(false);
   const [burnedPolyester, setBurnedPolyester] = useState(false);
-  const [summerChoice, setSummerChoice] = useState<'cotton' | 'polyester' | null>(null);
+  const [isIgnitingCotton, setIsIgnitingCotton] = useState(false);
+  const [isIgnitingPolyester, setIsIgnitingPolyester] = useState(false);
+  const [safetyChoice, setSafetyChoice] = useState<'cotton' | 'polyester' | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
 
   const navigate = useNavigate();
   const completeMission = useProgressStore((state) => state.completeMission);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
-  const phaseOrder: Phase[] = ['HOOK', 'BURN_TEST', 'SUMMER_TEST', 'APPLY'];
+  const phaseOrder: Phase[] = ['HOOK', 'BURN_TEST', 'SAFETY_REASON', 'APPLY'];
   const currentStepIndex = phaseOrder.indexOf(currentPhase);
   const totalSteps = phaseOrder.length;
 
@@ -42,8 +42,8 @@ export function FireSafetyMission() {
       addDiscovery({
         materialId: 'fire-safety',
         discoveredAt: Date.now(),
-        properties: ['Cotton burns to ash', 'Synthetic melts into sticky bead', 'Breathable vs Non-breathable'],
-        uses: ['Kitchen apron (Cotton)', 'Fire festival safety'],
+        properties: ['Cotton burns to crumbly ash', 'Synthetic melts into hot sticky bead', 'Kitchen safety critical'],
+        uses: ['Chef kitchen aprons (100% Cotton)', 'Fire festival safety'],
         scienceWord: 'Melt vs Burn safety',
       });
       setShowCelebration(true);
@@ -64,7 +64,7 @@ export function FireSafetyMission() {
     sounds.pop();
     setBurnedCotton(false);
     setBurnedPolyester(false);
-    setSummerChoice(null);
+    setSafetyChoice(null);
   };
 
   const isStepComplete = () => {
@@ -73,20 +73,40 @@ export function FireSafetyMission() {
         return true;
       case 'BURN_TEST':
         return burnedCotton && burnedPolyester;
-      case 'SUMMER_TEST':
-        return summerChoice === 'cotton';
+      case 'SAFETY_REASON':
+        return true;
       case 'APPLY':
-        return false;
+        return safetyChoice === 'cotton';
       default:
         return false;
     }
+  };
+
+  const triggerBurnCotton = () => {
+    sounds.flameIgnite();
+    setIsIgnitingCotton(true);
+    setTimeout(() => {
+      setBurnedCotton(true);
+      setIsIgnitingCotton(false);
+      voiceAssistant.speak('Look at that! Natural cotton burns like paper and turns into soft, harmless gray ash!');
+    }, 450);
+  };
+
+  const triggerBurnPolyester = () => {
+    sounds.flameIgnite();
+    setIsIgnitingPolyester(true);
+    setTimeout(() => {
+      setBurnedPolyester(true);
+      setIsIgnitingPolyester(false);
+      voiceAssistant.speak('Watch out! Synthetic polyester shrinks, curls, and melts into a hot sticky plastic bead!');
+    }, 450);
   };
 
   return (
     <MissionLayout
       missionId="mission-04"
       missionNumber={4}
-      missionTitle="Fire Safety & Summer Comfort"
+      missionTitle="Fire Safety & Heat Lab"
       currentStep={currentStepIndex + 1}
       totalSteps={totalSteps}
       isStepComplete={isStepComplete()}
@@ -110,236 +130,228 @@ export function FireSafetyMission() {
           transition={{ duration: 0.25 }}
           className="w-full flex-1 flex flex-col items-center justify-center py-4"
         >
-          {/* ════ PHASE 1: HOOK ════ */}
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 1: HOOK (The Fire & Kitchen Question)
+          ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <div className="w-24 h-24 mb-3 flex items-center justify-center text-rose-500">
-                <Flame className="w-20 h-20 animate-pulse" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Why Must You NEVER Wear Synthetic Clothes Near Fire? 🔥
+              <Pip mood="thinking" size="xl" />
+              <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                The Heat & Flame Safety Mystery! 🔥
               </h2>
-              <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-8">
-                Synthetic fabrics are strong and wrinkle-free, but they hide a dangerous secret when near heat.
-                Let's perform a controlled science flame test to see how <span className="text-emerald-600 font-black">Natural Cotton</span> vs{' '}
-                <span className="text-sky-600 font-black">Synthetic Polyester</span> react to fire!
+              <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
+                Why do professional chefs and blacksmiths always wear{' '}
+                <span className="text-amber-600 font-black">100% Cotton aprons</span> near hot stoves, but NEVER wear synthetic polyester clothes?
               </p>
 
               <button
                 onClick={handleNextPhase}
-                className="btn-3d-amber text-slate-950 font-black text-xl py-4 px-12 rounded-3xl cursor-pointer flex items-center gap-2"
+                className="bg-amber-400 border-2 border-amber-600 shadow-[0_6px_0_#D97706] active:translate-y-1.5 active:shadow-none text-slate-900 font-black text-xl py-4 px-12 rounded-3xl hover:bg-amber-300 transition-all cursor-pointer flex items-center gap-2"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
-                <span>Enter Flame Test Chamber 🔬</span>
+                <span>Enter the Flame Lab 🔬</span>
                 <ArrowRight className="w-6 h-6 stroke-[3]" />
               </button>
             </div>
           )}
 
-          {/* ════ PHASE 2: FLAME BURN TEST ════ */}
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 2: BURN TEST SANDBOX (Real Fabric Flame Reactions)
+          ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'BURN_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="concerned" size="lg" />
+                <Pip mood="explaining" size="lg" />
                 <PipSpeechBubble
-                  message="Tap both flame buttons to test how each fabric reacts to a flame! Watch what happens to the fibres!"
+                  message="Ignite both fabric swatches on the ceramic lab plate to see how natural fibers vs synthetic plastics react to heat!"
                   isVisible={true}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                {/* Station A: Cotton */}
-                <div className="bg-white p-6 md:p-8 rounded-3xl border-4 border-emerald-200 shadow-xl flex flex-col items-center">
-                  <div className="flex items-center justify-between w-full mb-3">
-                    <span className="font-black text-lg text-slate-900">Natural Cotton</span>
-                    <span className="text-xs font-black bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">
-                      Plant Fibre
-                    </span>
-                  </div>
+              {/* Dual Flame Experiment Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+                {/* Cotton Flame Test */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
+                    Natural Cotton (Plant Cellulose)
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-500 mb-3">Burns cleanly without melting</span>
 
-                  <div className="w-full h-48 rounded-2xl bg-slate-50 border-3 border-dashed border-slate-300 flex flex-col items-center justify-center p-4">
-                    {burnedCotton ? (
-                      <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center">
-                        <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full mb-2 inline-block">
-                          ✓ Burns Cleanly into Soft Ash
-                        </span>
-                        <p className="text-xs font-bold text-slate-600 mt-2">
-                          Cotton burns like paper, turning into harmless powdery gray ash. It does NOT melt or stick to skin!
-                        </p>
-                      </motion.div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <CottonIllustration className="w-16 h-16 mb-2" />
-                        <span className="text-xs font-bold text-slate-400">Ready for flame test</span>
+                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                    <img
+                      src={cottonBurningAshImg}
+                      alt="Cotton Burning into Soft Ash"
+                      className="w-full h-full object-contain"
+                    />
+                    {isIgnitingCotton && (
+                      <div className="absolute inset-0 bg-amber-500/30 flex items-center justify-center text-4xl animate-ping">
+                        🔥
                       </div>
                     )}
                   </div>
 
                   <button
-                    onClick={() => {
-                      sounds.pop();
-                      setBurnedCotton(true);
-                    }}
-                    disabled={burnedCotton}
-                    className="mt-5 w-full py-4 rounded-2xl btn-3d-emerald font-black text-base flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                    onClick={triggerBurnCotton}
+                    className={`w-full py-3.5 mt-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                      burnedCotton
+                        ? 'bg-amber-100 text-amber-900 border-2 border-amber-300'
+                        : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md active:scale-95'
+                    }`}
                   >
-                    <Flame className="w-5 h-5" />
-                    <span>{burnedCotton ? '✓ Tested (Burns to Ash)' : 'Apply Flame to Cotton'}</span>
+                    <Flame className="w-4 h-4 text-amber-900" />
+                    <span>{burnedCotton ? '✅ Result: Soft Gray Ash' : 'Test Cotton in Flame! 🔥'}</span>
                   </button>
+
+                  {burnedCotton && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3 p-3 rounded-2xl bg-amber-50 border border-amber-300 text-slate-800 text-xs font-bold text-center"
+                    >
+                      🌱 Cotton behaves like wood and paper: it burns cleanly into light crumbly ash that easily brushes away!
+                    </motion.div>
+                  )}
                 </div>
 
-                {/* Station B: Polyester */}
-                <div className="bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-200 shadow-xl flex flex-col items-center">
-                  <div className="flex items-center justify-between w-full mb-3">
-                    <span className="font-black text-lg text-slate-900">Synthetic Polyester</span>
-                    <span className="text-xs font-black bg-sky-100 text-sky-800 px-3 py-1 rounded-full">
-                      Petrochemical Fibre
-                    </span>
-                  </div>
+                {/* Polyester Flame Test */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-rose-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                  <span className="px-3 py-1 bg-rose-100 text-rose-900 rounded-full text-xs font-black uppercase mb-1">
+                    Synthetic Polyester (Plastic Polymer)
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-500 mb-3">Melts into hot molten plastic</span>
 
-                  <div className="w-full h-48 rounded-2xl bg-slate-50 border-3 border-dashed border-slate-300 flex flex-col items-center justify-center p-4">
-                    {burnedPolyester ? (
-                      <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center">
-                        <span className="text-xs font-black text-rose-700 bg-rose-100 px-3 py-1 rounded-full mb-2 inline-block flex items-center gap-1 mx-auto w-fit">
-                          <AlertTriangle className="w-3.5 h-3.5" /> MELTS into Hot Sticky Beads!
-                        </span>
-                        <p className="text-xs font-bold text-rose-600 mt-2">
-                          Polyester melts into scalding plastic beads that fuse and stick tightly to skin, causing severe burns!
-                        </p>
-                      </motion.div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <PolyesterIllustration className="w-16 h-16 mb-2" />
-                        <span className="text-xs font-bold text-slate-400">Ready for flame test</span>
+                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                    <img
+                      src={polyesterMeltingBeadImg}
+                      alt="Polyester Melting into Hard Bead"
+                      className="w-full h-full object-contain"
+                    />
+                    {isIgnitingPolyester && (
+                      <div className="absolute inset-0 bg-rose-500/30 flex items-center justify-center text-4xl animate-ping">
+                        🔥
                       </div>
                     )}
                   </div>
 
                   <button
-                    onClick={() => {
-                      sounds.boing();
-                      setBurnedPolyester(true);
-                    }}
-                    disabled={burnedPolyester}
-                    className="mt-5 w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 border-2 border-rose-700 shadow-[0_5px_0_#9F1239] text-white font-black text-base flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                    onClick={triggerBurnPolyester}
+                    className={`w-full py-3.5 mt-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                      burnedPolyester
+                        ? 'bg-rose-100 text-rose-900 border-2 border-rose-300'
+                        : 'bg-rose-500 hover:bg-rose-600 text-white shadow-md active:scale-95'
+                    }`}
                   >
-                    <Flame className="w-5 h-5" />
-                    <span>{burnedPolyester ? '⚠️ Tested (Melts & Sticks)' : 'Apply Flame to Polyester'}</span>
+                    <Flame className="w-4 h-4 text-white" />
+                    <span>{burnedPolyester ? '⚠️ Result: Molten Plastic Bead' : 'Test Polyester in Flame! 🔥'}</span>
                   </button>
+
+                  {burnedPolyester && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3 p-3 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 text-xs font-bold text-center"
+                    >
+                      ⚠️ DANGER: Polyester is petroleum plastic! High heat causes it to melt into scalding sticky black beads that glue to skin!
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </div>
           )}
 
-          {/* ════ PHASE 3: SUMMER COMFORT TEST ════ */}
-          {currentPhase === 'SUMMER_TEST' && (
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 3: SAFETY REASONING (Golden Rule)
+          ════════════════════════════════════════════════════════════════════════ */}
+          {currentPhase === 'SAFETY_REASON' && (
             <div className="w-full max-w-3xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="explaining" size="lg" />
+                <Pip mood="celebrating" size="lg" />
                 <PipSpeechBubble
-                  message="It's 40°C in the middle of summer! Which shirt will keep you cool and prevent sweat allergies?"
+                  message="Now you discovered the golden fire safety rule of materials science!"
                   isVisible={true}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-6 w-full mb-6">
-                <button
-                  onClick={() => {
-                    sounds.success();
-                    setSummerChoice('cotton');
-                  }}
-                  className={`p-6 rounded-3xl border-4 flex flex-col items-center transition-all cursor-pointer ${
-                    summerChoice === 'cotton'
-                      ? 'border-emerald-500 bg-emerald-50 shadow-xl ring-4 ring-emerald-300'
-                      : 'border-slate-200 bg-white hover:bg-slate-50'
-                  }`}
-                >
-                  <div className="w-20 h-20 mb-2">
-                    <CottonIllustration className="w-full h-full" />
-                  </div>
-                  <span className="font-black text-lg text-slate-900">100% Cotton Shirt</span>
-                  <span className="text-xs font-extrabold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full mt-2">
-                    ✓ Breathes & Absorbs Sweat
-                  </span>
-                </button>
+              <div className="w-full bg-slate-900 text-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center text-center">
+                <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/80 px-4 py-1.5 rounded-full mb-3">
+                  🛡️ Critical Materials Science Safety Rule
+                </span>
+                <h3 className="text-2xl md:text-3xl font-black text-amber-300 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  Never Wear Synthetic Clothes Near Open Fire!
+                </h3>
+                <p className="text-xs md:text-sm text-slate-300 font-bold max-w-xl leading-relaxed">
+                  Natural cotton and wool burn to harmless ash and do not stick. Synthetic clothes (nylon, polyester, acrylic) liquefy under heat and cause severe contact burns. Always choose natural fabrics for kitchen cooking, campfires, and fire festivals!
+                </p>
+              </div>
+            </div>
+          )}
 
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 4: APPLY (The Chef Kitchen Decision)
+          ════════════════════════════════════════════════════════════════════════ */}
+          {currentPhase === 'APPLY' && (
+            <div className="w-full max-w-2xl flex flex-col items-center text-center">
+              <Pip mood="thinking" size="lg" />
+              <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                Chef Apron Safety Decision 🍳
+              </h2>
+              <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
+                Pip is designing a protective apron for a busy restaurant kitchen with open gas stove flames. Which fabric must Pip use?
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
                 <button
                   onClick={() => {
                     sounds.boing();
-                    setSummerChoice('polyester');
+                    setSafetyChoice('polyester');
                   }}
-                  className={`p-6 rounded-3xl border-4 flex flex-col items-center transition-all cursor-pointer ${
-                    summerChoice === 'polyester'
-                      ? 'border-rose-400 bg-rose-50 shadow-md ring-4 ring-rose-200'
-                      : 'border-slate-200 bg-white hover:bg-slate-50'
+                  className={`p-5 rounded-3xl border-3 font-black text-sm transition-all cursor-pointer flex flex-col items-center gap-2 ${
+                    safetyChoice === 'polyester'
+                      ? 'bg-rose-100 border-rose-500 text-rose-900'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="w-20 h-20 mb-2">
-                    <PolyesterIllustration className="w-full h-full" />
-                  </div>
-                  <span className="font-black text-lg text-slate-900">Synthetic Shirt</span>
-                  <span className="text-xs font-extrabold text-rose-600 bg-rose-100 px-3 py-1 rounded-full mt-2">
-                    Traps Sweat & Causes Irritation
-                  </span>
+                  <span className="text-3xl">👕❌</span>
+                  <span>100% Synthetic Polyester</span>
+                  <span className="text-xs font-bold text-slate-500">Will melt and stick to skin if spark touches</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    sounds.fanfare();
+                    setSafetyChoice('cotton');
+                  }}
+                  className={`p-5 rounded-3xl border-3 font-black text-sm transition-all cursor-pointer flex flex-col items-center gap-2 ${
+                    safetyChoice === 'cotton'
+                      ? 'bg-emerald-100 border-emerald-500 text-emerald-900 shadow-xl ring-4 ring-emerald-300 scale-105'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="text-3xl">🥼✨</span>
+                  <span>100% Heavy Natural Cotton</span>
+                  <span className="text-xs font-bold text-slate-500">Safe: does not melt or stick to skin</span>
                 </button>
               </div>
 
-              {summerChoice === 'cotton' && (
-                <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-900 shadow-md">
-                  🎉 Correct! Cotton fibres absorb perspiration, allowing it to evaporate and cool the skin naturally!
-                </div>
+              {safetyChoice === 'polyester' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-700 font-bold text-xs max-w-md"
+                >
+                  ⚠️ Severe Hazard! Polyester melts into scalding plastic when exposed to stove sparks!
+                </motion.div>
               )}
-            </div>
-          )}
 
-          {/* ════ PHASE 4: DIWALI & KITCHEN SAFETY APPLY ════ */}
-          {currentPhase === 'APPLY' && (
-            <div className="w-full max-w-3xl flex flex-col items-center">
-              <div className="bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-2xl mb-6 w-full text-center">
-                <span className="text-5xl mb-2 block animate-bounce">🪔✨</span>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  The Festival of Lights Safety Dilemma
-                </h2>
-                <p className="text-base text-slate-600 font-bold leading-relaxed max-w-xl mx-auto">
-                  A child is getting dressed to light oil lamps (diyas) and celebrate with fireworks on Diwali night.
-                  Her mother insists she must change out of her shiny polyester outfit into a cotton kurta. Why?
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => {
-                    sounds.fanfare();
-                    handleNextPhase();
-                  }}
-                  className="p-8 rounded-3xl bg-emerald-50 hover:bg-emerald-100 border-4 border-emerald-400 shadow-lg text-center flex flex-col items-center cursor-pointer"
+              {safetyChoice === 'cotton' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold text-xs max-w-md"
                 >
-                  <span className="text-4xl mb-2">🛡️</span>
-                  <span className="font-black text-xl text-slate-900 mb-1">
-                    Cotton is safe around flames
-                  </span>
-                  <span className="text-xs font-black text-emerald-700 bg-emerald-200 px-3 py-1 rounded-full">
-                    Polyester melts & sticks to skin in a fire ✓
-                  </span>
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => sounds.boing()}
-                  className="p-8 rounded-3xl bg-white hover:bg-rose-50 border-4 border-slate-200 opacity-60 text-center flex flex-col items-center cursor-pointer"
-                >
-                  <span className="text-4xl mb-2">👕</span>
-                  <span className="font-black text-xl text-slate-900 mb-1">
-                    Polyester is too heavy for parties
-                  </span>
-                  <span className="text-xs font-black text-rose-600 bg-rose-100 px-3 py-1 rounded-full">
-                    Incorrect reason
-                  </span>
-                </motion.button>
-              </div>
+                  🎉 Certified Chef Safe! Natural cotton protects the body without dangerous melting!
+                </motion.div>
+              )}
             </div>
           )}
         </motion.div>

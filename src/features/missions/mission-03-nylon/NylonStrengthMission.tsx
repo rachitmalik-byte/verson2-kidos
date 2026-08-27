@@ -9,30 +9,20 @@ import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import {
-  NylonIllustration,
-  CottonIllustration,
-  SilkIllustration,
-  ParachuteIllustration,
-} from '@/components/illustrations/MaterialIllustrations';
-import { Sparkles, ArrowRight, ShieldCheck, Scale, Dumbbell, Zap, Check } from 'lucide-react';
+import cottonThreadBreakingImg from '@/assets/images/experiments/cotton_thread_breaking.jpg';
+import nylonRopeHeavyWeightImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
+import nylonParachuteSkyImg from '@/assets/images/raincoat/nylon_parachute_sky.jpg';
+import { Sparkles, ArrowRight, ShieldCheck, Scale, Dumbbell, Zap, Check, AlertCircle, ZoomIn } from 'lucide-react';
 
 type Phase = 'HOOK' | 'TENSILE_TEST' | 'COMPARE' | 'APPLY';
 
-interface ThreadTest {
-  id: string;
-  name: string;
-  maxWeight: number; // in kg
-  renderIcon: () => React.ReactNode;
-  isSnapped: boolean;
-}
-
 export function NylonStrengthMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
-  const [weightKg, setWeightKg] = useState(5);
-  const [testedThreads, setTestedThreads] = useState<Record<string, number>>({});
+  const [weightKg, setWeightKg] = useState(2);
+  const [testedThreads, setTestedThreads] = useState<Record<string, { snapped: boolean; max: number }>>({});
   const [activeThread, setActiveThread] = useState<string>('cotton');
   const [showCelebration, setShowCelebration] = useState(false);
+  const [applyAnswer, setApplyAnswer] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const completeMission = useProgressStore((state) => state.completeMission);
@@ -58,7 +48,7 @@ export function NylonStrengthMission() {
       });
       setShowCelebration(true);
       setTimeout(() => {
-        navigate('/chapter-hub');
+        navigate('/chapter/3/mission/4');
       }, 2400);
     }
   };
@@ -72,8 +62,9 @@ export function NylonStrengthMission() {
 
   const handleRedo = () => {
     sounds.pop();
-    setWeightKg(5);
+    setWeightKg(2);
     setTestedThreads({});
+    setApplyAnswer(null);
   };
 
   const isStepComplete = () => {
@@ -81,35 +72,45 @@ export function NylonStrengthMission() {
       case 'HOOK':
         return true;
       case 'TENSILE_TEST':
-        return Object.keys(testedThreads).length >= 3;
+        return Object.keys(testedThreads).length >= 2;
       case 'COMPARE':
         return true;
       case 'APPLY':
-        return false;
+        return applyAnswer === 'nylon';
       default:
         return false;
     }
   };
 
   const THREADS = [
-    { id: 'cotton', name: 'Cotton Thread', max: 10, renderIcon: () => <CottonIllustration className="w-10 h-10" /> },
-    { id: 'silk', name: 'Silk Filament', max: 20, renderIcon: () => <SilkIllustration className="w-10 h-10" /> },
-    { id: 'steel', name: 'Steel Wire (Same Gauge)', max: 40, renderIcon: () => <Dumbbell className="w-10 h-10 text-slate-500" /> },
-    { id: 'nylon', name: 'Nylon Polymer Fibre', max: 55, renderIcon: () => <NylonIllustration className="w-10 h-10" /> },
+    {
+      id: 'cotton',
+      name: 'Natural Cotton Thread',
+      max: 2,
+      origin: 'Plant Cellulose (Short Overlapping Fibers)',
+      color: 'amber',
+    },
+    {
+      id: 'nylon',
+      name: 'Synthetic Nylon Cord',
+      max: 25,
+      origin: 'Polymer Chains (Continuous Unbroken Filaments)',
+      color: 'sky',
+    },
   ];
 
-  const handleAddWeight = () => {
-    const thread = THREADS.find((t) => t.id === activeThread);
+  const handleApplyWeight = (threadId: string, kg: number) => {
+    const thread = THREADS.find((t) => t.id === threadId);
     if (!thread) return;
 
-    const nextWeight = weightKg + 10;
-    setWeightKg(nextWeight);
-
-    if (nextWeight > thread.max) {
-      sounds.boing();
-      setTestedThreads((p) => ({ ...p, [activeThread]: thread.max }));
+    if (kg > thread.max) {
+      sounds.tensionSnap();
+      setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: true, max: thread.max } }));
+      voiceAssistant.speak(`Snap! The ${thread.name} snapped at ${kg} kilograms because its natural fibers pulled apart!`);
     } else {
-      sounds.pop();
+      sounds.success();
+      setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: false, max: thread.max } }));
+      voiceAssistant.speak(`The ${thread.name} holds ${kg} kilograms with zero strain!`);
     }
   };
 
@@ -117,14 +118,14 @@ export function NylonStrengthMission() {
     <MissionLayout
       missionId="mission-03"
       missionNumber={3}
-      missionTitle="The Super-Nylon Strength Test"
+      missionTitle="The Strength Championship"
       currentStep={currentStepIndex + 1}
       totalSteps={totalSteps}
       isStepComplete={isStepComplete()}
       onNext={handleNextPhase}
       onPrev={handlePrevPhase}
       onRedo={handleRedo}
-      themeGradient="from-indigo-100 via-sky-50 to-amber-50"
+      themeGradient="from-sky-100 via-indigo-50 to-amber-100"
     >
       <CelebrationOverlay
         isVisible={showCelebration}
@@ -141,239 +142,265 @@ export function NylonStrengthMission() {
           transition={{ duration: 0.25 }}
           className="w-full flex-1 flex flex-col items-center justify-center py-4"
         >
-          {/* ════ PHASE 1: HOOK ════ */}
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 1: HOOK (The Heavy Lift Mystery)
+          ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <div className="w-24 h-24 mb-4 flex items-center justify-center">
-                <NylonIllustration className="w-full h-full" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Can a Thread Be Stronger Than Steel? ⚡
+              <Pip mood="curious" size="xl" />
+              <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                The Great Tensile Strength Showdown! 🏋️
               </h2>
-              <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-8">
-                In 1935, chemists synthesized <span className="text-sky-600 font-black">Nylon</span> from petroleum, limestone, and coal.
-                Scientists made an unbelievable claim: a single strand of nylon can hold more weight than a steel wire of the same thickness!
-                Let's test this in Pip's Tensile Machine!
+              <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
+                Mountain climbers and skydivers trust thin cords with their lives! Can you test how much weight a thin{' '}
+                <span className="text-amber-600 font-black">Cotton thread</span> can hold before snapping versus synthetic{' '}
+                <span className="text-sky-600 font-black">Nylon cord</span>?
               </p>
 
               <button
                 onClick={handleNextPhase}
-                className="btn-3d-amber text-slate-950 font-black text-xl py-4 px-12 rounded-3xl cursor-pointer flex items-center gap-2"
+                className="bg-amber-400 border-2 border-amber-600 shadow-[0_6px_0_#D97706] active:translate-y-1.5 active:shadow-none text-slate-900 font-black text-xl py-4 px-12 rounded-3xl hover:bg-amber-300 transition-all cursor-pointer flex items-center gap-2"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
-                <span>Load the Tensile Tester! 🏋️</span>
+                <span>Enter the Tensile Lab 🔬</span>
                 <ArrowRight className="w-6 h-6 stroke-[3]" />
               </button>
             </div>
           )}
 
-          {/* ════ PHASE 2: TENSILE TEST INTERACTIVE ════ */}
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 2: TENSILE LAB (Weight Drop Sandbox)
+          ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'TENSILE_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              {/* Pip Dialogue Header */}
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="thinking" size="lg" />
+                <Pip mood="explaining" size="lg" />
                 <PipSpeechBubble
-                  message="Select a thread, then keep adding iron weights until the strand snaps! Watch when Nylon breaks!"
+                  message="Hang different cast-iron weights on both cords to test their breaking limit!"
                   isVisible={true}
                 />
               </div>
 
-              {/* Thread Selector Tabs */}
-              <div className="flex flex-wrap justify-center gap-3 mb-6 w-full">
-                {THREADS.map((t) => {
-                  const tested = testedThreads[t.id] !== undefined;
-                  const isSelected = activeThread === t.id;
-
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => {
-                        sounds.pop();
-                        setActiveThread(t.id);
-                        setWeightKg(5);
-                      }}
-                      className={`p-3.5 rounded-2xl border-3 flex items-center gap-2.5 font-black text-sm transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-sky-500 text-white border-sky-700 shadow-md scale-105'
-                          : tested
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      <div className="w-7 h-7">{t.renderIcon()}</div>
-                      <span>{t.name}</span>
-                      {tested && <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Tensile Testing Rig */}
-              <div className="w-full bg-white rounded-3xl border-4 border-slate-200 shadow-xl p-8 flex flex-col items-center">
-                {/* Rig Frame */}
-                <div className="w-full max-w-md bg-slate-900 rounded-3xl p-6 text-white flex flex-col items-center shadow-2xl relative overflow-hidden border-4 border-slate-800">
-                  <div className="text-xs font-black uppercase text-amber-400 mb-2">
-                    Active Test: {THREADS.find((t) => t.id === activeThread)?.name}
-                  </div>
-
-                  {/* Suspended Cord Graphic */}
-                  <div className="h-32 w-full flex flex-col items-center justify-between my-2">
-                    {/* Top Clamp */}
-                    <div className="w-24 h-4 bg-slate-700 rounded-full border border-slate-600" />
-
-                    {/* The Strand */}
-                    {testedThreads[activeThread] !== undefined ? (
-                      <div className="text-rose-500 font-black text-sm bg-rose-950/80 px-4 py-1.5 rounded-full border border-rose-500 animate-pulse">
-                        💥 SNAPPED at {testedThreads[activeThread]} kg!
-                      </div>
-                    ) : (
-                      <motion.div
-                        animate={{ height: ['80px', `${80 + weightKg * 0.8}px`] }}
-                        className="w-2 bg-gradient-to-b from-sky-400 to-amber-300 rounded-full shadow-[0_0_10px_#38BDF8]"
-                      />
-                    )}
-
-                    {/* Bottom Weight Hanger */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-16 h-12 bg-amber-500 border-2 border-amber-600 rounded-2xl flex items-center justify-center text-slate-950 font-black text-lg shadow-lg">
-                        {weightKg} kg
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Weight Control Controls */}
-                <div className="flex items-center gap-4 mt-6">
+              {/* Weight Selector Bar */}
+              <div className="bg-white p-4 rounded-3xl border-3 border-slate-200 shadow-md flex items-center gap-3 mb-6 flex-wrap justify-center">
+                <span className="text-xs font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
+                  <Scale className="w-4 h-4 text-amber-500" />
+                  <span>Select Test Weight:</span>
+                </span>
+                {[1, 2, 5, 10, 25].map((kg) => (
                   <button
-                    onClick={handleAddWeight}
-                    disabled={testedThreads[activeThread] !== undefined}
-                    className="btn-3d-amber text-slate-950 font-black text-lg py-3.5 px-8 rounded-2xl cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
-                  >
-                    <Dumbbell className="w-5 h-5" />
-                    <span>Add +10 kg Weight!</span>
-                  </button>
-
-                  <button
+                    key={kg}
                     onClick={() => {
                       sounds.pop();
-                      setWeightKg(5);
-                      setTestedThreads((p) => {
-                        const next = { ...p };
-                        delete next[activeThread];
-                        return next;
-                      });
+                      setWeightKg(kg);
                     }}
-                    className="btn-3d-slate font-black text-sm py-3.5 px-6 rounded-2xl cursor-pointer"
+                    className={`px-4 py-2 rounded-2xl font-black text-xs md:text-sm flex items-center gap-1.5 transition-all cursor-pointer ${
+                      weightKg === kg
+                        ? 'bg-amber-400 text-slate-950 shadow-md scale-105 ring-2 ring-amber-300'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
                   >
-                    Reset Thread
+                    <Dumbbell className="w-3.5 h-3.5" />
+                    <span>{kg} kg</span>
                   </button>
+                ))}
+              </div>
+
+              {/* Dual Test Rig Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+                {/* Cotton Test Rig */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-2">
+                    Natural Cotton Thread
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-500 mb-3">Plant Cellulose Fibers</span>
+
+                  {/* Real Photo Experiment View */}
+                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                    <img
+                      src={cottonThreadBreakingImg}
+                      alt="Cotton Thread Snap Experiment"
+                      className="w-full h-full object-contain"
+                    />
+                    {testedThreads['cotton']?.snapped && (
+                      <div className="absolute inset-0 bg-rose-500/20 backdrop-blur-[1px] flex items-center justify-center">
+                        <span className="text-4xl animate-bounce">🧵💥</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => handleApplyWeight('cotton', weightKg)}
+                    className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <Dumbbell className="w-4 h-4" />
+                    <span>Hang {weightKg} kg Weight on Cotton</span>
+                  </button>
+
+                  {testedThreads['cotton'] && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs ${
+                        testedThreads['cotton'].snapped
+                          ? 'bg-rose-50 border-rose-300 text-rose-700'
+                          : 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                      }`}
+                    >
+                      {testedThreads['cotton'].snapped
+                        ? `💥 SNAPPED! Cotton broke under ${weightKg}kg (Limit: 2kg)`
+                        : `✅ Cotton held ${weightKg}kg successfully!`}
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* Synthetic Nylon Test Rig */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                  <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-2">
+                    Synthetic Nylon Cord
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-500 mb-3">Long Polymer Molecular Chains</span>
+
+                  {/* Real Photo Experiment View */}
+                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
+                    <img
+                      src={nylonRopeHeavyWeightImg}
+                      alt="Nylon Cord 25lb Dumbbell Test"
+                      className="w-full h-full object-contain"
+                    />
+                    {testedThreads['nylon'] && !testedThreads['nylon'].snapped && (
+                      <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2.5 py-0.5 rounded-full text-xs font-black shadow-md">
+                        ✨ Holds Effortlessly!
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => handleApplyWeight('nylon', weightKg)}
+                    className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-sky-500 hover:bg-sky-600 text-white shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <Dumbbell className="w-4 h-4" />
+                    <span>Hang {weightKg} kg Weight on Nylon</span>
+                  </button>
+
+                  {testedThreads['nylon'] && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs bg-emerald-50 border-emerald-300 text-emerald-700"
+                    >
+                      🌟 UNSTOPPABLE! Nylon holds {weightKg}kg with zero strain!
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </div>
           )}
 
-          {/* ════ PHASE 3: SCIENCE LAW COMPARE ════ */}
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 3: COMPARE (Why is Nylon So Strong?)
+          ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'COMPARE' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
                 <Pip mood="celebrating" size="lg" />
                 <PipSpeechBubble
-                  message="Look at the scientific results! Nylon held 55 kg — even more than steel wire of identical thickness!"
+                  message="Look at why Nylon is so strong! Continuous polymer chains act like unbreakable steel cables at the molecular scale!"
                   isVisible={true}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                <div className="bg-white p-8 rounded-3xl border-4 border-emerald-300 shadow-xl flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-4xl">🏆</span>
-                    <div>
-                      <span className="text-xs font-black uppercase text-emerald-600">The Wow Science Fact</span>
-                      <h3 className="text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                        Super-Strength of Nylon
-                      </h3>
-                    </div>
-                  </div>
-                  <p className="text-slate-700 font-bold leading-relaxed mb-6">
-                    A nylon fibre is stronger than a steel wire of the same thickness! It is lightweight, flexible, and resists rot from water and microbes.
-                  </p>
-                  <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs font-black text-emerald-900 mt-auto">
-                    🧪 Raw Materials: Petroleum, limestone, water, coal.
-                  </div>
+              {/* Real World Life-Saving Application Card */}
+              <div className="w-full bg-slate-900 text-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col md:flex-row items-center gap-6 mb-6">
+                <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-lg shrink-0">
+                  <img
+                    src={nylonParachuteSkyImg}
+                    alt="Nylon Parachute in Sky"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
 
-                <div className="bg-white p-8 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12">
-                      <ParachuteIllustration className="w-full h-full" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-black uppercase text-sky-600">Everyday Uses</span>
-                      <h3 className="text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                        Where Do We Use Nylon?
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2.5 text-xs font-extrabold text-slate-800">
-                    <span className="p-3 bg-slate-50 rounded-xl border border-slate-200">🪂 Parachutes</span>
-                    <span className="p-3 bg-slate-50 rounded-xl border border-slate-200">🪢 Climbing Ropes</span>
-                    <span className="p-3 bg-slate-50 rounded-xl border border-slate-200">🪥 Toothbrush Bristles</span>
-                    <span className="p-3 bg-slate-50 rounded-xl border border-slate-200">🏕️ Sleeping Bags</span>
-                  </div>
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full">
+                    🪂 Real-World Application: Skydiving Parachutes
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-black text-white mt-2 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    Why Chemists Replaced Silk & Cotton With Nylon
+                  </h3>
+                  <p className="text-xs md:text-sm text-slate-300 font-bold leading-relaxed">
+                    Before 1935, parachutes were made of fragile natural silk. Synthetic Nylon was invented with extreme tensile strength: a cord as thin as a pencil can lift a family car without snapping!
+                  </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ════ PHASE 4: APPLY ════ */}
+          {/* ════════════════════════════════════════════════════════════════════════
+              PHASE 4: APPLY (The Rock Climbing Challenge)
+          ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
-            <div className="w-full max-w-3xl flex flex-col items-center">
-              <div className="bg-white p-8 rounded-3xl border-4 border-indigo-300 shadow-2xl mb-6 w-full text-center">
-                <span className="text-5xl mb-2 block animate-bounce">🧗‍♂️🪂</span>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Mountain Rescue Dilemma
-                </h2>
-                <p className="text-base text-slate-600 font-bold leading-relaxed max-w-xl mx-auto">
-                  A rescue team needs a climbing rope that can hold the weight of 3 climbers, but is lightweight enough to carry up Mount Everest in a backpack.
-                  Which material should the expedition choose?
-                </p>
-              </div>
+            <div className="w-full max-w-2xl flex flex-col items-center text-center">
+              <Pip mood="thinking" size="lg" />
+              <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                Rock Climbing Safety Challenge 🧗
+              </h2>
+              <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
+                Pip is preparing for a mountain expedition. Which rope material should Pip pack to ensure 100% safety against heavy falls?
+              </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
+                <button
+                  onClick={() => {
+                    sounds.boing();
+                    setApplyAnswer('cotton');
+                  }}
+                  className={`p-5 rounded-3xl border-3 font-black text-sm transition-all cursor-pointer flex flex-col items-center gap-2 ${
+                    applyAnswer === 'cotton'
+                      ? 'bg-rose-100 border-rose-500 text-rose-800'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="text-3xl">🧵</span>
+                  <span>Natural Cotton Rope</span>
+                  <span className="text-xs font-bold text-slate-500">Snaps easily under sudden shock load</span>
+                </button>
+
+                <button
                   onClick={() => {
                     sounds.fanfare();
-                    handleNextPhase();
+                    setApplyAnswer('nylon');
                   }}
-                  className="p-8 rounded-3xl bg-emerald-50 hover:bg-emerald-100 border-4 border-emerald-400 shadow-lg text-center flex flex-col items-center cursor-pointer"
+                  className={`p-5 rounded-3xl border-3 font-black text-sm transition-all cursor-pointer flex flex-col items-center gap-2 ${
+                    applyAnswer === 'nylon'
+                      ? 'bg-emerald-100 border-emerald-500 text-emerald-900 shadow-xl ring-4 ring-emerald-300 scale-105'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
                 >
-                  <div className="w-16 h-16 mb-2">
-                    <NylonIllustration className="w-full h-full" />
-                  </div>
-                  <span className="font-black text-2xl text-slate-900 mb-1">Nylon Climbing Rope</span>
-                  <span className="text-xs font-black text-emerald-700 bg-emerald-200 px-3 py-1 rounded-full">
-                    Stronger than steel & feather-light ✓
-                  </span>
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => sounds.boing()}
-                  className="p-8 rounded-3xl bg-white hover:bg-rose-50 border-4 border-slate-200 opacity-60 text-center flex flex-col items-center cursor-pointer"
-                >
-                  <div className="w-16 h-16 mb-2">
-                    <CottonIllustration className="w-full h-full" />
-                  </div>
-                  <span className="font-black text-2xl text-slate-900 mb-1">Cotton Rope</span>
-                  <span className="text-xs font-black text-rose-600 bg-rose-100 px-3 py-1 rounded-full">
-                    Too weak — would snap under climber weight!
-                  </span>
-                </motion.button>
+                  <span className="text-3xl">🪢✨</span>
+                  <span>Synthetic Nylon Dynamic Rope</span>
+                  <span className="text-xs font-bold text-slate-500">High tensile strength & elastic shock absorber</span>
+                </button>
               </div>
+
+              {applyAnswer === 'cotton' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-700 font-bold text-xs max-w-md"
+                >
+                  ⚠️ Danger! Natural cotton fibers break under sudden shock weight. Climbers need synthetic Nylon cords!
+                </motion.div>
+              )}
+
+              {applyAnswer === 'nylon' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold text-xs max-w-md"
+                >
+                  🎉 Perfect scientific choice! Nylon stretches to absorb fall energy and will never snap!
+                </motion.div>
+              )}
             </div>
           )}
         </motion.div>

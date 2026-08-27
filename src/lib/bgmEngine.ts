@@ -1,6 +1,6 @@
-// ─── Procedural Multi-Track Background Music (BGM) Engine ───
-// 100% Royalty-Free & Uncopyrighted Procedural Web Audio Synthesizer
-// Zero external asset loading, zero network latency, full audio ducking when TTS speaks
+// ─── High-Fidelity Polyphonic Procedural Background Music Engine ───
+// 3-Voice Warm Acoustic Harmony (Sub-Bass + Pad Chord + Sparkling Chime Melody)
+// 100% Uncopyrighted Web Audio Synthesizer with crystal clarity & smooth TTS ducking
 
 export interface BgmTrack {
   id: string;
@@ -30,7 +30,7 @@ class BgmEngine {
   private timerId: number | null = null;
   private step = 0;
   private isMuted = false;
-  private baseVolume = 0.35;
+  private baseVolume = 0.65;
   private wasPlayingBeforeTabSwitch = false;
 
   constructor() {
@@ -73,179 +73,162 @@ class BgmEngine {
     return this.ctx;
   }
 
-  // Melodic scale note frequencies in Hz
   private readonly NOTES: Record<string, number> = {
+    C2: 65.41, E2: 82.41, F2: 87.31, G2: 98.0, A2: 110.0,
     C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, G3: 196.0, A3: 220.0, B3: 246.94,
     C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.0, A4: 440.0, B4: 493.88,
     C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, A5: 880.0, B5: 987.77,
-    C6: 1046.5,
+    C6: 1046.5, E6: 1318.5, G6: 1567.98,
   };
 
-  private playTone(freq: number, type: OscillatorType, duration: number, vol = 0.12, attack = 0.02) {
+  // Play rich acoustic bell/marimba note with warm filter
+  private playAcousticNote(freq: number, duration: number, vol = 0.35, isBass = false) {
     const ctx = this.initContext();
     if (!ctx || !this.duckGain || this.isMuted) return;
 
     try {
+      const now = ctx.currentTime;
+
+      // 1. Primary fundamental oscillator
       const osc = ctx.createOscillator();
+      osc.type = isBass ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      // 2. Harmonic overtone (adds warm shimmer)
+      const overtone = ctx.createOscillator();
+      overtone.type = 'triangle';
+      overtone.frequency.setValueAtTime(isBass ? freq * 2 : freq * 2, now);
+
+      // 3. Low-pass filter for warmth
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(isBass ? 400 : 2600, now);
+
       const gain = ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
-      gain.gain.setValueAtTime(0.001, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + attack);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-
-      osc.connect(gain);
+      osc.connect(filter);
+      overtone.connect(filter);
+      filter.connect(gain);
       gain.connect(this.duckGain);
 
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + duration);
+      osc.start(now);
+      overtone.start(now);
+      osc.stop(now + duration);
+      overtone.stop(now + duration);
     } catch {}
   }
 
-  // Multi-Track procedural sequencer step generator
-  private tick() {
+  // ── TRACK PATTERNS (C Major / G Major Happy Progressions) ──
+  private playStep() {
     const track = BGM_TRACKS.find((t) => t.id === this.currentTrackId) || BGM_TRACKS[0];
     const s = this.step % 16;
-    const n = this.NOTES;
+    const bar = Math.floor(s / 4);
 
-    switch (track.id) {
-      case 'playful-lab': {
-        // Playful C Major Pentatonic Marimba + Soft Chime (C4, D4, E4, G4, A4)
-        const melody = [n.C5, 0, n.E5, n.G5, 0, n.A5, n.G5, 0, n.E5, 0, n.D5, n.E5, n.C5, 0, n.G4, 0];
-        const bass = [n.C3, 0, 0, 0, n.G3, 0, 0, 0, n.A3, 0, 0, 0, n.F3, 0, n.G3, 0];
+    // Chords: Cmaj (C-E-G) -> Gmaj (G-B-D) -> Amin (A-C-E) -> Fmaj (F-A-C)
+    const chordRoots = ['C3', 'G2', 'A2', 'F2'];
+    const chordTriads = [
+      ['C4', 'E4', 'G4'],
+      ['B3', 'D4', 'G4'],
+      ['C4', 'E4', 'A4'],
+      ['C4', 'F4', 'A4'],
+    ];
 
-        if (melody[s]) this.playTone(melody[s], 'sine', 0.22, 0.09);
-        if (bass[s]) this.playTone(bass[s], 'triangle', 0.35, 0.14, 0.05);
-        if (s % 4 === 0) this.playTone(n.C4, 'sine', 0.1, 0.04);
-        break;
+    // 1. Bassline on beat 0 and 2
+    if (s % 4 === 0) {
+      const rootNote = chordRoots[bar];
+      if (this.NOTES[rootNote]) {
+        this.playAcousticNote(this.NOTES[rootNote], 0.7, 0.45, true);
       }
+    }
 
-      case 'rainy-storm': {
-        // Atmospheric Rain Chords + Droplet Tones
-        const rainChords = [n.D4, 0, n.F4, 0, n.A4, 0, n.C5, 0, n.G4, 0, n.Bb4 || n.A4, 0, n.F4, 0, n.D4, 0];
-        const bass = [n.D3, 0, 0, 0, n.A3, 0, 0, 0, n.G3, 0, 0, 0, n.D3, 0, 0, 0];
+    // 2. Mid Warm Arpeggio Pad on every beat
+    const triad = chordTriads[bar];
+    const padNote = triad[s % 3];
+    if (this.NOTES[padNote]) {
+      this.playAcousticNote(this.NOTES[padNote], 0.45, 0.28, false);
+    }
 
-        if (rainChords[s]) this.playTone(rainChords[s], 'sine', 0.45, 0.07, 0.08);
-        if (bass[s]) this.playTone(bass[s], 'triangle', 0.6, 0.12, 0.1);
-        if (s % 3 === 0) this.playTone(n.E5, 'sine', 0.08, 0.03);
-        break;
-      }
+    // 3. Playful Top Melody (pentatonic glockenspiel)
+    const melodySeq: Record<string, string[]> = {
+      'playful-lab': ['C5', 'E5', 'G5', 'E5', 'G5', 'C6', 'G5', 'E5', 'A5', 'C6', 'G5', 'E5', 'F5', 'E5', 'D5', 'C5'],
+      'rainy-storm': ['G4', 'C5', 'E5', 'D5', 'B4', 'D5', 'G5', 'E5', 'A4', 'C5', 'E5', 'D5', 'F4', 'A4', 'C5', 'B4'],
+      'mystery-investigation': ['E5', 'G5', 'B5', 'G5', 'D5', 'F5', 'A5', 'F5', 'C5', 'E5', 'A5', 'E5', 'D5', 'F5', 'B5', 'G5'],
+      'high-energy-sprint': ['C5', 'C5', 'G5', 'G5', 'A5', 'A5', 'G5', '', 'F5', 'F5', 'E5', 'E5', 'D5', 'D5', 'C5', ''],
+      'cosmic-explorer': ['C5', 'G5', 'E5', 'C6', 'G5', 'B5', 'D6', 'G5', 'A5', 'E6', 'C6', 'A5', 'F5', 'C6', 'A5', 'F5'],
+      'chill-study': ['E5', '', 'G5', '', 'D5', '', 'F5', '', 'C5', '', 'E5', '', 'A4', '', 'C5', ''],
+    };
 
-      case 'mystery-investigation': {
-        // Pizzicato curiosity staccato
-        const pizz = [n.A4, 0, n.C5, 0, n.E5, n.D5, 0, n.C5, n.B4, 0, n.G4, 0, n.A4, 0, 0, 0];
-        if (pizz[s]) this.playTone(pizz[s], 'triangle', 0.12, 0.11);
-        if (s % 8 === 0) this.playTone(n.A3, 'sine', 0.4, 0.1);
-        break;
-      }
-
-      case 'high-energy-sprint': {
-        // Arcade 128 BPM pulse
-        const lead = [n.E5, n.E5, 0, n.G5, n.A5, 0, n.G5, n.E5, n.D5, n.D5, 0, n.E5, n.G5, 0, n.A5, n.B5];
-        const kick = [n.C3, 0, n.C3, 0, n.C3, 0, n.C3, 0, n.A3, 0, n.A3, 0, n.G3, 0, n.G3, 0];
-
-        if (lead[s]) this.playTone(lead[s], 'square', 0.12, 0.05);
-        if (kick[s]) this.playTone(kick[s], 'triangle', 0.15, 0.15);
-        break;
-      }
-
-      case 'sky-rescue': {
-        // Epic soaring cinematic brass / flute
-        const melody = [n.C5, 0, n.G5, 0, n.A5, 0, n.G5, 0, n.F5, 0, n.E5, 0, n.D5, 0, n.C5, 0];
-        const chords = [n.C4, 0, 0, 0, n.E4, 0, 0, 0, n.F4, 0, 0, 0, n.G4, 0, 0, 0];
-
-        if (melody[s]) this.playTone(melody[s], 'sine', 0.35, 0.1, 0.05);
-        if (chords[s]) this.playTone(chords[s], 'triangle', 0.5, 0.09, 0.1);
-        break;
-      }
-
-      case 'carnival-celebration': {
-        // Cheerful waltz
-        const lead = [n.G5, n.E5, n.C5, n.G5, n.A5, n.F5, n.D5, n.A5, n.B5, n.G5, n.E5, n.B5, n.C6, 0, 0, 0];
-        if (lead[s]) this.playTone(lead[s], 'sine', 0.18, 0.08);
-        break;
-      }
-
-      case 'cosmic-explorer': {
-        // Ambient space arpeggiator
-        const arp = [n.C4, n.E4, n.G4, n.B4, n.D5, n.B4, n.G4, n.E4, n.A3, n.C4, n.E4, n.G4, n.C5, n.G4, n.E4, n.C4];
-        if (arp[s]) this.playTone(arp[s], 'sine', 0.3, 0.06, 0.04);
-        break;
-      }
-
-      case 'chill-study': {
-        // Warm lofi piano chords
-        const lofi = [n.F4, 0, n.A4, 0, n.C5, 0, n.E5, 0, n.G4, 0, n.B4, 0, n.D5, 0, 0, 0];
-        if (lofi[s]) this.playTone(lofi[s], 'sine', 0.4, 0.07, 0.06);
-        break;
-      }
+    const activeMelody = melodySeq[this.currentTrackId] || melodySeq['playful-lab'];
+    const melNote = activeMelody[s];
+    if (melNote && this.NOTES[melNote]) {
+      this.playAcousticNote(this.NOTES[melNote], 0.35, 0.42, false);
     }
 
     this.step++;
   }
 
-  // Start BGM playback
-  start(trackId?: string) {
-    if (trackId) this.currentTrackId = trackId;
-    if (this.isPlaying) return;
+  start(trackId = 'playful-lab') {
+    if (this.isPlaying && this.currentTrackId === trackId) return;
 
+    this.stop();
+    this.currentTrackId = trackId;
     this.initContext();
     this.isPlaying = true;
+    this.step = 0;
 
-    const track = BGM_TRACKS.find((t) => t.id === this.currentTrackId) || BGM_TRACKS[0];
-    const intervalMs = (60000 / track.bpm) / 4; // 16th note subdivision
+    const track = BGM_TRACKS.find((t) => t.id === trackId) || BGM_TRACKS[0];
+    const intervalMs = (60 / track.bpm / 2) * 1000; // Eighth-note pulses
 
     this.timerId = window.setInterval(() => {
-      this.tick();
+      if (this.isPlaying && !this.isMuted) {
+        this.playStep();
+      }
     }, intervalMs);
   }
 
-  // Stop BGM
   stop() {
     this.isPlaying = false;
     if (this.timerId !== null) {
-      window.clearInterval(this.timerId);
+      clearInterval(this.timerId);
       this.timerId = null;
     }
   }
 
-  // Switch Track immediately
-  setTrack(trackId: string) {
-    this.currentTrackId = trackId;
-    if (this.isPlaying) {
-      this.stop();
-      this.start(trackId);
-    }
-  }
-
-  // Set Master BGM Volume (0.0 to 1.0)
-  setVolume(vol: number) {
-    this.baseVolume = Math.max(0, Math.min(1, vol));
-    if (this.masterGain && this.ctx && !this.isMuted) {
-      this.masterGain.gain.setValueAtTime(this.baseVolume, this.ctx.currentTime);
-    }
-  }
-
-  // Mute / Unmute BGM
   setMuted(muted: boolean) {
     this.isMuted = muted;
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setValueAtTime(muted ? 0 : this.baseVolume, this.ctx.currentTime);
     }
+    if (muted) {
+      this.stop();
+    }
   }
 
-  // Audio Ducking: Smoothly lower BGM volume when Pip is speaking
-  duck(isSpeaking: boolean) {
-    if (!this.duckGain || !this.ctx) return;
-    try {
-      const targetGain = isSpeaking ? 0.15 : 1.0; // Reduce to 15% during speech
-      this.duckGain.gain.linearRampToValueAtTime(targetGain, this.ctx.currentTime + 0.15);
-    } catch {}
+  setVolume(vol: number) {
+    this.baseVolume = Math.max(0, Math.min(1.0, vol));
+    if (this.masterGain && this.ctx && !this.isMuted) {
+      this.masterGain.gain.setValueAtTime(this.baseVolume, this.ctx.currentTime);
+    }
   }
 
-  getTrackId() {
-    return this.currentTrackId;
+  // Smooth audio ducking when TTS starts speaking
+  duck() {
+    if (this.duckGain && this.ctx) {
+      const now = this.ctx.currentTime;
+      this.duckGain.gain.cancelScheduledValues(now);
+      this.duckGain.gain.linearRampToValueAtTime(0.18, now + 0.1);
+    }
+  }
+
+  unduck() {
+    if (this.duckGain && this.ctx) {
+      const now = this.ctx.currentTime;
+      this.duckGain.gain.cancelScheduledValues(now);
+      this.duckGain.gain.linearRampToValueAtTime(1.0, now + 0.3);
+    }
   }
 
   getIsPlaying() {
