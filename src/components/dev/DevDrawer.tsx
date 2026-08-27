@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/stores/progressStore';
@@ -18,22 +19,37 @@ import {
   Sparkles,
   Volume2,
   VolumeX,
-  Radio,
-  BookOpen,
+  Coins,
+  Shirt,
+  Compass,
   User,
   Shield,
   Layers,
   CheckCircle2,
   ExternalLink,
+  PlusCircle,
+  Gem,
 } from 'lucide-react';
 
 export const DevDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { completedMissions, completeMission, resetProgress } = useProgressStore();
+  const {
+    completedMissions,
+    completeMission,
+    resetProgress,
+    credits,
+    addCredits,
+    unlockedOutfits,
+    unlockedHeadwear,
+    unlockItem,
+    startTour,
+    endTour,
+  } = useProgressStore();
+
   const { discoveries, addDiscovery, resetDiscoveries } = useDiscoveryStore();
-  const { child, setChild, pin, setPin, isSetUp, completeSetup } = useParentStore();
+  const { child, setChild, pin, setPin, isSetUp, completeSetup, reset: resetParent } = useParentStore();
   const { isSfxMuted, isTtsMuted, toggleSfx, toggleTts } = useAudioStore();
 
   const handleUnlockAll = () => {
@@ -50,10 +66,37 @@ export const DevDrawer: React.FC = () => {
     });
   };
 
+  const handleUnlockAllSkins = () => {
+    sounds.fanfare();
+    const allOutfits = ['lab-coat', 'astronaut', 'winter-parka', 'gold-champion', 'detective'];
+    const allHats = ['goggles', 'visor', 'grad-cap', 'crown', 'party-hat'];
+    allOutfits.forEach((id) => unlockItem('outfit', id, 0));
+    allHats.forEach((id) => unlockItem('headwear', id, 0));
+    addCredits(500);
+  };
+
+  const handleAddCredits = (amount: number) => {
+    sounds.sparkle();
+    addCredits(amount);
+  };
+
+  const handleQuickSetupChild = () => {
+    sounds.success();
+    setChild({
+      name: 'Aarav',
+      grade: '5',
+      interests: ['space', 'robotics', 'science', 'inventions'],
+      avatar: '🧪',
+    });
+    setPin('1234');
+    completeSetup();
+  };
+
   const handleResetAll = () => {
     sounds.boing();
     resetProgress();
     resetDiscoveries();
+    resetParent();
   };
 
   const handleTestTts = (text: string) => {
@@ -73,8 +116,8 @@ export const DevDrawer: React.FC = () => {
             sounds.pop();
             setIsOpen(true);
           }}
-          className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-slate-900 text-amber-400 border-2 border-amber-400 shadow-2xl flex flex-col items-center justify-center font-black text-[10px] uppercase tracking-wider cursor-pointer hover:bg-slate-800 transition-all ring-4 ring-slate-900/30"
-          title="Open Developer Testing Super-Hacks"
+          className="fixed bottom-6 right-6 z-[99990] w-12 h-12 rounded-full bg-slate-950 text-amber-400 border-2 border-amber-400 shadow-2xl flex flex-col items-center justify-center font-black text-[10px] uppercase tracking-wider cursor-pointer hover:bg-slate-900 transition-all ring-4 ring-slate-900/40"
+          title="Open Developer Testing Super-Hacks & Currency Cheats"
         >
           <Code className="w-4 h-4" />
           <span>DEV</span>
@@ -82,214 +125,264 @@ export const DevDrawer: React.FC = () => {
       )}
 
       {/* ── Slide-Out Super Hacks Drawer ── */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black z-50 backdrop-blur-xs"
-            />
-
-            {/* Panel */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-slate-900 text-white z-50 shadow-2xl border-l-4 border-amber-400 flex flex-col overflow-hidden font-sans select-none"
-            >
-              {/* Header */}
-              <div className="p-5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-amber-400/20 text-amber-400 rounded-xl border border-amber-400/40">
-                    <Code className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-base text-amber-400">PolyQuest Dev Console</h3>
-                    <p className="text-[11px] text-slate-400">Testing Hacks & Route Fast-Travel</p>
-                  </div>
-                </div>
-
-                <button
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
+              <div className="fixed inset-0 z-[100000] flex justify-end">
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  exit={{ opacity: 0 }}
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer"
+                  className="fixed inset-0 bg-black/60 backdrop-blur-xs"
+                />
+
+                {/* Panel */}
+                <motion.div
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+                  className="relative z-10 w-full max-w-md bg-slate-950 text-slate-100 h-full overflow-y-auto border-l-4 border-amber-400 p-6 flex flex-col font-sans shadow-2xl"
                 >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Scrollable Hack Tools */}
-              <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs">
-                {/* 1. Global Fast Travel Navigation */}
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-2.5">
-                    🚀 Fast Travel (Routes)
-                  </span>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { name: 'Role Selection', path: '/' },
-                      { name: 'Chapter Hub Map', path: '/chapter-hub' },
-                      { name: 'Chapter 3 Intro', path: '/chapter/3' },
-                      { name: 'Field Journal', path: '/discovery-book' },
-                      { name: 'Parent PIN Gate', path: '/parent/pin' },
-                      { name: 'Parent Dashboard', path: '/parent/dashboard' },
-                      { name: 'Parent Setup', path: '/parent/setup' },
-                    ].map((route) => (
-                      <button
-                        key={route.path}
-                        onClick={() => {
-                          sounds.pop();
-                          voiceAssistant.stop();
-                          navigate(route.path);
-                          setIsOpen(false);
-                        }}
-                        className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-left font-bold truncate flex items-center justify-between cursor-pointer"
+                  {/* Header */}
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+                    <div className="flex items-center gap-2">
+                      <Code className="w-6 h-6 text-amber-400" />
+                      <h2
+                        className="text-xl font-black text-amber-400 tracking-tight"
+                        style={{ fontFamily: 'Nunito, sans-serif' }}
                       >
-                        <span>{route.name}</span>
-                        <ExternalLink className="w-3 h-3 text-slate-400" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 2. Jump to Any Mission (1-13) */}
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-2.5">
-                    🔬 Jump to Mission
-                  </span>
-                  <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1 bg-slate-950/60 rounded-2xl border border-slate-800">
-                    {missions.map((m) => (
-                      <button
-                        key={m.id}
-                        onClick={() => {
-                          sounds.pop();
-                          voiceAssistant.stop();
-                          navigate(`/chapter/3/mission/${m.number}`);
-                          setIsOpen(false);
-                        }}
-                        className="p-2 rounded-xl bg-slate-800 hover:bg-amber-400 hover:text-slate-950 text-slate-200 border border-slate-700 text-left font-extrabold truncate cursor-pointer transition-colors"
-                      >
-                        M{m.number}: {m.title}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 3. Progression Super Hacks */}
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-2.5">
-                    ⚡ Progression Cheats
-                  </span>
-                  <div className="grid grid-cols-2 gap-2">
+                        Developer Super-Hacks ⚡
+                      </h2>
+                    </div>
                     <button
-                      onClick={handleUnlockAll}
-                      className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                      onClick={() => setIsOpen(false)}
+                      className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
                     >
-                      <Unlock className="w-4 h-4" />
-                      <span>Unlock All Missions</span>
-                    </button>
-
-                    <button
-                      onClick={handleResetAll}
-                      className="p-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black flex items-center justify-center gap-2 cursor-pointer shadow-md"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                      <span>Reset All Progress</span>
+                      <X className="w-5 h-5 stroke-[3]" />
                     </button>
                   </div>
-                </div>
 
-                {/* 4. Audio & Voice Studio */}
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-2.5">
-                    🎙️ Audio & Voice Testing
-                  </span>
-                  <div className="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span>Sound FX:</span>
+                  <div className="space-y-6 flex-1 text-xs font-bold">
+                    {/* ── SECTION 1: CURRENCY & WALLET CHEATS ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-amber-300 font-black uppercase tracking-wider flex items-center gap-1.5">
+                          <Coins className="w-4 h-4 text-amber-400" />
+                          <span>PolyCredits Cheats</span>
+                        </span>
+                        <span className="px-2.5 py-0.5 bg-amber-400/20 text-amber-300 rounded-full font-black">
+                          {credits} 🪙
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => handleAddCredits(100)}
+                          className="py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                        >
+                          <PlusCircle className="w-3.5 h-3.5" />
+                          <span>+100 Coins 🪙</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleAddCredits(9999)}
+                          className="py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 shadow-md active:scale-95"
+                        >
+                          <Gem className="w-3.5 h-3.5" />
+                          <span>Unlimited 9999 💎</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* ── SECTION 2: WARDROBE & SKINS UNLOCK ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-pink-500/40">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-pink-300 font-black uppercase tracking-wider flex items-center gap-1.5">
+                          <Shirt className="w-4 h-4 text-pink-400" />
+                          <span>Pip Skins & Wardrobe</span>
+                        </span>
+                        <span className="text-[10px] text-pink-400">
+                          {unlockedOutfits.length} Outfits / {unlockedHeadwear.length} Hats
+                        </span>
+                      </div>
+
                       <button
-                        onClick={toggleSfx}
-                        className={`px-3 py-1 rounded-lg font-black text-xs ${
-                          isSfxMuted ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                        }`}
+                        onClick={handleUnlockAllSkins}
+                        className="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md active:scale-95"
                       >
-                        {isSfxMuted ? 'Muted' : 'Enabled'}
+                        <Sparkles className="w-4 h-4" />
+                        <span>Unlock All 10 Outfits & Hats 🥼👑</span>
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <span>Voice / TTS:</span>
-                      <button
-                        onClick={toggleTts}
-                        className={`px-3 py-1 rounded-lg font-black text-xs ${
-                          isTtsMuted ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                        }`}
-                      >
-                        {isTtsMuted ? 'Muted' : 'Enabled'}
-                      </button>
+                    {/* ── SECTION 3: MASCOT GUIDED TOUR CONTROLS ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-sky-500/40">
+                      <span className="text-sky-300 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
+                        <Compass className="w-4 h-4 text-sky-400" />
+                        <span>Live Mascot Tour Controller</span>
+                      </span>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => {
+                            sounds.sparkle();
+                            startTour();
+                            setIsOpen(false);
+                            navigate('/chapter-hub');
+                          }}
+                          className="py-2.5 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          <Play className="w-3.5 h-3.5" />
+                          <span>Start Tour 🧭</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            sounds.pop();
+                            endTour();
+                          }}
+                          className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Skip Tour</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-800 flex flex-wrap gap-1.5">
+                    {/* ── SECTION 4: CURRICULUM UNLOCKS & WARPS ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                      <span className="text-amber-400 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
+                        <Unlock className="w-4 h-4" />
+                        <span>Curriculum & Discoveries</span>
+                      </span>
+
+                      <div className="flex gap-2 mb-3">
+                        <button
+                          onClick={handleUnlockAll}
+                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Unlock All 13 Missions</span>
+                        </button>
+
+                        <button
+                          onClick={handleResetAll}
+                          className="py-2.5 px-4 bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          <span>Reset</span>
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-1.5 max-h-40 overflow-y-auto pr-1">
+                        {missions.map((m) => (
+                          <button
+                            key={m.id}
+                            onClick={() => {
+                              sounds.pop();
+                              setIsOpen(false);
+                              navigate(`/chapter/3/mission/${m.number}`);
+                            }}
+                            className={`p-2 rounded-xl text-[11px] font-black border text-center transition-all cursor-pointer ${
+                              completedMissions.includes(m.id)
+                                ? 'bg-emerald-950/60 border-emerald-500/60 text-emerald-300'
+                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                            }`}
+                          >
+                            M{m.number}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ── SECTION 5: PARENT ACCOUNT QUICK-INJECT ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-violet-400 font-black uppercase tracking-wider flex items-center gap-1.5">
+                          <User className="w-4 h-4" />
+                          <span>Parent Profile State</span>
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                            isSetUp ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                          }`}
+                        >
+                          {isSetUp ? 'Registered ✓' : 'Unregistered ❌'}
+                        </span>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleQuickSetupChild}
+                          className="flex-1 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-black cursor-pointer shadow-md"
+                        >
+                          Auto-Register ("Aarav, Gr 5")
+                        </button>
+                        <button
+                          onClick={() => {
+                            sounds.pop();
+                            resetParent();
+                          }}
+                          className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-black cursor-pointer"
+                        >
+                          Clear ID
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* ── SECTION 6: AUDIO SOUNDBOARD TESTER ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                      <span className="text-slate-400 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
+                        <Volume2 className="w-4 h-4 text-amber-400" />
+                        <span>Audio Soundboard Tester</span>
+                      </span>
+
+                      <div className="grid grid-cols-3 gap-2 mb-3">
+                        <button
+                          onClick={() => sounds.sparkle()}
+                          className="p-2 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl text-center cursor-pointer"
+                        >
+                          ✨ Sparkle
+                        </button>
+                        <button
+                          onClick={() => sounds.fanfare()}
+                          className="p-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-xl text-center cursor-pointer"
+                        >
+                          🎺 Fanfare
+                        </button>
+                        <button
+                          onClick={() => sounds.boing()}
+                          className="p-2 bg-slate-800 hover:bg-slate-700 text-rose-300 rounded-xl text-center cursor-pointer"
+                        >
+                          ⚡ Boing
+                        </button>
+                      </div>
+
                       <button
-                        onClick={() => sounds.pop()}
-                        className="px-2.5 py-1 bg-slate-800 rounded-lg hover:bg-slate-700 cursor-pointer"
+                        onClick={() => handleTestTts('Hello master scientist! Pip audio test is running perfectly!')}
+                        className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5"
                       >
-                        Pop
-                      </button>
-                      <button
-                        onClick={() => sounds.splash()}
-                        className="px-2.5 py-1 bg-slate-800 rounded-lg hover:bg-slate-700 cursor-pointer"
-                      >
-                        Splash
-                      </button>
-                      <button
-                        onClick={() => sounds.success()}
-                        className="px-2.5 py-1 bg-slate-800 rounded-lg hover:bg-slate-700 cursor-pointer"
-                      >
-                        Success
-                      </button>
-                      <button
-                        onClick={() => sounds.fanfare()}
-                        className="px-2.5 py-1 bg-slate-800 rounded-lg hover:bg-slate-700 cursor-pointer"
-                      >
-                        Fanfare
-                      </button>
-                      <button
-                        onClick={() => handleTestTts('Hello young scientist! Welcome to PolyQuest!')}
-                        className="px-2.5 py-1 bg-violet-600 rounded-lg hover:bg-violet-500 font-bold cursor-pointer"
-                      >
-                        Test Voice 🔊
+                        <Volume2 className="w-3.5 h-3.5 text-violet-400" />
+                        <span>Test Pip TTS Voice</span>
                       </button>
                     </div>
                   </div>
-                </div>
 
-                {/* 5. Live State Viewer */}
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block mb-2">
-                    📊 Live Storage Cache Inspector
-                  </span>
-                  <div className="p-3 bg-slate-950 rounded-2xl border border-slate-800 font-mono text-[10px] text-emerald-400 overflow-x-auto">
-                    <div>Scientist: {child?.name || 'Not Set'} (Grade {child?.grade || '5'})</div>
-                    <div>Completed: {completedMissions.length} / 13</div>
-                    <div>Discoveries: {discoveries.length} / {materials.length}</div>
-                    <div>Parent Setup: {isSetUp ? 'Complete' : 'Pending'} (PIN: {pin || 'None'})</div>
+                  {/* Footer */}
+                  <div className="pt-4 border-t border-slate-800 text-[10px] text-slate-500 font-mono flex items-center justify-between">
+                    <span>Antigravity Developer Mode</span>
+                    <span>v2.4.0</span>
                   </div>
-                </div>
+                </motion.div>
               </div>
-
-              {/* Footer */}
-              <div className="p-4 bg-slate-950 border-t border-slate-800 text-center text-[10px] text-slate-500 font-bold">
-                Dev Drawer is only visible during development / QA testing
-              </div>
-            </motion.div>
-          </>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 };
