@@ -31,6 +31,7 @@ import { FirstTimeTutorialOverlay } from '@/components/tutorial/FirstTimeTutoria
 import { ScanMyWorldModal } from '@/components/ai/ScanMyWorldModal';
 import { SocraticPipAITutorModal } from '@/components/ai/SocraticPipAITutorModal';
 import { WhatIfScienceSandboxModal } from '@/components/ai/WhatIfScienceSandboxModal';
+import { AiScienceLabModal } from '@/components/ai/AiScienceLabModal';
 
 interface AudioNavBarControlsProps {
   className?: string;
@@ -116,11 +117,11 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const [showClosetModal, setShowClosetModal] = useState(false);
   const [showArcadeModal, setShowArcadeModal] = useState(false);
   const [showTutorialModal, setShowTutorialModal] = useState(false);
+  const [showAiLabHubModal, setShowAiLabHubModal] = useState(false);
   const [showScanModal, setShowScanModal] = useState(false);
   const [showPipChatModal, setShowPipChatModal] = useState(false);
   const [showWhatIfModal, setShowWhatIfModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAiMenuOpen, setIsAiMenuOpen] = useState(false);
 
   const { isSfxMuted, isTtsMuted, isBgmMuted, toggleSfx, toggleTts, toggleBgm } = useAudioStore();
   const child = useParentStore((state) => state.child);
@@ -139,7 +140,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
 
   return (
     <>
-      <div className={`flex items-center gap-2 ${className}`}>
+      <div className={`flex items-center gap-1.5 sm:gap-2 ${className}`}>
         {/* PolyCredits Balance Badge */}
         <button
           id="navbar-credits-btn"
@@ -147,7 +148,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
             sounds.pop();
             setShowClosetModal(true);
           }}
-          className="px-3 py-1.5 rounded-2xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 text-amber-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0"
+          className="px-3 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 text-amber-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
           title="PolyCredits Balance • Click to open Wardrobe"
         >
           <Coins className="w-4 h-4 text-amber-600 animate-pulse" />
@@ -155,91 +156,20 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
         </button>
 
         {/* Desktop Unified Tools */}
-        <div className="hidden md:flex items-center gap-2">
-          {/* Unified AI Science Lab Capsule Dropdown */}
-          <div className="relative">
-            <button
-              id="navbar-ai-lab-btn"
-              onClick={() => {
-                sounds.pop();
-                setIsAiMenuOpen(!isAiMenuOpen);
-              }}
-              className="px-3 py-1.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all"
-              title="Open Gemini AI Science Tools"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
-              <span>AI Science Lab ▾</span>
-            </button>
-
-            {/* AI Lab Dropdown Menu */}
-            {isAiMenuOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setIsAiMenuOpen(false)}
-                />
-                <div className="absolute top-full left-0 mt-2 z-50 w-64 bg-white/95 backdrop-blur-xl rounded-3xl border-3 border-indigo-200 shadow-2xl p-2.5 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <span className="text-[9px] font-black uppercase tracking-wider text-indigo-800 px-2 py-0.5">
-                    Gemini 2.5 AI Powered Tools
-                  </span>
-
-                  {/* Scan My World */}
-                  <button
-                    onClick={() => {
-                      sounds.pop();
-                      setIsAiMenuOpen(false);
-                      setShowScanModal(true);
-                    }}
-                    className="p-2.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-950 flex items-center gap-2.5 text-left cursor-pointer transition-all active:scale-98"
-                  >
-                    <div className="p-2 bg-emerald-500 text-white rounded-xl shadow-xs shrink-0">
-                      <Camera className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-black text-slate-900">Scan My World 📷</div>
-                      <div className="text-[10px] font-bold text-emerald-700">Camera Material Detective</div>
-                    </div>
-                  </button>
-
-                  {/* Ask Pip AI */}
-                  <button
-                    onClick={() => {
-                      sounds.pop();
-                      setIsAiMenuOpen(false);
-                      setShowPipChatModal(true);
-                    }}
-                    className="p-2.5 rounded-2xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-950 flex items-center gap-2.5 text-left cursor-pointer transition-all active:scale-98"
-                  >
-                    <div className="p-2 bg-sky-500 text-white rounded-xl shadow-xs shrink-0">
-                      <Bot className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-black text-slate-900">Ask Pip AI 🤖</div>
-                      <div className="text-[10px] font-bold text-sky-700">Live Socratic Voice Tutor</div>
-                    </div>
-                  </button>
-
-                  {/* What-If Sandbox */}
-                  <button
-                    onClick={() => {
-                      sounds.pop();
-                      setIsAiMenuOpen(false);
-                      setShowWhatIfModal(true);
-                    }}
-                    className="p-2.5 rounded-2xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-950 flex items-center gap-2.5 text-left cursor-pointer transition-all active:scale-98"
-                  >
-                    <div className="p-2 bg-purple-500 text-white rounded-xl shadow-xs shrink-0">
-                      <FlaskConical className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-black text-slate-900">"What If?" Lab 🧪</div>
-                      <div className="text-[10px] font-bold text-purple-700">Generative Physics Sandbox</div>
-                    </div>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+        <div className="hidden md:flex items-center gap-1.5">
+          {/* Unified AI Science Lab Trigger Button */}
+          <button
+            id="navbar-ai-lab-btn"
+            onClick={() => {
+              sounds.sparkle();
+              setShowAiLabHubModal(true);
+            }}
+            className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all shrink-0 whitespace-nowrap"
+            title="Open Gemini AI Science Superpowers Hub"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+            <span>AI Science Lab ✨</span>
+          </button>
 
           {/* Pip's Closet */}
           <button
@@ -248,7 +178,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
               sounds.pop();
               setShowClosetModal(true);
             }}
-            className="px-3 py-1.5 rounded-2xl bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 text-pink-900 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all"
+            className="px-3 py-2 rounded-2xl bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 text-pink-900 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
             title="Open Wardrobe"
           >
             <Shirt className="w-3.5 h-3.5 text-pink-600" />
@@ -262,7 +192,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
               sounds.pop();
               setShowArcadeModal(true);
             }}
-            className="px-3 py-1.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all"
+            className="px-3 py-2 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
             title="Play Science Games"
           >
             <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
@@ -419,6 +349,13 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
       )}
 
       {/* Modals */}
+      <AiScienceLabModal
+        isOpen={showAiLabHubModal}
+        onClose={() => setShowAiLabHubModal(false)}
+        onOpenScan={() => setShowScanModal(true)}
+        onOpenAskPip={() => setShowPipChatModal(true)}
+        onOpenWhatIf={() => setShowWhatIfModal(true)}
+      />
       <AudioSettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <PipClosetModal isOpen={showClosetModal} onClose={() => setShowClosetModal(false)} />
       <ScienceArcadeModal isOpen={showArcadeModal} onClose={() => setShowArcadeModal(false)} />
