@@ -16,6 +16,7 @@ import {
 import { Droplet, Sparkles, Check, ArrowRight, ShieldCheck, Feather, Sun, AlertCircle, Lightbulb, ZoomIn } from 'lucide-react';
 import { bgmEngine } from '@/lib/bgmEngine';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
+import { useFXStore } from '@/stores/fxStore';
 
 // Real Minimal Isolated Photography Assets
 import cottonCoatDryImg from '@/assets/images/raincoat/cotton_coat_dry.jpg';
@@ -392,6 +393,7 @@ export function RaincoatMission() {
                   <button
                     onClick={() => {
                       sounds.splash();
+                      useFXStore.getState().triggerFX('rain', 3500);
                       setIsSprayingA(true);
                       setTimeout(() => {
                         setTestedWater((prev) => ({ ...prev, a: true }));
@@ -475,6 +477,7 @@ export function RaincoatMission() {
                   <button
                     onClick={() => {
                       sounds.splash();
+                      useFXStore.getState().triggerFX('rain', 3500);
                       setIsSprayingB(true);
                       setTimeout(() => {
                         setTestedWater((prev) => ({ ...prev, b: true }));

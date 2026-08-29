@@ -18,6 +18,7 @@ import { DevDrawer } from '@/components/dev/DevDrawer';
 import { GlobalWordExplainer } from '@/components/dictionary/GlobalWordExplainer';
 import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
 import { TryWithMeEngine } from '@/components/try-with-me/TryWithMeEngine';
+import { EnvironmentFXOverlay } from '@/components/effects/EnvironmentFXOverlay';
 
 export function App() {
   return (
@@ -61,6 +62,9 @@ export function App() {
 
         {/* Global Text-Selection Smart Dictionary & Audio Explainer */}
         <GlobalWordExplainer />
+
+        {/* Global Full-Screen Interactive Environmental Effects Overlay */}
+        <EnvironmentFXOverlay />
 
         {/* Global Developer Super-Hacks Drawer */}
         <DevDrawer />

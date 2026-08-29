@@ -7,6 +7,7 @@ import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { useParentStore } from '@/stores/parentStore';
 import { useAudioStore } from '@/stores/audioStore';
 import { usePipStore } from '@/stores/pipStore';
+import { useFXStore } from '@/stores/fxStore';
 import { Pip } from '@/components/pip/Pip';
 import { missions } from '@/data/missions';
 import { materials } from '@/data/materials';
@@ -437,6 +438,56 @@ export const DevDrawer: React.FC = () => {
                         <Volume2 className="w-3.5 h-3.5 text-violet-400" />
                         <span>Test Pip TTS Voice</span>
                       </button>
+                    </div>
+
+                    {/* ── SECTION 7: FULL-SCREEN ENVIRONMENTAL FX TESTER ── */}
+                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-cyan-500/40">
+                      <span className="text-cyan-400 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-cyan-400" />
+                        <span>Environmental FX Simulator</span>
+                      </span>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => {
+                            sounds.splash();
+                            useFXStore.getState().triggerFX('rain', 3500);
+                          }}
+                          className="p-2.5 bg-cyan-950/60 border border-cyan-500/40 hover:bg-cyan-900 text-cyan-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          🌧️ Rainstorm FX (3.5s)
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            sounds.sparkle();
+                            useFXStore.getState().triggerFX('spark', 2000);
+                          }}
+                          className="p-2.5 bg-amber-950/60 border border-amber-500/40 hover:bg-amber-900 text-amber-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          ⚡ Electric Sparks (2s)
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            sounds.pop();
+                            useFXStore.getState().triggerFX('steam', 2500);
+                          }}
+                          className="p-2.5 bg-orange-950/60 border border-orange-500/40 hover:bg-orange-900 text-orange-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          🔥 Steam / Heat (2.5s)
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            sounds.fanfare();
+                            useFXStore.getState().triggerFX('timelapse', 3000);
+                          }}
+                          className="p-2.5 bg-indigo-950/60 border border-indigo-500/40 hover:bg-indigo-900 text-indigo-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          ⏳ 500-Yr Wormhole (3s)
+                        </button>
+                      </div>
                     </div>
                   </div>
 
