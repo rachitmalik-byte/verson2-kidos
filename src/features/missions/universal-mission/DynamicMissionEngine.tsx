@@ -40,6 +40,7 @@ import {
   AlertTriangle,
   RotateCcw,
   Lightbulb,
+  Home,
 } from 'lucide-react';
 
 // Real Studio Macro Educational Photography
@@ -87,6 +88,8 @@ export const DynamicMissionEngine: React.FC = () => {
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [interactiveState, setInteractiveState] = useState<Record<string, any>>({});
+  const [showCelebration, setShowCelebration] = useState(false);
+
   useEffect(() => {
     voiceAssistant.stop();
     setCurrentStepIndex(0);
