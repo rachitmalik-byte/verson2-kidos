@@ -4,8 +4,8 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { Gauge, Sparkles, AlertTriangle, CheckCircle2, Flame, Droplet, Zap, RotateCcw, Wrench } from 'lucide-react';
 
-import realTireTreadImg from '@/assets/images/experiments/vulcanized_car_tire_tread.jpg';
 import rubberTreeLatexImg from '@/assets/images/experiments/rubber_tree_tapping_latex.jpg';
+import carWheelRimImg from '@/assets/images/experiments/car_wheel_rim.png';
 
 /* ============================================================================
    1. HIGH-PRESSURE PIPE BURST & EPOXY SEAL SIMULATOR (MISSION 12)
@@ -191,23 +191,23 @@ export const RaceCarTireFrictionSim: React.FC<{
       </div>
 
       {/* Realistic Rolling Tire & Moving Road Stage */}
-      <div className="relative w-full h-56 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 rounded-3xl border-3 border-slate-700 flex flex-col items-center justify-center overflow-hidden mb-6 shadow-inner">
-        {/* Sky / Speed Blur Lines */}
+      <div className="relative w-full h-60 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 rounded-3xl border-3 border-slate-700 flex flex-col items-center justify-center overflow-hidden mb-6 shadow-inner">
+        {/* Speed Blur Lines */}
         {isSpinning && (
-          <div className="absolute inset-0 pointer-events-none opacity-20">
+          <div className="absolute inset-0 pointer-events-none opacity-25">
             {Array.from({ length: 8 }).map((_, i) => (
               <motion.div
                 key={i}
                 animate={{ x: ['100%', '-100%'] }}
-                transition={{ repeat: Infinity, duration: 0.25 + i * 0.05, ease: 'linear' }}
+                transition={{ repeat: Infinity, duration: 0.2 + i * 0.04, ease: 'linear' }}
                 style={{ top: `${i * 12}%` }}
-                className="absolute h-0.5 w-32 bg-amber-400"
+                className="absolute h-0.5 w-36 bg-amber-400"
               />
             ))}
           </div>
         )}
 
-        {/* The Rotating Real Tire Wheel Assembly */}
+        {/* The Rotating Real Car Tire Wheel Rim (Isolated Transparent Graphic) */}
         <div className="relative flex items-center justify-center">
           <motion.div
             animate={
@@ -219,37 +219,47 @@ export const RaceCarTireFrictionSim: React.FC<{
               isSpinning
                 ? {
                     repeat: Infinity,
-                    duration: Math.max(0.06, 0.8 - speedRpm / 15000),
+                    duration: Math.max(0.05, 0.7 - speedRpm / 16000),
                     ease: 'linear',
                   }
                 : {}
             }
-            className={`relative w-36 h-36 rounded-full border-8 overflow-hidden shadow-2xl flex items-center justify-center ${
-              isOverheated
-                ? 'border-amber-900 scale-95 ring-4 ring-rose-500'
-                : 'border-slate-800 ring-4 ring-amber-400/50'
+            className={`relative w-40 h-40 rounded-full flex items-center justify-center transition-all ${
+              isOverheated ? 'scale-90 filter drop-shadow-[0_0_15px_#f43f5e]' : 'drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]'
             }`}
           >
-            {/* Real Photographic Tread Texture */}
-            <img
-              src={rubberType === 'synthetic' ? realTireTreadImg : rubberTreeLatexImg}
-              alt="Tire Tread Texture"
-              className={`w-full h-full object-cover ${
-                isOverheated ? 'filter brightness-50 contrast-150 blur-[1px]' : ''
-              }`}
-            />
-
-            {/* Aluminum Wheel Hub */}
-            <div className="absolute w-14 h-14 rounded-full bg-gradient-to-tr from-slate-900 via-slate-600 to-slate-900 border-4 border-amber-400 shadow-xl flex items-center justify-center">
-              <span className="text-[10px] font-black text-amber-300 font-mono">F1</span>
-            </div>
+            {rubberType === 'synthetic' ? (
+              /* High-Fidelity Car Wheel & Alloy Rim */
+              <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                <img
+                  src={carWheelRimImg}
+                  alt="Vulcanized Car Tire & Silver Alloy Rim"
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
+            ) : (
+              /* Raw Un-vulcanized Tree Latex Wheel (Melts under heat) */
+              <div
+                className={`relative w-full h-full rounded-full overflow-hidden border-8 border-amber-900 bg-amber-950 flex items-center justify-center ${
+                  isOverheated ? 'rounded-[35%] animate-pulse scale-95 border-amber-700 bg-amber-900' : ''
+                }`}
+              >
+                <img
+                  src={rubberTreeLatexImg}
+                  alt="Raw Sticky Tree Latex"
+                  className="w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-amber-950/80 via-transparent to-amber-800/60" />
+                <span className="text-2xl absolute">🌳</span>
+              </div>
+            )}
           </motion.div>
 
-          {/* Friction Heat & Smoke FX */}
+          {/* Friction Smoke & Fire Particles */}
           {isSpinning && (
             <div className="absolute right-0 bottom-2 pointer-events-none flex gap-1">
               <motion.span
-                animate={{ opacity: [0, 1, 0], scale: [0.5, 2, 2.5], x: [0, 30, 60], y: [0, -20, -40] }}
+                animate={{ opacity: [0, 1, 0], scale: [0.5, 2, 2.5], x: [0, 35, 70], y: [0, -20, -45] }}
                 transition={{ repeat: Infinity, duration: 0.35 }}
                 className="text-2xl"
               >
@@ -259,24 +269,24 @@ export const RaceCarTireFrictionSim: React.FC<{
           )}
         </div>
 
-        {/* Animated Textured Asphalt Road Surface */}
-        <div className="absolute bottom-0 w-full h-10 bg-slate-950 border-t-4 border-slate-700 flex items-center overflow-hidden">
+        {/* Animated Asphalt Road Track */}
+        <div className="absolute bottom-0 w-full h-11 bg-slate-950 border-t-4 border-slate-700 flex items-center overflow-hidden">
           <motion.div
             animate={isSpinning ? { x: ['0%', '-50%'] } : {}}
-            transition={{ repeat: Infinity, duration: 0.3, ease: 'linear' }}
+            transition={{ repeat: Infinity, duration: 0.25, ease: 'linear' }}
             className="flex whitespace-nowrap gap-6 w-[200%]"
           >
             {Array.from({ length: 20 }).map((_, idx) => (
-              <span key={idx} className="w-8 h-1.5 bg-amber-400/80 rounded-full inline-block" />
+              <span key={idx} className="w-10 h-2 bg-amber-400/90 rounded-full inline-block shadow-[0_0_8px_#f59e0b]" />
             ))}
           </motion.div>
         </div>
       </div>
 
-      {/* Speed & Rubber Material Controls */}
+      {/* Speed & Material Selection Controls */}
       <div className="w-full max-w-md flex flex-col gap-4 mb-4">
         <div className="flex justify-between items-center text-xs font-black text-slate-300">
-          <span>Speed: {speedRpm} RPM</span>
+          <span>Tire Speed: {speedRpm} RPM</span>
           <span className="text-amber-400">{(speedRpm / 60).toFixed(0)} km/h</span>
         </div>
         <input
@@ -331,7 +341,7 @@ export const RaceCarTireFrictionSim: React.FC<{
         </button>
       </div>
 
-      {/* Visual Collage & Discovery Card */}
+      {/* Discovery Science Card */}
       <div className="w-full bg-slate-900/90 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center gap-4 text-xs font-bold text-slate-300">
         <img
           src={rubberTreeLatexImg}
@@ -344,8 +354,8 @@ export const RaceCarTireFrictionSim: React.FC<{
           </span>
           <span>
             Natural tree latex gets sticky when hot and brittle when cold. By heating latex with{' '}
-            <strong className="text-white">Sulfur</strong>, Goodyear created{' '}
-            <strong className="text-amber-300">Vulcanization</strong> — locking rubber polymers into an elastic 3D grid that never melts!
+            <strong className="text-white">Sulfur</strong>, Goodyear invented{' '}
+            <strong className="text-amber-300">Vulcanization</strong> — cross-linking rubber polymer chains into a resilient 3D mesh that never melts!
           </span>
         </div>
       </div>
