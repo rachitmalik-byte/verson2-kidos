@@ -21,10 +21,10 @@ import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafet
 import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import {
   VectorCircuitWorkbench,
-  VectorCopperWireSpecimen,
-  VectorPVCCableSpecimen,
+  VectorCopperRodSpecimen,
   VectorSteelKeySpecimen,
-  VectorRubberEraserSpecimen,
+  VectorPlasticBrickSpecimen,
+  VectorRubberBandSpecimen,
 } from '@/components/interactive/VectorCircuitLab';
 import {
   HighPressurePipeLeakSim,
@@ -1059,18 +1059,18 @@ export const DynamicMissionEngine: React.FC = () => {
                   <VectorCircuitWorkbench
                     specimenId={interactiveState.testedId || 'copper'}
                     conducts={interactiveState.conducts === true}
-                    specimenName={interactiveState.testedMaterial || 'Raw Copper Metal Wire'}
+                    specimenName={interactiveState.testedMaterial || 'Solid Copper Metal Rod'}
                     isFlowing={interactiveState.conducts === true}
                   />
                 </div>
 
                 {/* Material Selectors with Clean Vector Graphics */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full mb-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full mb-4">
                   {[
-                    { id: 'copper', name: 'Copper Wire', conducts: true, type: 'Metal Conductor', render: () => <VectorCopperWireSpecimen /> },
-                    { id: 'steel', name: 'Steel Key', conducts: true, type: 'Metal Conductor', render: () => <VectorSteelKeySpecimen /> },
-                    { id: 'plastic', name: 'PVC Cable Plastic', conducts: false, type: 'Plastic Insulator', render: () => <VectorPVCCableSpecimen /> },
-                    { id: 'rubber', name: 'Rubber Eraser', conducts: false, type: 'Elastomer Insulator', render: () => <VectorRubberEraserSpecimen /> },
+                    { id: 'copper', name: 'Solid Copper Rod', conducts: true, type: 'Metal Conductor ⚡', render: () => <VectorCopperRodSpecimen /> },
+                    { id: 'steel', name: 'Polished Steel Key', conducts: true, type: 'Metal Conductor ⚡', render: () => <VectorSteelKeySpecimen /> },
+                    { id: 'plastic', name: 'Plastic Toy Brick', conducts: false, type: 'Plastic Insulator 🛡️', render: () => <VectorPlasticBrickSpecimen /> },
+                    { id: 'rubber', name: 'Flexible Rubber Band', conducts: false, type: 'Rubber Insulator 🛡️', render: () => <VectorRubberBandSpecimen /> },
                   ].map((mat) => (
                     <button
                       key={mat.id}
@@ -1094,17 +1094,17 @@ export const DynamicMissionEngine: React.FC = () => {
                           return next;
                         });
                       }}
-                      className={`p-3.5 rounded-2xl border-2 text-center cursor-pointer transition-all flex flex-col items-center ${
+                      className={`p-3.5 rounded-3xl border-3 text-center cursor-pointer transition-all flex flex-col items-center shadow-md ${
                         interactiveState[mat.id]
-                          ? 'bg-amber-100 border-amber-500 font-black ring-2 ring-amber-300'
-                          : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+                          ? 'bg-amber-100 border-amber-500 font-black ring-4 ring-amber-300 scale-102'
+                          : 'bg-white border-slate-200 hover:bg-slate-50'
                       }`}
                     >
-                      <div className="w-full h-16 rounded-xl overflow-hidden mb-1 border border-slate-800 bg-slate-900 flex items-center justify-center p-1">
+                      <div className="w-full h-18 rounded-2xl overflow-hidden mb-2 border border-slate-200 bg-slate-50 flex items-center justify-center p-1 shadow-inner">
                         {mat.render()}
                       </div>
                       <span className="text-xs font-black text-slate-900 block mt-1">{mat.name}</span>
-                      <span className={`text-[10px] font-bold ${mat.conducts ? 'text-amber-700' : 'text-sky-700'}`}>
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full mt-1 ${mat.conducts ? 'bg-amber-200 text-amber-900' : 'bg-emerald-100 text-emerald-900'}`}>
                         {mat.type}
                       </span>
                     </button>
@@ -1113,7 +1113,7 @@ export const DynamicMissionEngine: React.FC = () => {
 
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
-                    🎉 Aha Discovery! Copper conducts electricity to power the bulb, while PVC Plastic blocks electricity to protect our fingers from shocks!
+                    🎉 Aha Discovery! Copper and Steel metals conduct electricity to light the bulb, while Synthetic Plastic and Natural Rubber block electricity to keep our hands safe from shocks!
                   </div>
                 )}
               </div>

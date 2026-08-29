@@ -13,10 +13,10 @@ import { useFXStore } from '@/stores/fxStore';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 import {
   VectorCircuitWorkbench,
-  VectorCopperWireSpecimen,
-  VectorPVCCableSpecimen,
+  VectorCopperRodSpecimen,
   VectorSteelKeySpecimen,
-  VectorRubberEraserSpecimen,
+  VectorPlasticBrickSpecimen,
+  VectorRubberBandSpecimen,
 } from '@/components/interactive/VectorCircuitLab';
 
 // Real Macro Studio Photography for Hook & Microscope
@@ -44,7 +44,7 @@ type Phase = 'HOOK' | 'CIRCUIT_TEST' | 'MICROSCOPE' | 'APPLY';
 interface TestSpecimen {
   id: string;
   name: string;
-  category: 'Metal Conductor' | 'Plastic Insulator';
+  category: 'Metal Conductor' | 'Plastic Insulator' | 'Rubber Insulator';
   conducts: boolean;
   material: string;
   hint: string;
@@ -55,23 +55,13 @@ interface TestSpecimen {
 const SPECIMENS: TestSpecimen[] = [
   {
     id: 'copper',
-    name: 'Raw Copper Metal Wire',
+    name: 'Solid Copper Metal Rod',
     category: 'Metal Conductor',
     conducts: true,
     material: 'Red-orange metallic copper atoms with free valence electrons',
     hint: 'Electrons flow like water through copper metal!',
     scienceDetail: 'Copper is an exceptional electrical conductor with minimal electrical resistance.',
-    renderGraphic: () => <VectorCopperWireSpecimen />,
-  },
-  {
-    id: 'pvc-plastic',
-    name: 'Flexible PVC Plastic Sheath',
-    category: 'Plastic Insulator',
-    conducts: false,
-    material: 'Polyvinyl Chloride (PVC) synthetic polymer chain',
-    hint: 'Plastic locks all electrons tightly inside covalent chemical bonds!',
-    scienceDetail: 'PVC plastic is a high-grade electrical insulator that blocks up to 10,000 Volts.',
-    renderGraphic: () => <VectorPVCCableSpecimen />,
+    renderGraphic: () => <VectorCopperRodSpecimen />,
   },
   {
     id: 'steel',
@@ -84,14 +74,24 @@ const SPECIMENS: TestSpecimen[] = [
     renderGraphic: () => <VectorSteelKeySpecimen />,
   },
   {
-    id: 'rubber',
-    name: 'Vulcanized Rubber Eraser',
+    id: 'plastic',
+    name: 'Plastic Toy Building Brick',
     category: 'Plastic Insulator',
     conducts: false,
-    material: 'Cross-linked elastomer polymer matrix',
-    hint: 'Rubber tightly resists any electric current passing through!',
-    scienceDetail: 'Rubber stops electron transfer completely, making it ideal for electrician safety gloves.',
-    renderGraphic: () => <VectorRubberEraserSpecimen />,
+    material: 'Molded synthetic polymer plastic with tightly locked covalent bonds',
+    hint: 'Plastic holds its electrons tightly, blocking any electrical current!',
+    scienceDetail: 'Synthetic plastic is a premier insulator used for plugs, switches, and appliance casings.',
+    renderGraphic: () => <VectorPlasticBrickSpecimen />,
+  },
+  {
+    id: 'rubber',
+    name: 'Flexible Rubber Band',
+    category: 'Rubber Insulator',
+    conducts: false,
+    material: 'Natural cross-linked rubber elastomer polymer',
+    hint: 'Rubber stops electron transfer completely, preventing dangerous shocks!',
+    scienceDetail: 'Rubber stops electric flow 100%, which is why electrician gloves are made of thick rubber.',
+    renderGraphic: () => <VectorRubberBandSpecimen />,
   },
 ];
 

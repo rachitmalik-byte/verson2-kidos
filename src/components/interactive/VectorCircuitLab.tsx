@@ -7,61 +7,60 @@ import { motion } from 'framer-motion';
 export const VectorBattery12V: React.FC<{ isFlowing: boolean }> = ({ isFlowing }) => {
   return (
     <div className="flex flex-col items-center select-none">
-      <svg width="100" height="120" viewBox="0 0 100 120" className="drop-shadow-lg">
+      <svg width="105" height="125" viewBox="0 0 105 125" className="drop-shadow-md">
         <defs>
-          <linearGradient id="batteryBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#d97706" />
-            <stop offset="50%" stopColor="#b45309" />
-            <stop offset="100%" stopColor="#78350f" />
+          <linearGradient id="batteryChassisGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#f59e0b" />
+            <stop offset="60%" stopColor="#d97706" />
+            <stop offset="100%" stopColor="#b45309" />
           </linearGradient>
-          <linearGradient id="metalTerminalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#f8fafc" />
-            <stop offset="50%" stopColor="#94a3b8" />
-            <stop offset="100%" stopColor="#475569" />
+          <linearGradient id="metalPinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="50%" stopColor="#cbd5e1" />
+            <stop offset="100%" stopColor="#64748b" />
           </linearGradient>
         </defs>
 
-        {/* Terminals */}
         {/* Positive Red Terminal (+) */}
-        <rect x="18" y="10" width="16" height="12" rx="3" fill="#ef4444" stroke="#991b1b" strokeWidth="2" />
-        <rect x="23" y="4" width="6" height="7" rx="2" fill="url(#metalTerminalGrad)" />
-        <text x="26" y="20" fill="#ffffff" fontSize="10" fontWeight="900" textAnchor="middle">+</text>
+        <rect x="20" y="8" width="18" height="14" rx="3" fill="#ef4444" stroke="#b91c1c" strokeWidth="2" />
+        <rect x="26" y="2" width="6" height="8" rx="2" fill="url(#metalPinGrad)" />
+        <text x="29" y="19" fill="#ffffff" fontSize="11" fontWeight="900" textAnchor="middle">+</text>
 
         {/* Negative Black Terminal (-) */}
-        <rect x="66" y="10" width="16" height="12" rx="3" fill="#1e293b" stroke="#0f172a" strokeWidth="2" />
-        <rect x="71" y="4" width="6" height="7" rx="2" fill="url(#metalTerminalGrad)" />
-        <text x="74" y="19" fill="#ffffff" fontSize="11" fontWeight="900" textAnchor="middle">-</text>
+        <rect x="68" y="8" width="18" height="14" rx="3" fill="#334155" stroke="#1e293b" strokeWidth="2" />
+        <rect x="74" y="2" width="6" height="8" rx="2" fill="url(#metalPinGrad)" />
+        <text x="77" y="18" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle">-</text>
 
-        {/* Battery Main Body */}
-        <rect x="8" y="22" width="84" height="92" rx="14" fill="url(#batteryBodyGrad)" stroke="#f59e0b" strokeWidth="2.5" />
-        <rect x="14" y="28" width="72" height="80" rx="10" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+        {/* Main Battery Casing */}
+        <rect x="8" y="22" width="90" height="96" rx="16" fill="url(#batteryChassisGrad)" stroke="#78350f" strokeWidth="2.5" />
+        <rect x="14" y="28" width="78" height="84" rx="12" fill="#0f172a" stroke="#1e293b" strokeWidth="2" />
 
-        {/* Voltage Label */}
-        <rect x="22" y="36" width="56" height="24" rx="6" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" />
-        <text x="50" y="52" fill="#fbbf24" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+        {/* 12V Label Badge */}
+        <rect x="22" y="36" width="62" height="26" rx="8" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" />
+        <text x="53" y="54" fill="#fbbf24" fontSize="14" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
           12V DC
         </text>
 
-        {/* Power Dial Indicator */}
-        <circle cx="50" cy="84" r="16" fill="#020617" stroke="#475569" strokeWidth="1.5" />
-        <path d="M 40 88 A 12 12 0 0 1 60 88" fill="none" stroke="#64748b" strokeWidth="2" strokeDasharray="2,2" />
+        {/* Analog Voltage Dial */}
+        <circle cx="53" cy="86" r="16" fill="#020617" stroke="#475569" strokeWidth="1.5" />
+        <path d="M 43 90 A 12 12 0 0 1 63 90" fill="none" stroke="#64748b" strokeWidth="2" strokeDasharray="2,2" />
         
-        {/* Needle */}
+        {/* Voltage Needle Indicator */}
         <motion.line
-          x1="50"
-          y1="84"
-          x2={isFlowing ? "59" : "44"}
-          y2={isFlowing ? "74" : "78"}
+          x1="53"
+          y1="86"
+          x2={isFlowing ? "62" : "47"}
+          y2={isFlowing ? "76" : "80"}
           stroke={isFlowing ? "#22c55e" : "#ef4444"}
-          strokeWidth="2.5"
+          strokeWidth="3"
           strokeLinecap="round"
-          animate={{ rotate: isFlowing ? [0, 4, -3, 0] : 0 }}
-          transition={{ repeat: Infinity, duration: 0.8 }}
+          animate={{ rotate: isFlowing ? [0, 5, -3, 0] : 0 }}
+          transition={{ repeat: Infinity, duration: 0.7 }}
         />
-        <circle cx="50" cy="84" r="3" fill="#f59e0b" />
+        <circle cx="53" cy="86" r="3.5" fill="#f59e0b" />
       </svg>
-      <span className="text-[11px] font-black text-amber-400 mt-1 uppercase tracking-wider">
-        Power Battery
+      <span className="text-xs font-black text-slate-800 mt-1 uppercase tracking-wide">
+        Power Battery 🔋
       </span>
     </div>
   );
@@ -73,70 +72,71 @@ export const VectorBattery12V: React.FC<{ isFlowing: boolean }> = ({ isFlowing }
 export const VectorEdisonBulb: React.FC<{ isLit: boolean }> = ({ isLit }) => {
   return (
     <div className="flex flex-col items-center select-none relative">
-      {/* Radiant Glow Bloom Halo */}
+      {/* Radiant Golden Glow Bloom */}
       {isLit && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: [0.7, 1, 0.8], scale: [1, 1.15, 1] }}
-          transition={{ repeat: Infinity, duration: 1.2 }}
-          className="absolute -top-6 -left-6 w-36 h-36 bg-amber-400/40 rounded-full blur-xl pointer-events-none"
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.18, 1] }}
+          transition={{ repeat: Infinity, duration: 1.1 }}
+          className="absolute -top-8 -left-8 w-44 h-44 bg-amber-400/50 rounded-full blur-2xl pointer-events-none"
         />
       )}
 
-      <svg width="100" height="120" viewBox="0 0 100 120" className="drop-shadow-lg relative z-10">
+      <svg width="105" height="125" viewBox="0 0 105 125" className="drop-shadow-md relative z-10">
         <defs>
-          <radialGradient id="bulbGlassLit" cx="50%" cy="40%" r="50%">
+          <radialGradient id="bulbLitGrad" cx="50%" cy="40%" r="50%">
             <stop offset="0%" stopColor="#ffffff" />
             <stop offset="35%" stopColor="#fef08a" />
             <stop offset="70%" stopColor="#f59e0b" />
             <stop offset="100%" stopColor="#d97706" />
           </radialGradient>
-          <radialGradient id="bulbGlassOff" cx="50%" cy="40%" r="50%">
-            <stop offset="0%" stopColor="#334155" stopOpacity="0.4" />
-            <stop offset="70%" stopColor="#1e293b" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#0f172a" />
+          <radialGradient id="bulbOffGrad" cx="50%" cy="40%" r="50%">
+            <stop offset="0%" stopColor="#f1f5f9" stopOpacity="0.8" />
+            <stop offset="60%" stopColor="#cbd5e1" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#94a3b8" />
           </radialGradient>
         </defs>
 
-        {/* Bulb Screw Base */}
-        <rect x="38" y="86" width="24" height="6" rx="2" fill="#94a3b8" stroke="#475569" strokeWidth="1" />
-        <rect x="39" y="93" width="22" height="5" rx="2" fill="#64748b" stroke="#334155" strokeWidth="1" />
-        <rect x="40" y="99" width="20" height="5" rx="2" fill="#94a3b8" stroke="#475569" strokeWidth="1" />
-        <path d="M 43 105 L 57 105 L 54 112 L 46 112 Z" fill="#1e293b" />
+        {/* Screw Base Collar */}
+        <rect x="40" y="90" width="26" height="6" rx="2" fill="#cbd5e1" stroke="#64748b" strokeWidth="1" />
+        <rect x="42" y="97" width="22" height="6" rx="2" fill="#94a3b8" stroke="#475569" strokeWidth="1" />
+        <rect x="44" y="104" width="18" height="6" rx="2" fill="#cbd5e1" stroke="#64748b" strokeWidth="1" />
+        <path d="M 46 110 L 60 110 L 57 118 L 49 118 Z" fill="#334155" />
 
-        {/* Glass Dome Envelope */}
+        {/* Glass Bulb Dome */}
         <path
-          d="M 50 14 C 30 14, 20 28, 20 44 C 20 58, 32 68, 38 86 L 62 86 C 68 68, 80 58, 80 44 C 80 28, 70 14, 50 14 Z"
-          fill={isLit ? "url(#bulbGlassLit)" : "url(#bulbGlassOff)"}
-          stroke={isLit ? "#fef08a" : "#475569"}
-          strokeWidth="2.5"
+          d="M 53 14 C 31 14, 20 28, 20 46 C 20 62, 34 72, 40 90 L 66 90 C 72 72, 86 62, 86 46 C 86 28, 75 14, 53 14 Z"
+          fill={isLit ? "url(#bulbLitGrad)" : "url(#bulbOffGrad)"}
+          stroke={isLit ? "#fef08a" : "#64748b"}
+          strokeWidth="3"
         />
 
-        {/* Filament Supports & Coils */}
-        <line x1="43" y1="84" x2="43" y2="48" stroke={isLit ? "#ffffff" : "#64748b"} strokeWidth="1.5" />
-        <line x1="57" y1="84" x2="57" y2="48" stroke={isLit ? "#ffffff" : "#64748b"} strokeWidth="1.5" />
+        {/* Filament Lead Wires */}
+        <line x1="45" y1="88" x2="45" y2="50" stroke={isLit ? "#ffffff" : "#475569"} strokeWidth="2" />
+        <line x1="61" y1="88" x2="61" y2="50" stroke={isLit ? "#ffffff" : "#475569"} strokeWidth="2" />
         
-        {/* Tungsten Coiled Loop */}
+        {/* Glowing Tungsten Coil */}
         <path
-          d="M 43 48 Q 50 36 57 48"
+          d="M 45 50 Q 53 36 61 50"
           fill="none"
           stroke={isLit ? "#ffffff" : "#475569"}
-          strokeWidth={isLit ? "3.5" : "2"}
+          strokeWidth={isLit ? "4" : "2.5"}
           strokeLinecap="round"
         />
 
-        {/* Spark Rays when Lit */}
+        {/* Bright Spark Radiance */}
         {isLit && (
           <>
-            <line x1="50" y1="4" x2="50" y2="10" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="12" y1="20" x2="18" y2="24" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="88" y1="20" x2="82" y2="24" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="6" y1="44" x2="13" y2="44" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="94" y1="44" x2="87" y2="44" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="53" y1="4" x2="53" y2="10" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+            <line x1="12" y1="20" x2="18" y2="25" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+            <line x1="94" y1="20" x2="88" y2="25" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+            <line x1="6" y1="46" x2="14" y2="46" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+            <line x1="100" y1="46" x2="92" y2="46" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
           </>
         )}
       </svg>
-      <span className={`text-[11px] font-black mt-1 uppercase tracking-wider ${isLit ? 'text-amber-300' : 'text-slate-500'}`}>
+
+      <span className={`text-xs font-black mt-1 uppercase tracking-wide ${isLit ? 'text-amber-600' : 'text-slate-500'}`}>
         {isLit ? '⚡ LIGHTS UP! (ON)' : 'Dark (Current Blocked)'}
       </span>
     </div>
@@ -144,112 +144,123 @@ export const VectorEdisonBulb: React.FC<{ isLit: boolean }> = ({ isLit }) => {
 };
 
 /* ============================================================================
-   3. ⚡ 4 DEDICATED CRYSTAL-CLEAR SPECIMEN VECTOR RENDERERS
+   3. 🧪 4 CLEAN, UNMISTAKABLE SPECIMEN VECTOR RENDERERS
    ============================================================================ */
 
-export const VectorCopperWireSpecimen: React.FC = () => (
-  <svg width="140" height="70" viewBox="0 0 140 70" className="drop-shadow-md">
+/* 1. ⚡ Raw Solid Copper Metal Wire / Rod */
+export const VectorCopperRodSpecimen: React.FC = () => (
+  <svg width="150" height="75" viewBox="0 0 150 75" className="drop-shadow-sm">
     <defs>
-      <linearGradient id="copperStrandGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <linearGradient id="copperRodBody" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" stopColor="#fba76a" />
-        <stop offset="30%" stopColor="#ea580c" />
+        <stop offset="35%" stopColor="#ea580c" />
         <stop offset="70%" stopColor="#c2410c" />
         <stop offset="100%" stopColor="#7c2d12" />
       </linearGradient>
-      <linearGradient id="copperShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <linearGradient id="copperHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%" stopColor="#ea580c" />
-        <stop offset="50%" stopColor="#fed7aa" />
+        <stop offset="50%" stopColor="#ffedd5" />
         <stop offset="100%" stopColor="#c2410c" />
       </linearGradient>
     </defs>
-    {/* Copper Wire Twisted Strands */}
-    <rect x="15" y="24" width="110" height="22" rx="11" fill="url(#copperStrandGrad)" stroke="#7c2d12" strokeWidth="2" />
-    <path d="M 20 28 Q 70 32 120 28" fill="none" stroke="url(#copperShine)" strokeWidth="4" strokeLinecap="round" />
-    <path d="M 20 38 Q 70 42 120 38" fill="none" stroke="url(#copperShine)" strokeWidth="3" strokeLinecap="round" />
-    {/* Exposed Wire Fringe Tips */}
-    <line x1="12" y1="28" x2="20" y2="30" stroke="#ea580c" strokeWidth="2.5" />
-    <line x1="10" y1="35" x2="18" y2="35" stroke="#ea580c" strokeWidth="2.5" />
-    <line x1="12" y1="42" x2="20" y2="40" stroke="#ea580c" strokeWidth="2.5" />
-    <line x1="120" y1="30" x2="128" y2="28" stroke="#ea580c" strokeWidth="2.5" />
-    <line x1="122" y1="35" x2="130" y2="35" stroke="#ea580c" strokeWidth="2.5" />
-    <line x1="120" y1="40" x2="128" y2="42" stroke="#ea580c" strokeWidth="2.5" />
+    {/* Solid Copper Cylinder */}
+    <rect x="18" y="24" width="114" height="26" rx="13" fill="url(#copperRodBody)" stroke="#7c2d12" strokeWidth="2.5" />
+    <path d="M 24 30 Q 75 34 126 30" fill="none" stroke="url(#copperHighlight)" strokeWidth="4" strokeLinecap="round" />
+    <path d="M 24 40 Q 75 44 126 40" fill="none" stroke="url(#copperHighlight)" strokeWidth="2.5" strokeLinecap="round" />
+    {/* End Caps */}
+    <ellipse cx="18" cy="37" rx="6" ry="13" fill="#ea580c" stroke="#7c2d12" strokeWidth="2" />
+    <ellipse cx="132" cy="37" rx="6" ry="13" fill="#fba76a" stroke="#7c2d12" strokeWidth="2" />
   </svg>
 );
 
-export const VectorPVCCableSpecimen: React.FC = () => (
-  <svg width="140" height="70" viewBox="0 0 140 70" className="drop-shadow-md">
-    <defs>
-      <linearGradient id="blackJacketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#475569" />
-        <stop offset="50%" stopColor="#1e293b" />
-        <stop offset="100%" stopColor="#0f172a" />
-      </linearGradient>
-    </defs>
-    {/* Outer PVC Black Insulating Sheath */}
-    <rect x="25" y="16" width="60" height="38" rx="8" fill="url(#blackJacketGrad)" stroke="#64748b" strokeWidth="2" />
-    <text x="55" y="38" fill="#94a3b8" fontSize="9" fontWeight="900" textAnchor="middle">PVC JACKET</text>
-
-    {/* Inner Insulated Wires Protruding (Blue, Brown, Striped) */}
-    <rect x="85" y="19" width="30" height="10" rx="3" fill="#2563eb" stroke="#1d4ed8" strokeWidth="1" />
-    <rect x="85" y="31" width="30" height="10" rx="3" fill="#d97706" stroke="#b45309" strokeWidth="1" />
-    <rect x="85" y="43" width="30" height="10" rx="3" fill="#16a34a" stroke="#15803d" strokeWidth="1" />
-
-    {/* Copper wire tips */}
-    <rect x="115" y="21" width="12" height="6" rx="2" fill="#ea580c" stroke="#c2410c" strokeWidth="1" />
-    <rect x="115" y="33" width="12" height="6" rx="2" fill="#ea580c" stroke="#c2410c" strokeWidth="1" />
-    <rect x="115" y="45" width="12" height="6" rx="2" fill="#ea580c" stroke="#c2410c" strokeWidth="1" />
-  </svg>
-);
-
+/* 2. ⚡ Polished Steel Metal Key */
 export const VectorSteelKeySpecimen: React.FC = () => (
-  <svg width="140" height="70" viewBox="0 0 140 70" className="drop-shadow-md">
+  <svg width="150" height="75" viewBox="0 0 150 75" className="drop-shadow-sm">
     <defs>
-      <linearGradient id="silverKeyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#f8fafc" />
-        <stop offset="30%" stopColor="#cbd5e1" />
+      <linearGradient id="shinySilverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#ffffff" />
+        <stop offset="30%" stopColor="#e2e8f0" />
         <stop offset="60%" stopColor="#94a3b8" />
-        <stop offset="100%" stopColor="#64748b" />
+        <stop offset="100%" stopColor="#475569" />
       </linearGradient>
     </defs>
     {/* Key Bow Head */}
-    <circle cx="35" cy="35" r="22" fill="url(#silverKeyGrad)" stroke="#475569" strokeWidth="2.5" />
-    <circle cx="35" cy="35" r="9" fill="#0f172a" stroke="#334155" strokeWidth="2" />
-    {/* Key Shaft / Blade */}
-    <rect x="52" y="30" width="70" height="10" rx="2" fill="url(#silverKeyGrad)" stroke="#475569" strokeWidth="2" />
-    {/* Key Bitting Notches */}
-    <path d="M 85 40 L 90 47 L 96 40 L 102 48 L 108 40 L 114 49 L 122 40 Z" fill="url(#silverKeyGrad)" stroke="#475569" strokeWidth="1.5" />
+    <circle cx="38" cy="37" r="22" fill="url(#shinySilverGrad)" stroke="#334155" strokeWidth="2.5" />
+    <circle cx="38" cy="37" r="9" fill="#f8fafc" stroke="#475569" strokeWidth="2" />
+    {/* Key Blade / Shaft */}
+    <rect x="56" y="32" width="76" height="11" rx="2" fill="url(#shinySilverGrad)" stroke="#334155" strokeWidth="2" />
+    {/* Key Notches (Teeth) */}
+    <path d="M 88 43 L 94 51 L 100 43 L 106 52 L 112 43 L 118 53 L 128 43 Z" fill="url(#shinySilverGrad)" stroke="#334155" strokeWidth="1.5" />
   </svg>
 );
 
-export const VectorRubberEraserSpecimen: React.FC = () => (
-  <svg width="140" height="70" viewBox="0 0 140 70" className="drop-shadow-md">
+/* 3. 🛡️ 100% Synthetic Plastic Toy Building Brick (Lego style) */
+export const VectorPlasticBrickSpecimen: React.FC = () => (
+  <svg width="150" height="75" viewBox="0 0 150 75" className="drop-shadow-sm">
     <defs>
-      <linearGradient id="pinkRubberGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#fda4af" />
-        <stop offset="50%" stopColor="#f43f5e" />
-        <stop offset="100%" stopColor="#be123c" />
+      <linearGradient id="plasticBrickGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#38bdf8" />
+        <stop offset="40%" stopColor="#0284c7" />
+        <stop offset="100%" stopColor="#0369a1" />
       </linearGradient>
-      <linearGradient id="blueRubberGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#93c5fd" />
-        <stop offset="50%" stopColor="#3b82f6" />
-        <stop offset="100%" stopColor="#1d4ed8" />
+      <linearGradient id="plasticStudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#7dd3fc" />
+        <stop offset="100%" stopColor="#0284c7" />
       </linearGradient>
     </defs>
-    {/* 3D Eraser Block */}
-    {/* Pink Half */}
-    <path d="M 18 20 L 70 20 L 70 52 L 18 52 Z" fill="url(#pinkRubberGrad)" stroke="#9f1239" strokeWidth="2" />
-    {/* Blue Half */}
-    <path d="M 70 20 L 122 20 L 122 52 L 70 52 Z" fill="url(#blueRubberGrad)" stroke="#1e40af" strokeWidth="2" />
-    {/* Stamp */}
-    <rect x="36" y="28" width="68" height="16" rx="4" fill="#ffffff" fillOpacity="0.85" />
-    <text x="70" y="40" fill="#0f172a" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
-      100% RUBBER
+    {/* 4 Cylindrical Plastic Studs on Top */}
+    <rect x="30" y="16" width="18" height="10" rx="3" fill="url(#plasticStudGrad)" stroke="#0369a1" strokeWidth="1.5" />
+    <rect x="54" y="16" width="18" height="10" rx="3" fill="url(#plasticStudGrad)" stroke="#0369a1" strokeWidth="1.5" />
+    <rect x="78" y="16" width="18" height="10" rx="3" fill="url(#plasticStudGrad)" stroke="#0369a1" strokeWidth="1.5" />
+    <rect x="102" y="16" width="18" height="10" rx="3" fill="url(#plasticStudGrad)" stroke="#0369a1" strokeWidth="1.5" />
+
+    {/* Main Rectangular Plastic Body */}
+    <rect x="22" y="24" width="106" height="34" rx="6" fill="url(#plasticBrickGrad)" stroke="#075985" strokeWidth="2.5" />
+    {/* Glossy Plastic Highlight Reflection */}
+    <path d="M 26 28 L 124 28" stroke="#bae6fd" strokeWidth="3" strokeLinecap="round" />
+    <text x="75" y="47" fill="#ffffff" fontSize="10" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+      PLASTIC TOY
+    </text>
+  </svg>
+);
+
+/* 4. 🛡️ 100% Flexible Natural Rubber Band Loop */
+export const VectorRubberBandSpecimen: React.FC = () => (
+  <svg width="150" height="75" viewBox="0 0 150 75" className="drop-shadow-sm">
+    <defs>
+      <linearGradient id="rubberBandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fef08a" />
+        <stop offset="40%" stopColor="#eab308" />
+        <stop offset="80%" stopColor="#ca8a04" />
+        <stop offset="100%" stopColor="#a16207" />
+      </linearGradient>
+    </defs>
+    {/* Outer Elastic Loop */}
+    <path
+      d="M 28 37 C 28 20, 122 20, 122 37 C 122 54, 28 54, 28 37 Z"
+      fill="none"
+      stroke="url(#rubberBandGrad)"
+      strokeWidth="14"
+      strokeLinecap="round"
+    />
+    {/* Inner Rubber Crease / Depth */}
+    <path
+      d="M 36 37 C 36 26, 114 26, 114 37 C 114 48, 36 48, 36 37 Z"
+      fill="none"
+      stroke="#713f12"
+      strokeWidth="2"
+      opacity="0.4"
+    />
+    {/* Rubber Band Label Tag */}
+    <rect x="52" y="30" width="46" height="14" rx="4" fill="#fef9c3" stroke="#ca8a04" strokeWidth="1.5" />
+    <text x="75" y="41" fill="#854d0e" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+      RUBBER BAND
     </text>
   </svg>
 );
 
 /* ============================================================================
-   4. 🔌 COMPLETE INTERACTIVE 3D CIRCUIT WORKBENCH
+   4. 🔌 PREMIUM BRIGHT LABORATORY CIRCUIT WORKBENCH
    ============================================================================ */
 export const VectorCircuitWorkbench: React.FC<{
   specimenId: string;
@@ -262,98 +273,113 @@ export const VectorCircuitWorkbench: React.FC<{
   const renderSpecimenGraphic = () => {
     switch (specimenId) {
       case 'copper':
-        return <VectorCopperWireSpecimen />;
-      case 'pvc-plastic':
-        return <VectorPVCCableSpecimen />;
+        return <VectorCopperRodSpecimen />;
       case 'steel':
         return <VectorSteelKeySpecimen />;
+      case 'plastic':
+        return <VectorPlasticBrickSpecimen />;
       case 'rubber':
-        return <VectorRubberEraserSpecimen />;
+        return <VectorRubberBandSpecimen />;
       default:
-        return <VectorCopperWireSpecimen />;
+        return <VectorCopperRodSpecimen />;
     }
   };
 
   return (
-    <div className="w-full max-w-3xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 p-6 md:p-8 rounded-3xl border-4 border-slate-700 shadow-2xl flex flex-col items-center relative overflow-hidden text-white">
-      {/* Background Circuit Grid Texture */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:24px_24px] opacity-30 pointer-events-none" />
+    <div className="w-full bg-gradient-to-b from-slate-50 via-white to-amber-50/50 p-6 sm:p-8 rounded-3xl border-4 border-amber-300 shadow-xl flex flex-col items-center relative overflow-hidden">
+      {/* Workbench Header Status Bar */}
+      <div className="w-full flex items-center justify-between gap-2 mb-4 pb-3 border-b-2 border-slate-200 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse" />
+          <span className="text-xs font-black uppercase text-slate-800 tracking-wider">
+            12V DC Science Circuit Workbench
+          </span>
+        </div>
+        <span
+          className={`text-xs font-black px-3.5 py-1 rounded-full shadow-xs ${
+            isCircuitClosed
+              ? 'bg-amber-400 text-slate-950 border border-amber-500'
+              : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+          }`}
+        >
+          {isCircuitClosed ? '⚡ CLOSED CIRCUIT (CURRENT FLOWS)' : '🛡️ OPEN CIRCUIT (CURRENT BLOCKED)'}
+        </span>
+      </div>
 
-      {/* Main Bench Layout: Battery ➔ Alligator Clamp 1 ➔ Specimen ➔ Alligator Clamp 2 ➔ Lightbulb */}
-      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 relative z-10 my-2">
+      {/* Main Bench Layout: Battery ➔ Wire 1 ➔ Crocodile Clips & Specimen ➔ Wire 2 ➔ Lightbulb */}
+      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 relative my-2">
         {/* 1. 12V Battery Power Source */}
         <VectorBattery12V isFlowing={isCircuitClosed} />
 
-        {/* 2. Left Connecting Wire with Flowing Electron Particles */}
+        {/* 2. Left Connecting Wire (Red Cable) with Animated Flowing Electron Dots */}
         <div className="flex-1 w-full md:w-auto flex flex-col items-center justify-center">
-          <div className="w-full h-3 bg-slate-800 rounded-full border border-slate-600 relative overflow-hidden shadow-inner">
+          <div className="w-full h-4 bg-red-600 rounded-full border-2 border-red-800 relative overflow-hidden shadow-md">
             {isCircuitClosed && (
               <motion.div
                 animate={{ x: ['-100%', '100%'] }}
                 transition={{ repeat: Infinity, duration: 0.65, ease: 'linear' }}
-                className="w-16 h-full bg-gradient-to-r from-transparent via-cyan-400 to-amber-300 rounded-full shadow-[0_0_15px_#38bdf8]"
+                className="w-16 h-full bg-gradient-to-r from-transparent via-yellow-200 to-white rounded-full shadow-[0_0_15px_#fef08a]"
               />
             )}
           </div>
-          <span className="text-[9px] font-bold text-slate-400 mt-1">
-            {isCircuitClosed ? '⚡ Electrons Streaming' : 'No Current Flow'}
+          <span className="text-[10px] font-black text-red-700 mt-1 uppercase">
+            {isCircuitClosed ? '⚡ Live Current (+)' : 'Red Positive Lead'}
           </span>
         </div>
 
-        {/* 3. Center Test Gap Clamped by Alligator Clips */}
-        <div className="flex flex-col items-center p-4 rounded-3xl bg-slate-950/90 border-2 border-amber-400/80 shadow-2xl relative min-w-[220px]">
-          {/* Top Clamp Label */}
+        {/* 3. Center Test Gap Clamped by Crocodile Clips */}
+        <div className="flex flex-col items-center p-4 sm:p-5 rounded-3xl bg-white border-3 border-amber-400 shadow-xl relative min-w-[240px]">
+          {/* Clamp Header Tag */}
           <div className="flex items-center gap-1.5 mb-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            <span className="text-[10px] font-black uppercase text-amber-300 tracking-wider">
+            <span className="text-[11px] font-black uppercase text-amber-900 bg-amber-100 px-3 py-0.5 rounded-full">
               [ Alligator Clamps Test Gap ]
             </span>
           </div>
 
           {/* Left & Right Chrome Alligator Clamps Graphic */}
-          <div className="flex items-center justify-center gap-1 relative my-1">
-            {/* Left Alligator Jaw */}
-            <div className="w-4 h-8 bg-gradient-to-r from-slate-400 to-slate-200 rounded-l-md border border-slate-600 shadow-md shrink-0 flex items-center justify-center text-[10px] font-black text-slate-800">
+          <div className="flex items-center justify-center gap-1.5 relative my-2">
+            {/* Left Crocodile Jaw */}
+            <div className="w-5 h-9 bg-gradient-to-r from-slate-400 to-slate-200 rounded-l-lg border-2 border-slate-600 shadow-md shrink-0 flex items-center justify-center text-xs font-black text-slate-800">
               ◄
             </div>
 
-            {/* The Specimen Graphic */}
-            <div className="p-2 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center min-w-[150px] min-h-[75px]">
+            {/* The Specimen Graphic on Clean White Pedestal */}
+            <div className="p-2 bg-slate-50 rounded-2xl border-2 border-slate-200 flex items-center justify-center min-w-[155px] min-h-[80px] shadow-inner">
               {renderSpecimenGraphic()}
             </div>
 
-            {/* Right Alligator Jaw */}
-            <div className="w-4 h-8 bg-gradient-to-l from-slate-400 to-slate-200 rounded-r-md border border-slate-600 shadow-md shrink-0 flex items-center justify-center text-[10px] font-black text-slate-800">
+            {/* Right Crocodile Jaw */}
+            <div className="w-5 h-9 bg-gradient-to-l from-slate-400 to-slate-200 rounded-r-lg border-2 border-slate-600 shadow-md shrink-0 flex items-center justify-center text-xs font-black text-slate-800">
               ►
             </div>
           </div>
 
           {/* Specimen Name & Status */}
-          <span className="font-black text-sm text-white mt-2">{specimenName}</span>
+          <span className="font-black text-sm text-slate-900 mt-1">{specimenName}</span>
           <span
-            className={`text-[10px] font-black px-3 py-1 rounded-full mt-1 shadow-sm ${
+            className={`text-[10px] font-black px-3.5 py-1 rounded-full mt-1.5 shadow-xs ${
               conducts
-                ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-300 animate-pulse'
-                : 'bg-emerald-500 text-slate-950 ring-2 ring-emerald-300'
+                ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-300'
+                : 'bg-emerald-500 text-white ring-2 ring-emerald-300'
             }`}
           >
-            {conducts ? '⚡ CONDUCTOR (Circuit Closed)' : '🛡️ INSULATOR (Circuit Blocked)'}
+            {conducts ? '⚡ CONDUCTOR (Electricity Flows)' : '🛡️ INSULATOR (Blocks Electricity)'}
           </span>
         </div>
 
-        {/* 4. Right Connecting Wire with Flowing Electron Particles */}
+        {/* 4. Right Connecting Wire (Black Cable) with Animated Flowing Electron Dots */}
         <div className="flex-1 w-full md:w-auto flex flex-col items-center justify-center">
-          <div className="w-full h-3 bg-slate-800 rounded-full border border-slate-600 relative overflow-hidden shadow-inner">
+          <div className="w-full h-4 bg-slate-800 rounded-full border-2 border-slate-950 relative overflow-hidden shadow-md">
             {isCircuitClosed && (
               <motion.div
                 animate={{ x: ['-100%', '100%'] }}
                 transition={{ repeat: Infinity, duration: 0.65, ease: 'linear' }}
-                className="w-16 h-full bg-gradient-to-r from-transparent via-cyan-400 to-amber-300 rounded-full shadow-[0_0_15px_#38bdf8]"
+                className="w-16 h-full bg-gradient-to-r from-transparent via-cyan-300 to-white rounded-full shadow-[0_0_15px_#38bdf8]"
               />
             )}
           </div>
-          <span className="text-[9px] font-bold text-slate-400 mt-1">
-            {isCircuitClosed ? '⚡ Closed Circuit' : 'Open / Broken Circuit'}
+          <span className="text-[10px] font-black text-slate-700 mt-1 uppercase">
+            {isCircuitClosed ? '⚡ Returning Current (-)' : 'Black Return Lead'}
           </span>
         </div>
 
