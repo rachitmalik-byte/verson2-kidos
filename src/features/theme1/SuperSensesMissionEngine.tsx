@@ -8,6 +8,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
+import { THEME_1_CHAPTERS, Theme1Chapter } from '@/data/theme1Missions';
 import {
   SpecimenAntAntennaSensilla,
   SpecimenSnakeHollowFang,
@@ -450,7 +451,7 @@ export function SuperSensesMissionEngine() {
 
                 <div className="w-full max-w-xl">
                   <SpeechReadAloudCoach
-                    targetSentence={chapter.sentenceForSpeechCoach}
+                    sentence={chapter.sentenceForSpeechCoach}
                     onComplete={() => {
                       sounds.fanfare();
                       setSpeechDone(true);

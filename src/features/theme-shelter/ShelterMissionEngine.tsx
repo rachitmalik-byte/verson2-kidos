@@ -481,7 +481,7 @@ export function ShelterMissionEngine() {
 
                 <div className="w-full max-w-xl">
                   <SpeechReadAloudCoach
-                    targetSentence={chapter.sentenceForSpeechCoach}
+                    sentence={chapter.sentenceForSpeechCoach}
                     onComplete={() => {
                       sounds.fanfare();
                       setSpeechDone(true);
