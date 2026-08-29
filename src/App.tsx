@@ -14,6 +14,8 @@ import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
 import { Theme1Hub } from '@/features/theme1/Theme1Hub';
 import { SuperSensesMissionEngine } from '@/features/theme1/SuperSensesMissionEngine';
+import { ThemeShelterHub } from '@/features/theme-shelter/ThemeShelterHub';
+import { ShelterMissionEngine } from '@/features/theme-shelter/ShelterMissionEngine';
 import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
 import { MysteryObjectQuiz } from '@/features/mystery-lab/MysteryObjectQuiz';
 import { DevDrawer } from '@/components/dev/DevDrawer';
@@ -42,6 +44,10 @@ export function App() {
           {/* Theme 1: Super Senses & Living World (4 Chapters) */}
           <Route path="/theme/1/hub" element={<Theme1Hub />} />
           <Route path="/theme/1/chapter/:chapterNum" element={<SuperSensesMissionEngine />} />
+
+          {/* Theme 3 & 5: Shelter, Mountains & Earth (5 Chapters) */}
+          <Route path="/theme/shelter/hub" element={<ThemeShelterHub />} />
+          <Route path="/theme/shelter/chapter/:chapterNum" element={<ShelterMissionEngine />} />
 
           {/* Chapter Hub, Discovery Journal & Mystery Lab */}
           <Route path="/chapter-hub" element={<ChapterHub />} />
