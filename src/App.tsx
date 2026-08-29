@@ -12,6 +12,8 @@ import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/Nylon
 import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafetyMission';
 import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
+import { Theme1Hub } from '@/features/theme1/Theme1Hub';
+import { SuperSensesMissionEngine } from '@/features/theme1/SuperSensesMissionEngine';
 import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
 import { MysteryObjectQuiz } from '@/features/mystery-lab/MysteryObjectQuiz';
 import { DevDrawer } from '@/components/dev/DevDrawer';
@@ -36,6 +38,10 @@ export function App() {
           <Route path="/parent/setup" element={<ParentSetup />} />
           <Route path="/parent/pin" element={<ParentPinGate />} />
           <Route path="/parent/dashboard" element={<ParentDashboard />} />
+
+          {/* Theme 1: Super Senses & Living World (4 Chapters) */}
+          <Route path="/theme/1/hub" element={<Theme1Hub />} />
+          <Route path="/theme/1/chapter/:chapterNum" element={<SuperSensesMissionEngine />} />
 
           {/* Chapter Hub, Discovery Journal & Mystery Lab */}
           <Route path="/chapter-hub" element={<ChapterHub />} />
