@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Camera,
@@ -177,11 +178,32 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     startCamera();
   };
 
-  if (!isOpen) return null;
+  if (typeof document === 'undefined') return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-      <div className="bg-white w-full max-w-2xl rounded-3xl md:rounded-[36px] border-4 border-amber-400 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              sounds.pop();
+              voiceAssistant.stop();
+              stopCamera();
+              onClose();
+            }}
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: 'spring', damping: 24, stiffness: 300 }}
+            className="relative z-10 bg-white w-full max-w-2xl rounded-3xl md:rounded-[36px] border-4 border-amber-400 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          >
         {/* Header */}
         <div className="p-4 sm:p-5 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 flex items-center justify-between text-slate-950 border-b-2 border-amber-500">
           <div className="flex items-center gap-2.5">
@@ -426,7 +448,10 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
             </motion.div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
-  );
+  )}
+</AnimatePresence>,
+document.body
+);
 };
