@@ -46,6 +46,7 @@ import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy
 
 import { InteractiveChapterVideoLab } from './InteractiveChapterVideoLab';
 import { IntegratedGuidebook } from './IntegratedGuidebook';
+import { DailyCuriosityQuest } from '@/components/gamification/DailyCuriosityQuest';
 
 const missionThumbnails: Record<string, string> = {
   'mission-01': raincoatWaterproofImg,
@@ -253,6 +254,9 @@ export function ChapterHub() {
 
         {activeTab === 'missions' && (
           <>
+            {/* ── Daily Curiosity Quest Riddle Widget ── */}
+            <DailyCuriosityQuest />
+
             {/* ── Chapters Roadmap Preview ── */}
             <div id="chapter-modules-grid" className="space-y-3">
               <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">
