@@ -181,7 +181,6 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     setQuizAnswered(false);
     setSelectedOption(null);
     sounds.sparkle();
-    voiceAssistant.speak('Scanning object with Gemini AI Vision... Let me identify the physical material!');
 
     try {
       const compressedData = await compressImageForVision(imageInput);
