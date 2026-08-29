@@ -209,39 +209,38 @@ export const SpecimenBurdockVelcroHooks: React.FC<{ zoom: number }> = ({ zoom })
    THEME 3 & 5: SHELTER, MOUNTAINS & EARTH SPECIMENS (DYNAMIC REAL OPTICAL ZOOM)
    ============================================================================ */
 
+import pashminaMicroscopeImg from '@/assets/images/theme-shelter/pashmina_microscope_macro.jpg';
+
 /** Shelter Ch 1: Pashmina Micro-fiber (12µm) vs Human Hair (50µm) */
 export const SpecimenPashminaVsHumanHair: React.FC<{ zoom: number }> = ({ zoom }) => {
-  const viewBox = zoom === 100 ? '0 0 220 220' : zoom === 250 ? '30 30 160 160' : '65 45 90 90';
+  const scale = zoom === 100 ? 1 : zoom === 250 ? 1.5 : 2.2;
 
   return (
-    <svg width="220" height="220" viewBox={viewBox} className="w-full h-full transition-all duration-500 ease-out">
-      <circle cx="110" cy="110" r="105" fill="#090d16" />
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-full bg-slate-950">
+      <motion.img
+        src={pashminaMicroscopeImg}
+        alt="Real Optical Microscope View: Cashmere Pashmina fibers vs Human Hair"
+        animate={{ scale }}
+        transition={{ type: 'spring', damping: 15 }}
+        className="w-full h-full object-cover select-none"
+      />
 
-      {/* Left: Thick Human Hair (50µm) with coarse keratin cuticles */}
-      <g transform="translate(40, 20)">
-        <rect x="0" y="10" width="38" height="145" rx="6" fill="#334155" stroke="#64748b" strokeWidth="2" />
-        {[25, 45, 65, 85, 105, 125, 145].map((y, i) => (
-          <line key={i} x1="2" y1={y} x2="36" y2={y + 4} stroke="#94a3b8" strokeWidth={zoom === 500 ? 3 : 1.5} />
-        ))}
-        <text x="19" y="165" fill="#cbd5e1" fontSize="6.5" fontWeight="900" textAnchor="middle">HUMAN HAIR (50µm)</text>
-      </g>
+      {/* Crosshair & Measurement Reticle Overlay */}
+      <div className="absolute inset-0 pointer-events-none border-2 border-amber-400/40 rounded-full flex items-center justify-center">
+        <div className="w-full h-[1px] bg-amber-400/30 absolute" />
+        <div className="h-full w-[1px] bg-amber-400/30 absolute" />
+        <div className="w-32 h-32 rounded-full border border-amber-400/30 absolute" />
+      </div>
 
-      {/* Right: Ultra-Fine Pashmina Goat Fiber (12µm) - 6x Thinner! */}
-      <g transform="translate(140, 20)">
-        <rect x="5" y="10" width={zoom === 500 ? 12 : 6} height="145" rx="3" fill="#f59e0b" stroke="#fef08a" strokeWidth="1" />
-        {/* Trapped Insulating Air Pockets inside micro-core */}
-        {[30, 60, 90, 120, 140].map((y, i) => (
-          <circle key={i} cx={zoom === 500 ? 11 : 8} cy={y} r={zoom === 500 ? 3 : 1.5} fill="#ffffff" />
-        ))}
-        <text x="8" y="165" fill="#fbbf24" fontSize="6.5" fontWeight="900" textAnchor="middle">PASHMINA (12µm)</text>
-      </g>
-
-      {/* HUD Label */}
-      <rect x="25" y="185" width="170" height="20" rx="6" fill="#020617" fillOpacity="0.9" stroke="#f59e0b" strokeWidth="1" />
-      <text x="110" y="198" fill="#fbbf24" fontSize="8" fontWeight="900" textAnchor="middle">
-        {zoom === 100 ? '100x: FIBER WIDTH COMPARISON' : zoom === 250 ? '250x: KERATIN CUTICLES' : '500x: INSULATING MICRO-AIR POCKETS'}
-      </text>
-    </svg>
+      {/* Dynamic Measurement HUD Callout */}
+      <div className="absolute bottom-2 bg-slate-950/90 backdrop-blur-md px-3 py-1 rounded-xl border border-amber-400 text-[10px] font-black text-amber-200">
+        {zoom === 100
+          ? '100x: Left (12µm Pashmina) vs Right (50µm Hair)'
+          : zoom === 250
+          ? '250x: Keratin Cuticle Scales Visible'
+          : '500x: Ultra-Fine Thermal Micro-Core'}
+      </div>
+    </div>
   );
 };
 
