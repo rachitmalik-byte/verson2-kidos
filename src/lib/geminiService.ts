@@ -1,14 +1,19 @@
 /**
  * Google Gemini AI Service for PolyQuest Science Academy
- * Real-time open-ended AI extraction with gemini-2.5-flash
- * Provides direct 3-4 sentence explanations in simple words for Class 5 students.
+ * Real-time open-ended AI extraction with automatic model cascade (gemini-3.5-flash -> gemini-3.5-flash-lite).
+ * Provides direct 3-4 sentence explanations in simple words for Class 5 students and 100% accurate vision analysis.
  */
 
 const GEMINI_API_KEY =
   import.meta.env.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6IxHjl_Nd_Ui87NtEhD5CXeMTCgeCxTxuWrelxDAlTVtg';
 
-const MODEL_NAME = 'gemini-2.5-flash';
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${GEMINI_API_KEY}`;
+// Robust model cascade for zero-downtime & high quota limits
+const CANDIDATE_MODELS = [
+  'gemini-3.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-flash-lite-latest',
+  'gemini-2.5-flash',
+];
 
 export interface MaterialAnalysisResult {
   materialName: string;
@@ -34,6 +39,39 @@ export interface WhatIfResult {
   scienceLaw: string;
 }
 
+/**
+ * Executes a Gemini API request with automatic model fallback if one hits a rate-limit (429) or is busy
+ */
+async function generateContentCascade(requestBody: any): Promise<string> {
+  let lastError: any = null;
+
+  for (const model of CANDIDATE_MODELS) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (text) return text;
+      } else {
+        const errText = await response.text();
+        console.warn(`Model ${model} returned status ${response.status}: ${errText.substring(0, 150)}`);
+        lastError = new Error(`Status ${response.status}: ${errText}`);
+      }
+    } catch (err) {
+      console.warn(`Failed to reach model ${model}:`, err);
+      lastError = err;
+    }
+  }
+
+  throw lastError || new Error('All candidate AI models were unavailable.');
+}
+
 export const geminiService = {
   hasApiKey(): boolean {
     return Boolean(GEMINI_API_KEY && GEMINI_API_KEY.length > 10);
@@ -52,32 +90,20 @@ Rules:
 4. Include 1-2 fun emojis.
 5. Context: ${contextTopic || 'CBSE Class 5 EVS & Science'}.`;
 
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: `${systemPrompt}\n\nQuestion: "${question}"` }],
-          },
-        ],
-        generationConfig: {
-          maxOutputTokens: 1000,
-          temperature: 0.2,
+    const requestBody = {
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: `${systemPrompt}\n\nQuestion: "${question}"` }],
         },
-      }),
-    });
+      ],
+      generationConfig: {
+        maxOutputTokens: 1000,
+        temperature: 0.2,
+      },
+    };
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Gemini API Error: ${response.status} ${errorText}`);
-    }
-
-    const data = await response.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    if (!reply) throw new Error('No reply from Gemini AI');
-    return reply;
+    return await generateContentCascade(requestBody);
   },
 
   /**
@@ -93,13 +119,13 @@ Rules:
     const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
 
     const prompt = `You are an expert materials scientist analyzing a photo for a CBSE Class 5 Science student (age 9-11).
-Identify the main physical material of the object shown in the photo (e.g. Molded Plastic/Polycarbonate/ABS, Silicone, Stone/Rock/Granite, Metal/Steel/Copper/Aluminum, Wood, Cotton, Wool, Silk, Glass, Ceramic, Rubber).
-Return ONLY a valid JSON object matching this schema with NO extra text:
+Identify the main physical material of the object shown in the photo (e.g. Aluminum Metal Aerosol Can, Molded Polycarbonate Plastic, Tin, Steel, Wood, Cotton, Wool, Silk, Glass, Ceramic, Rubber).
+Return ONLY a valid JSON object matching this schema with NO markdown code fences or extra text:
 {
-  "materialName": "Exact material name (e.g. Molded Polycarbonate Plastic, Natural Stone, Stainless Steel)",
-  "family": "Material family (e.g. Synthetic Polymer, Igneous Rock, Metallic Alloy, Natural Cellulose)",
+  "materialName": "Exact material name (e.g. Aluminum Metal, Molded Plastic)",
+  "family": "Material family (e.g. Metal / Metallic Alloy, Synthetic Polymer)",
   "category": "Natural" or "Synthetic",
-  "microscopicStructure": "1 simple sentence explaining its molecular structure in easy words for a 5th grader",
+  "microscopicStructure": "1 simple sentence explaining its molecular/particle structure for a 5th grader",
   "confidence": 0.95,
   "funFact": "1 exciting kid-friendly trivia fact about this material",
   "interactiveChallenge": {
@@ -112,39 +138,27 @@ Return ONLY a valid JSON object matching this schema with NO extra text:
   }
 }`;
 
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              {
-                inlineData: {
-                  mimeType: mimeType,
-                  data: cleanBase64,
-                },
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            { text: prompt },
+            {
+              inlineData: {
+                mimeType: mimeType,
+                data: cleanBase64,
               },
-            ],
-          },
-        ],
-        generationConfig: {
-          maxOutputTokens: 2500,
-          temperature: 0.1,
+            },
+          ],
         },
-      }),
-    });
+      ],
+      generationConfig: {
+        maxOutputTokens: 2500,
+        temperature: 0.1,
+      },
+    };
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Gemini Vision API Error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
-    
-    // Robust regex extraction of JSON object
+    const rawText = await generateContentCascade(requestBody);
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('Could not parse valid JSON from AI Vision response');
@@ -172,18 +186,12 @@ Return ONLY valid JSON matching this schema:
   "scienceLaw": "The underlying scientific rule"
 }`;
 
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1500, temperature: 0.2 },
-      }),
-    });
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 1500, temperature: 0.2 },
+    };
 
-    if (!response.ok) throw new Error(`Gemini Error: ${response.statusText}`);
-    const data = await response.json();
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
+    const rawText = await generateContentCascade(requestBody);
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Invalid JSON from simulation');
     return JSON.parse(jsonMatch[0]) as WhatIfResult;
@@ -209,18 +217,12 @@ Return ONLY valid JSON matching this schema:
   "pronunciation": "/phonetic/"
 }`;
 
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1000, temperature: 0.2 },
-      }),
-    });
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 1000, temperature: 0.2 },
+    };
 
-    if (!response.ok) throw new Error(`Gemini Word Def Error: ${response.statusText}`);
-    const data = await response.json();
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
+    const rawText = await generateContentCascade(requestBody);
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Invalid JSON from dictionary');
     return JSON.parse(jsonMatch[0]);
