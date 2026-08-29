@@ -11,8 +11,12 @@ import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { bgmEngine } from '@/lib/bgmEngine';
-import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { InquiryQuestionCard } from '@/components/interactive/InquiryQuestionCard';
+import { RaincoatMission } from '@/features/missions/mission-01-raincoat/RaincoatMission';
+import { SortingMission } from '@/features/missions/mission-02-sorting/SortingMission';
+import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/NylonStrengthMission';
+import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafetyMission';
+import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import {
   HighPressurePipeLeakSim,
   RaceCarTireFrictionSim,
@@ -90,11 +94,18 @@ import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy
 
 export const DynamicMissionEngine: React.FC = () => {
   const { missionNum } = useParams<{ missionNum: string }>();
+  const missionNumber = parseInt(missionNum || '4', 10);
+
+  if (missionNumber === 1) return <RaincoatMission />;
+  if (missionNumber === 2) return <SortingMission />;
+  if (missionNumber === 3) return <NylonStrengthMission />;
+  if (missionNumber === 5) return <FireSafetyMission />;
+  if (missionNumber === 8) return <WireMission />;
+
   const navigate = useNavigate();
   const completeMission = useProgressStore((state) => state.completeMission);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
-  const missionNumber = parseInt(missionNum || '4', 10);
   const mission = missions.find((m) => m.number === missionNumber) || missions[3];
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -383,6 +394,33 @@ export const DynamicMissionEngine: React.FC = () => {
                     🎉 Excellent! All 3 synthetic fibres mastered! Tap Next Step →
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Step 3: Molecular Elasticity of Synthetics */}
+            {currentStepIndex === 3 && (
+              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-400 shadow-xl text-center">
+                <span className="text-5xl mb-2">🔬✨</span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Why Synthetics Resist Wrinkles</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 max-w-lg">
+                  Natural cotton is made of cellulose strands that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are long polymer chains engineered with elastic molecular memory — they spring back straight when released!
+                </p>
+                <div className="p-5 bg-sky-50 rounded-2xl border-2 border-sky-200 w-full max-w-md mb-6">
+                  <span className="text-xs font-black text-sky-900 block mb-1">💡 Key Science Takeaway:</span>
+                  <p className="text-xs font-bold text-sky-800">
+                    Synthetic polymers have strong molecular backbone bonds that do not break under everyday bending, keeping clothes crisp without an iron!
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    sounds.success();
+                    setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
+                  }}
+                  className="btn-3d-amber text-slate-950 font-black text-sm py-3 px-8 rounded-2xl cursor-pointer"
+                >
+                  Got It! Test My Knowledge ➔
+                </button>
               </div>
             )}
 
@@ -2048,7 +2086,30 @@ export const DynamicMissionEngine: React.FC = () => {
         );
 
       default:
-        return null;
+        return (
+          <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-3xl md:rounded-[36px] border-4 border-sky-400 shadow-xl flex flex-col items-center text-center">
+            <Pip mood="explaining" size="lg" />
+            <h3 className="text-2xl font-black text-slate-900 mt-3 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              {currentStep.title || mission.title}
+            </h3>
+            <p className="text-sm font-bold text-slate-600 mb-6 max-w-md leading-relaxed">
+              {currentStep.instruction || 'Explore this science investigation and tap the button below to test your deduction!'}
+            </p>
+            <div className="p-4 bg-sky-50 rounded-2xl border-2 border-sky-200 w-full mb-6 text-xs font-bold text-sky-900">
+              <span>💡 <strong>Science Focus:</strong> {mission.concepts.join(' • ')}</span>
+            </div>
+            <button
+              onClick={() => {
+                sounds.success();
+                setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                handleNextStep();
+              }}
+              className="btn-3d-amber text-slate-950 font-black text-sm py-3 px-8 rounded-2xl cursor-pointer"
+            >
+              Continue Mission ➔
+            </button>
+          </div>
+        );
     }
   };
 
