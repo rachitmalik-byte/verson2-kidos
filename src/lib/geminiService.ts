@@ -198,33 +198,144 @@ Return ONLY valid JSON matching this schema:
   },
 
   /**
-   * 📖 AI Science Word & Vocabulary Explainer
+   * 🗣️ Gemini AI Speech Recognition & Pronunciation Coach
+   * Compares what the student spoke with the target sentence, gives word-by-word analysis and Pip encouragement.
    */
-  async defineWordWithAI(word: string): Promise<{
-    word: string;
-    definition: string;
-    example: string;
-    category: string;
-    pronunciation?: string;
+  async evaluateSpeechWithAI(spokenTranscript: string, targetSentence: string): Promise<{
+    accuracyScore: number;
+    isPassed: boolean;
+    encouragement: string;
+    pronunciationTip?: string;
+    wordStatuses: { word: string; isCorrect: boolean }[];
   }> {
-    const prompt = `Define "${word}" simply in 1 short sentence for a 5th grader. Give 1 everyday example.
-Return ONLY valid JSON matching this schema:
+    const prompt = `You are Pip, a supportive speech & reading coach for a CBSE Class 5 student (age 9-11).
+Target sentence: "${targetSentence}"
+What the student said: "${spokenTranscript}"
+
+Compare the student's spoken words with the target sentence.
+Return ONLY a valid JSON object matching this schema:
 {
-  "word": "${word}",
-  "definition": "1 clear simple sentence in easy words",
-  "example": "1 fun everyday science example sentence",
-  "category": "Noun / Verb / Adjective / Science Term",
-  "pronunciation": "/phonetic/"
+  "accuracyScore": 90, // number from 0 to 100
+  "isPassed": true, // true if accuracyScore >= 75
+  "encouragement": "1 short enthusiastic, warm sentence celebrating their effort and mentioning a word they pronounced well",
+  "pronunciationTip": "1 gentle tip if they mispronounced or missed a word, or empty string if perfect",
+  "wordStatuses": [
+    { "word": "wordFromTargetSentence", "isCorrect": true }
+  ]
 }`;
 
     const requestBody = {
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 1000, temperature: 0.2 },
+      generationConfig: { maxOutputTokens: 1200, temperature: 0.2 },
     };
 
     const rawText = await generateContentCascade(requestBody);
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Invalid JSON from dictionary');
+    if (!jsonMatch) {
+      // Fallback calculation
+      const targetWords = targetSentence.toLowerCase().split(/\s+/).map((w) => w.replace(/[^a-z0-9]/gi, ''));
+      const spokenWords = spokenTranscript.toLowerCase().split(/\s+/).map((w) => w.replace(/[^a-z0-9]/gi, ''));
+      const matches = targetWords.filter((tw) => spokenWords.includes(tw)).length;
+      const score = Math.round((matches / Math.max(targetWords.length, 1)) * 100);
+      return {
+        accuracyScore: score,
+        isPassed: score >= 70,
+        encouragement: score >= 70 ? 'Fantastic reading! You spoke with great clarity!' : 'Good try! Let us practice reading it once more together!',
+        wordStatuses: targetSentence.split(/\s+/).map((w) => ({
+          word: w,
+          isCorrect: spokenWords.includes(w.toLowerCase().replace(/[^a-z0-9]/gi, '')),
+        })),
+      };
+    }
+
     return JSON.parse(jsonMatch[0]);
   },
+
+  /**
+   * 📊 Gemini AI Parent Learning Intelligence & Cognitive Diagnostics
+   */
+  async generateParentAIAnalytics(data: {
+    childName: string;
+    grade: string;
+    completedMissions: string[];
+    discoveriesCount: number;
+    discoveredWords: string[];
+  }): Promise<{
+    overallSummary: string;
+    cognitiveStrengths: string[];
+    growthAreas: string[];
+    curiosityScore: number;
+    homeConversationStarters: { title: string; prompt: string; whyItWorks: string }[];
+  }> {
+    const prompt = `You are a Senior Educational Psychologist & CBSE Curriculum Expert evaluating a student's science progress.
+Student: ${data.childName || 'Student'} (Grade ${data.grade || '5'})
+Completed Missions: ${data.completedMissions.length} of 13 missions (IDs: ${data.completedMissions.join(', ')})
+Discoveries Made: ${data.discoveriesCount} (Concepts: ${data.discoveredWords.join(', ') || 'Polymers, Natural Fibers'})
+
+Analyze the student's progress and return ONLY a valid JSON object matching this schema:
+{
+  "overallSummary": "2-3 insightful, encouraging sentences for the parent summarizing the child's mechanical, scientific deduction, and inquiry milestones.",
+  "cognitiveStrengths": [
+    "3 specific strengths (e.g. 'Strong conceptual grasp of thermal and electrical insulation', 'High curiosity in molecular cross-linking', 'Intuitive understanding of material selection')"
+  ],
+  "growthAreas": [
+    "2 gentle recommendations for home reinforcement (e.g. 'Reinforce difference between synthetic recycling and natural biodegradation')"
+  ],
+  "curiosityScore": 92, // number 80 to 99
+  "homeConversationStarters": [
+    {
+      "title": "Short catchy activity name",
+      "prompt": "1 clear question or 2-minute activity the parent can do at home with the child",
+      "whyItWorks": "1 sentence explaining the scientific concept it reinforces"
+    },
+    {
+      "title": "Second home activity",
+      "prompt": "Second conversation starter",
+      "whyItWorks": "Why it works"
+    },
+    {
+      "title": "Third home activity",
+      "prompt": "Third conversation starter",
+      "whyItWorks": "Why it works"
+    }
+  ]
+}`;
+
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 2000, temperature: 0.2 },
+    };
+
+    const rawText = await generateContentCascade(requestBody);
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Could not parse parent analytics JSON');
+    }
+
+    return JSON.parse(jsonMatch[0]);
+  },
+
+  /**
+   * 💬 Live Floating Pip AI Companion Chat
+   * Provides ultra-fast, conversational answers in 2-3 short sentences for Class 5 students.
+   */
+  async chatWithLivePip(userInput: string, pageContext?: string): Promise<string> {
+    const prompt = `You are Pip, a playful, energetic cartoon robot science buddy for a CBSE Class 5 student (age 9-11).
+Current page/screen context: ${pageContext || 'PolyQuest Science Academy'}.
+User message: "${userInput}"
+
+Rules:
+1. Reply in exactly 2 to 3 short sentences.
+2. Use simple, direct, kid-friendly vocabulary.
+3. Be enthusiastic, warm, and helpful with 1-2 fun emojis.
+4. If they ask a science question, explain it with an everyday example.`;
+
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 800, temperature: 0.3 },
+    };
+
+    return await generateContentCascade(requestBody);
+  },
 };
+

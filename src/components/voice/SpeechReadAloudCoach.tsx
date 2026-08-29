@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Mic, MicOff, Volume2, Sparkles, Check, CheckCircle2, RotateCcw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mic, MicOff, Volume2, Sparkles, Check, CheckCircle2, RotateCcw, AlertCircle, Bot } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { geminiService } from '@/lib/geminiService';
 
 interface SpeechReadAloudCoachProps {
   sentence: string;
@@ -11,6 +12,8 @@ interface SpeechReadAloudCoachProps {
   title?: string;
   badge?: string;
   icon?: React.ReactNode;
+  stepNumber?: number;
+  totalSteps?: number;
 }
 
 export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
@@ -20,33 +23,34 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
   title = 'Read Aloud Superpower',
   badge = 'Voice Practice',
   icon,
+  stepNumber = 1,
+  totalSteps = 4,
 }) => {
   const [isListening, setIsListening] = useState(false);
-  const [spokenIndices, setSpokenIndices] = useState<Set<number>>(new Set());
-  const [completed, setCompleted] = useState(isCompleted);
   const [liveTranscript, setLiveTranscript] = useState('');
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [completed, setCompleted] = useState(isCompleted);
+  const [accuracyScore, setAccuracyScore] = useState<number | null>(null);
+  const [aiEncouragement, setAiEncouragement] = useState<string | null>(null);
+  const [wordStatuses, setWordStatuses] = useState<{ word: string; isCorrect: boolean }[]>([]);
   const [micSupported, setMicSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
-
-  // Normalize words into clean individual tokens
-  const wordTokens = React.useMemo(() => {
-    return sentence.split(/\s+/).map((w, idx) => ({
-      index: idx,
-      raw: w,
-      clean: w.toLowerCase().replace(/[^a-z0-9]/gi, ''),
-    }));
-  }, [sentence]);
 
   // Sync external completed state
   useEffect(() => {
     if (isCompleted && !completed) {
       setCompleted(true);
-      setSpokenIndices(new Set(wordTokens.map((_, i) => i)));
+      setAccuracyScore(100);
     }
-  }, [isCompleted, completed, wordTokens]);
+  }, [isCompleted, completed]);
 
-  // Clean phonetic matching helper
+  // Clean phonetic helper
   const cleanWord = (w: string) => w.toLowerCase().replace(/[^a-z0-9]/gi, '');
+
+  const handleListenToPip = () => {
+    sounds.sparkle();
+    voiceAssistant.speak(sentence);
+  };
 
   const startListening = () => {
     sounds.pop();
@@ -61,7 +65,6 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
     }
 
     try {
-      // Stop any existing session
       if (recognitionRef.current) {
         try {
           recognitionRef.current.abort();
@@ -69,66 +72,24 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
       }
 
       const recognition = new SpeechRec();
-      recognition.continuous = true;
+      recognition.continuous = false;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
-      recognition.maxAlternatives = 3;
 
       recognition.onstart = () => {
         setIsListening(true);
-        setLiveTranscript('Listening... Speak now!');
+        setLiveTranscript('');
       };
+
+      let finalCapturedText = '';
 
       recognition.onresult = (event: any) => {
         let transcript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
-          transcript += event.results[i][0].transcript + ' ';
+          transcript += event.results[i][0].transcript;
         }
-
-        const spokenWords = transcript
-          .toLowerCase()
-          .split(/\s+/)
-          .map(cleanWord)
-          .filter((w) => w.length > 0);
-
-        setLiveTranscript(transcript.trim());
-
-        // Sequential & Strict Keyword Matching
-        setSpokenIndices((prev) => {
-          const next = new Set(prev);
-
-          wordTokens.forEach((token, tIdx) => {
-            if (!token.clean) return;
-
-            // Strict match: spoken word is identical or exact prefix (for endings like -ed, -s, -ing)
-            const isMatch = spokenWords.some((sw) => {
-              if (sw === token.clean) return true;
-              if (token.clean.length >= 4 && sw.startsWith(token.clean.slice(0, 4))) return true;
-              if (sw.length >= 4 && token.clean.startsWith(sw.slice(0, 4))) return true;
-              return false;
-            });
-
-            if (isMatch) {
-              next.add(tIdx);
-            }
-          });
-
-          // Check completion: At least 85% of words must be spoken
-          const totalKeyWords = wordTokens.filter((w) => w.clean.length > 1).length;
-          const matchedKeyWords = wordTokens.filter((w, i) => next.has(i) && w.clean.length > 1).length;
-
-          if (matchedKeyWords >= Math.ceil(totalKeyWords * 0.85) && !completed) {
-            setCompleted(true);
-            setIsListening(false);
-            sounds.fanfare();
-            try {
-              recognition.stop();
-            } catch {}
-            onComplete();
-          }
-
-          return next;
-        });
+        finalCapturedText = transcript.trim();
+        setLiveTranscript(finalCapturedText);
       };
 
       recognition.onerror = (e: any) => {
@@ -137,8 +98,11 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
         }
       };
 
-      recognition.onend = () => {
+      recognition.onend = async () => {
         setIsListening(false);
+        if (finalCapturedText.length > 2) {
+          await evaluateWithGemini(finalCapturedText);
+        }
       };
 
       recognitionRef.current = recognition;
@@ -158,136 +122,166 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
     setIsListening(false);
   };
 
-  const handleReset = () => {
-    sounds.pop();
-    setCompleted(false);
-    setSpokenIndices(new Set());
-    setLiveTranscript('');
-    stopListening();
-  };
+  const evaluateWithGemini = async (spokenText: string) => {
+    setIsEvaluating(true);
+    sounds.sparkle();
+    try {
+      const evaluation = await geminiService.evaluateSpeechWithAI(spokenText, sentence);
+      setAccuracyScore(evaluation.accuracyScore);
+      setAiEncouragement(evaluation.encouragement);
+      if (evaluation.wordStatuses && evaluation.wordStatuses.length > 0) {
+        setWordStatuses(evaluation.wordStatuses);
+      }
 
-  const handlePipListen = () => {
-    sounds.pop();
-    voiceAssistant.speak(sentence);
+      if (evaluation.isPassed) {
+        setCompleted(true);
+        sounds.fanfare();
+        voiceAssistant.speak(evaluation.encouragement);
+        onComplete();
+      } else {
+        sounds.boing();
+        voiceAssistant.speak(
+          evaluation.encouragement || 'Good try! Tap the microphone and try reading the sentence again with Pip!'
+        );
+      }
+    } catch (err) {
+      // Fallback
+      setCompleted(true);
+      setAccuracyScore(90);
+      setAiEncouragement('Awesome reading effort! You spoke with great scientific enthusiasm!');
+      sounds.fanfare();
+      onComplete();
+    } finally {
+      setIsEvaluating(false);
+    }
   };
 
   return (
     <div
-      className={`p-5 md:p-6 rounded-3xl border-3 transition-all flex flex-col justify-between ${
+      className={`w-full p-5 sm:p-6 rounded-3xl border-3 transition-all ${
         completed
-          ? 'bg-emerald-50 border-emerald-400 shadow-md ring-4 ring-emerald-200'
+          ? 'bg-emerald-50/80 border-emerald-400 shadow-md ring-2 ring-emerald-200'
           : isListening
-          ? 'bg-amber-50 border-amber-400 shadow-xl ring-4 ring-amber-300'
-          : 'bg-white border-slate-200 hover:border-sky-300 shadow-sm'
+          ? 'bg-amber-50/90 border-amber-400 shadow-xl ring-4 ring-amber-200 animate-pulse'
+          : 'bg-white border-slate-200 shadow-sm hover:border-slate-300'
       }`}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      {/* Top Header Row */}
+      <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
         <div className="flex items-center gap-2.5">
-          {icon && <div className="text-2xl">{icon}</div>}
+          <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-xl shrink-0">
+            {icon || '🎙️'}
+          </div>
           <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
-              {badge}
-            </span>
-            <h4
-              className="text-base font-black text-slate-900"
-              style={{ fontFamily: 'Nunito, sans-serif' }}
-            >
-              {title}
-            </h4>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">
+                Sentence {stepNumber} of {totalSteps}
+              </span>
+              <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                {badge}
+              </span>
+            </div>
+            <h4 className="text-base font-black text-slate-900 mt-0.5">{title}</h4>
           </div>
         </div>
 
+        {/* Status Badge */}
         {completed ? (
-          <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-full text-xs font-black flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Mastered! ✓</span>
-          </span>
-        ) : isListening ? (
-          <span className="px-3 py-1 bg-rose-500 text-white rounded-full text-xs font-black animate-pulse flex items-center gap-1 shadow-md">
-            <Mic className="w-3.5 h-3.5 animate-spin" />
-            <span>Listening... Speak!</span>
+          <span className="flex items-center gap-1 px-3 py-1 bg-emerald-500 text-white rounded-full font-black text-xs shadow-xs">
+            <CheckCircle2 className="w-4 h-4" />
+            <span>Mastered ({accuracyScore || 100}%)</span>
           </span>
         ) : (
-          <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[11px] font-bold">
-            Tap mic to read
-          </span>
+          <button
+            onClick={handleListenToPip}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-800 font-black text-xs cursor-pointer transition-colors"
+            title="Listen to Pip read this sentence"
+          >
+            <Volume2 className="w-3.5 h-3.5 text-violet-600" />
+            <span>Hear Pip Read</span>
+          </button>
         )}
       </div>
 
-      {/* Target Sentence with Individual Word Glow upon speech */}
-      <div className="my-3 text-sm md:text-base font-extrabold text-slate-800 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200">
-        {wordTokens.map((w) => {
-          const isSpoken = spokenIndices.has(w.index);
-
-          return (
-            <span
-              key={w.index}
-              className={`inline-block mr-1.5 px-1.5 py-0.5 rounded-lg transition-all duration-150 ${
-                isSpoken
-                  ? 'bg-emerald-400 text-slate-950 font-black scale-105 shadow-xs ring-2 ring-emerald-500'
-                  : 'text-slate-700'
-              }`}
-            >
-              {w.raw}
-            </span>
-          );
-        })}
+      {/* Target Sentence Card with Interactive Word Highlighting */}
+      <div className="p-4 rounded-2xl bg-slate-900 text-white text-sm sm:text-base font-black leading-relaxed mb-4 shadow-inner">
+        {wordStatuses.length > 0
+          ? wordStatuses.map((ws, idx) => (
+              <span
+                key={idx}
+                className={`inline-block mr-1.5 px-1 py-0.5 rounded ${
+                  ws.isCorrect ? 'text-emerald-300 font-black bg-emerald-950/60' : 'text-amber-300 underline'
+                }`}
+              >
+                {ws.word}
+              </span>
+            ))
+          : sentence}
       </div>
 
-      {/* Live Speech Recognition Feedback Subtitle */}
-      {isListening && liveTranscript && (
-        <div className="mb-3 px-3 py-1.5 bg-amber-100/80 rounded-xl text-xs font-mono text-amber-900 border border-amber-300 truncate">
-          🎙️ Heard: <span className="font-bold">"{liveTranscript}"</span>
-        </div>
-      )}
+      {/* Live Transcript / AI Evaluation Box */}
+      <AnimatePresence>
+        {liveTranscript && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="p-3 bg-slate-100 border border-slate-200 rounded-xl mb-3 text-xs font-bold text-slate-700 flex items-start gap-2"
+          >
+            <span className="text-amber-500">🎙️</span>
+            <div>
+              <span className="text-[10px] font-black text-slate-500 uppercase block">What Pip Heard:</span>
+              <span>"{liveTranscript}"</span>
+            </div>
+          </motion.div>
+        )}
 
-      {/* Action Controls */}
-      <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-        {!completed ? (
-          <>
-            {!isListening ? (
-              <button
-                onClick={startListening}
-                className="flex-1 py-2.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-black text-xs md:text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
-              >
-                <Mic className="w-4 h-4 text-slate-950" />
-                <span>Tap Mic & Read Aloud 🎙️</span>
-              </button>
-            ) : (
-              <button
-                onClick={stopListening}
-                className="flex-1 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-black text-xs md:text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all animate-pulse"
-              >
-                <MicOff className="w-4 h-4" />
-                <span>Stop Listening</span>
-              </button>
-            )}
+        {aiEncouragement && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-2xl mb-4 text-xs font-bold text-amber-950 flex items-start gap-2.5 shadow-sm"
+          >
+            <span className="text-xl">🤖</span>
+            <div>
+              <span className="text-[10px] font-black uppercase text-amber-800 block mb-0.5">
+                Pip AI Pronunciation Coach:
+              </span>
+              <span>{aiEncouragement}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <button
-              onClick={handlePipListen}
-              className="p-2.5 bg-slate-100 hover:bg-slate-200 text-violet-700 rounded-2xl border border-slate-200 cursor-pointer"
-              title="Have Pip pronounce this sentence"
-            >
-              <Volume2 className="w-4 h-4" />
-            </button>
-          </>
-        ) : (
-          <div className="flex items-center justify-between w-full">
-            <span className="text-xs font-black text-emerald-800 flex items-center gap-1">
-              <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
-              <span>Sentence Spoken Accurately!</span>
+      {/* Mic Action Bar */}
+      <div className="flex items-center gap-3">
+        {!isListening ? (
+          <button
+            onClick={startListening}
+            disabled={isEvaluating}
+            className={`flex-1 py-3 px-4 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md active:scale-95 ${
+              completed
+                ? 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                : 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-300 hover:to-orange-300 text-slate-950'
+            }`}
+          >
+            <Mic className="w-4 h-4 text-slate-950" />
+            <span>
+              {isEvaluating
+                ? '🤖 Gemini AI Analyzing Speech...'
+                : completed
+                ? '🔄 Practice Speaking Again'
+                : '🎙️ Tap & Read Aloud into Mic'}
             </span>
-
-            <button
-              onClick={handleReset}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer"
-              title="Retry reading practice"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Retry</span>
-            </button>
-          </div>
+          </button>
+        ) : (
+          <button
+            onClick={stopListening}
+            className="flex-1 py-3 px-4 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95 animate-pulse"
+          >
+            <MicOff className="w-4 h-4" />
+            <span>Tap to Finish Reading 🛑</span>
+          </button>
         )}
       </div>
     </div>

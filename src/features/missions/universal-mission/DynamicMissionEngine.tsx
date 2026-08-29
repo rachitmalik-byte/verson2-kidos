@@ -823,40 +823,68 @@ export const DynamicMissionEngine: React.FC = () => {
             )}
 
             {currentStepIndex === 1 && (
-              <div className="w-full space-y-4">
+              <div className="w-full max-w-3xl space-y-4">
                 <div className="flex items-center gap-4 mb-3 justify-center">
                   <Pip mood="explaining" size="md" />
-                  <PipSpeechBubble message="Read aloud each plastic superpower using your mic, or listen to Pip to master all 4!" isVisible={true} />
+                  <PipSpeechBubble message="Read aloud each plastic superpower in order into your mic! Gemini AI and Pip will coach your pronunciation!" isVisible={true} />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   {[
-                    { id: 'mould', title: '1. Easily Moulded', sentence: 'Plastic can be melted and pressed into any shape using heat and pressure.', icon: '🔄' },
-                    { id: 'rust', title: '2. Never Rusts or Rots', sentence: 'Plastic is completely waterproof and will never rust or corrode like iron.', icon: '🛡️' },
-                    { id: 'light', title: '3. Lightweight & Tough', sentence: 'Plastic is far lighter than steel and will not shatter into pieces like glass.', icon: '🪶' },
-                    { id: 'insulate', title: '4. Electric Insulator', sentence: 'Plastic blocks electric current to keep our hands safe from electric shocks.', icon: '⚡' },
-                  ].map((p) => (
-                    <SpeechReadAloudCoach
-                      key={p.id}
-                      title={p.title}
-                      sentence={p.sentence}
-                      icon={<span>{p.icon}</span>}
-                      isCompleted={interactiveState[p.id] === true}
-                      onComplete={() => {
-                        setInteractiveState((prev) => {
-                          const next = { ...prev, [p.id]: true };
-                          if (['mould', 'rust', 'light', 'insulate'].every((k) => next[k])) {
-                            next[`step_${currentStepIndex}`] = true;
-                          }
-                          return next;
-                        });
-                      }}
-                    />
-                  ))}
+                    { id: 'mould', order: 1, title: '1. Easily Moulded', sentence: 'Plastic can be melted and pressed into any shape using heat and pressure.', icon: '🔄' },
+                    { id: 'rust', order: 2, title: '2. Never Rusts or Rots', sentence: 'Plastic is completely waterproof and will never rust or corrode like iron.', icon: '🛡️' },
+                    { id: 'light', order: 3, title: '3. Lightweight & Tough', sentence: 'Plastic is far lighter than steel and will not shatter into pieces like glass.', icon: '🪶' },
+                    { id: 'insulate', order: 4, title: '4. Electric Insulator', sentence: 'Plastic blocks electric current to keep our hands safe from electric shocks.', icon: '⚡' },
+                  ].map((p, idx, list) => {
+                    const isPreviousDone = idx === 0 || interactiveState[list[idx - 1].id] === true;
+                    const isDone = interactiveState[p.id] === true;
+
+                    if (!isPreviousDone && !isDone) {
+                      return (
+                        <div
+                          key={p.id}
+                          className="p-4 rounded-3xl bg-slate-100 border-2 border-slate-200 opacity-60 flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-xl opacity-50">{p.icon}</span>
+                            <div>
+                              <span className="text-[10px] font-black uppercase text-slate-400">Locked Step {p.order}</span>
+                              <h4 className="text-sm font-bold text-slate-500">{p.title}</h4>
+                            </div>
+                          </div>
+                          <span className="text-xs font-bold text-slate-400 bg-slate-200 px-3 py-1 rounded-full">
+                            🔒 Complete previous sentence first
+                          </span>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <SpeechReadAloudCoach
+                        key={p.id}
+                        title={p.title}
+                        sentence={p.sentence}
+                        stepNumber={p.order}
+                        totalSteps={4}
+                        icon={<span>{p.icon}</span>}
+                        isCompleted={isDone}
+                        onComplete={() => {
+                          setInteractiveState((prev) => {
+                            const next = { ...prev, [p.id]: true };
+                            if (['mould', 'rust', 'light', 'insulate'].every((k) => next[k])) {
+                              next[`step_${currentStepIndex}`] = true;
+                            }
+                            return next;
+                          });
+                        }}
+                      />
+                    );
+                  })}
                 </div>
+
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-900">
-                    🎉 Awesome speech practice! All 4 superpowers mastered! Tap Next Step → to operate the Moulding Press!
+                    🎉 Awesome speech practice! All 4 superpowers mastered in sequence! Tap Next Step → to operate the Moulding Press!
                   </div>
                 )}
               </div>
