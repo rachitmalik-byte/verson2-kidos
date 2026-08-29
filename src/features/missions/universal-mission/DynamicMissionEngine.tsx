@@ -20,6 +20,13 @@ import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/Nylon
 import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafetyMission';
 import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import {
+  VectorCircuitWorkbench,
+  VectorCopperWireSpecimen,
+  VectorPVCCableSpecimen,
+  VectorSteelKeySpecimen,
+  VectorRubberEraserSpecimen,
+} from '@/components/interactive/VectorCircuitLab';
+import {
   HighPressurePipeLeakSim,
   RaceCarTireFrictionSim,
   MolecularVulcanizationSim,
@@ -1041,50 +1048,29 @@ export const DynamicMissionEngine: React.FC = () => {
 
             {/* Step 1: Live Circuit Sandbox */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Live Circuit Conductor Sandbox</h3>
+              <div className="w-full max-w-4xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Live 3D Circuit Conductor Sandbox</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
-                  Tap each material to place it into the open electrical circuit and see if the lightbulb glows!
+                  Tap each material to clamp it between the alligator clips and see if current illuminates the Edison bulb!
                 </p>
 
-                {/* Circuit Lightbulb Display with Real Lightbulb Photo */}
-                <div className="p-6 bg-slate-900 rounded-3xl w-full max-w-md mb-6 flex items-center justify-around text-white border-4 border-slate-700">
-                  <div className="text-center">
-                    <span className="text-3xl block">🔋</span>
-                    <span className="text-[10px] font-bold text-slate-400">9V Battery</span>
-                  </div>
-
-                  <div className="flex-1 mx-4 text-center">
-                    {interactiveState.testedMaterial ? (
-                      <span className="text-xs font-black text-amber-300 bg-slate-800 px-3 py-1 rounded-full border border-amber-500/50">
-                        {interactiveState.testedMaterial}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-slate-500 font-mono">--- [ Open Gap ] ---</span>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 flex items-center justify-center p-1">
-                      {interactiveState.conducts ? (
-                        <img src={lightbulbGlowingBrightImg} alt="Bulb Lit" className="w-full h-full object-cover rounded-xl filter drop-shadow-[0_0_15px_#FBBF24]" />
-                      ) : (
-                        <Lightbulb className="w-8 h-8 text-slate-600" />
-                      )}
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-400 mt-1">
-                      {interactiveState.conducts ? 'LIGHTS UP! ✓' : 'Dark (Off)'}
-                    </span>
-                  </div>
+                {/* 3D Vector Circuit Workbench */}
+                <div className="w-full mb-6">
+                  <VectorCircuitWorkbench
+                    specimenId={interactiveState.testedId || 'copper'}
+                    conducts={interactiveState.conducts === true}
+                    specimenName={interactiveState.testedMaterial || 'Raw Copper Metal Wire'}
+                    isFlowing={interactiveState.conducts === true}
+                  />
                 </div>
 
-                {/* Material Selectors with Real Photos */}
+                {/* Material Selectors with Clean Vector Graphics */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full mb-4">
                   {[
-                    { id: 'copper', name: 'Copper Wire', image: copperWireMacroImg, conducts: true, type: 'Conductor' },
-                    { id: 'steel', name: 'Steel Key', image: steelKeyMacroImg, conducts: true, type: 'Conductor' },
-                    { id: 'plastic', name: 'PVC Cable Plastic', image: pvcInsulatedCableImg, conducts: false, type: 'Insulator' },
-                    { id: 'rubber', name: 'Rubber Eraser', image: rubberEraserMacroImg, conducts: false, type: 'Insulator' },
+                    { id: 'copper', name: 'Copper Wire', conducts: true, type: 'Metal Conductor', render: () => <VectorCopperWireSpecimen /> },
+                    { id: 'steel', name: 'Steel Key', conducts: true, type: 'Metal Conductor', render: () => <VectorSteelKeySpecimen /> },
+                    { id: 'plastic', name: 'PVC Cable Plastic', conducts: false, type: 'Plastic Insulator', render: () => <VectorPVCCableSpecimen /> },
+                    { id: 'rubber', name: 'Rubber Eraser', conducts: false, type: 'Elastomer Insulator', render: () => <VectorRubberEraserSpecimen /> },
                   ].map((mat) => (
                     <button
                       key={mat.id}
@@ -1099,6 +1085,7 @@ export const DynamicMissionEngine: React.FC = () => {
                         setInteractiveState((p) => {
                           const next = {
                             ...p,
+                            testedId: mat.id,
                             testedMaterial: mat.name,
                             conducts: mat.conducts,
                             [mat.id]: true,
@@ -1109,14 +1096,14 @@ export const DynamicMissionEngine: React.FC = () => {
                       }}
                       className={`p-3.5 rounded-2xl border-2 text-center cursor-pointer transition-all flex flex-col items-center ${
                         interactiveState[mat.id]
-                          ? 'bg-amber-100 border-amber-500 font-black'
+                          ? 'bg-amber-100 border-amber-500 font-black ring-2 ring-amber-300'
                           : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
-                      <div className="w-14 h-14 rounded-xl overflow-hidden mb-1 border border-slate-200">
-                        <img src={mat.image} alt={mat.name} className="w-full h-full object-cover" />
+                      <div className="w-full h-16 rounded-xl overflow-hidden mb-1 border border-slate-800 bg-slate-900 flex items-center justify-center p-1">
+                        {mat.render()}
                       </div>
-                      <span className="text-xs font-black text-slate-900 block">{mat.name}</span>
+                      <span className="text-xs font-black text-slate-900 block mt-1">{mat.name}</span>
                       <span className={`text-[10px] font-bold ${mat.conducts ? 'text-amber-700' : 'text-sky-700'}`}>
                         {mat.type}
                       </span>
