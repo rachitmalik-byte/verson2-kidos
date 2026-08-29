@@ -515,7 +515,7 @@ export function WireMission() {
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
-                      src={activeMicroscopeSpecimen === 'copper' ? cottonFabricZoomImg : polyesterFabricZoomImg}
+                      src={activeMicroscopeSpecimen === 'copper' ? copperWireMacroImg : pvcInsulatedCableImg}
                       alt="Microscope Specimen"
                       initial={{ scale: 0.8, opacity: 0.3 }}
                       animate={{

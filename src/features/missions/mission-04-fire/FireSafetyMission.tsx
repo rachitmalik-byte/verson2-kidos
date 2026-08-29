@@ -385,7 +385,7 @@ export function FireSafetyMission() {
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
-                      src={activeMicroscopeSpecimen === 'cotton' ? cottonFabricZoomImg : polyesterFabricZoomImg}
+                      src={activeMicroscopeSpecimen === 'cotton' ? cottonBurningAshImg : polyesterMeltingBeadImg}
                       alt="Microscope Specimen"
                       initial={{ scale: 0.8, opacity: 0.3 }}
                       animate={{

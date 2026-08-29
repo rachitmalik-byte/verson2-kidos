@@ -422,7 +422,7 @@ export function NylonStrengthMission() {
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
-                      src={activeMicroscopeSpecimen === 'cotton' ? cottonFabricZoomImg : polyesterFabricZoomImg}
+                      src={activeMicroscopeSpecimen === 'cotton' ? cottonThreadIntactImg : nylonCordIntactImg}
                       alt="Microscope Specimen"
                       initial={{ scale: 0.8, opacity: 0.3 }}
                       animate={{
