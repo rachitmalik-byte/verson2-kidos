@@ -9,7 +9,6 @@ import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { useFXStore } from '@/stores/fxStore';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 
 // Real Studio Macro Educational Photography (Clean Before & After Pairs)
@@ -103,7 +102,6 @@ export function FireSafetyMission() {
   const triggerBurnCotton = () => {
     sounds.flameIgnite();
     setIsIgnitingCotton(true);
-    useFXStore.getState().triggerFX('steam', 2500);
     setTimeout(() => {
       setBurnedCotton(true);
       setIsIgnitingCotton(false);
@@ -114,7 +112,6 @@ export function FireSafetyMission() {
   const triggerBurnPolyester = () => {
     sounds.flameIgnite();
     setIsIgnitingPolyester(true);
-    useFXStore.getState().triggerFX('steam', 2500);
     setTimeout(() => {
       setBurnedPolyester(true);
       setIsIgnitingPolyester(false);

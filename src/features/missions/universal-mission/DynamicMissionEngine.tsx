@@ -913,7 +913,6 @@ export const DynamicMissionEngine: React.FC = () => {
                   <button
                     onClick={() => {
                       sounds.splash();
-                      useFXStore.getState().triggerFX('steam', 2500);
                       setInteractiveState((p) => ({ ...p, heatApplied: true }));
                     }}
                     className={`p-4 rounded-2xl border-3 flex flex-col items-center gap-1 cursor-pointer transition-all ${
