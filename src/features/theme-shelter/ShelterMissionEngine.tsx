@@ -23,6 +23,9 @@ import {
   PetroleumRefineryAndSolarSim,
 } from '@/components/interactive/ThemeShelterSimulators';
 import { SunitaInSpaceMultiStationLab } from '@/components/interactive/SpaceHabitatLabs';
+import { MechanicalCrossSectionStudio } from '@/components/studios/MechanicalCrossSectionStudio';
+import { FortArchitectStudio } from '@/components/studios/FortArchitectStudio';
+import { HighAltitudeBarometerStudio } from '@/components/studios/HighAltitudeBarometerStudio';
 import {
   ArrowLeft,
   ArrowRight,
@@ -371,55 +374,131 @@ export function ShelterMissionEngine() {
             )}
 
             {/* ════════════════════════════════════════════════════════════════
-                PHASE 3: MICROSCOPE (Optical Zoom Studio)
+                PHASE 3: PHYSICAL SCALE & APPARATUS STUDIO
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'MICROSCOPE' && (
-              <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
-                <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
-                  <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
-                    <ZoomIn className="w-4 h-4 text-indigo-400" />
-                    <span>Microscopic Structural Studio ({zoomLevel}x)</span>
-                  </span>
+              <div className="w-full flex flex-col items-center gap-6">
+                {/* Chapter 1: Pashmina Cashmere vs Human Hair (<100µm) -> True Optical Microscope Studio */}
+                {num === 1 && (
+                  <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
+                    <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
+                      <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
+                        <ZoomIn className="w-4 h-4 text-indigo-400" />
+                        <span>Biological Optical Microscope ({zoomLevel}x)</span>
+                      </span>
 
-                  <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                    {[100, 250, 500].map((z) => (
-                      <button
-                        key={z}
-                        onClick={() => {
-                          sounds.pop();
-                          setZoomLevel(z);
-                        }}
-                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                          zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {z}x
-                      </button>
-                    ))}
+                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
+                        {[100, 250, 500].map((z) => (
+                          <button
+                            key={z}
+                            onClick={() => {
+                              sounds.pop();
+                              setZoomLevel(z);
+                            }}
+                            className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                              zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            {z}x
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
+                      <SpecimenPashminaVsHumanHair zoom={zoomLevel} />
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
+                      500x Optical Microscope reveals Pashmina cashmere fiber is only 12 microns wide (6x thinner than human hair), trapping millions of insulating warm air pockets!
+                    </p>
                   </div>
-                </div>
+                )}
 
-                <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
-                  {num === 1 && <SpecimenPashminaVsHumanHair zoom={zoomLevel} />}
-                  {num === 2 && <SpecimenAirMoleculeBarometer zoom={zoomLevel} />}
-                  {num === 3 && <SpecimenZeroGravityWaterSphere zoom={zoomLevel} />}
-                  {num === 4 && <SpecimenGolcondaGearMechanics zoom={zoomLevel} />}
-                  {num === 5 && <SpecimenPetroleumPorousSandstone zoom={zoomLevel} />}
+                {/* Chapter 2: High Altitude Mountain Barometer Scale -> HighAltitudeBarometerStudio */}
+                {num === 2 && <HighAltitudeBarometerStudio />}
 
-                  <div className="absolute inset-0 pointer-events-none border border-indigo-400/30 rounded-full flex items-center justify-center">
-                    <div className="w-full h-[1px] bg-indigo-400/30 absolute" />
-                    <div className="h-full w-[1px] bg-indigo-400/30 absolute" />
-                    <div className="w-24 h-24 rounded-full border border-indigo-400/40 absolute" />
+                {/* Chapter 3: Sunita in Space / Microgravity Surface Tension -> Zero Gravity Fluid Studio */}
+                {num === 3 && (
+                  <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
+                    <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
+                      <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
+                        <ZoomIn className="w-4 h-4 text-indigo-400" />
+                        <span>Microgravity Fluid Cohesion Studio ({zoomLevel}x)</span>
+                      </span>
+
+                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
+                        {[100, 250, 500].map((z) => (
+                          <button
+                            key={z}
+                            onClick={() => {
+                              sounds.pop();
+                              setZoomLevel(z);
+                            }}
+                            className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                              zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            {z}x
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
+                      <SpecimenZeroGravityWaterSphere zoom={zoomLevel} />
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
+                      Microgravity optics reveals water molecules clustering tightly into minimum surface area spheres under cohesive hydrogen surface tension!
+                    </p>
                   </div>
-                </div>
+                )}
 
-                <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
-                  {num === 1 && '500x Microscope reveals Pashmina fiber is only 12 microns wide (6x thinner than human hair), trapping millions of insulating warm air pockets!'}
-                  {num === 2 && 'Microscope shows high-altitude air molecular density drops sharply from sea level to 8,848m summit!'}
-                  {num === 3 && 'Microscope reveals water molecules clustering tightly into minimum surface area spheres under microgravity surface tension!'}
-                  {num === 4 && 'Cross-section shows interlocking wooden gear teeth and pulley chains lifting stepwell water buckets smoothly!'}
-                  {num === 5 && 'Microscopic view of ancient fossilized marine plankton hydrocarbons converted into petroleum under geological pressure!'}
-                </p>
+                {/* Chapter 4: Golconda Fort Stepwells & Bastions -> Mechanical Cross-Section & Fort Architect Studios */}
+                {num === 4 && (
+                  <div className="w-full flex flex-col items-center gap-6">
+                    <MechanicalCrossSectionStudio />
+                    <FortArchitectStudio />
+                  </div>
+                )}
+
+                {/* Chapter 5: Petroleum Porous Sandstone Geology Studio */}
+                {num === 5 && (
+                  <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
+                    <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
+                      <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
+                        <ZoomIn className="w-4 h-4 text-indigo-400" />
+                        <span>Petroleum Sandstone Strata Geological Studio ({zoomLevel}x)</span>
+                      </span>
+
+                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
+                        {[100, 250, 500].map((z) => (
+                          <button
+                            key={z}
+                            onClick={() => {
+                              sounds.pop();
+                              setZoomLevel(z);
+                            }}
+                            className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                              zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            {z}x
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
+                      <SpecimenPetroleumPorousSandstone zoom={zoomLevel} />
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
+                      Geological magnification of ancient porous sandstone rock pores trapping crude hydrocarbons deep beneath sedimentary layers!
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
