@@ -269,7 +269,26 @@ export const MysteryObjectQuiz: React.FC = () => {
   const specimen = MYSTERY_SPECIMENS[currentIndex];
   const progressPercent = Math.round(((currentIndex + 1) / MYSTERY_SPECIMENS.length) * 100);
 
+  // Shuffle options for the current specimen
+  const randomizedOptions = React.useMemo(() => {
+    const arr = [...specimen.options];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }, [currentIndex, specimen.options]);
+
+  // Cancel prior voice speech when moving to next question
+  React.useEffect(() => {
+    voiceAssistant.stop();
+    return () => {
+      voiceAssistant.stop();
+    };
+  }, [currentIndex]);
+
   const handleOptionSelect = (opt: string) => {
+    voiceAssistant.stop();
     if (isAnswered) return;
     setSelectedOption(opt);
     setIsAnswered(true);
@@ -490,7 +509,7 @@ export const MysteryObjectQuiz: React.FC = () => {
                 </span>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {specimen.options.map((opt) => {
+                  {randomizedOptions.map((opt) => {
                     const isSelected = selectedOption === opt;
                     const isCorrect = opt === specimen.correctMaterial;
 

@@ -159,8 +159,12 @@ class VoiceAssistantEngine {
 
   private notifySpeaking(speaking: boolean) {
     this.listeners.forEach((cb) => cb(speaking));
-    // Dynamic BGM Ducking: Lower music volume when Pip is talking
-    bgmEngine.duck(speaking);
+    // Dynamic BGM Ducking: Lower music volume when Pip is talking, restore when done
+    if (speaking) {
+      bgmEngine.duck();
+    } else {
+      bgmEngine.unduck();
+    }
   }
 
   private notifyBoundary(charIndex: number, text: string, wordIndex?: number) {
@@ -176,12 +180,12 @@ class VoiceAssistantEngine {
 
   // Speaks with custom speed/pitch preferences, emotional prosody, and exact word sync
   speak(text: string, onEnd?: () => void) {
+    this.stop();
+
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || this.isMuted()) {
       if (onEnd) onEnd();
       return;
     }
-
-    this.stop();
 
     // Clean emojis & normalize whitespace
     const cleanedText = text

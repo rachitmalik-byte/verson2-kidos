@@ -61,8 +61,9 @@ export function RaincoatMission() {
   const currentStepIndex = phaseOrder.indexOf(currentPhase);
   const totalSteps = phaseOrder.length;
 
-  // Dynamic Case-Themed BGM Track Switching
+  // Dynamic Case-Themed BGM Track Switching & Speech Cancellation
   React.useEffect(() => {
+    voiceAssistant.stop();
     if (currentPhase === 'HOOK' || currentPhase === 'INSPECT') {
       bgmEngine.setTrack('rainy-storm');
     } else if (currentPhase === 'PRACTICE') {
@@ -72,9 +73,13 @@ export function RaincoatMission() {
     } else {
       bgmEngine.setTrack('playful-lab');
     }
+    return () => {
+      voiceAssistant.stop();
+    };
   }, [currentPhase]);
 
   const handleNextPhase = () => {
+    voiceAssistant.stop();
     setFeedback(null);
     if (currentStepIndex < totalSteps - 1) {
       sounds.success();

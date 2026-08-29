@@ -32,7 +32,7 @@ export const useAudioStore = create<AudioState>()(
       isSfxMuted: false,
       isTtsMuted: false,
       isBgmMuted: false,
-      bgmVolume: 0.35,
+      bgmVolume: 0.70,
       currentBgmTrack: 'playful-lab',
       ttsSpeed: 0.94,
       ttsPitch: 1.08,

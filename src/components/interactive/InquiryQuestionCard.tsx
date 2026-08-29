@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -25,6 +25,16 @@ interface InquiryQuestionCardProps {
   isCompleted?: boolean;
 }
 
+// Fisher-Yates shuffle algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
   title,
   question,
@@ -40,7 +50,26 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [showXpReward, setShowXpReward] = useState(false);
 
+  // Dynamically shuffle options whenever the question or options change
+  const randomizedOptions = useMemo(() => {
+    return shuffleArray(options);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question, title]);
+
+  // Stop previous voice assistant speech when question changes or component unmounts
+  useEffect(() => {
+    voiceAssistant.stop();
+    setSelectedId(null);
+    setFeedbackMessage(null);
+    setHasSucceeded(isCompleted);
+
+    return () => {
+      voiceAssistant.stop();
+    };
+  }, [question, title, isCompleted]);
+
   const handleOptionClick = (opt: InquiryOption) => {
+    voiceAssistant.stop();
     setSelectedId(opt.id);
 
     if (opt.isCorrect) {
@@ -99,9 +128,9 @@ export const InquiryQuestionCard: React.FC<InquiryQuestionCardProps> = ({
         {question}
       </p>
 
-      {/* Neutral, Balanced Inquiry Options */}
+      {/* Randomized Inquiry Options */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
-        {options.map((opt) => {
+        {randomizedOptions.map((opt) => {
           const isSelected = selectedId === opt.id;
           const isSolvedCorrect = hasSucceeded && opt.isCorrect;
 

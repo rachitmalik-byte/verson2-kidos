@@ -8,6 +8,7 @@ import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
+import { voiceAssistant } from '@/lib/voiceAssistant';
 
 // Real Studio Macro Educational Photography
 import rawCottonBollImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
@@ -128,6 +129,23 @@ export function SortingMission() {
   const [activePracticeItem, setActivePracticeItem] = useState<string | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
 
+  // Shuffle specimen cards on desk
+  const [shuffledItems] = useState(() => {
+    const arr = [...SORTING_ITEMS];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  });
+
+  React.useEffect(() => {
+    voiceAssistant.stop();
+    return () => {
+      voiceAssistant.stop();
+    };
+  }, [currentPhase]);
+
   const navigate = useNavigate();
   const completeMission = useProgressStore((state) => state.completeMission);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
@@ -137,6 +155,7 @@ export function SortingMission() {
   const totalSteps = phaseOrder.length;
 
   const handleNextPhase = () => {
+    voiceAssistant.stop();
     if (currentStepIndex < totalSteps - 1) {
       sounds.success();
       setCurrentPhase(phaseOrder[currentStepIndex + 1]);
@@ -378,9 +397,9 @@ export function SortingMission() {
                 </button>
               </div>
 
-              {/* ── 8 REAL STUDIO SPECIMEN CARDS ── */}
+              {/* ── 8 REAL STUDIO SPECIMEN CARDS (SHUFFLED) ── */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full">
-                {SORTING_ITEMS.map((item) => {
+                {shuffledItems.map((item) => {
                   const isSorted = Boolean(sortedItems[item.id]);
                   const isSelected = activeItem === item.id;
 

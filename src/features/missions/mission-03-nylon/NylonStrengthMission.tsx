@@ -41,7 +41,15 @@ export function NylonStrengthMission() {
   const currentStepIndex = phaseOrder.indexOf(currentPhase);
   const totalSteps = phaseOrder.length;
 
+  React.useEffect(() => {
+    voiceAssistant.stop();
+    return () => {
+      voiceAssistant.stop();
+    };
+  }, [currentPhase]);
+
   const handleNextPhase = () => {
+    voiceAssistant.stop();
     if (currentStepIndex < totalSteps - 1) {
       sounds.success();
       setCurrentPhase(phaseOrder[currentStepIndex + 1]);

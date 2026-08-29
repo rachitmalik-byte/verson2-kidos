@@ -119,9 +119,18 @@ class BgmEngine {
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
         this.duckGain = this.ctx.createGain();
+        const compressor = this.ctx.createDynamicsCompressor();
+        compressor.threshold.setValueAtTime(-18, this.ctx.currentTime);
+        compressor.knee.setValueAtTime(24, this.ctx.currentTime);
+        compressor.ratio.setValueAtTime(8, this.ctx.currentTime);
+        compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);
+        compressor.release.setValueAtTime(0.2, this.ctx.currentTime);
+
         this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : this.baseVolume, this.ctx.currentTime);
         this.duckGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
-        this.duckGain.connect(this.masterGain);
+
+        this.duckGain.connect(compressor);
+        compressor.connect(this.masterGain);
         this.masterGain.connect(this.ctx.destination);
       }
     }
@@ -173,7 +182,8 @@ class BgmEngine {
 
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.linearRampToValueAtTime(vol, now + attackTime);
+      // Scaled volume for rich dynamic range
+      gain.gain.linearRampToValueAtTime(Math.min(0.9, vol * 1.5), now + attackTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
       osc.connect(filter);
