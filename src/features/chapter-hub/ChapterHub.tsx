@@ -44,6 +44,9 @@ import raceCarTireTreadImg from '@/assets/images/experiments/vulcanized_car_tire
 import epoxyAdhesiveSealantImg from '@/assets/images/experiments/epoxy_resin_adhesive_glue.jpg';
 import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy_jump.jpg';
 
+import { InteractiveChapterVideoLab } from './InteractiveChapterVideoLab';
+import { IntegratedGuidebook } from './IntegratedGuidebook';
+
 const missionThumbnails: Record<string, string> = {
   'mission-01': raincoatWaterproofImg,
   'mission-02': cottonBollSpecimenImg,
@@ -67,6 +70,7 @@ export function ChapterHub() {
   const discoveries = useDiscoveryStore((state) => state.discoveries);
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
+  const [activeTab, setActiveTab] = useState<'missions' | 'video' | 'guidebook'>('missions');
 
   const totalStars = completedMissions.length * 3 + discoveries.length * 2;
   const isAllComplete = completedMissions.length === missions.length;
@@ -160,36 +164,64 @@ export function ChapterHub() {
               />
             </div>
 
-            {/* Quick Actions Bar */}
+            {/* Quick Actions & View Switcher */}
             <div className="flex flex-wrap gap-2.5 mt-4 justify-center md:justify-start">
               <button
-                id="chapter-intro-btn"
+                id="tab-missions-btn"
                 onClick={() => {
                   sounds.pop();
-                  navigate('/chapter/3');
+                  voiceAssistant.stop();
+                  setActiveTab('missions');
                 }}
-                className="btn-3d-amber text-slate-950 font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                  activeTab === 'missions'
+                    ? 'bg-amber-400 border-2 border-amber-600 text-slate-950 ring-2 ring-amber-300'
+                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
+                }`}
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Play Chapter Intro 🎬</span>
+                <Compass className="w-3.5 h-3.5" />
+                <span>13 Hands-on Missions 🗺️</span>
               </button>
 
               <button
-                id="chapter-journal-btn"
+                id="tab-video-btn"
                 onClick={() => {
                   sounds.pop();
-                  navigate('/discovery-book');
+                  voiceAssistant.stop();
+                  setActiveTab('video');
                 }}
-                className="px-4 py-2.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-xs transition-all"
+                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                  activeTab === 'video'
+                    ? 'bg-sky-500 border-2 border-sky-700 text-white ring-2 ring-sky-300 shadow-sky-200'
+                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
+                }`}
               >
-                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Field Specimen Journal ({discoveries.length})</span>
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Video Lab (Timeline Synced) 🎬</span>
+              </button>
+
+              <button
+                id="tab-guidebook-btn"
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  setActiveTab('guidebook');
+                }}
+                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                  activeTab === 'guidebook'
+                    ? 'bg-indigo-600 border-2 border-indigo-800 text-white ring-2 ring-indigo-300 shadow-indigo-200'
+                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Science Field Guidebook 📖</span>
               </button>
 
               <button
                 id="chapter-mystery-quiz-btn"
                 onClick={() => {
                   sounds.pop();
+                  voiceAssistant.stop();
                   navigate('/mystery-lab');
                 }}
                 className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all"
@@ -197,53 +229,73 @@ export function ChapterHub() {
                 <Sparkles className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
                 <span>Mystery Specimen Quiz Lab 🔬 (+25🪙)</span>
               </button>
+
+              <button
+                id="chapter-journal-btn"
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  navigate('/discovery-book');
+                }}
+                className="px-4 py-2.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-xs transition-all"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Field Journal ({discoveries.length})</span>
+              </button>
             </div>
           </div>
         </div>
 
-        {/* ── Chapters Roadmap Preview ── */}
-        <div id="chapter-modules-grid" className="space-y-3">
-          <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">
-            Chemistry Course Modules & Chapters
-          </h3>
+        {/* ── Dynamic Tab Content View ── */}
+        {activeTab === 'video' && <InteractiveChapterVideoLab />}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { num: 'Ch 1', title: 'States of Matter: Solids & Gases', status: 'Coming Soon', active: false },
-              { num: 'Ch 2', title: 'Pure Substances & Mixtures', status: 'Coming Soon', active: false },
-              { num: 'Ch 3', title: 'Synthetic Materials & Polymers', status: 'ACTIVE (13 Missions)', active: true },
-              { num: 'Ch 4', title: 'Acids, Bases & Neutralization', status: 'Coming Soon', active: false },
-            ].map((ch) => (
-              <div
-                key={ch.num}
-                className={`p-4 rounded-2xl border-2 flex flex-col justify-between transition-all ${
-                  ch.active
-                    ? 'bg-amber-50 border-amber-400 shadow-md ring-2 ring-amber-300'
-                    : 'bg-white/80 border-slate-200 opacity-60'
-                }`}
-              >
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
-                    {ch.num}
-                  </span>
-                  <span className="font-extrabold text-xs text-slate-800 leading-tight block mt-0.5">
-                    {ch.title}
-                  </span>
-                </div>
-                <span
-                  className={`text-[10px] font-black uppercase tracking-wider mt-2.5 px-2.5 py-0.5 rounded-full w-fit ${
-                    ch.active ? 'bg-amber-400 text-slate-950 font-black shadow-xs' : 'bg-slate-100 text-slate-400'
-                  }`}
-                >
-                  {ch.status}
-                </span>
+        {activeTab === 'guidebook' && <IntegratedGuidebook />}
+
+        {activeTab === 'missions' && (
+          <>
+            {/* ── Chapters Roadmap Preview ── */}
+            <div id="chapter-modules-grid" className="space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">
+                CBSE Class 5 EVS Course Modules
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  { num: 'Ch 1', title: 'States of Matter: Solids & Gases', status: 'Coming Soon', active: false },
+                  { num: 'Ch 2', title: 'Pure Substances & Mixtures', status: 'Coming Soon', active: false },
+                  { num: 'Ch 3', title: 'Synthetic Materials & Polymers', status: 'ACTIVE (13 Missions)', active: true },
+                  { num: 'Ch 4', title: 'Acids, Bases & Neutralization', status: 'Coming Soon', active: false },
+                ].map((ch) => (
+                  <div
+                    key={ch.num}
+                    className={`p-4 rounded-2xl border-2 flex flex-col justify-between transition-all ${
+                      ch.active
+                        ? 'bg-amber-50 border-amber-400 shadow-md ring-2 ring-amber-300'
+                        : 'bg-white/80 border-slate-200 opacity-60'
+                    }`}
+                  >
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                        {ch.num}
+                      </span>
+                      <span className="font-extrabold text-xs text-slate-800 leading-tight block mt-0.5">
+                        {ch.title}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-black uppercase tracking-wider mt-2.5 px-2.5 py-0.5 rounded-full w-fit ${
+                        ch.active ? 'bg-amber-400 text-slate-950 font-black shadow-xs' : 'bg-slate-100 text-slate-400'
+                      }`}
+                    >
+                      {ch.status}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* ── 13 Interactive Mission Visual Adventure Cards ── */}
-        <div id="chapter-missions-trail" className="space-y-4">
+            {/* ── 13 Interactive Mission Visual Adventure Cards ── */}
+            <div id="chapter-missions-trail" className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Compass className="w-5 h-5 text-amber-500" />
@@ -372,6 +424,8 @@ export function ChapterHub() {
             })}
           </div>
         </div>
+          </>
+        )}
       </div>
 
       {/* First-Time Guided Tutorial Tour */}
