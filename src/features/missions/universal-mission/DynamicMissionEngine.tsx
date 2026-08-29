@@ -61,6 +61,12 @@ import plasticDecayDay1Img from '@/assets/images/decay/plastic_day1.jpg';
 import plasticDecay2WeeksImg from '@/assets/images/decay/plastic_2weeks.jpg';
 import plasticDecay100YrsImg from '@/assets/images/decay/plastic_100yrs.jpg';
 import plasticDecay450YrsImg from '@/assets/images/decay/plastic_450yrs.jpg';
+import soilCottonDay1Img from '@/assets/images/decay/soil_cotton_day1.jpg';
+import soilCottonRottedImg from '@/assets/images/decay/soil_cotton_rotted.jpg';
+import soilPlasticDay1Img from '@/assets/images/decay/soil_plastic_day1.jpg';
+import soilPlastic450yrsImg from '@/assets/images/decay/soil_plastic_450yrs.jpg';
+import soilAppleDay1Img from '@/assets/images/decay/soil_apple_day1.jpg';
+import soilAppleRottedImg from '@/assets/images/decay/soil_apple_rotted.jpg';
 import copperWireMacroImg from '@/assets/images/wire/copper_wire_macro.jpg';
 import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
 import steelKeyMacroImg from '@/assets/images/wire/steel_key_macro.jpg';
@@ -1366,121 +1372,246 @@ export const DynamicMissionEngine: React.FC = () => {
               </div>
             )}
 
-            {/* Step 1: Time Slider Sandbox with Real Photos */}
+            {/* Step 1: Multi-Specimen Consistent Soil Decay Simulator */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl">
-                <h3 className="text-2xl font-black text-slate-900 mb-2">500-Year Soil Decay Simulator</h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-4 text-center">
-                  Drag the timeline slider to travel forward in time and watch how soil bacteria break down waste!
+              <div className="w-full max-w-4xl flex flex-col items-center bg-white p-5 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-2xl">⏳🌱</span>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    500-Year Soil Time Travel Chamber
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 font-bold mb-4 text-center max-w-xl">
+                  Choose a pair of materials below, then travel forward in time to discover why nature eats organic items but plastic trash stays for centuries!
                 </p>
 
-                {/* Timeline Slider */}
-                <div className="w-full max-w-md mb-6">
-                  <div className="flex justify-between text-xs font-black text-slate-600 mb-1">
-                    <span>Day 1</span>
-                    <span>2 Weeks</span>
-                    <span>100 Yrs</span>
-                    <span>450 Yrs+</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="3"
-                    step="1"
-                    value={interactiveState.timeStep ?? 0}
-                    onChange={(e) => {
-                      sounds.pop();
-                      const val = parseInt(e.target.value, 10);
-                      setInteractiveState((p) => ({
-                        ...p,
-                        timeStep: val,
-                        [`step_${currentStepIndex}`]: val >= 2,
-                      }));
-                    }}
-                    className="w-full accent-emerald-500 cursor-pointer h-3 bg-slate-200 rounded-lg"
-                  />
+                {/* Specimen Category Selector */}
+                <div className="flex flex-wrap justify-center gap-2 mb-5 w-full">
+                  {[
+                    { id: 'cotton', label: '👕 1. Cotton Fabric vs Plastic Bottle', natural: 'Cotton Fabric' },
+                    { id: 'apple', label: '🍎 2. Apple Fruit vs Plastic Bottle', natural: 'Apple Fruit' },
+                    { id: 'wood', label: '🪵 3. Wood Timber vs Plastic Pellets', natural: 'Wood Timber' },
+                  ].map((pair) => {
+                    const isSelected = (interactiveState.soilPair || 'cotton') === pair.id;
+                    return (
+                      <button
+                        key={pair.id}
+                        onClick={() => {
+                          sounds.pop();
+                          voiceAssistant.stop();
+                          setInteractiveState((p) => ({ ...p, soilPair: pair.id }));
+                        }}
+                        className={`px-3.5 py-2 rounded-2xl text-xs font-black transition-all cursor-pointer border-2 ${
+                          isSelected
+                            ? 'bg-emerald-500 border-emerald-700 text-white shadow-md scale-102 ring-2 ring-emerald-300'
+                            : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700'
+                        }`}
+                      >
+                        {pair.label}
+                      </button>
+                    );
+                  })}
                 </div>
 
-                {/* Soil Observation Box with Progressive Real Photos */}
+                {/* Timeline Milestone Buttons */}
+                <div className="w-full bg-slate-900 text-white p-3.5 sm:p-4 rounded-2xl mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-amber-400" />
+                    <span className="text-xs font-black uppercase tracking-wider text-amber-300">
+                      Time Travel Milestones:
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {[
+                      { step: 0, label: '🌱 Day 1 (Fresh)', voice: 'Day 1: Both materials are freshly buried in dark garden soil.' },
+                      { step: 1, label: '⏳ 2 Weeks', voice: '2 Weeks later: Soil bacteria and moisture begin decomposing the natural item.' },
+                      { step: 2, label: '🍂 1 Year', voice: '1 Year later: Natural plant fibers crumble into rich garden compost!' },
+                      { step: 3, label: '🚀 450+ Years', voice: '450 Years in the future: Natural organic matter vanished into fertile soil, but synthetic plastic is still polluting!' },
+                    ].map((t) => {
+                      const isCurrent = (interactiveState.timeStep ?? 0) === t.step;
+                      return (
+                        <button
+                          key={t.step}
+                          onClick={() => {
+                            sounds.sparkle();
+                            voiceAssistant.speak(t.voice);
+                            setInteractiveState((p) => ({
+                              ...p,
+                              timeStep: t.step,
+                              [`step_${currentStepIndex}`]: t.step >= 1,
+                            }));
+                          }}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                            isCurrent
+                              ? 'bg-amber-400 text-slate-950 shadow-md font-black ring-2 ring-amber-300 scale-105'
+                              : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                          }`}
+                        >
+                          {t.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Side-by-Side Soil Decomposition Observation Cards */}
                 {(() => {
                   const step = interactiveState.timeStep ?? 0;
-                  const woodStages = [
-                    { img: woodDecayDay1Img, label: 'Fresh Natural Timber', desc: 'Solid organic cellulose block' },
-                    { img: woodDecay2WeeksImg, label: 'Moist & Softening Wood', desc: 'Microbes & fungi start breaking down fibers' },
-                    { img: woodDecay100YrsImg, label: 'Rotting Mossy Humus', desc: 'Organic matter crumbling into rich compost' },
-                    { img: woodDecay450YrsImg, label: 'Fertile Soil Compost! ✓', desc: 'Completely recycled back to nature' },
-                  ];
-                  const plasticStages = [
-                    { img: plasticDecayDay1Img, label: 'Shiny Blue Polymer Pellets', desc: 'Brand new synthetic hydrocarbon chains' },
-                    { img: plasticDecay2WeeksImg, label: '100% Intact & Waterproof', desc: 'Zero microbial decay, water beads off' },
-                    { img: plasticDecay100YrsImg, label: 'Still Undigested in Dirt!', desc: 'Cracked by sunlight, but never eaten by bacteria' },
-                    { img: plasticDecay450YrsImg, label: 'Shattered Microplastics! ⚠️', desc: 'Never biodegrades, pollutes soil & water forever' },
-                  ];
-                  const currentWood = woodStages[step] || woodStages[0];
-                  const currentPlastic = plasticStages[step] || plasticStages[0];
+                  const pair = interactiveState.soilPair || 'cotton';
+
+                  let naturalImg = soilCottonDay1Img;
+                  let naturalTitle = '100% Natural Cotton Swatch';
+                  let naturalState = 'Freshly buried clean plant cellulose fibers in dark potting soil.';
+                  let naturalBadge = '🌱 Fresh Organic Matter';
+
+                  let syntheticImg = soilPlasticDay1Img;
+                  let syntheticTitle = 'Synthetic PET Plastic Bottle';
+                  let syntheticState = 'Brand new man-made polymer bottle resting in soil.';
+                  let syntheticBadge = '🧪 Fresh Polymer Bottle';
+
+                  if (pair === 'cotton') {
+                    naturalImg = step >= 1 ? soilCottonRottedImg : soilCottonDay1Img;
+                    naturalTitle = '100% Natural Cotton Fabric';
+                    naturalState =
+                      step === 0
+                        ? 'Day 1: Clean woven cotton cloth buried fresh in soil cross-section.'
+                        : 'Composted into dark, fertile garden humus soil feeding plant root systems! ✓';
+                    naturalBadge = step >= 1 ? '✓ 100% Biodegraded Compost' : '🌱 Day 1 in Soil';
+
+                    syntheticImg = step >= 2 ? soilPlastic450yrsImg : soilPlasticDay1Img;
+                    syntheticTitle = 'Synthetic PET Plastic Bottle';
+                    syntheticState =
+                      step === 0
+                        ? 'Day 1: Clean transparent plastic water bottle resting in soil.'
+                        : '450+ Years: Microbes cannot eat synthetic bonds. Plastic turns brittle and shatters into toxic microplastics! ⚠️';
+                    syntheticBadge = step >= 2 ? '⚠️ 450+ Yrs Non-Biodegradable' : '🧪 Day 1 in Soil';
+                  } else if (pair === 'apple') {
+                    naturalImg = step >= 1 ? soilAppleRottedImg : soilAppleDay1Img;
+                    naturalTitle = 'Natural Fresh Apple Fruit Core';
+                    naturalState =
+                      step === 0
+                        ? 'Day 1: Fresh fruit organic core buried in the glass soil study box.'
+                        : '2 Weeks: Microbes completely broke down fruit into dark compost with a seedling growing! ✓';
+                    naturalBadge = step >= 1 ? '✓ 100% Biodegraded Compost' : '🌱 Day 1 in Soil';
+
+                    syntheticImg = step >= 2 ? soilPlastic450yrsImg : soilPlasticDay1Img;
+                    syntheticTitle = 'Synthetic PET Plastic Bottle';
+                    syntheticState =
+                      step === 0
+                        ? 'Day 1: Clean transparent plastic water bottle in soil.'
+                        : '450+ Years: Still undigested in dirt! Soil bacteria cannot digest synthetic plastics. ⚠️';
+                    syntheticBadge = step >= 2 ? '⚠️ 450+ Yrs Non-Biodegradable' : '🧪 Day 1 in Soil';
+                  } else {
+                    // Wood pair
+                    const woodImgs = [woodDecayDay1Img, woodDecay2WeeksImg, woodDecay100YrsImg, woodDecay450YrsImg];
+                    const plasticImgs = [plasticDecayDay1Img, plasticDecay2WeeksImg, plasticDecay100YrsImg, plasticDecay450YrsImg];
+                    naturalImg = woodImgs[step] || woodImgs[0];
+                    naturalTitle = 'Natural Fallen Wood Timber';
+                    naturalState =
+                      step === 0
+                        ? 'Day 1: Solid natural tree cellulose block.'
+                        : step === 1
+                        ? '2 Weeks: Fungi and microbes soften wood fibers.'
+                        : '100+ Years: Fully decomposed into fertile soil compost! ✓';
+                    naturalBadge = step >= 2 ? '✓ 100% Recycled to Nature' : '🌱 Organic Cellulose';
+
+                    syntheticImg = plasticImgs[step] || plasticImgs[0];
+                    syntheticTitle = 'Synthetic Plastic Pellets';
+                    syntheticState =
+                      step === 0
+                        ? 'Day 1: Brand new synthetic hydrocarbon plastic beads.'
+                        : '450+ Years: Still undigested by bacteria, breaking into microplastics! ⚠️';
+                    syntheticBadge = step >= 2 ? '⚠️ 450+ Yrs Non-Biodegradable' : '🧪 Synthetic Polymer';
+                  }
 
                   return (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full mb-4">
-                      <div className="p-5 bg-emerald-50 rounded-3xl border-3 border-emerald-300 text-center flex flex-col items-center shadow-md">
-                        <span className="font-black text-xs uppercase tracking-wider text-emerald-950 block mb-2">
-                          1. Organic Natural Wood
-                        </span>
-                        <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-emerald-200 shadow-inner bg-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+                      {/* Left: Natural Biodegradable Specimen Card */}
+                      <div className="p-5 bg-gradient-to-b from-emerald-50 to-white rounded-3xl border-3 border-emerald-400 text-center flex flex-col items-center shadow-lg relative overflow-hidden">
+                        <div className="w-full flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-950 border border-emerald-300">
+                            NATURAL MATERIAL
+                          </span>
+                          <span className="text-[10px] font-black text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                            {naturalBadge}
+                          </span>
+                        </div>
+
+                        <div className="w-full aspect-square max-w-[240px] rounded-2xl overflow-hidden mb-3 border-2 border-emerald-300 shadow-inner bg-slate-900 relative">
                           <AnimatePresence mode="wait">
                             <motion.img
-                              key={`wood-decay-${step}`}
-                              src={currentWood.img}
-                              alt={currentWood.label}
-                              initial={{ opacity: 0.3, scale: 0.95 }}
+                              key={`nat-${pair}-${step}`}
+                              src={naturalImg}
+                              alt={naturalTitle}
+                              initial={{ opacity: 0.4, scale: 0.96 }}
                               animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0.3, scale: 1.05 }}
+                              exit={{ opacity: 0.4, scale: 1.04 }}
                               transition={{ duration: 0.3 }}
                               className="w-full h-full object-cover"
                             />
                           </AnimatePresence>
                         </div>
-                        <span className="text-xs font-black text-emerald-900 mb-0.5">
-                          {currentWood.label}
-                        </span>
-                        <span className="text-[11px] font-bold text-emerald-700">
-                          {currentWood.desc}
-                        </span>
+
+                        <h4 className="font-black text-base text-emerald-950 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                          {naturalTitle}
+                        </h4>
+                        <p className="text-xs font-bold text-emerald-800 leading-relaxed">
+                          {naturalState}
+                        </p>
                       </div>
 
-                      <div className="p-5 bg-rose-50 rounded-3xl border-3 border-rose-300 text-center flex flex-col items-center shadow-md">
-                        <span className="font-black text-xs uppercase tracking-wider text-rose-950 block mb-2">
-                          2. Synthetic Plastic Pellets
-                        </span>
-                        <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-rose-200 shadow-inner bg-white">
+                      {/* Right: Synthetic Non-Biodegradable Specimen Card */}
+                      <div className="p-5 bg-gradient-to-b from-rose-50 to-white rounded-3xl border-3 border-rose-400 text-center flex flex-col items-center shadow-lg relative overflow-hidden">
+                        <div className="w-full flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-rose-200 text-rose-950 border border-rose-300">
+                            SYNTHETIC MATERIAL
+                          </span>
+                          <span className="text-[10px] font-black text-rose-800 bg-rose-100 px-2 py-0.5 rounded-full">
+                            {syntheticBadge}
+                          </span>
+                        </div>
+
+                        <div className="w-full aspect-square max-w-[240px] rounded-2xl overflow-hidden mb-3 border-2 border-rose-300 shadow-inner bg-slate-900 relative">
                           <AnimatePresence mode="wait">
                             <motion.img
-                              key={`plastic-decay-${step}`}
-                              src={currentPlastic.img}
-                              alt={currentPlastic.label}
-                              initial={{ opacity: 0.3, scale: 0.95 }}
+                              key={`synth-${pair}-${step}`}
+                              src={syntheticImg}
+                              alt={syntheticTitle}
+                              initial={{ opacity: 0.4, scale: 0.96 }}
                               animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0.3, scale: 1.05 }}
+                              exit={{ opacity: 0.4, scale: 1.04 }}
                               transition={{ duration: 0.3 }}
                               className="w-full h-full object-cover"
                             />
                           </AnimatePresence>
                         </div>
-                        <span className="text-xs font-black text-rose-900 mb-0.5">
-                          {currentPlastic.label}
-                        </span>
-                        <span className="text-[11px] font-bold text-rose-700">
-                          {currentPlastic.desc}
-                        </span>
+
+                        <h4 className="font-black text-base text-rose-950 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                          {syntheticTitle}
+                        </h4>
+                        <p className="text-xs font-bold text-rose-800 leading-relaxed">
+                          {syntheticState}
+                        </p>
                       </div>
                     </div>
                   );
                 })()}
 
-                {interactiveState[`step_${currentStepIndex}`] && (
-                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
-                    🎉 Aha Discovery! Soil microbes eat organic carbon chains, but cannot digest synthetic polymers, leaving microplastics behind for centuries!
+                {/* Clear Science Lesson Takeaway Box */}
+                <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-2xl text-slate-900 w-full shadow-xs">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-amber-600" />
+                    <span className="text-xs font-black uppercase tracking-wider text-amber-900">
+                      Simple Science Takeaway:
+                    </span>
                   </div>
-                )}
+                  <p className="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed">
+                    🌿 <strong>Biodegradable:</strong> Earthworms and soil bacteria naturally eat organic plant fibers (cotton, wood, fruit), recycling them into rich garden food within weeks.  
+                    <br />
+                    ⚠️ <strong>Non-Biodegradable:</strong> Bacteria <em>cannot</em> digest man-made plastic chemicals, so plastics stay trapped in Earth's soil for over 450 years!
+                  </p>
+                </div>
               </div>
             )}
 
