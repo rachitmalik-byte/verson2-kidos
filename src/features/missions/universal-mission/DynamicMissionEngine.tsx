@@ -11,6 +11,7 @@ import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { bgmEngine } from '@/lib/bgmEngine';
+import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { InquiryQuestionCard } from '@/components/interactive/InquiryQuestionCard';
 import { RaincoatMission } from '@/features/missions/mission-01-raincoat/RaincoatMission';
 import { SortingMission } from '@/features/missions/mission-02-sorting/SortingMission';
