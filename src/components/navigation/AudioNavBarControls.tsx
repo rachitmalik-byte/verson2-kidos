@@ -20,11 +20,17 @@ import {
   Menu,
   X,
   Sparkles,
+  Camera,
+  Bot,
+  FlaskConical,
 } from 'lucide-react';
 import { AudioSettingsModal } from '@/components/audio/AudioSettingsModal';
 import { PipClosetModal } from '@/features/closet/PipClosetModal';
 import { ScienceArcadeModal } from '@/features/arcade/ScienceArcadeModal';
 import { FirstTimeTutorialOverlay } from '@/components/tutorial/FirstTimeTutorialOverlay';
+import { ScanMyWorldModal } from '@/components/ai/ScanMyWorldModal';
+import { SocraticPipAITutorModal } from '@/components/ai/SocraticPipAITutorModal';
+import { WhatIfScienceSandboxModal } from '@/components/ai/WhatIfScienceSandboxModal';
 
 interface AudioNavBarControlsProps {
   className?: string;
@@ -110,6 +116,9 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const [showClosetModal, setShowClosetModal] = useState(false);
   const [showArcadeModal, setShowArcadeModal] = useState(false);
   const [showTutorialModal, setShowTutorialModal] = useState(false);
+  const [showScanModal, setShowScanModal] = useState(false);
+  const [showPipChatModal, setShowPipChatModal] = useState(false);
+  const [showWhatIfModal, setShowWhatIfModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { isSfxMuted, isTtsMuted, isBgmMuted, toggleSfx, toggleTts, toggleBgm } = useAudioStore();
@@ -144,8 +153,50 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
           <span>{credits} 🪙</span>
         </button>
 
-        {/* Desktop Visible Buttons */}
+        {/* Desktop AI Tools Bar */}
         <div className="hidden md:flex items-center gap-1.5">
+          {/* Scan My World (Gemini Vision AI) */}
+          <button
+            id="navbar-scan-btn"
+            onClick={() => {
+              sounds.pop();
+              setShowScanModal(true);
+            }}
+            className="px-2.5 py-1.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs flex items-center gap-1 cursor-pointer shadow-md active:scale-95 transition-all"
+            title="Scan physical objects around your house with Gemini AI"
+          >
+            <Camera className="w-3.5 h-3.5 text-white animate-pulse" />
+            <span>Scan World 📷</span>
+          </button>
+
+          {/* Ask Pip AI Mentor */}
+          <button
+            id="navbar-ask-pip-btn"
+            onClick={() => {
+              sounds.pop();
+              setShowPipChatModal(true);
+            }}
+            className="px-2.5 py-1.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-black text-xs flex items-center gap-1 cursor-pointer shadow-md active:scale-95 transition-all"
+            title="Chat with Pip Socratic AI Tutor"
+          >
+            <Bot className="w-3.5 h-3.5 text-white" />
+            <span>Ask Pip AI 🤖</span>
+          </button>
+
+          {/* What-If Lab */}
+          <button
+            id="navbar-what-if-btn"
+            onClick={() => {
+              sounds.pop();
+              setShowWhatIfModal(true);
+            }}
+            className="px-2.5 py-1.5 rounded-2xl bg-purple-500 hover:bg-purple-600 text-white font-black text-xs flex items-center gap-1 cursor-pointer shadow-md active:scale-95 transition-all"
+            title="Generative Physics Sandbox"
+          >
+            <FlaskConical className="w-3.5 h-3.5 text-white" />
+            <span>What-If? 🧪</span>
+          </button>
+
           {/* Pip's Closet */}
           <button
             id="navbar-closet-btn"
@@ -157,7 +208,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
             title="Open Pip's Wardrobe"
           >
             <Shirt className="w-3.5 h-3.5 text-pink-600" />
-            <span>Pip's Closet</span>
+            <span>Wardrobe</span>
           </button>
 
           {/* Science Arcade */}
@@ -172,20 +223,6 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
           >
             <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
             <span>Arcade</span>
-          </button>
-
-          {/* "Try It With Me" Guide */}
-          <button
-            onClick={() => {
-              sounds.pop();
-              startTryWithMe();
-              navigate('/subjects');
-            }}
-            className="px-2.5 py-1.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 border-2 border-amber-500 text-slate-950 font-black text-xs flex items-center gap-1 cursor-pointer shadow-xs active:scale-95 transition-all"
-            title="Launch Interactive Spotlight Walkthrough"
-          >
-            <Compass className="w-3.5 h-3.5 text-slate-950 animate-pulse" />
-            <span>Try With Me 🪄</span>
           </button>
         </div>
 
@@ -260,8 +297,45 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
       </div>
 
       {/* Mobile Overflow Menu Drawer */}
+      {/* Mobile Overflow Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed top-16 right-3 z-50 bg-white/95 backdrop-blur-xl border-3 border-slate-200 rounded-3xl p-3 shadow-2xl flex flex-col gap-2 min-w-[200px] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="md:hidden fixed top-16 right-3 z-50 bg-white/95 backdrop-blur-xl border-3 border-slate-200 rounded-3xl p-3 shadow-2xl flex flex-col gap-2 min-w-[210px] animate-in fade-in slide-in-from-top-2 duration-200">
+          <button
+            onClick={() => {
+              sounds.pop();
+              setShowScanModal(true);
+              setIsMobileMenuOpen(false);
+            }}
+            className="px-3 py-2 rounded-2xl bg-emerald-50 border-2 border-emerald-200 text-emerald-950 font-black text-xs flex items-center gap-2 text-left"
+          >
+            <Camera className="w-4 h-4 text-emerald-600" />
+            <span>Scan My World 📷</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sounds.pop();
+              setShowPipChatModal(true);
+              setIsMobileMenuOpen(false);
+            }}
+            className="px-3 py-2 rounded-2xl bg-sky-50 border-2 border-sky-200 text-sky-950 font-black text-xs flex items-center gap-2 text-left"
+          >
+            <Bot className="w-4 h-4 text-sky-600" />
+            <span>Ask Pip AI 🤖</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sounds.pop();
+              setShowWhatIfModal(true);
+              setIsMobileMenuOpen(false);
+            }}
+            className="px-3 py-2 rounded-2xl bg-purple-50 border-2 border-purple-200 text-purple-950 font-black text-xs flex items-center gap-2 text-left"
+          >
+            <FlaskConical className="w-4 h-4 text-purple-600" />
+            <span>What-If? Sandbox 🧪</span>
+          </button>
+
           <button
             onClick={() => {
               sounds.pop();
@@ -289,19 +363,6 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
           <button
             onClick={() => {
               sounds.pop();
-              startTryWithMe();
-              setIsMobileMenuOpen(false);
-              navigate('/subjects');
-            }}
-            className="px-3 py-2 rounded-2xl bg-amber-50 border-2 border-amber-300 text-slate-900 font-black text-xs flex items-center gap-2 text-left"
-          >
-            <Compass className="w-4 h-4 text-amber-600" />
-            <span>Try With Me 🪄</span>
-          </button>
-
-          <button
-            onClick={() => {
-              sounds.pop();
               setShowSettingsModal(true);
               setIsMobileMenuOpen(false);
             }}
@@ -318,6 +379,9 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
       <PipClosetModal isOpen={showClosetModal} onClose={() => setShowClosetModal(false)} />
       <ScienceArcadeModal isOpen={showArcadeModal} onClose={() => setShowArcadeModal(false)} />
       <FirstTimeTutorialOverlay isOpen={showTutorialModal} onClose={() => setShowTutorialModal(false)} />
+      <ScanMyWorldModal isOpen={showScanModal} onClose={() => setShowScanModal(false)} />
+      <SocraticPipAITutorModal isOpen={showPipChatModal} onClose={() => setShowPipChatModal(false)} />
+      <WhatIfScienceSandboxModal isOpen={showWhatIfModal} onClose={() => setShowWhatIfModal(false)} />
     </>
   );
 };
