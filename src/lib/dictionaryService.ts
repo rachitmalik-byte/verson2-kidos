@@ -2,6 +2,7 @@
 // Datamuse WordNet API + Free Dictionary API + Wiktionary + 0ms Offline Database
 
 import { findVocabWord } from '@/data/vocabulary';
+import { geminiService } from '@/lib/geminiService';
 
 export interface DictionaryResult {
   word: string;
@@ -9,7 +10,7 @@ export interface DictionaryResult {
   example?: string;
   category: string; // e.g. 'Noun', 'Verb', 'Adjective', 'Adverb', 'Science Term'
   pronunciation?: string;
-  source: 'science-curriculum' | 'instant-dictionary' | 'datamuse-api' | 'dictionary-api' | 'cached';
+  source: 'science-curriculum' | 'instant-dictionary' | 'gemini-ai' | 'datamuse-api' | 'dictionary-api' | 'cached';
 }
 
 const CACHE_KEY = 'polyquest-dictionary-cache-v3';
@@ -374,7 +375,29 @@ export async function lookupWord(rawQuery: string): Promise<DictionaryResult> {
     }
   } catch (err) {}
 
-  // 6. Compound word splitting (e.g. rainstorm -> rain + storm)
+  // 6. Query Gemini 2.5 Flash AI for Child-Friendly CBSE Science Definition
+  if (geminiService.hasApiKey()) {
+    try {
+      const aiDef = await geminiService.defineWordWithAI(clean);
+      if (aiDef && aiDef.definition) {
+        const result: DictionaryResult = {
+          word: aiDef.word || clean.charAt(0).toUpperCase() + clean.slice(1),
+          definition: aiDef.definition,
+          example: aiDef.example || `Example: Discover how "${clean}" applies in physical science!`,
+          category: aiDef.category || 'Science Term',
+          pronunciation: aiDef.pronunciation || '',
+          source: 'gemini-ai',
+        };
+        cache[lower] = result;
+        saveCache(cache);
+        return result;
+      }
+    } catch (err) {
+      console.warn('Gemini dictionary query fallback:', err);
+    }
+  }
+
+  // 7. Compound word splitting (e.g. rainstorm -> rain + storm)
   const compounds: Record<string, string> = {
     rainstorm: 'A heavy storm with strong rain and wind.',
     raincoat: 'A protective coat designed to shed rainwater.',

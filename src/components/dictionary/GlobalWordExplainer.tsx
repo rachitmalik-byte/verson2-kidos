@@ -184,9 +184,16 @@ export const GlobalWordExplainer: React.FC = () => {
                       <BookOpen className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-                        {selectedEntry.category}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                          {selectedEntry.category}
+                        </span>
+                        {selectedEntry.source === 'gemini-ai' && (
+                          <span className="text-[9px] font-black uppercase tracking-wider text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200 flex items-center gap-0.5">
+                            ✨ Gemini AI
+                          </span>
+                        )}
+                      </div>
                       <h4
                         className="text-xl font-black text-slate-900 tracking-tight"
                         style={{ fontFamily: 'Nunito, sans-serif' }}

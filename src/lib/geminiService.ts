@@ -214,4 +214,53 @@ Return ONLY valid JSON matching this schema:
       };
     }
   },
+
+  /**
+   * 📖 AI Science Word & Vocabulary Explainer
+   * Explains any highlighted word or science concept for a 5th grader.
+   */
+  async defineWordWithAI(word: string): Promise<{
+    word: string;
+    definition: string;
+    example: string;
+    category: string;
+    pronunciation?: string;
+  }> {
+    try {
+      const prompt = `You are a science dictionary for CBSE Class 5 EVS and Science students (age 9-11).
+Define the word "${word}" simply in 1 sentence. Give 1 everyday example.
+Return ONLY valid JSON matching this schema:
+{
+  "word": "${word}",
+  "definition": "1 clear simple sentence for a 5th grader",
+  "example": "1 fun everyday science example sentence",
+  "category": "Noun / Verb / Adjective / Science Term",
+  "pronunciation": "/phonetic/"
+}`;
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 250, temperature: 0.2 },
+        }),
+      });
+
+      if (!response.ok) throw new Error(`Gemini Word Def Error: ${response.statusText}`);
+      const data = await response.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
+      const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleanJson);
+    } catch (err) {
+      console.warn('Gemini Word Def fallback:', err);
+      return {
+        word: word.charAt(0).toUpperCase() + word.slice(1),
+        definition: `A term used in science and materials study.`,
+        example: `Notice how "${word}" relates to physical matter and natural properties!`,
+        category: 'Science Term',
+      };
+    }
+  },
 };
+
