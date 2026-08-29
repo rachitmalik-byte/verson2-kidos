@@ -69,6 +69,10 @@ import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_br
 import boilingTeaKettleSteamImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
 import bakelitePanHandleImg from '@/assets/images/experiments/bakelite_pan_handle.jpg';
 import castIronScorchingHandleImg from '@/assets/images/experiments/cast_iron_scorching_handle.jpg';
+import bakeliteHandleCleanImg from '@/assets/images/experiments/bakelite_handle_clean.jpg';
+import bakeliteHandleSafeImg from '@/assets/images/experiments/bakelite_handle_safe.jpg';
+import metalHandleCleanImg from '@/assets/images/experiments/metal_handle_clean.jpg';
+import metalHandleScorchingImg from '@/assets/images/experiments/metal_handle_scorching.jpg';
 import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
 import polyesterSportShirtImg from '@/assets/images/experiments/polyester_sport_shirt.jpg';
 import petWaterBottleMoldingImg from '@/assets/images/experiments/pet_water_bottle_molding.jpg';
@@ -1159,13 +1163,13 @@ export const DynamicMissionEngine: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mb-6">
-                  {/* Bakelite Handle */}
+                  {/* Bakelite Handle Card */}
                   <motion.button
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       sounds.success();
-                      voiceAssistant.speak('Bakelite plastic blocks heat flow! The handle stays cool at 26°C, protecting Pip from burns!');
+                      voiceAssistant.speak('Bakelite plastic blocks heat flow! The handle stays cool at 26°C, protecting your hand from burns!');
                       setInteractiveState((p) => ({ ...p, testedBakelite: true, [`step_${currentStepIndex}`]: true }));
                     }}
                     className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
@@ -1174,39 +1178,49 @@ export const DynamicMissionEngine: React.FC = () => {
                         : 'bg-white border-slate-200 hover:border-emerald-300 shadow-md'
                     }`}
                   >
-                    {/* Thermal Aura Overlay */}
-                    {interactiveState.testedBakelite && (
-                      <div className="absolute inset-0 bg-emerald-400/10 pointer-events-none animate-pulse" />
-                    )}
-
-                    <div className="w-40 h-40 rounded-2xl overflow-hidden mb-3 border-2 border-emerald-200 bg-slate-950 relative flex items-center justify-center p-2">
-                      <div className="w-full h-full bg-slate-900 rounded-xl flex flex-col items-center justify-center text-center p-2 relative overflow-hidden border border-emerald-400/30">
-                        {/* Black Bakelite Thermoset Handle Graphic */}
-                        <div className="w-28 h-10 bg-gradient-to-r from-slate-950 via-slate-800 to-slate-950 rounded-full border-2 border-slate-700 shadow-lg flex items-center justify-center mb-1">
-                          <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
-                            BAKELITE PLASTIC
-                          </span>
-                        </div>
-                        <span className="text-3xl mb-1">🛡️❄️</span>
-                        <span className="text-[10px] font-bold text-emerald-300">
-                          Cross-Linked Thermoset Polymer
+                    {/* State Header Tag */}
+                    <div className="w-full flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                        {interactiveState.testedBakelite ? 'AFTER: 100°C STEAM TEST' : 'BEFORE: UNTESTED ROOM TEMP'}
+                      </span>
+                      {interactiveState.testedBakelite && (
+                        <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-emerald-600" /> SAFE
                         </span>
-                      </div>
+                      )}
                     </div>
 
-                    <span className="font-black text-sm text-slate-900">
+                    {/* Real Macro Photography with dynamic swap */}
+                    <div className="w-full aspect-square max-w-[220px] rounded-2xl overflow-hidden mb-3 border-2 border-slate-200 shadow-inner bg-slate-100 relative">
+                      <img
+                        src={interactiveState.testedBakelite ? bakeliteHandleSafeImg : bakeliteHandleCleanImg}
+                        alt="Bakelite Handle"
+                        className="w-full h-full object-cover transition-all duration-300"
+                      />
+                      {interactiveState.testedBakelite && (
+                        <div className="absolute top-2 left-2 bg-emerald-600/90 text-white text-[10px] font-black px-2 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1">
+                          <span>❄️ 26°C (Cool Grip)</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <span className="font-black text-base text-slate-900 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
                       1. Thermosetting Bakelite Handle
                     </span>
-                    <span className={`text-[11px] font-black px-3 py-1 rounded-full mt-2 transition-all ${
+                    <span className="text-xs text-slate-600 font-bold mb-3">
+                      Cross-linked polymer insulator blocks heat
+                    </span>
+
+                    <span className={`text-xs font-black px-4 py-1.5 rounded-full transition-all ${
                       interactiveState.testedBakelite
-                        ? 'bg-emerald-200 text-emerald-900 border border-emerald-400 shadow-xs'
-                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                        ? 'bg-emerald-200 text-emerald-950 border border-emerald-400 shadow-xs'
+                        : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-xs'
                     }`}>
-                      {interactiveState.testedBakelite ? '✓ Temperature: 26°C (Cool & Safe!)' : 'Tap to Test Temperature 🌡️'}
+                      {interactiveState.testedBakelite ? '✓ 26°C Cool & Safe To Hold! ❄️' : 'Tap to Test Temperature 🌡️'}
                     </span>
                   </motion.button>
 
-                  {/* Cast Iron Handle */}
+                  {/* Cast Iron Handle Card */}
                   <motion.button
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
@@ -1221,46 +1235,52 @@ export const DynamicMissionEngine: React.FC = () => {
                         : 'bg-white border-slate-200 hover:border-rose-300 shadow-md'
                     }`}
                   >
-                    {/* Heat Wave Pulse Overlay */}
-                    {interactiveState.testedIron && (
-                      <div className="absolute inset-0 bg-rose-500/15 pointer-events-none animate-pulse" />
-                    )}
-
-                    <div className="w-40 h-40 rounded-2xl overflow-hidden mb-3 border-2 border-rose-200 bg-slate-950 relative flex items-center justify-center p-2">
-                      <div className="w-full h-full bg-slate-900 rounded-xl flex flex-col items-center justify-center text-center p-2 relative overflow-hidden border border-rose-400/30">
-                        {/* Red Scorching Metal Handle Graphic */}
-                        <div className={`w-28 h-10 rounded-full border-2 shadow-lg flex items-center justify-center mb-1 transition-all ${
-                          interactiveState.testedIron
-                            ? 'bg-gradient-to-r from-orange-600 via-rose-600 to-red-700 border-yellow-300 shadow-[0_0_15px_#EF4444]'
-                            : 'bg-gradient-to-r from-slate-700 to-slate-600 border-slate-500'
-                        }`}>
-                          <span className="text-[10px] font-black text-white uppercase tracking-widest">
-                            {interactiveState.testedIron ? '🔥 98°C SCORCHING' : 'BARE METAL GRIP'}
-                          </span>
-                        </div>
-                        <span className="text-3xl mb-1">{interactiveState.testedIron ? '🔥⚠️' : '🍳⚡'}</span>
-                        <span className="text-[10px] font-bold text-rose-300">
-                          High Thermal Conductor
+                    {/* State Header Tag */}
+                    <div className="w-full flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                        {interactiveState.testedIron ? 'AFTER: 100°C STEAM TEST' : 'BEFORE: UNTESTED ROOM TEMP'}
+                      </span>
+                      {interactiveState.testedIron && (
+                        <span className="text-[10px] font-black text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3 text-rose-600" /> DANGER
                         </span>
-                      </div>
+                      )}
                     </div>
 
-                    <span className="font-black text-sm text-slate-900">
+                    {/* Real Macro Photography with dynamic swap */}
+                    <div className="w-full aspect-square max-w-[220px] rounded-2xl overflow-hidden mb-3 border-2 border-slate-200 shadow-inner bg-slate-100 relative">
+                      <img
+                        src={interactiveState.testedIron ? metalHandleScorchingImg : metalHandleCleanImg}
+                        alt="Cast Iron Handle"
+                        className="w-full h-full object-cover transition-all duration-300"
+                      />
+                      {interactiveState.testedIron && (
+                        <div className="absolute top-2 left-2 bg-rose-600/90 text-white text-[10px] font-black px-2 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1 animate-pulse">
+                          <span>🔥 98°C (SCORCHING!)</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <span className="font-black text-base text-slate-900 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
                       2. Bare Cast Iron Metal Grip
                     </span>
-                    <span className={`text-[11px] font-black px-3 py-1 rounded-full mt-2 transition-all ${
+                    <span className="text-xs text-slate-600 font-bold mb-3">
+                      High thermal conductor transfers boiling heat
+                    </span>
+
+                    <span className={`text-xs font-black px-4 py-1.5 rounded-full transition-all ${
                       interactiveState.testedIron
                         ? 'bg-rose-200 text-rose-950 border border-rose-400 shadow-xs'
-                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                     }`}>
-                      {interactiveState.testedIron ? '⚠️ Temperature: 98°C (Scorching Hot!)' : 'Tap to Test Temperature 🌡️'}
+                      {interactiveState.testedIron ? '⚠️ 98°C Scorching Heat Danger! 🔥' : 'Tap to Test Temperature 🌡️'}
                     </span>
                   </motion.button>
                 </div>
 
                 {interactiveState.testedBakelite && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full animate-fade-in shadow-md">
-                    🎉 Perfect Science Choice! Bakelite is a thermosetting plastic insulator. Its cross-linked polymer network does not soften or conduct heat, protecting Pip’s fingers!
+                    🎉 Perfect Science Discovery! Bakelite is a thermosetting polymer insulator. Its cross-linked chemical network blocks heat conduction, keeping your fingers safe at 26°C even when boiling 100°C water!
                   </div>
                 )}
               </div>
