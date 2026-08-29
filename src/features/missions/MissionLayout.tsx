@@ -5,12 +5,14 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import { ArrowLeft, ArrowRight, RotateCcw, Star, Home } from 'lucide-react';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
+import { missions } from '@/data/missions';
 import { MissionAudioControls } from '@/components/navigation/AudioNavBarControls';
+import { SocraticPipAITutorModal } from '@/components/ai/SocraticPipAITutorModal';
 
 interface MissionLayoutProps {
   missionId: string;
-  missionNumber: number;
-  missionTitle: string;
+  missionNumber?: number;
+  missionTitle?: string;
   currentStep: number;
   totalSteps: number;
   isStepComplete: boolean;
@@ -37,6 +39,10 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
   const navigate = useNavigate();
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
+
+  const currentMission = missions.find((m) => m.id === missionId || m.number === missionNumber);
+  const derivedNumber = missionNumber ?? currentMission?.number ?? 1;
+  const derivedTitle = missionTitle || currentMission?.title || 'Science Mission';
 
   const starsCount = completedMissions.length * 3 + discoveries.length * 2;
 
@@ -84,7 +90,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
             <div className="min-w-0 truncate">
               <div className="flex items-center gap-1.5">
                 <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-sky-100 text-sky-800 px-2 py-0.5 rounded shrink-0">
-                  Mission {missionNumber}
+                  Mission {derivedNumber}
                 </span>
                 <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 shrink-0">
                   Step {currentStep}/{totalSteps}
@@ -94,7 +100,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
                 className="text-xs sm:text-base font-black text-slate-900 truncate"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
-                {missionTitle}
+                {derivedTitle}
               </h1>
             </div>
           </div>
