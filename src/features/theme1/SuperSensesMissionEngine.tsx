@@ -8,7 +8,12 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
-import { THEME_1_CHAPTERS, Theme1Chapter } from '@/data/theme1Missions';
+import {
+  SpecimenAntAntennaSensilla,
+  SpecimenSnakeHollowFang,
+  SpecimenTonguePapillaeTasteBud,
+  SpecimenBurdockVelcroHooks,
+} from '@/components/microscope/MicroscopeSpecimenRenders';
 import {
   AntTrailPheromoneSim,
   EagleZoomVisionSim,
@@ -366,16 +371,10 @@ export function SuperSensesMissionEngine() {
                 </div>
 
                 <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-emerald-400/70">
-                  <motion.div
-                    animate={{ scale: zoomLevel === 100 ? 1 : zoomLevel === 250 ? 1.4 : 2.0 }}
-                    transition={{ type: 'spring', damping: 15 }}
-                    className="text-6xl"
-                  >
-                    {num === 1 && '🐜 🔬'}
-                    {num === 2 && '🐍 🦷'}
-                    {num === 3 && '👅 🧪'}
-                    {num === 4 && '🌿 🪝'}
-                  </motion.div>
+                  {num === 1 && <SpecimenAntAntennaSensilla zoom={zoomLevel} />}
+                  {num === 2 && <SpecimenSnakeHollowFang zoom={zoomLevel} />}
+                  {num === 3 && <SpecimenTonguePapillaeTasteBud zoom={zoomLevel} />}
+                  {num === 4 && <SpecimenBurdockVelcroHooks zoom={zoomLevel} />}
 
                   <div className="absolute inset-0 pointer-events-none border border-emerald-400/30 rounded-full flex items-center justify-center">
                     <div className="w-full h-[1px] bg-emerald-400/30 absolute" />

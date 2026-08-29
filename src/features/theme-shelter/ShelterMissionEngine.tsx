@@ -10,6 +10,13 @@ import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { SHELTER_CHAPTERS, ShelterChapter } from '@/data/themeShelterMissions';
 import {
+  SpecimenPashminaVsHumanHair,
+  SpecimenAirMoleculeBarometer,
+  SpecimenZeroGravityWaterSphere,
+  SpecimenGolcondaGearMechanics,
+  SpecimenPetroleumPorousSandstone,
+} from '@/components/microscope/MicroscopeSpecimenRenders';
+import {
   ChangthangPashminaSim,
   EverestMountaineeringSim,
   ZeroGravitySpaceStationSim,
@@ -393,17 +400,11 @@ export function ShelterMissionEngine() {
                 </div>
 
                 <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
-                  <motion.div
-                    animate={{ scale: zoomLevel === 100 ? 1 : zoomLevel === 250 ? 1.4 : 2.0 }}
-                    transition={{ type: 'spring', damping: 15 }}
-                    className="text-6xl"
-                  >
-                    {num === 1 && '🐐 🧶'}
-                    {num === 2 && '🧗 ❄️'}
-                    {num === 3 && '🚀 💧'}
-                    {num === 4 && '🏰 ⚙️'}
-                    {num === 5 && '🛢️ 🔥'}
-                  </motion.div>
+                  {num === 1 && <SpecimenPashminaVsHumanHair zoom={zoomLevel} />}
+                  {num === 2 && <SpecimenAirMoleculeBarometer zoom={zoomLevel} />}
+                  {num === 3 && <SpecimenZeroGravityWaterSphere zoom={zoomLevel} />}
+                  {num === 4 && <SpecimenGolcondaGearMechanics zoom={zoomLevel} />}
+                  {num === 5 && <SpecimenPetroleumPorousSandstone zoom={zoomLevel} />}
 
                   <div className="absolute inset-0 pointer-events-none border border-indigo-400/30 rounded-full flex items-center justify-center">
                     <div className="w-full h-[1px] bg-indigo-400/30 absolute" />
