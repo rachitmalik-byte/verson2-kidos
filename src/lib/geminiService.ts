@@ -41,7 +41,7 @@ export const geminiService = {
 
   /**
    * 🎙️ Live Open-Ended AI Science Mentor (Real-Time Extraction)
-   * Answers any science/curiosity question in 3 to 4 short, simple sentences with everyday words.
+   * Answers any science question in 3 to 4 short, simple sentences with everyday words.
    */
   async askSocraticPip(question: string, contextTopic?: string): Promise<string> {
     const systemPrompt = `You are Pip, a friendly cartoon science mentor for a CBSE Class 5 student (age 9-11).
@@ -93,15 +93,15 @@ Rules:
     const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
 
     const prompt = `You are an expert materials scientist analyzing a photo for a CBSE Class 5 Science student (age 9-11).
-Identify the physical material shown in the photo (e.g. Stone/Rock/Granite/Marble, Metal/Steel/Copper/Iron/Brass, Wood, Cotton, Wool, Silk, Glass, Ceramic, PET Plastic, PVC, Bakelite, Nylon, Rubber).
-Return ONLY a valid JSON object matching this schema:
+Identify the main physical material of the object shown in the photo (e.g. Molded Plastic/Polycarbonate/ABS, Silicone, Stone/Rock/Granite, Metal/Steel/Copper/Aluminum, Wood, Cotton, Wool, Silk, Glass, Ceramic, Rubber).
+Return ONLY a valid JSON object matching this schema with NO extra text:
 {
-  "materialName": "Exact material name",
-  "family": "Material family",
+  "materialName": "Exact material name (e.g. Molded Polycarbonate Plastic, Natural Stone, Stainless Steel)",
+  "family": "Material family (e.g. Synthetic Polymer, Igneous Rock, Metallic Alloy, Natural Cellulose)",
   "category": "Natural" or "Synthetic",
-  "microscopicStructure": "1 simple sentence explaining its molecular/particle structure for a 5th grader",
+  "microscopicStructure": "1 simple sentence explaining its molecular structure in easy words for a 5th grader",
   "confidence": 0.95,
-  "funFact": "1 exciting kid-friendly trivia fact",
+  "funFact": "1 exciting kid-friendly trivia fact about this material",
   "interactiveChallenge": {
     "question": "1 simple multiple choice question testing its property",
     "options": [
@@ -143,8 +143,13 @@ Return ONLY a valid JSON object matching this schema:
 
     const data = await response.json();
     const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
-    const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-    return JSON.parse(cleanJson) as MaterialAnalysisResult;
+    
+    // Robust regex extraction of JSON object
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Could not parse valid JSON from AI Vision response');
+    }
+    return JSON.parse(jsonMatch[0]) as MaterialAnalysisResult;
   },
 
   /**
@@ -179,8 +184,9 @@ Return ONLY valid JSON matching this schema:
     if (!response.ok) throw new Error(`Gemini Error: ${response.statusText}`);
     const data = await response.json();
     const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
-    const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-    return JSON.parse(cleanJson) as WhatIfResult;
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Invalid JSON from simulation');
+    return JSON.parse(jsonMatch[0]) as WhatIfResult;
   },
 
   /**
@@ -215,7 +221,8 @@ Return ONLY valid JSON matching this schema:
     if (!response.ok) throw new Error(`Gemini Word Def Error: ${response.statusText}`);
     const data = await response.json();
     const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}';
-    const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-    return JSON.parse(cleanJson);
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Invalid JSON from dictionary');
+    return JSON.parse(jsonMatch[0]);
   },
 };
