@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import {
@@ -9,10 +9,12 @@ import {
   Sparkles,
   Layers,
 } from 'lucide-react';
+import fortBastionsImg from '@/assets/images/theme-shelter/golconda_fort_bastions.jpg';
+import fatehDarwazaImg from '@/assets/images/theme-shelter/golconda_fateh_darwaza.jpg';
 
 /* ============================================================================
-   FORT ARCHITECT STUDIO (1:500 TACTICAL ARCHITECTURAL SCALE)
-   Used for: Golconda Fort Bastions (Burj), Iron Spiked Gates & Acoustic Archways
+   FORT ARCHITECT STUDIO (REAL FORTRESS PHOTOGRAPHS & TACTICAL ANNOTATIONS)
+   Used for: Golconda Fort Bastions (Burj), Walls & Fateh Darwaza Acoustics
    ============================================================================ */
 export const FortArchitectStudio: React.FC = () => {
   const [activeMode, setActiveMode] = useState<'straight_wall' | 'curved_bastion' | 'acoustics'>('curved_bastion');
@@ -26,6 +28,7 @@ export const FortArchitectStudio: React.FC = () => {
       sounds.sparkle();
       voiceAssistant.speak('Curved Bastion (Burj): Semicircular stone towers project outwards, providing 360-degree crossfire coverage with zero blind spots!');
     } else {
+      sounds.fanfare();
       voiceAssistant.speak('Acoustic archway dome: Clapping hands at the Fateh Darwaza main gate echoes clearly to the Bala Hissar palace 1 kilometer up on the hill!');
     }
   };
@@ -37,7 +40,7 @@ export const FortArchitectStudio: React.FC = () => {
         <div className="flex items-center gap-2">
           <Shield className="w-5 h-5 text-amber-500" />
           <span className="text-xs font-black uppercase tracking-widest text-amber-300">
-            Fort Tactical Architectural Plan (1:500 Scale)
+            Golconda Fort Tactical Architecture Studio
           </span>
         </div>
         <span
@@ -60,9 +63,9 @@ export const FortArchitectStudio: React.FC = () => {
       {/* Mode Selectors */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full mb-4">
         {[
-          { id: 'straight_wall', label: '1. Flat Wall (Blind Spot Hazard)', desc: 'Invaders climb unseen' },
+          { id: 'straight_wall', label: '1. Flat Wall (Blind Spot Hazard)', desc: 'Invaders climb unseen at base' },
           { id: 'curved_bastion', label: '2. Curved Bastion / Burj (360° FOV)', desc: 'Overlapping crossfire arcs' },
-          { id: 'acoustics', label: '3. Fateh Darwaza Sound Dome', desc: '1km acoustic early warning' },
+          { id: 'acoustics', label: '3. Fateh Darwaza Acoustic Gate', desc: '1km acoustic early warning dome' },
         ].map((m) => (
           <button
             key={m.id}
@@ -79,109 +82,107 @@ export const FortArchitectStudio: React.FC = () => {
         ))}
       </div>
 
-      {/* Tactical Grid Canvas */}
-      <div className="relative w-full max-w-xl h-80 rounded-3xl bg-[#141b2d] border-3 border-amber-500/50 shadow-2xl flex items-center justify-center p-4 overflow-hidden">
-        <svg className="w-full h-full" viewBox="0 0 340 220">
-          <defs>
-            <radialGradient id="fieldOfView" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="blindSpotGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ef4444" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
-            </radialGradient>
-          </defs>
+      {/* Photorealistic Canvas with Interactive Overlays */}
+      <div className="relative w-full max-w-2xl h-96 rounded-3xl bg-slate-900 border-3 border-amber-500/70 shadow-2xl overflow-hidden flex items-center justify-center">
+        {/* Base Image switching according to mode */}
+        <motion.img
+          key={activeMode === 'acoustics' ? 'gate' : 'bastion'}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          src={activeMode === 'acoustics' ? fatehDarwazaImg : fortBastionsImg}
+          alt="Golconda Fort Architecture"
+          className="w-full h-full object-cover select-none"
+        />
 
-          {/* ════ VIEW 1: FLAT STRAIGHT WALL (BLIND SPOT HAZARD) ════ */}
-          {activeMode === 'straight_wall' && (
-            <g transform="translate(170, 110)">
-              {/* Massive Stone Fort Wall */}
-              <rect x="-140" y="-15" width="280" height="30" fill="#475569" stroke="#94a3b8" strokeWidth="2" />
-              {/* Guards on top looking straight out */}
-              <circle cx="-60" cy="-5" r="5" fill="#f59e0b" />
-              <circle cx="60" cy="-5" r="5" fill="#f59e0b" />
+        {/* ════ OVERLAY 1: STRAIGHT WALL BLIND SPOT HAZARD ════ */}
+        {activeMode === 'straight_wall' && (
+          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-between p-6">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="bg-rose-950/90 backdrop-blur-md p-3 rounded-2xl border-2 border-rose-500 max-w-sm text-center"
+            >
+              <div className="text-rose-400 font-black text-xs uppercase mb-1">
+                ⚠️ Blind Spot Tactical Vulnerability
+              </div>
+              <p className="text-[11px] text-slate-200 font-bold">
+                When walls are flat and straight, defenders at the top battlements cannot see enemies climbing the base of the wall directly underneath them!
+              </p>
+            </motion.div>
 
-              {/* Red Blind Spot Cone along the wall base */}
-              <path d="M -140 15 L 140 15 L 90 70 L -90 70 Z" fill="url(#blindSpotGrad)" />
-              <text x="0" y="45" fill="#f87171" fontSize="8" fontWeight="900" textAnchor="middle">
-                ⚠️ BLIND SPOT ZONE (GUARDS CANNOT SEE BASE)
-              </text>
-              {/* Invaders Climbing */}
-              <circle cx="-30" cy="25" r="4" fill="#ef4444" />
-              <circle cx="30" cy="25" r="4" fill="#ef4444" />
-              <text x="0" y="-30" fill="#94a3b8" fontSize="8" fontWeight="900" textAnchor="middle">
-                FLAT STONE CURTAIN WALL
-              </text>
-            </g>
-          )}
+            {/* Visual Danger Zone Graphic */}
+            <div className="w-48 h-16 bg-rose-600/60 border-2 border-rose-400 rounded-xl backdrop-blur-xs flex items-center justify-center text-xs font-black text-white animate-pulse">
+              🚨 Wall Base Blind Spot Zone
+            </div>
+          </div>
+        )}
 
-          {/* ════ VIEW 2: CURVED BASTION (BURJ) WITH 360° ARCS OF FIRE ════ */}
-          {activeMode === 'curved_bastion' && (
-            <g transform="translate(170, 110)">
-              {/* Fort Walls */}
-              <rect x="-140" y="-15" width="100" height="30" fill="#475569" stroke="#94a3b8" strokeWidth="2" />
-              <rect x="40" y="-15" width="100" height="30" fill="#475569" stroke="#94a3b8" strokeWidth="2" />
+        {/* ════ OVERLAY 2: CURVED BASTION 360° ARCS OF FIRE ════ */}
+        {activeMode === 'curved_bastion' && (
+          <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-between p-6 pointer-events-none">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="bg-emerald-950/90 backdrop-blur-md p-3.5 rounded-2xl border-2 border-emerald-400 max-w-sm text-center"
+            >
+              <div className="text-emerald-300 font-black text-xs uppercase mb-1 flex items-center justify-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-emerald-400" />
+                <span>360° Semicircular Bastion (Burj)</span>
+              </div>
+              <p className="text-[11px] text-slate-200 font-bold">
+                Golconda's 87 circular stone bastions project outwards past the wall line. Guards stationed inside can shoot arrows and cannons in all directions, completely eliminating blind spots!
+              </p>
+            </motion.div>
 
-              {/* Overlapping Semicircular Green Crossfire Arcs */}
-              <path d="M 0 0 L -120 80 A 130 130 0 0 0 120 80 Z" fill="url(#fieldOfView)" />
-              <path d="M 0 0 L -80 -80 A 130 130 0 0 1 80 -80 Z" fill="url(#fieldOfView)" />
+            <div className="bg-slate-950/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-emerald-400 text-xs font-black text-emerald-300 shadow-xl">
+              🛡️ Overlapping Crossfire Defense Coverage
+            </div>
+          </div>
+        )}
 
-              {/* Semicircular Protruding Bastion Tower (Burj) */}
-              <path d="M -40 -15 L -40 15 A 40 40 0 0 0 40 15 L 40 -15 Z" fill="#78350f" stroke="#fbbf24" strokeWidth="3" />
-              <circle cx="0" cy="15" r="6" fill="#10b981" />
-              {/* Cannon Openings */}
-              <circle cx="-25" cy="30" r="3" fill="#020617" />
-              <circle cx="0" cy="45" r="3" fill="#020617" />
-              <circle cx="25" cy="30" r="3" fill="#020617" />
+        {/* ════ OVERLAY 3: FATEH DARWAZA ACOUSTIC ECHO ARCH ════ */}
+        {activeMode === 'acoustics' && (
+          <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-between p-6 pointer-events-none">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="bg-amber-950/90 backdrop-blur-md p-3.5 rounded-2xl border-2 border-amber-400 max-w-sm text-center"
+            >
+              <div className="text-amber-300 font-black text-xs uppercase mb-1 flex items-center justify-center gap-1.5">
+                <Volume2 className="w-4 h-4 text-amber-400 animate-bounce" />
+                <span>Fateh Darwaza Acoustic Dome</span>
+              </div>
+              <p className="text-[11px] text-slate-200 font-bold">
+                Notice the domed stone ceiling arches! Even a single handclap underneath this archway focuses sound waves that reverberate all the way to the king's palace at Bala Hissar (1 km away) for instant defense alert!
+              </p>
+            </motion.div>
 
-              <text x="0" y="85" fill="#34d399" fontSize="8" fontWeight="900" textAnchor="middle">
-                360° OVERLAPPING ARCS OF FIRE (ZERO BLIND SPOTS)
-              </text>
-              <text x="0" y="-35" fill="#fef08a" fontSize="8" fontWeight="900" textAnchor="middle">
-                OUTWARD-PROTRUDING BASTION (BURJ)
-              </text>
-            </g>
-          )}
-
-          {/* ════ VIEW 3: ACOUSTIC RESONANCE SOUND DOME ════ */}
-          {activeMode === 'acoustics' && (
-            <g transform="translate(170, 110)">
-              {/* Fateh Darwaza Entrance Dome */}
-              <path d="M -110 50 Q -110 -20 0 -20 Q 110 -20 110 50 Z" fill="none" stroke="#fbbf24" strokeWidth="3" />
-              {/* Concentric Sound Waves Expanding to Bala Hissar */}
-              {[20, 45, 70, 95].map((r, i) => (
-                <circle
-                  key={i}
-                  cx="0"
-                  cy="40"
-                  r={r}
-                  fill="none"
-                  stroke="#38bdf8"
-                  strokeWidth="1.5"
-                  strokeDasharray="4,4"
-                  opacity={1 - i * 0.2}
+            {/* Sound Wave Rings */}
+            <div className="relative flex items-center justify-center">
+              {[1, 2, 3].map((w) => (
+                <motion.div
+                  key={w}
+                  animate={{ scale: [1, 2.5], opacity: [0.8, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5, delay: w * 0.4 }}
+                  className="w-16 h-16 rounded-full border-2 border-cyan-300 absolute"
                 />
               ))}
-              <circle cx="0" cy="40" r="6" fill="#f59e0b" />
-              <text x="0" y="60" fill="#fef08a" fontSize="7" fontWeight="900" textAnchor="middle">
-                CLAPPING AT FATEH DARWAZA ENTRANCE
-              </text>
-              <text x="0" y="-40" fill="#38bdf8" fontSize="8" fontWeight="900" textAnchor="middle">
-                ACOUSTIC ECHO CARRIES 1KM UP TO BALA HISSAR
-              </text>
-            </g>
-          )}
-        </svg>
+              <span className="text-xs font-black text-amber-200 bg-slate-950/90 px-3 py-1 rounded-full border border-amber-400 z-10">
+                👏 Handclap Echo (1km Acoustic Travel)
+              </span>
+            </div>
+          </div>
+        )}
 
-        {/* HUD Footnote */}
-        <div className="absolute bottom-3 left-4 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-amber-500/60 text-[10px] font-black text-amber-200">
-          🏰 Golconda Fort Structure: 87 Bastions (Burj) • 8 Massive Spiked Gates
+        {/* HUD Tag */}
+        <div className="absolute bottom-3 left-4 bg-slate-950/90 backdrop-blur-md px-3 py-1 rounded-xl border border-amber-400/60 text-[10px] font-black text-amber-200">
+          🏰 Golconda Fort Structure: 87 Bastions (Burj) • 8 Spiked Gates
         </div>
       </div>
 
       <div className="w-full bg-slate-900 p-4 rounded-2xl border border-amber-600/40 text-center text-xs font-bold text-amber-200 mt-4">
-        🛡️ <strong>Military Architecture:</strong> Golconda’s 87 circular bastions projected past the straight curtain walls so defenders could spot approaching enemies from any angle without exposing themselves!
+        🛡️ <strong>CBSE Architecture Law:</strong> Ancient Indian forts were designed with curved protruding bastions to eliminate blind spots, iron-spiked doors to repel war elephants, and acoustic ceiling arches for long-distance military communication!
       </div>
     </div>
   );
