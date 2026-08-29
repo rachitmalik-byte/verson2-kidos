@@ -186,7 +186,10 @@ export function RaincoatMission() {
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"
-        onComplete={() => setShowCelebration(false)}
+        onComplete={() => {
+          setShowCelebration(false);
+          navigate('/chapter/3/mission/2');
+        }}
       />
 
       <AnimatePresence mode="wait">

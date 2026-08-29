@@ -135,7 +135,10 @@ export function FireSafetyMission() {
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"
-        onComplete={() => setShowCelebration(false)}
+        onComplete={() => {
+          setShowCelebration(false);
+          navigate('/chapter/3/mission/6');
+        }}
       />
 
       <AnimatePresence mode="wait">

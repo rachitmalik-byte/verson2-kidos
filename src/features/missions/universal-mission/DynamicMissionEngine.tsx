@@ -2129,7 +2129,14 @@ export const DynamicMissionEngine: React.FC = () => {
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"
-        onComplete={() => setShowCelebration(false)}
+        onComplete={() => {
+          setShowCelebration(false);
+          if (mission.number < 13) {
+            navigate(`/chapter/3/mission/${mission.number + 1}`);
+          } else {
+            navigate('/chapter-hub');
+          }
+        }}
       />
 
       <AnimatePresence mode="wait">
