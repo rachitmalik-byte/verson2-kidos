@@ -19,10 +19,10 @@ import {
 import {
   ChangthangPashminaSim,
   EverestMountaineeringSim,
-  ZeroGravitySpaceStationSim,
   GolcondaFortWaterAndDefenseSim,
   PetroleumRefineryAndSolarSim,
 } from '@/components/interactive/ThemeShelterSimulators';
+import { SunitaInSpaceMultiStationLab } from '@/components/interactive/SpaceHabitatLabs';
 import {
   ArrowLeft,
   ArrowRight,
@@ -364,7 +364,7 @@ export function ShelterMissionEngine() {
               <div className="w-full flex flex-col items-center gap-6">
                 {num === 1 && <ChangthangPashminaSim />}
                 {num === 2 && <EverestMountaineeringSim />}
-                {num === 3 && <ZeroGravitySpaceStationSim />}
+                {num === 3 && <SunitaInSpaceMultiStationLab />}
                 {num === 4 && <GolcondaFortWaterAndDefenseSim />}
                 {num === 5 && <PetroleumRefineryAndSolarSim />}
               </div>

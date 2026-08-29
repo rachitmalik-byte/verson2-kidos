@@ -22,6 +22,11 @@ import {
   TongueTasteAndBeaumontSim,
   SeedDispersalVelcroSim,
 } from '@/components/interactive/Theme1Simulators';
+import { SnakeInfraredThermalVisionLab } from '@/components/interactive/SuperSensesLabs';
+import {
+  TongueTasteInteractiveTrayLab,
+  BreadMoldEnvironmentalTimelapseLab,
+} from '@/components/interactive/FoodDigestionLabs';
 import {
   ArrowLeft,
   ArrowRight,
@@ -336,8 +341,19 @@ export function SuperSensesMissionEngine() {
                     <EagleZoomVisionSim />
                   </>
                 )}
-                {num === 2 && <SnakeGroundVibrationSim />}
-                {num === 3 && <TongueTasteAndBeaumontSim />}
+                {num === 2 && (
+                  <>
+                    <SnakeGroundVibrationSim />
+                    <SnakeInfraredThermalVisionLab />
+                  </>
+                )}
+                {num === 3 && (
+                  <>
+                    <TongueTasteInteractiveTrayLab />
+                    <TongueTasteAndBeaumontSim />
+                    <BreadMoldEnvironmentalTimelapseLab />
+                  </>
+                )}
                 {num === 4 && <SeedDispersalVelcroSim />}
               </div>
             )}
