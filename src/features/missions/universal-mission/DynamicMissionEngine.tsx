@@ -41,6 +41,7 @@ import {
   RotateCcw,
   Lightbulb,
   Home,
+  Clock,
 } from 'lucide-react';
 
 // Real Studio Macro Educational Photography
