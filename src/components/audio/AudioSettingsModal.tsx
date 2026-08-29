@@ -195,12 +195,16 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                           <span className="text-xl">{t.emoji}</span>
                           <div className="truncate">
                             <span className="font-black text-xs text-slate-800 block truncate">{t.name}</span>
-                            <span className="text-[10px] text-slate-400 font-bold block">{t.bpm} BPM</span>
+                            <span className="text-[10px] text-amber-700 font-bold block truncate">{t.genre} • {t.bpm} BPM</span>
                           </div>
                         </div>
 
                         {isSelected && (
-                          <div className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping shrink-0" />
+                          <div className="flex items-end gap-0.5 h-4 shrink-0">
+                            <span className="w-1 bg-amber-500 rounded-full animate-[bounce_0.6s_infinite_100ms] h-3" />
+                            <span className="w-1 bg-amber-600 rounded-full animate-[bounce_0.6s_infinite_300ms] h-4" />
+                            <span className="w-1 bg-amber-500 rounded-full animate-[bounce_0.6s_infinite_200ms] h-2.5" />
+                          </div>
                         )}
                       </button>
                     );

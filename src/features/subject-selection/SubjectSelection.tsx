@@ -10,13 +10,13 @@ import {
   FlaskConical,
   Zap,
   Leaf,
-  Rocket,
-  Calculator,
+  Droplets,
+  Home,
+  Utensils,
   Lock,
   ArrowRight,
-  BookOpen,
   Star,
-  CheckCircle2,
+  BookOpen,
 } from 'lucide-react';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
@@ -32,13 +32,14 @@ interface Subject {
   chapterCount: number;
   unlockedChapters: number;
   path?: string;
+  syllabusCode: string;
 }
 
 const SUBJECTS: Subject[] = [
   {
-    id: 'chemistry',
-    name: 'Chemistry & Materials',
-    subtitle: 'Synthetic Polymers, Fibres & Plastics Lab',
+    id: 'things-we-make',
+    name: 'Things We Make & Do: Materials',
+    subtitle: 'Natural vs Synthetic Materials, Fibres & Plastics (EVS Chapter 3)',
     icon: <FlaskConical className="w-10 h-10 text-amber-500" />,
     color: 'from-amber-400/20 via-orange-400/10 to-amber-500/20',
     border: 'border-amber-400 hover:border-amber-500',
@@ -46,50 +47,67 @@ const SUBJECTS: Subject[] = [
     chapterCount: 5,
     unlockedChapters: 1,
     path: '/chapter-hub',
+    syllabusCode: 'CBSE EVS Class 5 • Theme 6',
   },
   {
-    id: 'physics',
-    name: 'Physics & Electricity',
-    subtitle: 'Circuits, Magnets, Light & Gravity',
-    icon: <Zap className="w-10 h-10 text-sky-500" />,
-    color: 'from-sky-400/10 to-blue-500/20',
-    border: 'border-slate-300',
-    active: false,
-    chapterCount: 6,
-    unlockedChapters: 0,
-  },
-  {
-    id: 'biology',
-    name: 'Biology & Living Organisms',
-    subtitle: 'Plant Cells, Photosynthesis & Human Body',
+    id: 'living-world',
+    name: 'Super Senses & Living World',
+    subtitle: 'Animals, Plant Senses, Seeds & Adaptations (CBSE EVS)',
     icon: <Leaf className="w-10 h-10 text-emerald-500" />,
     color: 'from-emerald-400/10 to-teal-500/20',
     border: 'border-slate-300',
     active: false,
     chapterCount: 4,
     unlockedChapters: 0,
+    syllabusCode: 'CBSE EVS Class 5 • Theme 1',
   },
   {
-    id: 'space',
-    name: 'Space & Earth Science',
-    subtitle: 'Solar System, Volcanoes & Atmosphere',
-    icon: <Rocket className="w-10 h-10 text-indigo-500" />,
+    id: 'water-wonders',
+    name: 'Water & Aquatic Experiments',
+    subtitle: 'Floating & Sinking, Water Cycle & Preservation (CBSE EVS)',
+    icon: <Droplets className="w-10 h-10 text-sky-500" />,
+    color: 'from-sky-400/10 to-blue-500/20',
+    border: 'border-slate-300',
+    active: false,
+    chapterCount: 4,
+    unlockedChapters: 0,
+    syllabusCode: 'CBSE EVS Class 5 • Theme 4',
+  },
+  {
+    id: 'shelter-earth',
+    name: 'Shelter, Mountains & Earth',
+    subtitle: 'Habitats, High Altitudes & Travel Expeditions (CBSE EVS)',
+    icon: <Home className="w-10 h-10 text-indigo-500" />,
     color: 'from-indigo-400/10 to-purple-500/20',
     border: 'border-slate-300',
     active: false,
-    chapterCount: 5,
+    chapterCount: 4,
     unlockedChapters: 0,
+    syllabusCode: 'CBSE EVS Class 5 • Theme 3 & 5',
   },
   {
-    id: 'math',
-    name: 'Interactive Math Lab',
-    subtitle: 'Geometry, Speed, Fractions & Logic',
-    icon: <Calculator className="w-10 h-10 text-rose-500" />,
+    id: 'food-nutrition',
+    name: 'Food, Seeds & Farming',
+    subtitle: 'Digestion, Spoilage, Crops & Preservation (CBSE EVS)',
+    icon: <Utensils className="w-10 h-10 text-orange-500" />,
+    color: 'from-orange-400/10 to-amber-500/20',
+    border: 'border-slate-300',
+    active: false,
+    chapterCount: 4,
+    unlockedChapters: 0,
+    syllabusCode: 'CBSE EVS Class 5 • Theme 2',
+  },
+  {
+    id: 'energy-resources',
+    name: 'Fuels & Clean Energy',
+    subtitle: 'What If It Finishes? Energy, Solar & Conservation (CBSE EVS)',
+    icon: <Zap className="w-10 h-10 text-rose-500" />,
     color: 'from-rose-400/10 to-pink-500/20',
     border: 'border-slate-300',
     active: false,
-    chapterCount: 6,
+    chapterCount: 3,
     unlockedChapters: 0,
+    syllabusCode: 'CBSE EVS Class 5 • Theme 6',
   },
 ];
 
@@ -105,7 +123,7 @@ export const SubjectSelection: React.FC = () => {
       navigate(subject.path);
     } else {
       sounds.boing();
-      voiceAssistant.speak(`${subject.name} is coming soon in the next science curriculum update!`);
+      voiceAssistant.speak(`${subject.name} is aligned with CBSE Class 5 EVS and is launching in the next curriculum update!`);
     }
   };
 
@@ -120,8 +138,8 @@ export const SubjectSelection: React.FC = () => {
             </div>
             <div>
               <h1 className="font-black text-xl text-slate-900 leading-none">POLYQUEST</h1>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                Science Academy • Grades 5–6
+              <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">
+                CBSE Class 5 EVS • Environmental Studies
               </span>
             </div>
           </div>
@@ -133,17 +151,17 @@ export const SubjectSelection: React.FC = () => {
         <div id="subject-intro-banner" className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-xl flex flex-col md:flex-row items-center gap-6">
           <Pip mood="celebrating" size="lg" />
           <div className="flex-1 text-center md:text-left">
-            <span className="px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-2">
-              Select Your Science Subject
+            <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-2">
+              CBSE Class 5 EVS Curriculum Hub 🌿
             </span>
             <h2
               className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight"
               style={{ fontFamily: 'Nunito, sans-serif' }}
             >
-              Welcome to the PolyQuest Science Academy! 🔬
+              Welcome to Class 5 EVS Science Academy! 🔬
             </h2>
             <p className="text-sm md:text-base text-slate-600 font-bold mt-1.5 leading-relaxed">
-              Pick a science discipline below to dive into interactive storybooks, video labs, and hands-on experiments!
+              Explore hands-on interactive storybooks, tactile experiments, and field journals based on the NCERT Class 5 EVS (Environmental Studies) syllabus!
             </p>
           </div>
         </div>
@@ -183,6 +201,9 @@ export const SubjectSelection: React.FC = () => {
 
               {/* Subject Title & Description */}
               <div className="space-y-1.5 mb-6">
+                <span className="text-[11px] font-black text-slate-500 uppercase tracking-wide block">
+                  {sub.syllabusCode}
+                </span>
                 <h3
                   className="text-xl md:text-2xl font-black text-slate-900"
                   style={{ fontFamily: 'Nunito, sans-serif' }}

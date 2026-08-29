@@ -18,7 +18,7 @@ import polyesterSwatchCleanImg from '@/assets/images/experiments/polyester_swatc
 import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
 import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
 import polyesterFabricZoomImg from '@/assets/images/raincoat/polyester_fabric_zoom.jpg';
-import { Flame, ShieldAlert, Sun, ArrowRight, Check, AlertTriangle, Sparkles, ShieldCheck, ZoomIn } from 'lucide-react';
+import { Flame, ArrowRight, ZoomIn } from 'lucide-react';
 
 type Phase = 'HOOK' | 'BURN_TEST' | 'MICROSCOPE' | 'APPLY';
 

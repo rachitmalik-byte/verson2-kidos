@@ -35,7 +35,7 @@ import cottonBollSpecimenImg from '@/assets/images/specimens/raw_cotton_boll.jpg
 import nylonRopeHeavyImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
 import polyesterFabricRollImg from '@/assets/images/specimens/polyester_fabric_roll.jpg';
 import flameMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
-import summerSweatShirtImg from '@/assets/images/experiments/summer_sweat_cotton_shirt.jpg';
+import cottonSwatchCleanImg from '@/assets/images/experiments/cotton_swatch_clean.jpg';
 import plasticMoldingBottleImg from '@/assets/images/experiments/pet_water_bottle_molding.jpg';
 import circuitWireLightbulbImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
 import kettleBoilingSteamImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
@@ -50,7 +50,7 @@ const missionThumbnails: Record<string, string> = {
   'mission-03': nylonRopeHeavyImg,
   'mission-04': polyesterFabricRollImg,
   'mission-05': flameMeltingBeadImg,
-  'mission-06': summerSweatShirtImg,
+  'mission-06': cottonSwatchCleanImg,
   'mission-07': plasticMoldingBottleImg,
   'mission-08': circuitWireLightbulbImg,
   'mission-09': kettleBoilingSteamImg,
@@ -105,7 +105,7 @@ export function ChapterHub() {
             <div className="flex items-center gap-2 ml-1">
               <FlaskConical className="w-5 h-5 text-amber-500" />
               <span className="font-black text-sm text-slate-800 hidden md:inline">
-                Chemistry & Materials Science
+                CBSE Class 5 EVS • Things We Make & Do
               </span>
             </div>
           </div>
@@ -128,10 +128,10 @@ export function ChapterHub() {
 
           <div className="flex-1 text-center md:text-left">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
-              <span className="px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider">
-                Chapter 3 • Active Curriculum
+              <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-xs font-black uppercase tracking-wider">
+                CBSE Class 5 EVS • Chapter 3
               </span>
-              <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-1">
+              <span className="px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-1">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                 <span>{totalStars} Science Stars</span>
               </span>
@@ -144,10 +144,10 @@ export function ChapterHub() {
               className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight"
               style={{ fontFamily: 'Nunito, sans-serif' }}
             >
-              The World of Synthetic Materials 🧪✨
+              The World of Natural & Synthetic Materials 🧪✨
             </h1>
             <p className="text-xs md:text-sm font-bold text-slate-600 mt-1 max-w-xl">
-              Welcome back, {child?.name || 'Young Scientist'}! Dive into hands-on laboratory missions with real materials, interactive simulations, and speech challenges!
+              Welcome back, {child?.name || 'Young Scientist'}! Explore Class 5 EVS hands-on laboratory missions with real materials, interactive simulations, and speech challenges!
             </p>
 
             {/* Chapter Progress Bar */}

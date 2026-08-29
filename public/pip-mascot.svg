@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <defs>
+    <!-- Background / Aura Glow -->
+    <radialGradient id="pipGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FCD34D" stop-opacity="1" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="1" />
+    </radialGradient>
+    <!-- Head Gradient -->
+    <linearGradient id="pipHead" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="40%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <!-- Goggles Turquoise Gradient -->
+    <linearGradient id="pipGoggles" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <!-- Goggle Lens Glow -->
+    <radialGradient id="goggleGlass" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="60%" stop-color="#7DD3FC" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </radialGradient>
+  </defs>
+
+  <!-- Circular Outer Badge -->
+  <circle cx="64" cy="64" r="60" fill="url(#pipGlow)" stroke="#78350F" stroke-width="4" />
+
+  <!-- Antenna -->
+  <path d="M64 34 L64 16" stroke="#78350F" stroke-width="5" stroke-linecap="round" />
+  <circle cx="64" cy="14" r="7" fill="#EF4444" stroke="#78350F" stroke-width="3" />
+  <circle cx="62" cy="12" r="2.5" fill="#FFFFFF" opacity="0.9" />
+
+  <!-- Pip's Cute Round Head -->
+  <ellipse cx="64" cy="68" rx="44" ry="40" fill="url(#pipHead)" stroke="#78350F" stroke-width="4" />
+
+  <!-- Goggle Strap -->
+  <rect x="18" y="52" width="92" height="12" rx="6" fill="#0F172A" stroke="#78350F" stroke-width="2" />
+
+  <!-- Left Goggle Outer Frame -->
+  <circle cx="45" cy="58" r="20" fill="url(#pipGoggles)" stroke="#0F172A" stroke-width="3.5" />
+  <!-- Left Goggle Lens -->
+  <circle cx="45" cy="58" r="14.5" fill="url(#goggleGlass)" />
+  <!-- Left Goggle Eye Pupil -->
+  <circle cx="47" cy="58" r="7.5" fill="#0F172A" />
+  <circle cx="45" cy="55" r="3" fill="#FFFFFF" />
+  <circle cx="49" cy="61" r="1.5" fill="#FFFFFF" />
+
+  <!-- Right Goggle Outer Frame -->
+  <circle cx="83" cy="58" r="20" fill="url(#pipGoggles)" stroke="#0F172A" stroke-width="3.5" />
+  <!-- Right Goggle Lens -->
+  <circle cx="83" cy="58" r="14.5" fill="url(#goggleGlass)" />
+  <!-- Right Goggle Eye Pupil -->
+  <circle cx="85" cy="58" r="7.5" fill="#0F172A" />
+  <circle cx="83" cy="55" r="3" fill="#FFFFFF" />
+  <circle cx="87" cy="61" r="1.5" fill="#FFFFFF" />
+
+  <!-- Goggle Bridge -->
+  <rect x="60" y="55" width="8" height="6" rx="3" fill="#0F172A" />
+
+  <!-- Rosy Cheeks -->
+  <ellipse cx="32" cy="78" rx="6" ry="3.5" fill="#F87171" opacity="0.75" />
+  <ellipse cx="96" cy="78" rx="6" ry="3.5" fill="#F87171" opacity="0.75" />
+
+  <!-- Happy Open Smile with Tongue -->
+  <path d="M52 82 Q64 96 76 82" fill="#BE123C" stroke="#78350F" stroke-width="3" stroke-linecap="round" />
+  <path d="M57 87 Q64 94 71 87" fill="#FB7185" />
+
+  <!-- Sparkle Star -->
+  <path d="M106 28 L108 22 L114 20 L108 18 L106 12 L104 18 L98 20 L104 22 Z" fill="#FFFFFF" />
+</svg>

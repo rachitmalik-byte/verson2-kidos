@@ -34,23 +34,12 @@ import {
   ShieldCheck,
   Check,
   ArrowRight,
-  Layers,
-  Wrench,
-  Trophy,
   Sparkles,
-  Zap,
   Gauge,
   Thermometer,
   AlertTriangle,
-  Droplet,
-  CheckCircle2,
-  Clock,
   RotateCcw,
   Lightbulb,
-  Compass,
-  Home,
-  Wind,
-  Sliders,
 } from 'lucide-react';
 
 // Real Studio Macro Educational Photography
@@ -62,10 +51,7 @@ import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melti
 import polyesterFabricRollImg from '@/assets/images/specimens/polyester_fabric_roll.jpg';
 import syntheticAcrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
 import silkwormSilkCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
-import rawCottonBollImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
-import sheepWoolFleeceImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
 import naturalWoodTimberImg from '@/assets/images/specimens/natural_wood_timber.jpg';
-import plasticPetPelletsImg from '@/assets/images/specimens/plastic_pet_pellets.jpg';
 import woodDecayDay1Img from '@/assets/images/decay/wood_day1.jpg';
 import woodDecay2WeeksImg from '@/assets/images/decay/wood_2weeks.jpg';
 import woodDecay100YrsImg from '@/assets/images/decay/wood_100yrs.jpg';
@@ -79,16 +65,13 @@ import pvcInsulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
 import steelKeyMacroImg from '@/assets/images/wire/steel_key_macro.jpg';
 import rubberEraserMacroImg from '@/assets/images/wire/rubber_eraser_macro.jpg';
 import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
-import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
 import boilingTeaKettleSteamImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
 import bakelitePanHandleImg from '@/assets/images/experiments/bakelite_pan_handle.jpg';
 import castIronScorchingHandleImg from '@/assets/images/experiments/cast_iron_scorching_handle.jpg';
-import summerSweatCottonShirtImg from '@/assets/images/experiments/summer_sweat_cotton_shirt.jpg';
+import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
 import polyesterSportShirtImg from '@/assets/images/experiments/polyester_sport_shirt.jpg';
 import petWaterBottleMoldingImg from '@/assets/images/experiments/pet_water_bottle_molding.jpg';
 import thermosetPlugSwitchImg from '@/assets/images/experiments/thermoset_plug_switch.jpg';
-import polycottonBlendFabricImg from '@/assets/images/experiments/polycotton_blend_fabric.jpg';
-import rubberTreeTappingLatexImg from '@/assets/images/experiments/rubber_tree_tapping_latex.jpg';
 import vulcanizedCarTireTreadImg from '@/assets/images/experiments/vulcanized_car_tire_tread.jpg';
 import epoxyResinAdhesiveGlueImg from '@/assets/images/experiments/epoxy_resin_adhesive_glue.jpg';
 import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy_jump.jpg';
@@ -637,7 +620,7 @@ export const DynamicMissionEngine: React.FC = () => {
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl">
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
-                  <img src={summerSweatCottonShirtImg} alt="Cotton Shirt in Sun" className="w-full h-full object-cover" />
+                  <img src={cottonFabricZoomImg} alt="Porous Cotton Weave Macro" className="w-full h-full object-cover" />
                 </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The 42°C Scorching Summer Mystery</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base leading-relaxed">
@@ -669,7 +652,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   <div className="p-5 bg-emerald-50 rounded-2xl border-3 border-emerald-300 text-center flex flex-col items-center">
                     <span className="font-black text-slate-900 mb-2">1. Natural Cotton</span>
                     <div className="w-36 h-36 rounded-2xl bg-white border-2 border-emerald-300 overflow-hidden shadow-md p-1 flex items-center justify-center">
-                      <img src={summerSweatCottonShirtImg} alt="Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
+                      <img src={cottonSwatchCleanImg} alt="Breathable Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
                     </div>
                     <span className="text-[11px] font-bold text-emerald-800 mt-2">
                       {interactiveState.sprayed ? '✓ Absorbs Perspiration & Cools Skin!' : 'Porous natural plant cellulose'}

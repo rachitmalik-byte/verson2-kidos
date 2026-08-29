@@ -98,9 +98,9 @@ export function RoleSelection() {
         </div>
 
         <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border-2 border-slate-200 shadow-md mb-3">
-          <Sparkles className="w-4 h-4 text-amber-500 fill-amber-400" />
-          <span className="text-xs font-black uppercase tracking-widest text-slate-700">
-            Interactive Science Playground (Grades 5–6)
+          <Sparkles className="w-4 h-4 text-emerald-500 fill-emerald-400" />
+          <span className="text-xs font-black uppercase tracking-widest text-emerald-800">
+            CBSE Class 5 EVS • Interactive Science Academy
           </span>
         </div>
 
@@ -111,7 +111,7 @@ export function RoleSelection() {
           POLY<span className="text-sky-600">QUEST</span>
         </h1>
         <p className="text-lg sm:text-2xl font-black text-slate-700 mt-2 max-w-md mx-auto">
-          The World of Synthetic Materials
+          Things We Make & Do: Materials Science
         </p>
 
         {isSetUp && child && (
