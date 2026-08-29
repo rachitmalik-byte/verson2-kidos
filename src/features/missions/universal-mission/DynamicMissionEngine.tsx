@@ -11,6 +11,7 @@ import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { bgmEngine } from '@/lib/bgmEngine';
+import { useFXStore } from '@/stores/fxStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { InquiryQuestionCard } from '@/components/interactive/InquiryQuestionCard';
 import { RaincoatMission } from '@/features/missions/mission-01-raincoat/RaincoatMission';
@@ -905,6 +906,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   <button
                     onClick={() => {
                       sounds.splash();
+                      useFXStore.getState().triggerFX('steam', 2500);
                       setInteractiveState((p) => ({ ...p, heatApplied: true }));
                     }}
                     className={`p-4 rounded-2xl border-3 flex flex-col items-center gap-1 cursor-pointer transition-all ${
@@ -1087,8 +1089,12 @@ export const DynamicMissionEngine: React.FC = () => {
                     <button
                       key={mat.id}
                       onClick={() => {
-                        if (mat.conducts) sounds.sparkle();
-                        else sounds.pop();
+                        if (mat.conducts) {
+                          sounds.sparkle();
+                          useFXStore.getState().triggerFX('spark', 2500);
+                        } else {
+                          sounds.pop();
+                        }
 
                         setInteractiveState((p) => {
                           const next = {
@@ -1300,6 +1306,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       sounds.boing();
+                      useFXStore.getState().triggerFX('steam', 3000);
                       voiceAssistant.speak('Ouch! Metal conducts scorching 100°C heat straight from the boiling water into the hand!');
                       setInteractiveState((p) => ({ ...p, testedIron: true }));
                     }}
@@ -1503,6 +1510,7 @@ export const DynamicMissionEngine: React.FC = () => {
                           key={t.step}
                           onClick={() => {
                             sounds.sparkle();
+                            useFXStore.getState().triggerFX('timelapse', 3000);
                             voiceAssistant.speak(t.voice);
                             setInteractiveState((p) => ({
                               ...p,

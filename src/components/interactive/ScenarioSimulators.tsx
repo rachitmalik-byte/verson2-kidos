@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { useFXStore } from '@/stores/fxStore';
 import { Gauge, Sparkles, AlertTriangle, CheckCircle2, Flame, Droplet, Zap, RotateCcw, Wrench } from 'lucide-react';
 
 /* ============================================================================
@@ -17,6 +18,7 @@ export const HighPressurePipeLeakSim: React.FC<{
     setIsApplying(true);
     if (type === 'pine') {
       sounds.boing();
+      useFXStore.getState().triggerFX('rain', 3000);
       voiceAssistant.speak('Oh no! Natural pine resin is water soluble and blows right off under 80 PSI water pressure!');
       setTimeout(() => {
         setAdhesiveType('pine');
@@ -24,6 +26,7 @@ export const HighPressurePipeLeakSim: React.FC<{
       }, 600);
     } else {
       sounds.success();
+      useFXStore.getState().triggerFX('spark', 2000);
       voiceAssistant.speak('Success! 2-part synthetic epoxy polymerizes underwater and forms an impermeable seal that withstands 80 PSI!');
       setTimeout(() => {
         setAdhesiveType('epoxy');
@@ -326,11 +329,13 @@ export const RaceCarTireFrictionSim: React.FC<{
     setIsSpinning(true);
     if (rubberType === 'natural' && speedRpm > 5000) {
       sounds.boing();
+      useFXStore.getState().triggerFX('steam', 2500);
       voiceAssistant.speak(
         'Extreme friction! Natural raw rubber has NO sulfur crosslinks. Under 120°C heat, polymer chains slide apart, melt, and turn into sticky paste on the road!'
       );
     } else {
       sounds.success();
+      useFXStore.getState().triggerFX('spark', 2500);
       voiceAssistant.speak(
         'Incredible grip! Vulcanized rubber uses sulfur crosslinks to lock rubber chains into a tough 3D mesh that resists 160°C heat without melting!'
       );

@@ -9,6 +9,7 @@ import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { useFXStore } from '@/stores/fxStore';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 
 // Real Macro Studio Photography
@@ -18,8 +19,6 @@ import steelKeyMacroImg from '@/assets/images/wire/steel_key_macro.jpg';
 import rubberEraserMacroImg from '@/assets/images/wire/rubber_eraser_macro.jpg';
 import lightbulbGlowingBrightImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
 import electricianToolsSafetyImg from '@/assets/images/wire/electrician_tools_safety.jpg';
-import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
-import polyesterFabricZoomImg from '@/assets/images/raincoat/polyester_fabric_zoom.jpg';
 
 import {
   Zap,
@@ -167,6 +166,7 @@ export function WireMission() {
 
     if (specimen.conducts) {
       sounds.sparkle();
+      useFXStore.getState().triggerFX('spark', 2500);
       voiceAssistant.speak(
         `⚡ ${specimen.name} conducts electric current! Look at the lightbulb blazing with bright light!`
       );
