@@ -44,11 +44,28 @@ interface AudioNavBarControlsProps {
  */
 export const MissionAudioControls: React.FC = () => {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const { isSfxMuted, isBgmMuted, isTtsMuted, toggleBgm, toggleSfx } = useAudioStore();
+  const [showAiLabModal, setShowAiLabModal] = useState(false);
+  const [showScanModal, setShowScanModal] = useState(false);
+  const [showPipChatModal, setShowPipChatModal] = useState(false);
+  const [showWhatIfModal, setShowWhatIfModal] = useState(false);
+  const { isSfxMuted, isBgmMuted, toggleBgm, toggleSfx } = useAudioStore();
 
   return (
     <>
       <div className="flex items-center gap-1.5 shrink-0">
+        {/* Quick AI Science Lab Trigger */}
+        <button
+          onClick={() => {
+            sounds.sparkle();
+            setShowAiLabModal(true);
+          }}
+          className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-all shadow-xs whitespace-nowrap"
+          title="Open Gemini AI Science Tools"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+          <span className="hidden sm:inline">AI Lab ✨</span>
+        </button>
+
         {/* Quick Music Toggle */}
         <button
           onClick={() => {
@@ -99,6 +116,16 @@ export const MissionAudioControls: React.FC = () => {
         </button>
       </div>
 
+      <AiScienceLabModal
+        isOpen={showAiLabModal}
+        onClose={() => setShowAiLabModal(false)}
+        onOpenScan={() => setShowScanModal(true)}
+        onOpenAskPip={() => setShowPipChatModal(true)}
+        onOpenWhatIf={() => setShowWhatIfModal(true)}
+      />
+      <ScanMyWorldModal isOpen={showScanModal} onClose={() => setShowScanModal(false)} />
+      <SocraticPipAITutorModal isOpen={showPipChatModal} onClose={() => setShowPipChatModal(false)} />
+      <WhatIfScienceSandboxModal isOpen={showWhatIfModal} onClose={() => setShowWhatIfModal(false)} />
       <AudioSettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
     </>
   );

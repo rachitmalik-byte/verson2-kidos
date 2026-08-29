@@ -121,23 +121,40 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     analyzePhoto(sampleUrl);
   };
 
-  const analyzePhoto = async (base64Img: string) => {
+  const urlOrBlobToBase64 = async (urlOrData: string): Promise<string> => {
+    if (urlOrData.startsWith('data:image/')) {
+      return urlOrData;
+    }
+    const res = await fetch(urlOrData);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const analyzePhoto = async (imageInput: string) => {
     setIsAnalyzing(true);
     setResult(null);
     setQuizAnswered(false);
     setSelectedOption(null);
     sounds.sparkle();
-    voiceAssistant.speak('Scanning material molecular structure... Let me analyze the fibers!');
+    voiceAssistant.speak('Scanning material molecular structure... Let me analyze the fibers and minerals!');
 
     try {
-      const res = await geminiService.detectMaterialFromImage(base64Img);
+      const base64Data = await urlOrBlobToBase64(imageInput);
+      const res = await geminiService.detectMaterialFromImage(base64Data);
       setResult(res);
       sounds.success();
       voiceAssistant.speak(
         `Material identified! That is ${res.materialName}, a ${res.category} material! Tap the quiz to test its property!`
       );
-    } catch (err) {
+    } catch (err: any) {
       console.error('Analysis failed:', err);
+      setErrorMessage('Could not analyze the photo. Please ensure good lighting and try again!');
+      voiceAssistant.speak('Oops! Let us try taking another clear photo with good lighting!');
     } finally {
       setIsAnalyzing(false);
     }

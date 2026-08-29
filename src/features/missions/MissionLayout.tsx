@@ -52,6 +52,8 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
     navigate('/');
   };
 
+  const [showPipModal, setShowPipModal] = React.useState(false);
+
   return (
     <div
       className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-3 sm:pt-5 pb-24 sm:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden`}
@@ -98,30 +100,14 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
           </div>
 
           {/* Right: Progress Stepping Stones + Stars + Clean Audio Controls */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-            {/* Stepping Stones (Dots) */}
-            <div className="hidden sm:flex items-center gap-1 bg-slate-100 px-2.5 py-1.5 rounded-xl border border-slate-200">
-              {Array.from({ length: totalSteps }, (_, i) => i + 1).map((stepNum) => (
-                <div
-                  key={stepNum}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    stepNum === currentStep
-                      ? 'w-5 bg-amber-500 ring-2 ring-amber-300'
-                      : stepNum < currentStep
-                      ? 'w-2 bg-emerald-500'
-                      : 'w-2 bg-slate-300'
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Stars Counter */}
-            <div className="flex items-center gap-1 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-amber-50 border-2 border-amber-300 rounded-xl sm:rounded-2xl text-amber-900 font-black text-xs">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Stars Count Capsule */}
+            <div className="flex items-center gap-1 bg-amber-50 border-2 border-amber-300 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm text-amber-900 shadow-xs">
               <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
               <span>{starsCount}</span>
             </div>
 
-            {/* Compact Mission Audio Controls */}
+            {/* Compact Mission Audio Controls & AI Hub */}
             <MissionAudioControls />
           </div>
         </header>
@@ -131,6 +117,21 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
           {children}
         </main>
       </div>
+
+      {/* Floating Ask Pip AI Mentor Bubble (Always accessible between activity steps) */}
+      <button
+        onClick={() => {
+          sounds.sparkle();
+          setShowPipModal(true);
+        }}
+        className="fixed bottom-20 right-4 sm:right-6 z-40 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-full shadow-2xl border-2 border-white flex items-center gap-2 cursor-pointer active:scale-95 transition-all hover:shadow-indigo-300/50"
+        title="Ask Pip AI for a science clue"
+      >
+        <span className="text-lg">🤖</span>
+        <span className="font-black text-xs sm:text-sm tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          Ask Pip Clue ✨
+        </span>
+      </button>
 
       {/* ── Bottom Tactile Navigation Bar (Fixed for Mobile & Desktop) ── */}
       <footer className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t-2 border-slate-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
@@ -171,6 +172,9 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
           </button>
         </div>
       </footer>
+
+      {/* Socratic Pip AI Modal */}
+      <SocraticPipAITutorModal isOpen={showPipModal} onClose={() => setShowPipModal(false)} />
     </div>
   );
 };
