@@ -256,7 +256,8 @@ export function SuperSensesMissionEngine() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-emerald-100 via-teal-50 to-amber-50 flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative">
+    <div className="min-h-screen w-full flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+      <LivingWorldAnimatedForestBackground />
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"

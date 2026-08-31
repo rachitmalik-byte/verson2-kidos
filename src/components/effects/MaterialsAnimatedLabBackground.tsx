@@ -12,7 +12,7 @@ export const MaterialsAnimatedLabBackground: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10 select-none">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none">
       {/* ── Dynamic Lab Warm Gradient ── */}
       <div
         className={`absolute inset-0 transition-colors duration-1000 ${

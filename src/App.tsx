@@ -28,7 +28,7 @@ export function App() {
   return (
     <ErrorBoundary>
     <BrowserRouter>
-      <div className="min-h-screen bg-slate-50 relative selection:bg-amber-300 selection:text-slate-950">
+      <div className="min-h-screen relative selection:bg-amber-300 selection:text-slate-950">
         <Routes>
           {/* Entry */}
           <Route path="/" element={<RoleSelection />} />
