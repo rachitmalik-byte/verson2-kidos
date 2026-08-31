@@ -125,7 +125,7 @@ export const DynamicMissionEngine: React.FC = () => {
   const completeMission = useProgressStore((state) => state.completeMission);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
-  const mission = missions.find((m) => m.number === missionNumber) || missions[3];
+  const mission = missions.find((m) => m.number === missionNumber) || missions[0];
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [interactiveState, setInteractiveState] = useState<Record<string, any>>({});
