@@ -45,7 +45,7 @@ export const ShelterAnimatedMountainBackground: React.FC = () => {
 
       {/* ── 2. Floating High-Altitude Clouds ── */}
       <motion.div
-        animate={{ x: [-100, window.innerWidth || 1200] }}
+        animate={{ x: [-100, 1400] }}
         transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
         className="absolute top-12 left-0 opacity-60 z-0"
       >
@@ -53,7 +53,7 @@ export const ShelterAnimatedMountainBackground: React.FC = () => {
       </motion.div>
 
       <motion.div
-        animate={{ x: [window.innerWidth || 1200, -150] }}
+        animate={{ x: [1400, -150] }}
         transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
         className="absolute top-28 right-0 opacity-40 z-0"
       >

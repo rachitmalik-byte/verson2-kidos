@@ -1,3 +1,5 @@
+import { ThemeWaterHub } from '@/features/theme-water/ThemeWaterHub';
+import { WaterMissionEngine } from '@/features/theme-water/WaterMissionEngine';
 import { TeacherStudio } from '@/features/teacher-studio/TeacherStudio';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -44,6 +46,8 @@ export function App() {
           <Route path="/theme/1/chapter/:chapterNum" element={<SuperSensesMissionEngine />} />
 
           {/* Theme 3 & 5: Shelter, Mountains & Earth (5 Chapters) */}
+          <Route path="/theme/water/hub" element={<ThemeWaterHub />} />
+          <Route path="/theme/water/chapter/:chapterNum" element={<WaterMissionEngine />} />
           <Route path="/theme/shelter/hub" element={<ThemeShelterHub />} />
           <Route path="/theme/shelter/chapter/:chapterNum" element={<ShelterMissionEngine />} />
 
