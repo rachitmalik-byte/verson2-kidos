@@ -174,7 +174,7 @@ export const TensileStrengthRigEngine: React.FC<Props> = ({ data, onComplete }) 
                 }`}
               >
                 <span>{s.icon}</span>
-                <span className="hidden sm:inline">{s.name.split(' ')[1] || s.name}</span>
+                <span className="text-[11px] font-black">{s.name.split(' ')[1] || s.name}</span>
                 {isDone && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
               </button>
             );

@@ -168,7 +168,7 @@ export const ShelterAnimatedMountainBackground: React.FC = () => {
       </div>
 
       {/* ── 7. Interactive Weather Mode Switcher Badge (Top Right) ── */}
-      <div className="absolute top-4 right-4 z-20 pointer-events-auto">
+      <div className="hidden sm:block absolute top-4 right-4 z-20 pointer-events-auto">
         <button
           onClick={handleToggleWeather}
           className="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-indigo-300 text-indigo-950 font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer hover:bg-white active:scale-95 transition-all"

@@ -134,7 +134,7 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
       {/* ══════════════════════════════════════════════════════════════════════
           2D ANIMATED VECTOR SCIENCE CANVAS (Water Cycle & Physics Simulation)
       ══════════════════════════════════════════════════════════════════════ */}
-      <div className="w-full h-80 sm:h-96 rounded-3xl overflow-hidden border-3 border-sky-300 relative shadow-inner bg-gradient-to-b from-sky-400 via-sky-200 to-emerald-100 select-none">
+      <div className="w-full h-[320px] sm:h-96 rounded-2xl sm:rounded-3xl overflow-hidden border-3 border-sky-300 relative shadow-inner bg-gradient-to-b from-sky-400 via-sky-200 to-emerald-100 select-none">
         {/* Background Clouds floating */}
         <motion.div
           animate={{ x: [-20, 30, -20] }}
@@ -194,7 +194,7 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
           <motion.div
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className={`px-5 py-3 rounded-full flex items-center gap-2 border-2 shadow-lg transition-all duration-500 cursor-pointer ${
+            className={`px-3 py-1.5 sm:px-5 sm:py-3 rounded-full flex items-center gap-1.5 sm:gap-2 border-2 shadow-lg transition-all duration-500 cursor-pointer ${
               cloudDensity === 'dense_storm'
                 ? 'bg-slate-700 border-slate-800 text-white shadow-[0_10px_25px_rgba(51,65,85,0.5)]'
                 : 'bg-white/95 border-sky-200 text-slate-700 shadow-md'
@@ -203,9 +203,9 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
             title="Click to trigger Precipitation!"
           >
             {isRaining ? (
-              <CloudRain className="w-8 h-8 text-sky-300 animate-bounce" />
+              <CloudRain className="w-5 h-5 sm:w-8 sm:h-8 text-sky-300 animate-bounce" />
             ) : (
-              <Cloud className="w-8 h-8 text-sky-400 fill-sky-100" />
+              <Cloud className="w-5 h-5 sm:w-8 sm:h-8 text-sky-400 fill-sky-100" />
             )}
             <div className="text-left">
               <span className="font-black text-xs block leading-tight">

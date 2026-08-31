@@ -144,7 +144,7 @@ export const WaterAnimatedOceanBackground: React.FC = () => {
       </div>
 
       {/* ── Interactive Tide Switcher (Top Right) ── */}
-      <div className="absolute top-4 right-4 z-20 pointer-events-auto">
+      <div className="hidden sm:block absolute top-4 right-4 z-20 pointer-events-auto">
         <button
           onClick={handleToggleTide}
           className="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-sky-300 text-sky-950 font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer hover:bg-white active:scale-95 transition-all"

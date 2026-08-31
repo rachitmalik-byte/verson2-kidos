@@ -50,7 +50,7 @@ export const MaterialsAnimatedLabBackground: React.FC = () => {
       </div>
 
       {/* ── Interactive Lab Mode Switcher ── */}
-      <div className="absolute top-4 right-4 z-20 pointer-events-auto">
+      <div className="hidden sm:block absolute top-4 right-4 z-20 pointer-events-auto">
         <button
           onClick={handleToggleLab}
           className="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-amber-300 text-amber-950 font-black text-xs shadow-md flex items-center gap-1.5 cursor-pointer hover:bg-white active:scale-95 transition-all"
