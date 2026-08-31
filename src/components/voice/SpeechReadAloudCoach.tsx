@@ -10,10 +10,10 @@ import {
   RotateCcw,
   AlertCircle,
   ArrowRight,
+  HelpCircle,
 } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { geminiService } from '@/lib/geminiService';
 
 interface SpeechReadAloudCoachProps {
   sentence: string;
@@ -24,6 +24,83 @@ interface SpeechReadAloudCoachProps {
   icon?: React.ReactNode;
   stepNumber?: number;
   totalSteps?: number;
+}
+
+const HOMOPHONES: Record<string, string[]> = {
+  icy: ['ic', 'ice', 'icey', 'isi', 'isee', 'i-c', 'i.c.', 'ic sea', 'ice-sea', 'isea'],
+  crampons: ['crampon', 'krampons', 'grampons', 'cramping', 'cramps', 'crampons', 'cramp-ons', 'crampones'],
+  mountaineers: ['mountaineer', 'mountaneers', 'mountain-ears', 'mountain', 'mountaineer\'s'],
+  glaciers: ['glacier', 'glasier', 'glaziers', 'glazier', 'glasier', 'glayshers'],
+  oxygen: ['oxigen', 'oxegen', 'oxygin', 'oxgyen', 'oxigen-tanks'],
+  altitudes: ['altitude', 'altitues', 'altitutdes', 'altitoodes'],
+  thin: ['tin', 'thing', 'think', 'fin'],
+  steel: ['steal', 'stele', 'still', 'steels'],
+  air: ['are', 'err', 'heir', 'ere'],
+  because: ['becaus', 'bcoz', 'cuz', 'becoz', 'cause'],
+  tanks: ['tank', 'thanx', 'thanks'],
+  carry: ['cary', 'kerry', 'curry', 'carried'],
+  use: ['used', 'uses', 'youse', 'yuze'],
+  on: ['an', 'one', 'un', 'in', 'own'],
+  and: ['an', 'nd', 'end', 'und'],
+  is: ['iz', 'es', 'his'],
+  at: ['et', 'it', 'ad'],
+  high: ['hi', 'bye', 'hai'],
+  pashmina: ['pashmeena', 'poshmina', 'pash', 'mina'],
+  barometer: ['baro', 'meter', 'barometre', 'bar-ometer'],
+  seismic: ['sizmic', 'sysmic', 'cesmic', 'sizesmic'],
+  persian: ['perzian', 'pershian', 'perzhian'],
+  polyester: ['poly', 'ester', 'polyester', 'poly-ester'],
+  polymer: ['poly', 'mer', 'polymers', 'poly-mer'],
+  monomer: ['mono', 'mer', 'monomers', 'mono-mer'],
+  crosslinking: ['cross', 'linking', 'crosslink', 'cross-linking'],
+  sulfur: ['sulphur', 'sulfer', 'sulpher'],
+  vulcanized: ['vulcanised', 'volcanized', 'volcanised', 'vulcan-ized'],
+  bakelite: ['bake', 'lite', 'bakelite', 'bake-lite'],
+  thermoplastic: ['thermo', 'plastic', 'thermo-plastic'],
+  thermosetting: ['thermo', 'setting', 'thermo-setting'],
+};
+
+function cleanWord(w: string): string {
+  return w.toLowerCase().replace(/[^a-z0-9]/gi, '');
+}
+
+function levenshteinDistance(s1: string, s2: string): number {
+  if (s1.length < s2.length) return levenshteinDistance(s2, s1);
+  if (s2.length === 0) return s1.length;
+  let previousRow = Array.from({ length: s2.length + 1 }, (_, i) => i);
+  for (let i = 0; i < s1.length; i++) {
+    const currentRow = [i + 1];
+    for (let j = 0; j < s2.length; j++) {
+      const insertions = previousRow[j + 1] + 1;
+      const deletions = currentRow[j] + 1;
+      const substitutions = previousRow[j] + (s1[i] !== s2[j] ? 1 : 0);
+      currentRow.push(Math.min(insertions, deletions, substitutions));
+    }
+    previousRow = currentRow;
+  }
+  return previousRow[previousRow.length - 1];
+}
+
+function isPhoneticMatch(spoken: string, target: string): boolean {
+  const s = cleanWord(spoken);
+  const t = cleanWord(target);
+  if (!s || !t) return false;
+  if (s === t) return true;
+
+  // 1. Homophone dictionary
+  if (HOMOPHONES[t] && HOMOPHONES[t].includes(s)) return true;
+  if (HOMOPHONES[s] && HOMOPHONES[s].includes(t)) return true;
+
+  // 2. Levenshtein edit distance
+  const dist = levenshteinDistance(s, t);
+
+  if (t.length <= 3) {
+    return dist <= 1 || (s.length >= 2 && (s.startsWith(t.slice(0, 2)) || t.startsWith(s.slice(0, 2))));
+  } else if (t.length <= 6) {
+    return dist <= 1 || (s.length >= 3 && (s.startsWith(t.slice(0, 3)) || t.startsWith(s.slice(0, 3))));
+  } else {
+    return dist <= 2 || (s.length >= 4 && (s.startsWith(t.slice(0, 4)) || t.startsWith(s.slice(0, 4))));
+  }
 }
 
 export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
@@ -50,7 +127,7 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
     return sentence.split(/\s+/).map((w, idx) => ({
       index: idx,
       raw: w,
-      clean: w.toLowerCase().replace(/[^a-z0-9]/gi, ''),
+      clean: cleanWord(w),
     }));
   }, [sentence]);
 
@@ -61,8 +138,6 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
       setCurrentWordIndex(wordTokens.length);
     }
   }, [isCompleted, completed, wordTokens.length]);
-
-  const cleanWord = (w: string) => w.toLowerCase().replace(/[^a-z0-9]/gi, '');
 
   const handleListenToPip = () => {
     sounds.sparkle();
@@ -76,6 +151,26 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
     setMisspokenIndices(new Set());
     setFeedbackMessage(null);
     setCompleted(false);
+  };
+
+  /**
+   * Tap-to-pass / practice single word
+   */
+  const handleWordClick = (index: number, wordRaw: string) => {
+    sounds.sparkle();
+    voiceAssistant.speak(wordRaw);
+    if (index === currentWordIndex) {
+      const nextIdx = currentWordIndex + 1;
+      setCurrentWordIndex(nextIdx);
+      if (nextIdx >= wordTokens.length && !completed) {
+        setCompleted(true);
+        sounds.fanfare();
+        const praise = `Awesome reading! You mastered the entire sentence! ⭐`;
+        setFeedbackMessage(praise);
+        voiceAssistant.speak(praise);
+        onComplete();
+      }
+    }
   };
 
   const startListening = () => {
@@ -101,7 +196,7 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
-      recognition.maxAlternatives = 3;
+      recognition.maxAlternatives = 5;
 
       recognition.onstart = () => {
         setIsListening(true);
@@ -124,35 +219,46 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
           .map(cleanWord)
           .filter((w) => w.length > 0);
 
-        // Real-Time Word-by-Word Sequential Matcher
-        let targetPointer = 0;
+        // Child-Friendly Multi-Token & Phonetic Sequential Matcher
+        let targetPointer = currentWordIndex;
         const newMisspoken = new Set<number>();
 
-        for (let sIdx = 0; sIdx < spokenWords.length && targetPointer < wordTokens.length; sIdx++) {
+        let sIdx = 0;
+        while (sIdx < spokenWords.length && targetPointer < wordTokens.length) {
           const spoken = spokenWords[sIdx];
           const target = wordTokens[targetPointer].clean;
 
-          // Exact match or strict phonetic prefix/suffix match
-          const isExact = spoken === target;
-          const isFuzzy =
-            target.length >= 4 &&
-            (spoken.startsWith(target.slice(0, target.length - 1)) ||
-              target.startsWith(spoken.slice(0, spoken.length - 1)));
-
-          if (isExact || isFuzzy) {
+          // 1. Single word phonetic match (e.g. 'ic' -> 'icy', 'crampon' -> 'crampons')
+          if (isPhoneticMatch(spoken, target)) {
             targetPointer++;
-          } else {
-            // If the user said a clearly different word (like "hit" for "heat")
-            if (spoken.length >= 2 && target.length >= 2 && sIdx >= targetPointer) {
-              newMisspoken.add(targetPointer);
+            sIdx++;
+            continue;
+          }
+
+          // 2. Two-word compound match (e.g. 'i' + 'c' -> 'icy', 'cramp' + 'ons' -> 'crampons')
+          if (sIdx + 1 < spokenWords.length) {
+            const compoundSpoken = spoken + spokenWords[sIdx + 1];
+            if (isPhoneticMatch(compoundSpoken, target)) {
+              targetPointer++;
+              sIdx += 2;
+              continue;
             }
           }
+
+          // 3. Skip noise / filler word lookahead
+          if (sIdx + 1 < spokenWords.length && isPhoneticMatch(spokenWords[sIdx + 1], target)) {
+            targetPointer++;
+            sIdx += 2;
+            continue;
+          }
+
+          sIdx++;
         }
 
         setCurrentWordIndex(targetPointer);
         setMisspokenIndices(newMisspoken);
 
-        // Strict Completion: Must reach the VERY LAST word in the sentence
+        // Completion trigger
         if (targetPointer >= wordTokens.length && !completed) {
           setCompleted(true);
           setIsListening(false);
@@ -176,11 +282,8 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
 
       recognition.onend = () => {
         setIsListening(false);
-
-        // If stopped before reaching the end of the sentence
         setCurrentWordIndex((idx) => {
           if (idx < wordTokens.length && !completed) {
-            const missingCount = wordTokens.length - idx;
             const msg = `You read ${idx} of ${wordTokens.length} words! Keep going to the very last word "${wordTokens[wordTokens.length - 1].raw}"!`;
             setFeedbackMessage(msg);
             sounds.boing();
@@ -256,7 +359,7 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
         </div>
       </div>
 
-      {/* ── Real-Time Word-by-Word Karaoke Sentence Display ── */}
+      {/* Real-Time Word-by-Word Karaoke Sentence Display */}
       <div className="p-5 rounded-2xl bg-slate-950 text-white text-base sm:text-lg font-black leading-loose mb-4 shadow-inner flex flex-wrap items-center gap-2">
         {wordTokens.map((token) => {
           const isSpoken = token.index < currentWordIndex;
@@ -267,7 +370,9 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
             return (
               <span
                 key={token.index}
-                className="px-2.5 py-1 rounded-xl bg-emerald-500 text-white shadow-sm flex items-center gap-1 animate-scaleIn"
+                onClick={() => handleWordClick(token.index, token.raw)}
+                className="px-2.5 py-1 rounded-xl bg-emerald-500 text-white shadow-sm flex items-center gap-1 animate-scaleIn cursor-pointer hover:bg-emerald-600"
+                title="Tapped to hear word"
               >
                 <span>{token.raw}</span>
                 <Check className="w-3.5 h-3.5 stroke-[3] inline text-emerald-100" />
@@ -279,7 +384,9 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
             return (
               <span
                 key={token.index}
-                className="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 shadow-md ring-4 ring-amber-300 animate-pulse font-black scale-105"
+                onClick={() => handleWordClick(token.index, token.raw)}
+                className="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 shadow-md ring-4 ring-amber-300 animate-pulse font-black scale-105 cursor-pointer"
+                title="Current word to read! Tap to hear Pip pronounce it."
               >
                 👉 {token.raw}
               </span>
@@ -290,8 +397,9 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
             return (
               <span
                 key={token.index}
-                className="px-2.5 py-1 rounded-xl bg-rose-500/30 text-rose-300 border border-rose-400 underline decoration-wavy"
-                title="Mispronounced or skipped word"
+                onClick={() => handleWordClick(token.index, token.raw)}
+                className="px-2.5 py-1 rounded-xl bg-rose-500/30 text-rose-300 border border-rose-400 underline decoration-wavy cursor-pointer hover:bg-rose-500/50"
+                title="Tap word to pronounce and pass!"
               >
                 {token.raw}
               </span>
@@ -299,89 +407,89 @@ export const SpeechReadAloudCoach: React.FC<SpeechReadAloudCoachProps> = ({
           }
 
           return (
-            <span key={token.index} className="px-1 py-0.5 text-slate-400 font-bold opacity-80">
+            <span
+              key={token.index}
+              onClick={() => handleWordClick(token.index, token.raw)}
+              className="px-1.5 py-0.5 text-slate-400 hover:text-white cursor-pointer transition-colors"
+              title="Tap to hear word"
+            >
               {token.raw}
             </span>
           );
         })}
       </div>
 
-      {/* Real-Time Live Microphone Transcript */}
-      {isListening && (
-        <div className="p-3 bg-amber-100/90 border-2 border-amber-300 rounded-2xl mb-4 text-xs font-bold text-amber-950 flex items-center justify-between gap-3 shadow-xs animate-pulse">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping inline-block" />
-            <span>
-              <strong>Speaking Live:</strong> "{liveTranscript || 'Reading aloud now...'}"
-            </span>
-          </div>
-          <span className="text-[10px] font-black uppercase text-amber-800">
-            Word {currentWordIndex} of {wordTokens.length}
-          </span>
-        </div>
-      )}
-
-      {/* Pip Feedback / Incomplete Guidance Box */}
-      {feedbackMessage && !isListening && (
+      {/* Pip Voice Coach Feedback Bubble */}
+      {feedbackMessage && (
         <motion.div
-          initial={{ opacity: 0, y: 5 }}
+          initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-3.5 rounded-2xl border mb-4 text-xs font-bold flex items-start gap-2.5 shadow-sm ${
+          className={`p-3.5 rounded-2xl mb-4 border flex items-center gap-2.5 text-xs font-bold ${
             completed
-              ? 'bg-emerald-100/90 border-emerald-300 text-emerald-950'
+              ? 'bg-emerald-100 border-emerald-300 text-emerald-950'
               : 'bg-amber-100/90 border-amber-300 text-amber-950'
           }`}
         >
-          <span className="text-xl shrink-0">{completed ? '🎉' : '🤖'}</span>
-          <div>
-            <span className="text-[10px] font-black uppercase block mb-0.5">
-              {completed ? 'Reading Mastered!' : 'Pip Speech Guide:'}
+          <span className="text-xl">🤖</span>
+          <div className="flex-1">
+            <span className="font-black block uppercase text-[10px] tracking-wider text-amber-900">
+              Pip Speech Guide:
             </span>
             <span>{feedbackMessage}</span>
           </div>
         </motion.div>
       )}
 
-      {/* Bottom Action Controls */}
-      <div className="flex items-center gap-2.5">
-        {!isListening ? (
-          <button
-            onClick={startListening}
-            className={`flex-1 py-3 px-4 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md active:scale-95 ${
-              completed
-                ? 'bg-slate-800 hover:bg-slate-700 text-slate-200'
-                : 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-300 hover:to-orange-300 text-slate-950'
-            }`}
-          >
-            <Mic className="w-4 h-4 text-slate-950" />
-            <span>
-              {completed
-                ? '🔄 Practice Speaking Again'
-                : currentWordIndex > 0
-                ? '🎙️ Continue Reading Aloud'
-                : '🎙️ Tap & Read Aloud into Mic'}
-            </span>
-          </button>
-        ) : (
-          <button
-            onClick={stopListening}
-            className="flex-1 py-3 px-4 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95 animate-pulse"
-          >
-            <MicOff className="w-4 h-4" />
-            <span>Done Reading (Stop Mic) 🛑</span>
-          </button>
-        )}
+      {/* Bottom Controls Bar */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-2 flex-1">
+          {!isListening ? (
+            <button
+              onClick={startListening}
+              className={`flex-1 py-3.5 px-6 rounded-2xl font-black text-sm cursor-pointer shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 ${
+                completed
+                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+                  : currentWordIndex > 0
+                  ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-slate-950 hover:brightness-105'
+                  : 'bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 hover:from-amber-500 hover:to-orange-600'
+              }`}
+            >
+              <Mic className="w-5 h-5" />
+              <span>
+                {completed
+                  ? 'Practice Reading Again 🎙️'
+                  : currentWordIndex > 0
+                  ? '🎙️ Continue Reading Aloud'
+                  : '🎙️ Tap to Read Aloud'}
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={stopListening}
+              className="flex-1 py-3.5 px-6 bg-rose-500 hover:bg-rose-600 text-white font-black text-sm rounded-2xl cursor-pointer shadow-lg animate-pulse flex items-center justify-center gap-2 active:scale-95 transition-all"
+            >
+              <MicOff className="w-5 h-5" />
+              <span>Listening... Tap when done ⏹️</span>
+            </button>
+          )}
 
-        {(currentWordIndex > 0 || completed) && !isListening && (
-          <button
-            onClick={handleReset}
-            className="p-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-700 cursor-pointer active:scale-95 transition-all"
-            title="Reset this sentence"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        )}
+          {currentWordIndex > 0 && (
+            <button
+              onClick={handleReset}
+              className="p-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all"
+              title="Reset Sentence"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
+
+      {!micSupported && (
+        <p className="mt-2 text-xs font-bold text-rose-600">
+          ⚠️ Microphone access is not supported in this browser. Please try Chrome or Edge.
+        </p>
+      )}
     </div>
   );
 };
