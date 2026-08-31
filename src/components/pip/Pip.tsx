@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useSpring } from 'framer-motion';
 import type { PipState, PipMood } from '@/types';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -36,6 +36,11 @@ export const Pip: React.FC<PipProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Smooth Spring Physics for Cursor Eye Tracking (Zero Re-renders, 60fps GPU fluid motion)
+  const eyeSpringConfig = { stiffness: 140, damping: 18, mass: 0.8 };
+  const eyeX = useSpring(0, eyeSpringConfig);
+  const eyeY = useSpring(0, eyeSpringConfig);
+
   // Store bindings
   const storeOutfit = useProgressStore((s) => s.equippedOutfit);
   const storeHeadwear = useProgressStore((s) => s.equippedHeadwear);
@@ -61,18 +66,17 @@ export const Pip: React.FC<PipProps> = ({
   const [isBlinking, setIsBlinking] = useState(false);
   const [mouthViseme, setMouthViseme] = useState<'closed' | 'open-small' | 'open-wide' | 'smile'>('smile');
   const [tapEffect, setTapEffect] = useState<{ id: number; icon: string }[]>([]);
-  const [eyeOffset, setEyeOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [highFiveImpact, setHighFiveImpact] = useState(false);
   const [showWardrobeQuickBtn, setShowWardrobeQuickBtn] = useState(false);
 
   const sizeClasses = {
-    sm: 'w-16 h-16',
-    md: 'w-24 h-24',
-    lg: 'w-32 h-32',
-    xl: 'w-44 h-44',
+    sm: 'w-20 h-20',
+    md: 'w-32 h-32 sm:w-36 sm:h-36',
+    lg: 'w-44 h-44 sm:w-52 sm:h-52',
+    xl: 'w-56 h-56 sm:w-64 sm:h-64',
   };
 
-  // ── 1. MOUSE CURSOR PUPIL TRACKING ──
+  // ── 1. BUTTERY SMOOTH CURSOR EYE TRACKING ──
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -84,26 +88,38 @@ export const Pip: React.FC<PipProps> = ({
       const dy = e.clientY - pipCenterY;
       const distance = Math.hypot(dx, dy);
 
-      if (distance === 0) return;
+      if (distance === 0) {
+        eyeX.set(0);
+        eyeY.set(0);
+        return;
+      }
 
-      const maxRadius = 3.5;
-      const factor = Math.min(distance / 35, maxRadius);
-      setEyeOffset({
-        x: (dx / distance) * factor,
-        y: (dy / distance) * factor,
-      });
+      // Smooth clamped radius: maximum 4.8px movement within eye whites
+      const maxRadius = 4.8;
+      const factor = Math.min(distance / 50, 1.0) * maxRadius;
+      eyeX.set((dx / distance) * factor);
+      eyeY.set((dy / distance) * factor);
+    };
+
+    const handleMouseLeave = () => {
+      eyeX.set(0);
+      eyeY.set(0);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [eyeX, eyeY]);
 
-  // ── 2. ADORABLE BLINKING (Every 4.5s) ──
+  // ── 2. ADORABLE NATURAL BLINKING (Every 4s) ──
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 150);
-    }, 4500);
+      setTimeout(() => setIsBlinking(false), 140);
+    }, 4000);
     return () => clearInterval(blinkInterval);
   }, []);
 
@@ -171,57 +187,56 @@ export const Pip: React.FC<PipProps> = ({
     setTimeout(() => setHighFiveImpact(false), 1200);
   };
 
-  // ── 5. CUTE ANIMATIONS ──
+  // ── 5. ORGANIC, LIVING CHARACTER ANIMATIONS ──
   const bodyVariants = {
     idle: {
-      scaleY: [1, 1.025, 1],
-      y: [0, -2, 0],
-      transition: { duration: 3.2, repeat: Infinity, ease: 'easeInOut' },
+      y: [0, -2.5, 0],
+      scaleY: [1, 1.018, 1],
+      transition: { duration: 3.6, repeat: Infinity, ease: 'easeInOut' },
     },
     curious: {
-      rotate: [-4, 6, -4],
-      y: -4,
-      transition: { duration: 1.2, ease: 'easeOut' },
+      rotate: -3.5,
+      y: -3,
+      transition: { duration: 0.4, ease: 'easeOut' },
     },
     teaching: {
       y: [0, -4, 0],
-      rotate: [0, 2, 0],
-      transition: { duration: 2.0, repeat: Infinity, ease: 'easeInOut' },
+      rotate: [0, 1.5, 0],
+      transition: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
     },
     listening: {
       y: 2,
-      scale: 1.04,
-      rotate: -3,
-      transition: { duration: 0.5, ease: 'easeOut' },
+      scale: 1.03,
+      rotate: -2.5,
+      transition: { duration: 0.3, ease: 'easeOut' },
     },
     thinking: {
-      rotate: [0, -5, 0],
-      y: [0, -3, 0],
-      transition: { duration: 2.0, repeat: Infinity, ease: 'easeInOut' },
+      rotate: -3.5,
+      y: -2,
+      transition: { duration: 0.4, ease: 'easeOut' },
     },
     correct: {
-      y: [0, -14, 0],
-      scale: [1, 1.1, 1],
-      rotate: [0, -5, 5, 0],
-      transition: { duration: 0.6, ease: 'easeOut' },
+      y: [0, -12, 0],
+      scale: [1, 1.08, 1],
+      transition: { duration: 0.5, ease: 'easeOut' },
     },
     try_again: {
-      x: [0, -4, 4, -2, 2, 0],
-      transition: { duration: 0.5, ease: 'easeInOut' },
+      x: [0, -3, 3, -2, 2, 0],
+      transition: { duration: 0.4, ease: 'easeInOut' },
     },
     celebrating: {
-      y: [0, -16, 0],
-      rotate: [0, -8, 8, 0],
-      scale: [1, 1.12, 1],
-      transition: { duration: 0.7, repeat: Infinity, repeatDelay: 1.0, ease: 'easeInOut' },
+      y: [0, -14, 0],
+      scale: [1, 1.1, 1],
+      rotate: [0, -4, 4, 0],
+      transition: { duration: 0.7, ease: 'easeOut' },
     },
     high_five: {
-      scale: [1, 1.05, 1],
+      scale: [1, 1.04, 1],
       y: [0, -3, 0],
-      transition: { duration: 1.0, repeat: Infinity, ease: 'easeInOut' },
+      transition: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' },
     },
     speaking: {
-      scaleY: [1, 1.03, 1],
+      scaleY: [1, 1.02, 1],
       transition: { duration: 0.35, repeat: Infinity, ease: 'easeInOut' },
     },
   };
@@ -234,6 +249,8 @@ export const Pip: React.FC<PipProps> = ({
       ref={containerRef}
       variants={bodyVariants}
       animate={currentState}
+      whileHover={{ scale: interactive ? 1.03 : 1 }}
+      whileTap={{ scale: interactive ? 0.96 : 1 }}
       onClick={handleClick}
       onMouseEnter={() => setShowWardrobeQuickBtn(true)}
       onMouseLeave={() => setShowWardrobeQuickBtn(false)}
@@ -273,7 +290,7 @@ export const Pip: React.FC<PipProps> = ({
 
       {/* Main Vector SVG */}
       <svg
-        viewBox="-40 -20 220 180"
+        viewBox="8 -6 124 146"
         className="w-full h-full overflow-visible"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -369,36 +386,16 @@ export const Pip: React.FC<PipProps> = ({
           </linearGradient>
         </defs>
 
-        {/* ── LAYER 1: CUTE TWITCHING EARS ── */}
-        <motion.g
-          animate={
-            currentState === 'listening'
-              ? { rotate: [-12, 12, -12] }
-              : currentState === 'curious'
-              ? { rotate: -10, y: -2 }
-              : { rotate: [-3, 3, -3] }
-          }
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: '34px 34px' }}
-        >
+        {/* ── LAYER 1: CUTE EARS ── */}
+        <g style={{ transformOrigin: '34px 34px' }}>
           <path d="M34 36 C18 14 24 2 38 10 C46 16 44 28 40 38 Z" fill="#8B5CF6" stroke="#5B21B6" strokeWidth="2.5" />
           <path d="M34 30 C26 18 28 10 36 16 C40 20 39 26 36 32 Z" fill="#DDD6FE" />
-        </motion.g>
+        </g>
 
-        <motion.g
-          animate={
-            currentState === 'listening'
-              ? { rotate: [12, -12, 12] }
-              : currentState === 'curious'
-              ? { rotate: 12, y: -2 }
-              : { rotate: [3, -3, 3] }
-          }
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: '106px 34px' }}
-        >
+        <g style={{ transformOrigin: '106px 34px' }}>
           <path d="M106 36 C122 14 116 2 102 10 C94 16 96 28 100 38 Z" fill="#8B5CF6" stroke="#5B21B6" strokeWidth="2.5" />
           <path d="M106 30 C114 18 112 10 104 16 C100 20 101 26 104 32 Z" fill="#DDD6FE" />
-        </motion.g>
+        </g>
 
         {/* ── LAYER 2: CHUBBY BODY & BELLY ── */}
         <path
@@ -408,7 +405,7 @@ export const Pip: React.FC<PipProps> = ({
           strokeWidth="3.5"
         />
 
-        {/* Cute Soft Belly */}
+        {/* Soft Fluffy Belly */}
         <ellipse cx="70" cy="86" rx="36" ry="32" fill="url(#pipBellyGrad)" />
 
         {/* Little Paws / Feet */}
@@ -424,7 +421,6 @@ export const Pip: React.FC<PipProps> = ({
               stroke="#0284C7"
               strokeWidth="2.5"
             />
-            {/* Blue Collar V-Neck */}
             <path d="M42 80 L54 94 L70 86 L86 94 L98 80" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="#E2E8F0" />
             <circle cx="70" cy="98" r="2.5" fill="#38BDF8" />
             <circle cx="70" cy="110" r="2.5" fill="#38BDF8" />
@@ -590,22 +586,30 @@ export const Pip: React.FC<PipProps> = ({
         <ellipse cx="44" cy="74" rx="8" ry="5" fill="url(#pipCheekGrad)" />
         <ellipse cx="96" cy="74" rx="8" ry="5" fill="url(#pipCheekGrad)" />
 
-        {/* ── LAYER 5: BIG SPARKLING ANIME EYES ── */}
+        {/* ── LAYER 5: 60FPS SPRING-PHYSICS EYE TRACKING ── */}
         {!isBlinking ? (
           <g>
-            {/* Left Eye */}
+            {/* Left Eye White Base */}
             <circle cx="52" cy="62" r="10" fill="#FFFFFF" stroke="#312E81" strokeWidth="1.8" />
-            <circle cx={52 + eyeOffset.x} cy={62 + eyeOffset.y} r="6.5" fill="#1E1B4B" />
-            {/* Double Sparkle Highlights */}
-            <circle cx={54 + eyeOffset.x * 0.8} cy={60 + eyeOffset.y * 0.8} r="2.5" fill="#FFFFFF" />
-            <circle cx={50 + eyeOffset.x * 0.8} cy={64 + eyeOffset.y * 0.8} r="1.4" fill="#FFFFFF" />
+            {/* Left Moving Pupil with Spring Physics */}
+            <motion.g style={{ x: eyeX, y: eyeY }}>
+              <circle cx="52" cy="62" r="6.5" fill="#1E1B4B" />
+              {/* Primary Gloss Sparkle */}
+              <circle cx="54.2" cy="59.8" r="2.6" fill="#FFFFFF" />
+              {/* Secondary Accent Sparkle */}
+              <circle cx="49.8" cy="63.8" r="1.4" fill="#FFFFFF" />
+            </motion.g>
 
-            {/* Right Eye */}
+            {/* Right Eye White Base */}
             <circle cx="88" cy="62" r="10" fill="#FFFFFF" stroke="#312E81" strokeWidth="1.8" />
-            <circle cx={88 + eyeOffset.x} cy={62 + eyeOffset.y} r="6.5" fill="#1E1B4B" />
-            {/* Double Sparkle Highlights */}
-            <circle cx={90 + eyeOffset.x * 0.8} cy={60 + eyeOffset.y * 0.8} r="2.5" fill="#FFFFFF" />
-            <circle cx={86 + eyeOffset.x * 0.8} cy={64 + eyeOffset.y * 0.8} r="1.4" fill="#FFFFFF" />
+            {/* Right Moving Pupil with Spring Physics */}
+            <motion.g style={{ x: eyeX, y: eyeY }}>
+              <circle cx="88" cy="62" r="6.5" fill="#1E1B4B" />
+              {/* Primary Gloss Sparkle */}
+              <circle cx="90.2" cy="59.8" r="2.6" fill="#FFFFFF" />
+              {/* Secondary Accent Sparkle */}
+              <circle cx="85.8" cy="63.8" r="1.4" fill="#FFFFFF" />
+            </motion.g>
           </g>
         ) : (
           <g>

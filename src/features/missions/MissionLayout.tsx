@@ -1,3 +1,4 @@
+import { MaterialsAnimatedLabBackground } from '@/components/effects/MaterialsAnimatedLabBackground';
 import React, { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sounds } from '@/lib/sounds';

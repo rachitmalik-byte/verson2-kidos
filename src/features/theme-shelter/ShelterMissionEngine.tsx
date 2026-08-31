@@ -287,6 +287,7 @@ export function ShelterMissionEngine() {
 
   return (
     <div className="min-h-screen w-full relative overflow-x-hidden flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative">
+      <ShelterAnimatedMountainBackground />
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"

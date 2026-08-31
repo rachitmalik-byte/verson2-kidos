@@ -1,3 +1,4 @@
+import { WaterAnimatedOceanBackground } from '@/components/effects/WaterAnimatedOceanBackground';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -94,7 +95,8 @@ export function WaterMissionEngine() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-300 via-blue-50 to-indigo-100 flex flex-col pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+    <div className="min-h-screen w-full flex flex-col pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+      <WaterAnimatedOceanBackground />
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"

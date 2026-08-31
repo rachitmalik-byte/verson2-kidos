@@ -94,7 +94,8 @@ export function ChapterHub() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-200 via-indigo-50 to-amber-100 flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative">
+    <div className="min-h-screen w-full flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+      <MaterialsAnimatedLabBackground />
       <div className="w-full max-w-6xl mx-auto flex flex-col gap-6">
         {/* ── Top Game Navbar ── */}
         <div id="navbar-top-controls" className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
@@ -139,7 +140,7 @@ export function ChapterHub() {
         {/* ── Chapter Hero Banner with Progress Gauge ── */}
         <div id="chapter-hero-banner" className="bg-white/95 rounded-3xl md:rounded-[36px] p-6 md:p-8 border-4 border-amber-400 shadow-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
           <div className="relative">
-            <Pip mood={isAllComplete ? 'celebrating' : 'explaining'} size="lg" />
+            <Pip mood={isAllComplete ? 'celebrating' : 'idle'} size="lg" />
             <motion.div
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
