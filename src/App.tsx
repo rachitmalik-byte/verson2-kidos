@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { RoleSelection } from '@/features/role-selection/RoleSelection';
 import { SubjectSelection } from '@/features/subject-selection/SubjectSelection';
@@ -22,6 +23,7 @@ import { LivePipVoiceSidecar } from '@/components/ai/LivePipVoiceSidecar';
 
 export function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <div className="min-h-screen bg-slate-50 relative selection:bg-amber-300 selection:text-slate-950">
         <Routes>
@@ -76,5 +78,6 @@ export function App() {
         <DevDrawer />
       </div>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }
