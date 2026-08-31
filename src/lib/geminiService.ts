@@ -1,6 +1,6 @@
 /**
  * Google Gemini AI Multi-Object Scene & Material Detective Service
- * Pure open-ended multimodal AI vision with dense per-object detection.
+ * Pure open-ended multimodal AI vision with dynamic ModelService discovery.
  */
 
 export interface ColorStats {
@@ -74,16 +74,71 @@ export const setApiKey = (key: string): void => {
   }
 };
 
-// Candidate Google Gemini Vision Models
-const CANDIDATE_MODELS = [
+// Default Upgraded Google Gemini Models
+const FALLBACK_CANDIDATE_MODELS = [
+  'gemini-2.5-flash',
   'gemini-2.0-flash',
+  'gemini-2.0-flash-001',
   'gemini-1.5-flash',
-  'gemini-2.0-flash-exp',
-  'gemini-1.5-pro',
+  'gemini-1.5-flash-latest',
+  'gemini-1.5-flash-002',
+  'gemini-2.5-pro',
 ];
 
+// Cached discovered models per API key
+let cachedDiscoveredModels: string[] | null = null;
+let lastCachedKey = '';
+
 /**
- * Executes a Gemini API request with fallback across models
+ * Dynamically queries Google ModelService to fetch exact supported models for this user's key
+ */
+async function getAvailableVisionModels(apiKey: string): Promise<string[]> {
+  if (cachedDiscoveredModels && lastCachedKey === apiKey && cachedDiscoveredModels.length > 0) {
+    return cachedDiscoveredModels;
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`, {
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.models && Array.isArray(data.models)) {
+        const supported = data.models
+          .filter((m: any) => m.supportedGenerationMethods?.includes('generateContent'))
+          .map((m: any) => m.name.replace(/^models\//, ''))
+          .filter((name: string) => name.includes('flash') || name.includes('pro') || name.includes('gemini'));
+
+        supported.sort((a: string, b: string) => {
+          if (a.includes('2.5-flash')) return -1;
+          if (b.includes('2.5-flash')) return 1;
+          if (a.includes('2.0-flash')) return -1;
+          if (b.includes('2.0-flash')) return 1;
+          if (a.includes('1.5-flash')) return -1;
+          if (b.includes('1.5-flash')) return 1;
+          return 0;
+        });
+
+        if (supported.length > 0) {
+          cachedDiscoveredModels = supported;
+          lastCachedKey = apiKey;
+          return supported;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('ModelService.ListModels query note:', e);
+  }
+
+  return FALLBACK_CANDIDATE_MODELS;
+}
+
+/**
+ * Executes a Gemini API request with automatic ModelService discovery and cascade fallback
  */
 async function generateContentCascade(requestBody: any): Promise<string> {
   const apiKey = getApiKey();
@@ -91,12 +146,13 @@ async function generateContentCascade(requestBody: any): Promise<string> {
     throw new Error('NO_API_KEY');
   }
 
+  const modelsToTry = await getAvailableVisionModels(apiKey);
   let lastErrorText = '';
 
-  for (const model of CANDIDATE_MODELS) {
+  for (const model of modelsToTry) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const timeoutId = setTimeout(() => controller.abort(), 9000);
 
     try {
       const response = await fetch(url, {
@@ -115,7 +171,7 @@ async function generateContentCascade(requestBody: any): Promise<string> {
       } else {
         const errJson = await response.json().catch(() => null);
         const errMsg = errJson?.error?.message || (await response.text().catch(() => `HTTP ${response.status}`));
-        console.warn(`Gemini Vision error on ${model}:`, errMsg);
+        console.warn(`Gemini Vision attempt on ${model} failed:`, errMsg);
         lastErrorText = errMsg;
       }
     } catch (err: any) {
@@ -124,7 +180,7 @@ async function generateContentCascade(requestBody: any): Promise<string> {
     }
   }
 
-  throw new Error(lastErrorText || 'Google Gemini API connection failed. Please verify your API key.');
+  throw new Error(lastErrorText || 'Google Gemini API connection failed. Please check your API key.');
 }
 
 /**
