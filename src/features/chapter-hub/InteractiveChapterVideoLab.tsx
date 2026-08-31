@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Play,
@@ -23,7 +23,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { Pip } from '@/components/pip/Pip';
 
-// Real Macro Educational Photography Assets
+// Real Macro Photography Assets
 import rawCottonBollImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
 import silkwormCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
 import nylonCordImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
@@ -51,7 +51,9 @@ export interface VideoCourse {
   id: string;
   title: string;
   subtitle: string;
+  creator: string;
   youtubeId: string;
+  thumbnail: string;
   durationLabel: string;
   totalSeconds: number;
   category: string;
@@ -80,59 +82,61 @@ export interface VideoCourse {
 
 export const VIDEO_COURSES: VideoCourse[] = [
   {
-    id: 'course-synthetic-fibres',
+    id: 'course-learning-junction',
     title: 'Synthetic Fibres: Types, Properties & Uses',
     subtitle: 'Learning Junction • Complete Visual Guide to Petrochemical Polymers',
+    creator: 'Learning Junction',
     youtubeId: 'IBdIzj0elzI',
-    durationLabel: '05:15',
-    totalSeconds: 315,
+    thumbnail: 'https://img.youtube.com/vi/IBdIzj0elzI/hqdefault.jpg',
+    durationLabel: '03:15',
+    totalSeconds: 195,
     category: 'CBSE Class 5 EVS • Synthetic Fibres',
-    badge: '🧪 Polymer Chemistry',
-    color: 'from-sky-500 to-indigo-600',
+    badge: '🧪 Video 1: Polymer Chemistry',
+    color: 'from-sky-500 via-blue-600 to-indigo-600',
     description:
-      'Discover how scientists synthesize Nylon, Rayon, Polyester, and Acrylic from petrochemicals, and explore why different fibers are chosen for parachutes, raincoats, and winter sweaters!',
+      'Learn what synthetic fibres are, how Rayon, Nylon, Polyester, and Acrylic are synthesized, and compare their superpowers like tensile strength, water resistance, and heat melting.',
     timestamps: [
       {
         timeSeconds: 0,
         timeLabel: '00:00',
         title: '1. What Are Synthetic Fibres?',
         summary:
-          'Unlike natural fibers from cotton plants or sheep fleece, synthetic fibers are man-made chemical chains synthesized primarily from petroleum raw materials.',
+          'Synthetic fibres are man-made polymer chains synthesized through chemical processes using petrochemicals, unlike natural fibres from cotton or sheep.',
         keyLaw: '🧱 Monomers link together into long repeating chains called Polymers!',
         image: rawCottonBollImg,
         quickQuestion: {
           question: 'What is the primary raw source used to make synthetic fibers?',
           options: [
-            { text: 'Petrochemicals (crude oil derivatives)', isCorrect: true },
-            { text: 'Crushed fruit seeds', isCorrect: false },
+            { text: 'Petrochemicals (chemicals from petroleum/crude oil)', isCorrect: true },
+            { text: 'Crushed fruit seeds from trees', isCorrect: false },
           ],
           explanation: 'Synthetic polymers are synthesized from petroleum chemical compounds!',
         },
       },
       {
-        timeSeconds: 45,
-        timeLabel: '00:45',
-        title: '2. Rayon (The Regenerated Artificial Silk)',
+        timeSeconds: 30,
+        timeLabel: '00:30',
+        title: '2. Rayon (Artificial Silk from Wood Pulp)',
         summary:
-          'Rayon is made by chemically treating natural wood pulp with sodium hydroxide and carbon disulfide. It feels as soft, cool, and shiny as natural silk at a fraction of the cost!',
-        keyLaw: '✨ Rayon is a semi-synthetic fiber made from chemically processed wood cellulose.',
+          'Rayon is made by chemically treating natural wood pulp cellulose. It is smooth, shiny, and absorbent like natural silk, but much more affordable!',
+        keyLaw: '✨ Rayon is a semi-synthetic fiber made from chemically treated wood cellulose.',
         image: silkwormCocoonImg,
         quickQuestion: {
           question: 'Why is Rayon called "Artificial Silk"?',
           options: [
-            { text: 'It has the lustrous shine and drape of silk, made from wood pulp', isCorrect: true },
+            { text: 'It has the lustrous shine and soft drape of silk, made from wood pulp', isCorrect: true },
             { text: 'It is woven by mechanical robot spiders', isCorrect: false },
           ],
           explanation: 'Rayon mimics natural silk gloss using dissolved wood cellulose fibers!',
         },
       },
       {
-        timeSeconds: 100,
-        timeLabel: '01:40',
+        timeSeconds: 60,
+        timeLabel: '01:00',
         title: '3. Nylon: 100% Fully Synthetic Wonder',
         summary:
-          'Invented in 1935, Nylon was the world’s first 100% synthetic fiber made without any natural plant cellulose. It is elastic, lightweight, and stronger than a steel wire of equal thickness!',
-        keyLaw: '🪢 Nylon has immense tensile strength — ideal for parachutes and climbing ropes!',
+          'Nylon was the world’s first fully synthetic fiber. It is elastic, lightweight, lustrous, and stronger than a steel wire of equal thickness!',
+        keyLaw: '🪢 Nylon has immense tensile strength — ideal for climbing ropes & toothbrushes!',
         image: nylonCordImg,
         quickQuestion: {
           question: 'Why is nylon used for rock-climbing ropes and parachute cords?',
@@ -144,45 +148,45 @@ export const VIDEO_COURSES: VideoCourse[] = [
         },
       },
       {
-        timeSeconds: 155,
-        timeLabel: '02:35',
-        title: '4. Polyester (Terylene / PET): Wrinkle-Free & Hydrophobic',
+        timeSeconds: 90,
+        timeLabel: '01:30',
+        title: '4. Polyester (Terylene): Wrinkle-Free & Hydrophobic',
         summary:
-          'Polyester fibers are completely hydrophobic (water-fearing). They do not wrinkle easily, dry extremely fast, and shed rain without absorbing moisture.',
+          'Polyester is made of repeating ester units. It does not get wrinkled easily, remains crisp, sheds water droplets, and is very easy to wash.',
         keyLaw: '💧 Polyester fibers refuse water absorption, making raincoats light and dry!',
         image: polyesterRaincoatImg,
         quickQuestion: {
-          question: 'What makes polyester the #1 choice for raincoats and sportswear?',
+          question: 'What makes polyester the #1 choice for raincoats and dress materials?',
           options: [
-            { text: 'It is hydrophobic, sheds water, and dries in minutes', isCorrect: true },
+            { text: 'It is wrinkle-free, hydrophobic, and dries quickly', isCorrect: true },
             { text: 'It absorbs 10 liters of water like a sponge', isCorrect: false },
           ],
           explanation: 'Non-porous polyester chains prevent water from entering the fiber core!',
         },
       },
       {
-        timeSeconds: 200,
-        timeLabel: '03:20',
+        timeSeconds: 120,
+        timeLabel: '02:00',
         title: '5. Acrylic (Artificial Wool): Warmth Without Moths',
         summary:
-          'Acrylic fiber mimics sheep wool. It is lightweight, fluffy, warm, and immune to moth damage, making it perfect for winter sweaters, blankets, and carpets.',
-        keyLaw: '🧶 Acrylic is a synthetic wool substitute that traps insulating pockets of warm air.',
+          'Acrylic is made from polyacrylonitrile. It is a synthetic substitute for natural wool that is lightweight, warm, colorful, and immune to moth damage.',
+        keyLaw: '🧶 Acrylic is an affordable artificial wool that traps insulating pockets of warm air.',
         image: acrylicYarnImg,
         quickQuestion: {
           question: 'What is a major advantage of Acrylic blankets over natural sheep wool?',
           options: [
-            { text: 'Much lighter, cheaper, washable, and moths do not eat it', isCorrect: true },
+            { text: 'Much cheaper, washable, lightweight, and moths do not eat it', isCorrect: true },
             { text: 'It grows thicker when watered', isCorrect: false },
           ],
           explanation: 'Moths cannot digest synthetic acrylic polymer chains!',
         },
       },
       {
-        timeSeconds: 250,
-        timeLabel: '04:10',
-        title: '6. Kitchen Safety: The Melting Warning',
+        timeSeconds: 150,
+        timeLabel: '02:30',
+        title: '6. Advantages, Disadvantages & Heat Safety',
         summary:
-          'CRITICAL SAFETY RULE: Natural fibers burn into safe, powdery ash. Synthetic clothes MELT and stick to human skin when exposed to heat. NEVER wear synthetic clothes while cooking or near fireworks!',
+          'Advantages: Durable, cheap, wrinkle-free, and easy to wash. Disadvantages: Poor air circulation (sweaty) and melts when heated. NEVER wear synthetics in kitchens!',
         keyLaw: '🔥 Safety Alert: Wear 100% natural cotton in the kitchen, NEVER synthetics!',
         image: cottonBurningAshImg,
         quickQuestion: {
@@ -240,24 +244,26 @@ export const VIDEO_COURSES: VideoCourse[] = [
     },
   },
   {
-    id: 'course-natural-vs-synthetic',
+    id: 'course-miacademy',
     title: "Natural & Synthetic Materials: Transforming Nature's Resources",
-    subtitle: 'Miacademy Physical Science • Chemical Transformations in the Real World',
+    subtitle: 'Miacademy Physical Science • Chemical Changes in Everyday Objects',
+    creator: 'Miacademy Physical Science',
     youtubeId: '2Vt2DnUKsDU',
-    durationLabel: '06:00',
-    totalSeconds: 360,
+    thumbnail: 'https://img.youtube.com/vi/2Vt2DnUKsDU/hqdefault.jpg',
+    durationLabel: '10:05',
+    totalSeconds: 605,
     category: 'Miacademy Physical Science • Materials',
-    badge: '🌍 Resource Engineering',
-    color: 'from-emerald-500 to-teal-700',
+    badge: "🌍 Video 2: Resource Engineering",
+    color: 'from-emerald-500 via-teal-600 to-cyan-700',
     description:
-      'Learn how humans transform raw Earth resources (crude oil, quartz sand, limestone, and trees) through chemical engineering into modern synthetic materials like plastics, glass, paper, and synthetic rubber!',
+      'Explore how humans chemically transform raw Earth resources (crude oil, quartz sand, fleece, and trees) into modern synthetic substances like fleece hoodies, plastics, glass, and rubber!',
     timestamps: [
       {
         timeSeconds: 0,
         timeLabel: '00:00',
-        title: '1. What Are Natural Resources?',
+        title: '1. Natural Resources in Everyday Items',
         summary:
-          'Natural resources exist naturally on Earth without human interference: living plants, animal fleece, timber trees, rock minerals, quartz sand, and underground crude oil.',
+          'Every object we use begins with natural resources extracted from Earth: plants, animals, rock minerals, sand, and petroleum crude oil.',
         keyLaw: '🌿 Natural resources are harvested directly from the biosphere, ground, or ocean.',
         image: timberImg,
         quickQuestion: {
@@ -270,15 +276,15 @@ export const VIDEO_COURSES: VideoCourse[] = [
         },
       },
       {
-        timeSeconds: 50,
-        timeLabel: '00:50',
+        timeSeconds: 80,
+        timeLabel: '01:20',
         title: '2. What Makes a Material "Synthetic"?',
         summary:
-          'A material is synthetic when human chemists use high heat, pressure, or chemical catalysts to chemically alter the atomic bonds of natural resources, forming a brand-new substance.',
+          'A material is synthetic when human chemists use chemical reactions to alter the atomic bonds of natural resources, creating a brand-new substance with different properties.',
         keyLaw: '🔬 Synthetic materials undergo permanent chemical changes to gain new properties.',
         image: nylonCordImg,
         quickQuestion: {
-          question: 'What is the key difference between simple processing and creating a synthetic material?',
+          question: 'What is the key difference between physical shaping and creating a synthetic material?',
           options: [
             { text: 'Synthetic materials undergo chemical reactions changing their molecular structure', isCorrect: true },
             { text: 'Synthetic materials are just painted in bright colors', isCorrect: false },
@@ -287,12 +293,12 @@ export const VIDEO_COURSES: VideoCourse[] = [
         },
       },
       {
-        timeSeconds: 105,
-        timeLabel: '01:45',
-        title: '3. From Underground Crude Oil to Useful Plastics',
+        timeSeconds: 180,
+        timeLabel: '03:00',
+        title: '3. Crude Oil to Useful Plastics & Fleece',
         summary:
-          'Crude oil is refined into smaller hydrocarbon molecules like ethylene. In chemical reactors, these monomers snap together into versatile plastics like polyethylene and PVC.',
-        keyLaw: '🛢️ Crude Oil ➔ Monomer Refining ➔ Polymerization ➔ Durable Plastics.',
+          'Crude oil is refined into monomers that are chemically linked into synthetic polymers like polyethylene and polyester fleece for warm winter hoodies.',
+        keyLaw: '🛢️ Crude Oil ➔ Monomer Refining ➔ Polymerization ➔ Durable Plastics & Fleece.',
         image: plasticDecayImg,
         quickQuestion: {
           question: 'Why are plastics so widely used in modern society?',
@@ -304,11 +310,11 @@ export const VIDEO_COURSES: VideoCourse[] = [
         },
       },
       {
-        timeSeconds: 160,
-        timeLabel: '02:40',
+        timeSeconds: 285,
+        timeLabel: '04:45',
         title: '4. Sand to Glass & Trees to Paper',
         summary:
-          'When quartz sand is heated to 1700°C, it melts into liquid silica and cools into transparent glass. When wood chips are chemically digested, pure cellulose fibers form smooth paper sheets.',
+          'When quartz sand is heated to 1,700°C, it melts into liquid silica and cools into transparent glass. When wood chips are chemically digested, cellulose fibers form smooth paper.',
         keyLaw: '⏳ High temperature thermal and chemical processing transforms sand into glass!',
         image: timberImg,
         quickQuestion: {
@@ -321,12 +327,12 @@ export const VIDEO_COURSES: VideoCourse[] = [
         },
       },
       {
-        timeSeconds: 215,
-        timeLabel: '03:35',
+        timeSeconds: 390,
+        timeLabel: '06:30',
         title: '5. Comparing Properties: Natural vs Synthetic',
         summary:
-          'Natural materials are often breathable, biodegradable, and renewable. Synthetic materials are often waterproof, shatterproof, non-corrosive, and mechanically stronger.',
-        keyLaw: '⚖️ Neither is "better" — scientists select materials based on the exact job requirements!',
+          'Natural materials are often breathable and biodegradable. Synthetic materials are often waterproof, shatterproof, non-corrosive, and mechanically stronger.',
+        keyLaw: '⚖️ Scientists select materials based on the exact job requirements!',
         image: rawCottonBollImg,
         quickQuestion: {
           question: 'What is a superpower that synthetic materials often have over natural ones?',
@@ -338,11 +344,11 @@ export const VIDEO_COURSES: VideoCourse[] = [
         },
       },
       {
-        timeSeconds: 265,
-        timeLabel: '04:25',
-        title: '6. Environmental Impact & The 3 R’s',
+        timeSeconds: 495,
+        timeLabel: '08:15',
+        title: '6. Sustainable Science & The 3 R’s',
         summary:
-          'Because synthetic plastics do not decompose in landfills for hundreds of years, responsible scientists follow the 3 R’s: Reduce unnecessary usage, Reuse containers, and Recycle plastics into new items.',
+          'Because synthetic plastics resist natural decay, responsible scientists follow the 3 R’s: Reduce unnecessary usage, Reuse containers, and Recycle plastics into new items.',
         keyLaw: '♻️ Reduce single-use plastics • Reuse durable containers • Recycle polymers!',
         image: plasticDecayImg,
         quickQuestion: {
@@ -401,7 +407,8 @@ export const InteractiveChapterVideoLab: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'video' | 'post_analysis'>('video');
 
   const activeCourse = VIDEO_COURSES[selectedCourseIndex] || VIDEO_COURSES[0];
-  const activeTimestamp = activeCourse.timestamps[activeTimestampIndex] || activeCourse.timestamps[0];
+  const timestamps = activeCourse?.timestamps || [];
+  const activeTimestamp = timestamps[activeTimestampIndex] || timestamps[0];
 
   const handleSelectCourse = (index: number) => {
     sounds.pop();
@@ -433,51 +440,104 @@ export const InteractiveChapterVideoLab: React.FC = () => {
   };
 
   const completedCount = Object.keys(quizAnswers).filter((k) => k.startsWith(activeCourse.id)).length;
-  const totalCheckpoints = activeCourse.timestamps.length;
+  const totalCheckpoints = timestamps.length;
+
+  if (!activeCourse || !activeTimestamp) {
+    return null;
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col gap-6 py-2 select-none">
-      {/* ── 1. Course Switcher Tabs (Video 1 vs Video 2) ── */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-3xl border-3 border-sky-300 shadow-md">
-        <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-xs">
-            <Tv className="w-5 h-5" />
+      {/* ── 1. PROMINENT DUAL VIDEO SHOWCASE SELECTOR (BOTH VIDEOS VISIBLE) ── */}
+      <div className="flex flex-col gap-3 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-3xl border-3 border-sky-300 shadow-md">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-xs">
+              <Tv className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+                Video Lesson Hub
+              </span>
+              <span className="text-sm sm:text-base font-black text-slate-900">
+                Choose Video Lesson (2 Complete Videos Available):
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
-              Interactive Science Video Lab
-            </span>
-            <span className="text-sm font-black text-slate-800">
-              Select Video Lesson:
-            </span>
-          </div>
+          <span className="text-xs font-black text-sky-700 bg-sky-100 px-3 py-1 rounded-full hidden sm:inline">
+            2 Lessons
+          </span>
         </div>
 
-        {/* Video Course Selection Buttons */}
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+        {/* 2 Big Visual Cards for Both Videos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-1">
           {VIDEO_COURSES.map((course, idx) => {
             const isSelected = idx === selectedCourseIndex;
+            const courseCompleted = Object.keys(quizAnswers).filter((k) => k.startsWith(course.id)).length;
+
             return (
               <motion.button
                 key={course.id}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.015, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => handleSelectCourse(idx)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-black flex items-center gap-1.5 cursor-pointer transition-all whitespace-nowrap ${
+                className={`p-3.5 rounded-2xl border-3 text-left transition-all cursor-pointer flex items-center gap-3.5 ${
                   isSelected
-                    ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md'
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                    ? 'bg-gradient-to-r from-sky-50 to-indigo-50 border-indigo-600 shadow-md ring-2 ring-indigo-300'
+                    : 'bg-slate-50 hover:bg-white border-slate-200 shadow-xs'
                 }`}
               >
-                <span>{course.badge}</span>
-                <span className="hidden sm:inline">• {course.title.split(':')[0]}</span>
+                {/* Video Thumbnail with Duration Overlay */}
+                <div className="relative w-24 sm:w-28 aspect-video rounded-xl overflow-hidden shadow-xs shrink-0 border border-slate-300 bg-slate-900">
+                  <img
+                    src={course.thumbnail}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-1 right-1 bg-black/80 text-white text-[9px] font-mono px-1 rounded font-black">
+                    {course.durationLabel}
+                  </div>
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-indigo-600/20 flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white fill-white drop-shadow-md" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Video Details */}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                      isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}>
+                      {idx === 0 ? 'Video 1 (3:15)' : 'Video 2 (10:05)'}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-500">
+                      {course.creator}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xs sm:text-sm font-black text-slate-900 truncate leading-snug">
+                    {course.title.split(':')[0]}
+                  </h3>
+                  <p className="text-[11px] font-bold text-slate-500 truncate mt-0.5">
+                    {course.subtitle}
+                  </p>
+
+                  <div className="flex items-center justify-between mt-2 text-[10px] font-black text-slate-600">
+                    <span>{courseCompleted}/{course.timestamps.length} Checkpoints</span>
+                    <span className={isSelected ? 'text-indigo-600 font-black' : 'text-slate-400'}>
+                      {isSelected ? '▶ NOW WATCHING' : 'CLICK TO WATCH ➔'}
+                    </span>
+                  </div>
+                </div>
               </motion.button>
             );
           })}
         </div>
       </div>
 
-      {/* ── 2. Active Course Hero Banner ── */}
+      {/* ── 2. Active Course Header Banner ── */}
       <div
         className={`w-full bg-gradient-to-r ${activeCourse.color} rounded-[32px] p-6 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden`}
       >
@@ -491,7 +551,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
             </span>
           </div>
 
-          <h2 className="text-xl sm:text-3xl font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h2 className="text-xl sm:text-2xl font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
             {activeCourse.title}
           </h2>
           <p className="text-xs sm:text-sm font-bold text-sky-100 mt-1 max-w-2xl leading-relaxed">
@@ -502,7 +562,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
         <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 shrink-0 relative z-10">
           <div className="flex items-center gap-1.5 bg-slate-950/40 px-3.5 py-1.5 rounded-2xl border border-white/20">
             <Clock className="w-4 h-4 text-amber-300" />
-            <span className="font-black text-xs text-white">Video Length: {activeCourse.durationLabel}</span>
+            <span className="font-black text-xs text-white">Length: {activeCourse.durationLabel}</span>
           </div>
 
           {/* Tab Switcher: Video Player vs Post-Video Analysis */}
@@ -530,7 +590,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
       {/* ── 3. MAIN CONTENT: VIDEO LAB vs POST-ANALYSIS ── */}
       {activeTab === 'video' ? (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left 7 Columns: Embedded YouTube Video + Timestamp Scrubber */}
+          {/* Left 7 Columns: Embedded YouTube Video + Exact Timestamp Scrubber */}
           <div className="lg:col-span-7 flex flex-col gap-4">
             {/* Embedded YouTube Player with Dynamic Timestamp Start */}
             <div className="w-full aspect-video bg-slate-950 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-300 relative">
@@ -549,15 +609,15 @@ export const InteractiveChapterVideoLab: React.FC = () => {
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                   <Play className="w-3.5 h-3.5 text-sky-600 fill-sky-600" />
-                  <span>Click Any Timestamp to Jump Directly in Video:</span>
+                  <span>Click Exact Timestamp to Jump Directly:</span>
                 </span>
                 <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">
-                  Topic {activeTimestampIndex + 1} of {activeCourse.timestamps.length}
+                  Topic {activeTimestampIndex + 1} of {timestamps.length}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {activeCourse.timestamps.map((ts, idx) => {
+                {timestamps.map((ts, idx) => {
                   const isActive = idx === activeTimestampIndex;
                   const isPassed = quizAnswers[`${activeCourse.id}-${idx}`] === true;
                   return (
@@ -683,12 +743,12 @@ export const InteractiveChapterVideoLab: React.FC = () => {
               </div>
 
               {/* Next Topic Progression Button */}
-              {activeTimestampIndex < activeCourse.timestamps.length - 1 ? (
+              {activeTimestampIndex < timestamps.length - 1 ? (
                 <button
                   onClick={() => handleSelectTimestamp(activeTimestampIndex + 1)}
                   className="w-full mt-2 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-95"
                 >
-                  <span>Next Video Chapter ({activeCourse.timestamps[activeTimestampIndex + 1].timeLabel})</span>
+                  <span>Next Video Chapter ({timestamps[activeTimestampIndex + 1].timeLabel})</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               ) : (
