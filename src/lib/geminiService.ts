@@ -1,6 +1,6 @@
 /**
  * Google Gemini AI Multi-Object Scene & Material Detective Service
- * Pure open-ended multimodal AI vision with dynamic ModelService discovery.
+ * Pure open-ended multimodal AI vision powered exclusively by Gemini 2.x & 3.x generation models.
  */
 
 export interface ColorStats {
@@ -74,15 +74,13 @@ export const setApiKey = (key: string): void => {
   }
 };
 
-// Default Upgraded Google Gemini Models
-const FALLBACK_CANDIDATE_MODELS = [
+// Current Generation Gemini 2.x & 3.x Multimodal Vision Models
+const CURRENT_GENERATION_MODELS = [
   'gemini-2.5-flash',
-  'gemini-2.0-flash',
-  'gemini-2.0-flash-001',
-  'gemini-1.5-flash',
-  'gemini-1.5-flash-latest',
-  'gemini-1.5-flash-002',
   'gemini-2.5-pro',
+  'gemini-2.0-flash',
+  'gemini-3-flash',
+  'gemini-2.0-flash-001',
 ];
 
 // Cached discovered models per API key
@@ -90,7 +88,7 @@ let cachedDiscoveredModels: string[] | null = null;
 let lastCachedKey = '';
 
 /**
- * Dynamically queries Google ModelService to fetch exact supported models for this user's key
+ * Dynamically queries Google ModelService to fetch exact supported 2.x / 3.x models for this key
  */
 async function getAvailableVisionModels(apiKey: string): Promise<string[]> {
   if (cachedDiscoveredModels && lastCachedKey === apiKey && cachedDiscoveredModels.length > 0) {
@@ -111,15 +109,17 @@ async function getAvailableVisionModels(apiKey: string): Promise<string[]> {
         const supported = data.models
           .filter((m: any) => m.supportedGenerationMethods?.includes('generateContent'))
           .map((m: any) => m.name.replace(/^models\//, ''))
-          .filter((name: string) => name.includes('flash') || name.includes('pro') || name.includes('gemini'));
+          .filter((name: string) => !name.includes('1.0') && !name.includes('1.5'));
 
         supported.sort((a: string, b: string) => {
           if (a.includes('2.5-flash')) return -1;
           if (b.includes('2.5-flash')) return 1;
+          if (a.includes('2.5-pro')) return -1;
+          if (b.includes('2.5-pro')) return 1;
           if (a.includes('2.0-flash')) return -1;
           if (b.includes('2.0-flash')) return 1;
-          if (a.includes('1.5-flash')) return -1;
-          if (b.includes('1.5-flash')) return 1;
+          if (a.includes('3-flash')) return -1;
+          if (b.includes('3-flash')) return 1;
           return 0;
         });
 
@@ -134,11 +134,11 @@ async function getAvailableVisionModels(apiKey: string): Promise<string[]> {
     console.warn('ModelService.ListModels query note:', e);
   }
 
-  return FALLBACK_CANDIDATE_MODELS;
+  return CURRENT_GENERATION_MODELS;
 }
 
 /**
- * Executes a Gemini API request with automatic ModelService discovery and cascade fallback
+ * Executes a Gemini API request with automatic 2.x / 3.x cascade fallback
  */
 async function generateContentCascade(requestBody: any): Promise<string> {
   const apiKey = getApiKey();
@@ -355,7 +355,7 @@ Rules:
   },
 
   /**
-   * 🔍 Pure Open-Ended AI Multimodal Vision Detective (Analyzes ANY photo with zero preset bias)
+   * 🔍 Pure Open-Ended AI Multimodal Vision Detective (Gemini 2.5 / 2.0 / 3.x)
    */
   async detectMaterialFromImage(
     base64Image: string,
