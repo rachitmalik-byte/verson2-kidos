@@ -522,10 +522,10 @@ export function TeacherStudio() {
             </div>
 
             {/* Sub-Editor for Sorting Trays */}
-            {currentStep.type === 'sorting_tray' && (
+            {currentStep.type === 'sorting_tray' && (currentStep as any).items && (
               <div className="flex flex-col gap-3 pt-3 border-t border-slate-100">
-                <span className="text-xs font-black text-slate-700">Items to Sort ({currentStep.items.length})</span>
-                {currentStep.items.map((item, idx) => (
+                <span className="text-xs font-black text-slate-700">Items to Sort ({((currentStep as any).items || []).length})</span>
+                {((currentStep as any).items || []).map((item: any, idx: number) => (
                   <div key={item.id || idx} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="text-xl">{item.icon}</span>
@@ -536,9 +536,9 @@ export function TeacherStudio() {
                     </div>
                     <button
                       onClick={() => {
-                        const updatedItems = currentStep.items.filter((_, i) => i !== idx);
+                        const updatedItems = ((currentStep as any).items || []).filter((_: any, i: number) => i !== idx);
                         const updated = [...missionConfig.steps];
-                        updated[activeStepIndex] = { ...currentStep, items: updatedItems };
+                        updated[activeStepIndex] = { ...currentStep, items: updatedItems } as any;
                         setMissionConfig({ ...missionConfig, steps: updated });
                         setPreviewKey((k) => k + 1);
                       }}
@@ -552,10 +552,10 @@ export function TeacherStudio() {
             )}
 
             {/* Sub-Editor for Matching Pairs */}
-            {currentStep.type === 'matching_pairs' && (
+            {currentStep.type === 'matching_pairs' && (currentStep as any).pairs && (
               <div className="flex flex-col gap-3 pt-3 border-t border-slate-100">
-                <span className="text-xs font-black text-slate-700">Pairs ({currentStep.pairs.length})</span>
-                {currentStep.pairs.map((pair, idx) => (
+                <span className="text-xs font-black text-slate-700">Pairs ({((currentStep as any).pairs || []).length})</span>
+                {((currentStep as any).pairs || []).map((pair: any, idx: number) => (
                   <div key={pair.id || idx} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="text-xl">{pair.leftIcon}</span>
@@ -566,9 +566,9 @@ export function TeacherStudio() {
                     </div>
                     <button
                       onClick={() => {
-                        const updatedPairs = currentStep.pairs.filter((_, i) => i !== idx);
+                        const updatedPairs = ((currentStep as any).pairs || []).filter((_: any, i: number) => i !== idx);
                         const updated = [...missionConfig.steps];
-                        updated[activeStepIndex] = { ...currentStep, pairs: updatedPairs };
+                        updated[activeStepIndex] = { ...currentStep, pairs: updatedPairs } as any;
                         setMissionConfig({ ...missionConfig, steps: updated });
                         setPreviewKey((k) => k + 1);
                       }}
@@ -576,6 +576,24 @@ export function TeacherStudio() {
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Sub-Editor for 2D Interactive Diagram Hotspots */}
+            {currentStep.type === 'interactive_diagram' && (currentStep as any).hotspots && (
+              <div className="flex flex-col gap-3 pt-3 border-t border-slate-100">
+                <span className="text-xs font-black text-slate-700">Stage Hotspots ({((currentStep as any).hotspots || []).length})</span>
+                {((currentStep as any).hotspots || []).map((spot: any, idx: number) => (
+                  <div key={spot.id || idx} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xl">{spot.icon}</span>
+                      <div className="truncate">
+                        <span className="font-black text-xs text-slate-900 block truncate">{spot.title}</span>
+                        <span className="text-[10px] font-bold text-slate-500 truncate">{spot.explanation}</span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
