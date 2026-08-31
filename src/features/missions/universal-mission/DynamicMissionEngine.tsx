@@ -206,21 +206,21 @@ export const DynamicMissionEngine: React.FC = () => {
     return false;
   };
 
-  // ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
-  // TANGIBLE PHET-STYLE DISCOVERY SIMULATIONS & EXPERIMENTS (MISSIONS 4ΓÇô13)
-  // ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+  // ═════════════════════════════════════════════════════════════════════════
+  // TANGIBLE PHET-STYLE DISCOVERY SIMULATIONS & EXPERIMENTS (MISSIONS 4–13)
+  // ═════════════════════════════════════════════════════════════════════════
   const renderExperimentContent = () => {
     switch (mission.number) {
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 4: FABRIC LAB (Interactive Crumple & Stretch Tester)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 4:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
             {/* Step 0: Everyday Mystery Hook */}
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl md:rounded-[36px] border-4 border-sky-300 shadow-xl">
-                <span className="text-6xl mb-3 block">Γ£¿≡ƒæö</span>
+                <span className="text-6xl mb-3 block">✨👔</span>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The Mystery of the Wrinkled Shirt</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base leading-relaxed">
                   Have you ever packed clothes in a suitcase? Some shirts come out covered in messy wrinkles, while others look crisp and freshly ironed! Why do different fabrics behave so differently?
@@ -237,7 +237,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Crumple Test Lab ≡ƒö¼
+                  Enter Crumple Test Lab 🔬
                 </button>
               </div>
             )}
@@ -286,11 +286,11 @@ export const DynamicMissionEngine: React.FC = () => {
 
                     <div className="mt-3 min-h-[38px] flex flex-col items-center justify-center">
                       <span className={`text-xs font-black ${interactiveState.crumpled ? 'text-rose-700' : 'text-slate-600'}`}>
-                        {interactiveState.crumpled ? 'Γ¥î Deep Permanent Wrinkles Formed!' : 'Smooth unpressed cotton swatch'}
+                        {interactiveState.crumpled ? '❌ Deep Permanent Wrinkles Formed!' : 'Smooth unpressed cotton swatch'}
                       </span>
                       {interactiveState.crumpled && (
                         <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full mt-1">
-                          Hydrogen bonds broke & creased ΓÖ¿∩╕Å
+                          Hydrogen bonds broke & creased ♨️
                         </span>
                       )}
                     </div>
@@ -330,11 +330,11 @@ export const DynamicMissionEngine: React.FC = () => {
 
                     <div className="mt-3 min-h-[38px] flex flex-col items-center justify-center">
                       <span className={`text-xs font-black ${interactiveState.crumpled ? 'text-emerald-700' : 'text-slate-600'}`}>
-                        {interactiveState.crumpled ? 'Γ£ô Springs Back 100% Wrinkle-Free!' : 'Smooth synthetic polyester'}
+                        {interactiveState.crumpled ? '✓ Springs Back 100% Wrinkle-Free!' : 'Smooth synthetic polyester'}
                       </span>
                       {interactiveState.crumpled && (
                         <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1">
-                          Elastic polymer chains snapped back Γ£¿
+                          Elastic polymer chains snapped back ✨
                         </span>
                       )}
                     </div>
@@ -352,12 +352,12 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3.5 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer active:scale-95 transition-all"
                 >
-                  {interactiveState.crumpled ? '≡ƒöä Smooth Out & Test Again' : 'Γ£è Squeeze & Crumple Fabrics!'}
+                  {interactiveState.crumpled ? '🔄 Smooth Out & Test Again' : '✊ Squeeze & Crumple Fabrics!'}
                 </button>
 
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 mt-4 w-full">
-                    ≡ƒÄë Aha Discovery! Polyester fibres act like tiny elastic polymer springs that resist wrinkling and never need ironing!
+                    🎉 Aha Discovery! Polyester fibres act like tiny elastic polymer springs that resist wrinkling and never need ironing!
                   </div>
                 )}
               </div>
@@ -408,7 +408,7 @@ export const DynamicMissionEngine: React.FC = () => {
                 </div>
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-900">
-                    ≡ƒÄë Excellent! All 3 synthetic fibres mastered! Tap Next Step ΓåÆ
+                    🎉 Excellent! All 3 synthetic fibres mastered! Tap Next Step →
                   </div>
                 )}
               </div>
@@ -417,13 +417,13 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 3: Molecular Elasticity of Synthetics */}
             {currentStepIndex === 3 && (
               <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-400 shadow-xl text-center">
-                <span className="text-5xl mb-2">≡ƒö¼Γ£¿</span>
+                <span className="text-5xl mb-2">🔬✨</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Why Synthetics Resist Wrinkles</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 max-w-lg">
-                  Natural cotton is made of cellulose strands that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are long polymer chains engineered with elastic molecular memory ΓÇö they spring back straight when released!
+                  Natural cotton is made of cellulose strands that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are long polymer chains engineered with elastic molecular memory — they spring back straight when released!
                 </p>
                 <div className="p-5 bg-sky-50 rounded-2xl border-2 border-sky-200 w-full max-w-md mb-6">
-                  <span className="text-xs font-black text-sky-900 block mb-1">≡ƒÆí Key Science Takeaway:</span>
+                  <span className="text-xs font-black text-sky-900 block mb-1">💡 Key Science Takeaway:</span>
                   <p className="text-xs font-bold text-sky-800">
                     Synthetic polymers have strong molecular backbone bonds that do not break under everyday bending, keeping clothes crisp without an iron!
                   </p>
@@ -436,7 +436,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-sm py-3 px-8 rounded-2xl cursor-pointer"
                 >
-                  Got It! Test My Knowledge Γ₧ö
+                  Got It! Test My Knowledge ➔
                 </button>
               </div>
             )}
@@ -446,14 +446,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Winter Wardrobe Challenge"
                 question="You need a lightweight, warm sweater for mountain camping that won't get ruined by clothes moths. Which synthetic fabric mimics wool perfectly?"
-                scenarioEmoji="≡ƒº╢≡ƒÅö∩╕Å"
+                scenarioEmoji="🧶🏔️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'acrylic',
                     label: 'Acrylic (Artificial Wool)',
-                    icon: '≡ƒº╢Γ¥ä∩╕Å',
+                    icon: '🧶❄️',
                     isCorrect: true,
                     explanation: 'Acrylic fibres trap air pockets just like natural sheep wool, but are much lighter, cheaper, and immune to moth damage!',
                     hint: 'Which synthetic fibre is known as Artificial Wool?',
@@ -461,7 +461,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'rayon',
                     label: 'Rayon (Artificial Silk)',
-                    icon: 'Γ£¿≡ƒæù',
+                    icon: '✨👗',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Rayon mimics silky cool party dresses, not warm winter sweaters!',
@@ -475,14 +475,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Formal Wedding Party Dress"
                 question="A fashion designer needs a shiny, lustrous dress fabric with the elegant sheen of silk, but affordable and durable. Which fabric fits?"
-                scenarioEmoji="≡ƒæùΓ£¿"
+                scenarioEmoji="👗✨"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'rayon',
                     label: 'Rayon (Artificial Silk from Wood Pulp)',
-                    icon: 'Γ£¿≡ƒæù',
+                    icon: '✨👗',
                     isCorrect: true,
                     explanation: 'Rayon has a luxurious silk-like gloss and drape, made by chemically regenerating plant cellulose!',
                     hint: 'Look for the regenerated fiber historically called "artificial silk"!',
@@ -490,7 +490,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'jute',
                     label: 'Coarse Natural Jute Sack Cloth',
-                    icon: '≡ƒî╛≡ƒÑö',
+                    icon: '🌾🥔',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Jute is rough and stiff, used for potato sacks rather than formal dresses.',
@@ -501,9 +501,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 5: FIRE SAFETY STATION (Controlled Flame Reaction Lab)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 5:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -523,7 +523,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Flame Test Chamber ≡ƒöÑ
+                  Enter Flame Test Chamber 🔥
                 </button>
               </div>
             )}
@@ -548,7 +548,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       />
                     </div>
                     <span className="text-[11px] font-bold text-slate-600 mt-2">
-                      {interactiveState.burnedCotton ? 'Γ£ô Soft Gray Ash (Harmless)' : 'Clean unburned cotton swatch'}
+                      {interactiveState.burnedCotton ? '✓ Soft Gray Ash (Harmless)' : 'Clean unburned cotton swatch'}
                     </span>
                     <button
                       onClick={() => {
@@ -561,7 +561,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       }}
                       className="mt-3 py-2 px-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-black text-xs cursor-pointer shadow-xs"
                     >
-                      {interactiveState.burnedCotton ? 'Γ£ô Tested (Safe Ash)' : 'Apply Flame ≡ƒöÑ'}
+                      {interactiveState.burnedCotton ? '✓ Tested (Safe Ash)' : 'Apply Flame 🔥'}
                     </button>
                   </div>
 
@@ -576,7 +576,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       />
                     </div>
                     <span className="text-[11px] font-bold text-rose-700 mt-2">
-                      {interactiveState.burnedPoly ? 'ΓÜá∩╕Å Sticky Molten Plastic Beads!' : 'Clean unburned polyester swatch'}
+                      {interactiveState.burnedPoly ? '⚠️ Sticky Molten Plastic Beads!' : 'Clean unburned polyester swatch'}
                     </span>
                     <button
                       onClick={() => {
@@ -589,14 +589,14 @@ export const DynamicMissionEngine: React.FC = () => {
                       }}
                       className="mt-3 py-2 px-4 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-black text-xs cursor-pointer shadow-xs"
                     >
-                      {interactiveState.burnedPoly ? 'ΓÜá∩╕Å Melts & Sticks!' : 'Apply Flame ≡ƒöÑ'}
+                      {interactiveState.burnedPoly ? '⚠️ Melts & Sticks!' : 'Apply Flame 🔥'}
                     </button>
                   </div>
                 </div>
 
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
-                    ≡ƒÄë Aha Discovery! Cotton burns safely to paper ash. But synthetic plastics MELT into scalding sticky liquid that clings to skin!
+                    🎉 Aha Discovery! Cotton burns safely to paper ash. But synthetic plastics MELT into scalding sticky liquid that clings to skin!
                   </div>
                 )}
               </div>
@@ -605,13 +605,13 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 2: Molecular Reaction & Safety Golden Rule */}
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-400 shadow-xl text-center flex flex-col items-center">
-                <span className="text-5xl mb-3 block">≡ƒö¼≡ƒöÑ</span>
+                <span className="text-5xl mb-3 block">🔬🔥</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Molecular Reaction: Why Synthetics Melt</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
                   Synthetic fibres are long chemical polymer chains made from petroleum. When exposed to heat, the polymer chains collapse into a hot liquid plastic puddle that clings to skin.
                 </p>
                 <div className="p-5 bg-rose-100 border-2 border-rose-300 rounded-2xl w-full text-left font-black text-xs text-rose-950 mb-4">
-                  <span className="block text-sm mb-1">≡ƒÜ¿ Safety Golden Rule:</span>
+                  <span className="block text-sm mb-1">🚨 Safety Golden Rule:</span>
                   Never wear synthetic clothes (Nylon, Polyester, Rayon) while cooking in the kitchen or lighting festival firecrackers!
                 </div>
                 <button
@@ -621,7 +621,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white font-black text-sm rounded-2xl cursor-pointer"
                 >
-                  I Understand the Safety Rule! ≡ƒ¢í∩╕Å
+                  I Understand the Safety Rule! 🛡️
                 </button>
               </div>
             )}
@@ -631,14 +631,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Kitchen Master Chef Safety Apron"
                 question="A professional chef is frying food near open gas flames. Which apron material will protect him from fire accidents?"
-                scenarioEmoji="≡ƒæ¿ΓÇì≡ƒì│≡ƒì│"
+                scenarioEmoji="👨‍🍳🍳"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'cotton-apron',
                     label: '100% Thick Cotton Canvas Apron',
-                    icon: '≡ƒî┐≡ƒæ¿ΓÇì≡ƒì│',
+                    icon: '🌿👨‍🍳',
                     isCorrect: true,
                     explanation: 'Cotton canvas does not melt when exposed to sparks, preventing severe molten plastic burns!',
                     hint: 'Choose the natural fibre that chars into ash rather than melting into sticky liquid!',
@@ -646,7 +646,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'nylon-apron',
                     label: 'Thin Synthetic Nylon Windbreaker Apron',
-                    icon: '≡ƒºÑ≡ƒöÑ',
+                    icon: '🧥🔥',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Thin nylon catches heat in seconds and melts directly onto the skin.',
@@ -660,14 +660,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Diwali Fireworks Safety Challenge"
                 question="You are helping your family light sparklers during a festival celebration. Which outfit is safe to wear near flames?"
-                scenarioEmoji="≡ƒ¬öΓ£¿"
+                scenarioEmoji="🪔✨"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'cotton-kurta',
                     label: '100% Natural Cotton Kurta / Dress',
-                    icon: '≡ƒî┐Γ£¿',
+                    icon: '🌿✨',
                     isCorrect: true,
                     explanation: 'Cotton does not melt when exposed to heat, preventing severe plastic adhesion burns!',
                     hint: 'Which material burns to harmless ash without melting into hot sticky beads?',
@@ -675,7 +675,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'nylon-kurta',
                     label: 'Synthetic Polyester / Nylon Party Outfit',
-                    icon: '≡ƒæù≡ƒöÑ',
+                    icon: '👗🔥',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Synthetics melt in a split second and stick tightly to skin. Never wear near fire!',
@@ -686,9 +686,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 6: SUMMER COMFORT (Breathability & Evaporative Cooling Lab)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 6:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -698,7 +698,7 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={cottonFabricZoomImg} alt="Porous Cotton Weave Macro" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">The 42┬░C Scorching Summer Mystery</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The 42°C Scorching Summer Mystery</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base leading-relaxed">
                   When you run outside in the summer sun, your body perspires (sweats) to cool you down. But why does wearing a synthetic shirt feel like wrapping yourself in plastic wrap?
                 </p>
@@ -710,7 +710,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Breathability Lab ΓÿÇ∩╕Å
+                  Enter Breathability Lab ☀️
                 </button>
               </div>
             )}
@@ -731,7 +731,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       <img src={cottonSwatchCleanImg} alt="Breathable Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
                     </div>
                     <span className="text-[11px] font-bold text-emerald-800 mt-2">
-                      {interactiveState.sprayed ? 'Γ£ô Absorbs Perspiration & Cools Skin!' : 'Porous natural plant cellulose'}
+                      {interactiveState.sprayed ? '✓ Absorbs Perspiration & Cools Skin!' : 'Porous natural plant cellulose'}
                     </span>
                   </div>
 
@@ -742,7 +742,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       <img src={polyesterSportShirtImg} alt="Polyester Shirt" className="w-full h-full object-cover rounded-xl" />
                     </div>
                     <span className="text-[11px] font-bold text-rose-700 mt-2">
-                      {interactiveState.sprayed ? 'ΓÜá∩╕Å Traps Hot Sweat & Heat Pockets!' : 'Non-porous synthetic polymer'}
+                      {interactiveState.sprayed ? '⚠️ Traps Hot Sweat & Heat Pockets!' : 'Non-porous synthetic polymer'}
                     </span>
                   </div>
                 </div>
@@ -754,7 +754,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3.5 bg-gradient-to-r from-sky-400 to-indigo-500 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer active:scale-95"
                 >
-                  ≡ƒÆª Spray Perspiration & Turn On Fan!
+                  💦 Spray Perspiration & Turn On Fan!
                 </button>
               </div>
             )}
@@ -762,7 +762,7 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 2: Microscopic Porosity Cross-Section */}
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl text-center flex flex-col items-center">
-                <span className="text-5xl mb-3 block">≡ƒö¼≡ƒÆ¿</span>
+                <span className="text-5xl mb-3 block">🔬💨</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Microscopic Porosity Cross-Section</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
                   Cotton fibres have hollow microscopic pores (lumens) that wick liquid sweat away from your skin through capillary action, evaporating in the breeze and cooling you down!
@@ -774,7 +774,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
                 >
-                  Got It! Capillary Evaporation Rules! ≡ƒÆ¿
+                  Got It! Capillary Evaporation Rules! 💨
                 </button>
               </div>
             )}
@@ -783,15 +783,15 @@ export const DynamicMissionEngine: React.FC = () => {
             {currentStepIndex >= 3 && (
               <InquiryQuestionCard
                 title="Summer Marathon Runner Outfit"
-                question="You are running a 5K race in 38┬░C outdoor summer heat. Which outfit will keep your body temperature lowest?"
-                scenarioEmoji="≡ƒÅâΓÇìΓÖé∩╕ÅΓÿÇ∩╕Å"
+                question="You are running a 5K race in 38°C outdoor summer heat. Which outfit will keep your body temperature lowest?"
+                scenarioEmoji="🏃‍♂️☀️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'cotton',
                     label: '100% Breathable Cotton Jersey',
-                    icon: '≡ƒî┐≡ƒæò',
+                    icon: '🌿👕',
                     isCorrect: true,
                     explanation: 'Cotton absorbs sweat immediately and lets air circulate, preventing heat exhaustion!',
                     hint: 'Choose the natural fibre with microscopic pores for sweat evaporation!',
@@ -799,7 +799,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'poly',
                     label: 'Synthetic Plastic Rain Jacket',
-                    icon: '≡ƒºÑΓÜá∩╕Å',
+                    icon: '🧥⚠️',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Non-porous synthetics trap hot sweat against your skin, causing overheating.',
@@ -810,9 +810,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 7: PLASTIC WORLD (Speech Coach + Hydraulic Press)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 7:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -833,7 +833,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Explore Plastic Superpowers ≡ƒ½Ö
+                  Explore Plastic Superpowers 🫙
                 </button>
               </div>
             )}
@@ -847,10 +847,10 @@ export const DynamicMissionEngine: React.FC = () => {
 
                 <div className="flex flex-col gap-4">
                   {[
-                    { id: 'mould', order: 1, title: '1. Easily Moulded', sentence: 'Plastic can be melted and pressed into any shape using heat and pressure.', icon: '≡ƒöä' },
-                    { id: 'rust', order: 2, title: '2. Never Rusts or Rots', sentence: 'Plastic is completely waterproof and will never rust or corrode like iron.', icon: '≡ƒ¢í∩╕Å' },
-                    { id: 'light', order: 3, title: '3. Lightweight & Tough', sentence: 'Plastic is far lighter than steel and will not shatter into pieces like glass.', icon: '≡ƒ¬╢' },
-                    { id: 'insulate', order: 4, title: '4. Electric Insulator', sentence: 'Plastic blocks electric current to keep our hands safe from electric shocks.', icon: 'ΓÜí' },
+                    { id: 'mould', order: 1, title: '1. Easily Moulded', sentence: 'Plastic can be melted and pressed into any shape using heat and pressure.', icon: '🔄' },
+                    { id: 'rust', order: 2, title: '2. Never Rusts or Rots', sentence: 'Plastic is completely waterproof and will never rust or corrode like iron.', icon: '🛡️' },
+                    { id: 'light', order: 3, title: '3. Lightweight & Tough', sentence: 'Plastic is far lighter than steel and will not shatter into pieces like glass.', icon: '🪶' },
+                    { id: 'insulate', order: 4, title: '4. Electric Insulator', sentence: 'Plastic blocks electric current to keep our hands safe from electric shocks.', icon: '⚡' },
                   ].map((p, idx, list) => {
                     const isPreviousDone = idx === 0 || interactiveState[list[idx - 1].id] === true;
                     const isDone = interactiveState[p.id] === true;
@@ -869,7 +869,7 @@ export const DynamicMissionEngine: React.FC = () => {
                             </div>
                           </div>
                           <span className="text-xs font-bold text-slate-400 bg-slate-200 px-3 py-1 rounded-full">
-                            ≡ƒöÆ Complete previous sentence first
+                            🔒 Complete previous sentence first
                           </span>
                         </div>
                       );
@@ -900,7 +900,7 @@ export const DynamicMissionEngine: React.FC = () => {
 
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-900">
-                    ≡ƒÄë Awesome speech practice! All 4 superpowers mastered in sequence! Tap Next Step ΓåÆ to operate the Moulding Press!
+                    🎉 Awesome speech practice! All 4 superpowers mastered in sequence! Tap Next Step → to operate the Moulding Press!
                   </div>
                 )}
               </div>
@@ -931,7 +931,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   >
                     <Thermometer className="w-6 h-6 text-rose-500" />
                     <span className="font-black text-xs md:text-sm">
-                      {interactiveState.heatApplied ? 'Γ£ô 200┬░C Heat Applied' : '1. Apply 200┬░C Heat ≡ƒöÑ'}
+                      {interactiveState.heatApplied ? '✓ 200°C Heat Applied' : '1. Apply 200°C Heat 🔥'}
                     </span>
                   </button>
 
@@ -957,14 +957,14 @@ export const DynamicMissionEngine: React.FC = () => {
                   >
                     <Gauge className="w-6 h-6 text-emerald-600" />
                     <span className="font-black text-xs md:text-sm">
-                      {interactiveState.pressureApplied ? 'Γ£ô 500 PSI Pressed!' : '2. Apply 500 PSI Pressure ΓÜÖ∩╕Å'}
+                      {interactiveState.pressureApplied ? '✓ 500 PSI Pressed!' : '2. Apply 500 PSI Pressure ⚙️'}
                     </span>
                   </button>
                 </div>
                 {interactiveState.pressureApplied && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full">
                     <span className="font-black text-sm text-emerald-950 block">
-                      Γ£¿ Moulding Complete! High-strength thermoplastic bottle formed!
+                      ✨ Moulding Complete! High-strength thermoplastic bottle formed!
                     </span>
                   </div>
                 )}
@@ -988,7 +988,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer"
                 >
-                  Confirm Plastic Mastery ≡ƒÄ»
+                  Confirm Plastic Mastery 🎯
                 </button>
               </div>
             )}
@@ -998,14 +998,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Chemical Storage Bottle Selector"
                 question="A chemistry lab needs containers to store acidic liquids for 5 years. Why do they pick plastic bottles instead of iron cans?"
-                scenarioEmoji="≡ƒº┤≡ƒº¬"
+                scenarioEmoji="🧴🧪"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'non-reactive',
                     label: 'Plastic is Chemically Non-Reactive & Non-Rusting',
-                    icon: '≡ƒ¢í∩╕Å≡ƒº¬',
+                    icon: '🛡️🧪',
                     isCorrect: true,
                     explanation: 'Plastics do not react with water, air, or acids, making them perfect for safe chemical storage!',
                     hint: 'Which property prevents plastic from corroding or rusting over time?',
@@ -1013,7 +1013,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'rusting-metal',
                     label: 'Iron Cans that Rust and Corrode',
-                    icon: '≡ƒ¢ó∩╕ÅΓÜá∩╕Å',
+                    icon: '🛢️⚠️',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Iron reacts with water and acids, rusting through and spilling dangerous chemicals.',
@@ -1024,9 +1024,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 8: PIP'S ELECTRICAL WIRE (Live Circuit Sandbox)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 8:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -1036,7 +1036,7 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={copperWireMacroImg} alt="Copper Wire" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">The Bare Wire Mystery! ΓÜí</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Bare Wire Mystery! ⚡</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   Pip is building an electrical circuit. Why do electric wires always have shiny copper inside and soft plastic on the outside?
                 </p>
@@ -1048,7 +1048,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Circuit Sandbox ΓÜí
+                  Enter Circuit Sandbox ⚡
                 </button>
               </div>
             )}
@@ -1074,10 +1074,10 @@ export const DynamicMissionEngine: React.FC = () => {
                 {/* Material Selectors with Clean Vector Graphics */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full mb-4">
                   {[
-                    { id: 'copper', name: 'Solid Copper Rod', conducts: true, type: 'Metal Conductor ΓÜí', render: () => <VectorCopperRodSpecimen /> },
-                    { id: 'steel', name: 'Polished Steel Key', conducts: true, type: 'Metal Conductor ΓÜí', render: () => <VectorSteelKeySpecimen /> },
-                    { id: 'plastic', name: 'Plastic Toy Brick', conducts: false, type: 'Plastic Insulator ≡ƒ¢í∩╕Å', render: () => <VectorPlasticBrickSpecimen /> },
-                    { id: 'rubber', name: 'Flexible Rubber Band', conducts: false, type: 'Rubber Insulator ≡ƒ¢í∩╕Å', render: () => <VectorRubberBandSpecimen /> },
+                    { id: 'copper', name: 'Solid Copper Rod', conducts: true, type: 'Metal Conductor ⚡', render: () => <VectorCopperRodSpecimen /> },
+                    { id: 'steel', name: 'Polished Steel Key', conducts: true, type: 'Metal Conductor ⚡', render: () => <VectorSteelKeySpecimen /> },
+                    { id: 'plastic', name: 'Plastic Toy Brick', conducts: false, type: 'Plastic Insulator 🛡️', render: () => <VectorPlasticBrickSpecimen /> },
+                    { id: 'rubber', name: 'Flexible Rubber Band', conducts: false, type: 'Rubber Insulator 🛡️', render: () => <VectorRubberBandSpecimen /> },
                   ].map((mat) => (
                     <button
                       key={mat.id}
@@ -1120,7 +1120,7 @@ export const DynamicMissionEngine: React.FC = () => {
 
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
-                    ≡ƒÄë Aha Discovery! Copper and Steel metals conduct electricity to light the bulb, while Synthetic Plastic and Natural Rubber block electricity to keep our hands safe from shocks!
+                    🎉 Aha Discovery! Copper and Steel metals conduct electricity to light the bulb, while Synthetic Plastic and Natural Rubber block electricity to keep our hands safe from shocks!
                   </div>
                 )}
               </div>
@@ -1143,7 +1143,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
                 >
-                  Jacket Extrusion Verified ΓÜí
+                  Jacket Extrusion Verified ⚡
                 </button>
               </div>
             )}
@@ -1153,14 +1153,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Electrician Tool Challenge"
                 question="An electrician is repairing a 240V live wall socket. Which tool handle should she use to stay safe?"
-                scenarioEmoji="≡ƒ¢á∩╕ÅΓÜí"
+                scenarioEmoji="🛠️⚡"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'plastic-handle',
                     label: 'Screwdriver with Plastic-Moulded Grip',
-                    icon: '≡ƒ¬¢≡ƒ¢í∩╕Å',
+                    icon: '🪛🛡️',
                     isCorrect: true,
                     explanation: 'Plastic is an electrical insulator! It completely blocks high-voltage electric current from entering the hands.',
                     hint: 'Look for the material that blocks electricity from passing through!',
@@ -1168,7 +1168,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'metal-handle',
                     label: 'Screwdriver with Solid Steel Metal Grip',
-                    icon: '≡ƒö¬ΓÜí',
+                    icon: '🔪⚡',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Steel is a metal conductor! Electricity would travel directly through the handle into the body.',
@@ -1179,9 +1179,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 9: SAVE PIP'S HAND! (Stove Heat Conductivity Lab)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 9:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -1190,9 +1190,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={boilingTeaKettleSteamImg} alt="Boiling Tea Kettle" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">Save Pip's Hand! ≡ƒ½û</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">Save Pip's Hand! 🫖</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
-                  The tea kettle is boiling at 100┬░C! The pot is made of metal to boil water fast, but what material will keep the handle cool?
+                  The tea kettle is boiling at 100°C! The pot is made of metal to boil water fast, but what material will keep the handle cool?
                 </p>
                 <button
                   onClick={() => {
@@ -1202,7 +1202,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Test Kettle Handle Materials ≡ƒîí∩╕Å
+                  Test Kettle Handle Materials 🌡️
                 </button>
               </div>
             )}
@@ -1212,7 +1212,7 @@ export const DynamicMissionEngine: React.FC = () => {
               <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Kettle Handle Thermal Test Chamber</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
-                  The kettle is boiling at 100┬░C! Tap each handle below to test its heat transfer and see the thermal reaction:
+                  The kettle is boiling at 100°C! Tap each handle below to test its heat transfer and see the thermal reaction:
                 </p>
 
                 {/* Central Boiling Kettle Status Banner */}
@@ -1223,15 +1223,15 @@ export const DynamicMissionEngine: React.FC = () => {
                     </div>
                     <div>
                       <span className="text-[10px] font-black text-rose-400 uppercase tracking-widest block">
-                        HEAT SOURCE ΓÇó BOILING WATER
+                        HEAT SOURCE • BOILING WATER
                       </span>
-                      <span className="text-sm font-black text-white">Metal Pot Core: 100┬░C Steam</span>
+                      <span className="text-sm font-black text-white">Metal Pot Core: 100°C Steam</span>
                     </div>
                   </div>
 
                   <div className="text-right">
                     <span className="text-xs font-mono font-black text-amber-400 block">
-                      {interactiveState.testedBakelite ? 'Γ¥ä∩╕Å INSULATED' : interactiveState.testedIron ? '≡ƒöÑ SCORCHING' : 'READY TO TEST'}
+                      {interactiveState.testedBakelite ? '❄️ INSULATED' : interactiveState.testedIron ? '🔥 SCORCHING' : 'READY TO TEST'}
                     </span>
                   </div>
                 </div>
@@ -1243,7 +1243,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       sounds.success();
-                      voiceAssistant.speak('Bakelite plastic blocks heat flow! The handle stays cool at 26┬░C, protecting your hand from burns!');
+                      voiceAssistant.speak('Bakelite plastic blocks heat flow! The handle stays cool at 26°C, protecting your hand from burns!');
                       setInteractiveState((p) => ({ ...p, testedBakelite: true, [`step_${currentStepIndex}`]: true }));
                     }}
                     className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
@@ -1255,7 +1255,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     {/* State Header Tag */}
                     <div className="w-full flex items-center justify-between mb-2">
                       <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
-                        {interactiveState.testedBakelite ? 'AFTER: 100┬░C STEAM TEST' : 'BEFORE: UNTESTED ROOM TEMP'}
+                        {interactiveState.testedBakelite ? 'AFTER: 100°C STEAM TEST' : 'BEFORE: UNTESTED ROOM TEMP'}
                       </span>
                       {interactiveState.testedBakelite && (
                         <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -1273,7 +1273,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       />
                       {interactiveState.testedBakelite && (
                         <div className="absolute top-2 left-2 bg-emerald-600/90 text-white text-[10px] font-black px-2 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1">
-                          <span>Γ¥ä∩╕Å 26┬░C (Cool Grip)</span>
+                          <span>❄️ 26°C (Cool Grip)</span>
                         </div>
                       )}
                     </div>
@@ -1290,7 +1290,7 @@ export const DynamicMissionEngine: React.FC = () => {
                         ? 'bg-emerald-200 text-emerald-950 border border-emerald-400 shadow-xs'
                         : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-xs'
                     }`}>
-                      {interactiveState.testedBakelite ? 'Γ£ô 26┬░C Cool & Safe To Hold! Γ¥ä∩╕Å' : 'Tap to Test Temperature ≡ƒîí∩╕Å'}
+                      {interactiveState.testedBakelite ? '✓ 26°C Cool & Safe To Hold! ❄️' : 'Tap to Test Temperature 🌡️'}
                     </span>
                   </motion.button>
 
@@ -1301,7 +1301,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     onClick={() => {
                       sounds.boing();
                       useFXStore.getState().triggerFX('steam', 3000);
-                      voiceAssistant.speak('Ouch! Metal conducts scorching 100┬░C heat straight from the boiling water into the hand!');
+                      voiceAssistant.speak('Ouch! Metal conducts scorching 100°C heat straight from the boiling water into the hand!');
                       setInteractiveState((p) => ({ ...p, testedIron: true }));
                     }}
                     className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
@@ -1313,7 +1313,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     {/* State Header Tag */}
                     <div className="w-full flex items-center justify-between mb-2">
                       <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
-                        {interactiveState.testedIron ? 'AFTER: 100┬░C STEAM TEST' : 'BEFORE: UNTESTED ROOM TEMP'}
+                        {interactiveState.testedIron ? 'AFTER: 100°C STEAM TEST' : 'BEFORE: UNTESTED ROOM TEMP'}
                       </span>
                       {interactiveState.testedIron && (
                         <span className="text-[10px] font-black text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -1331,7 +1331,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       />
                       {interactiveState.testedIron && (
                         <div className="absolute top-2 left-2 bg-rose-600/90 text-white text-[10px] font-black px-2 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1 animate-pulse">
-                          <span>≡ƒöÑ 98┬░C (SCORCHING!)</span>
+                          <span>🔥 98°C (SCORCHING!)</span>
                         </div>
                       )}
                     </div>
@@ -1348,14 +1348,14 @@ export const DynamicMissionEngine: React.FC = () => {
                         ? 'bg-rose-200 text-rose-950 border border-rose-400 shadow-xs'
                         : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
                     }`}>
-                      {interactiveState.testedIron ? 'ΓÜá∩╕Å 98┬░C Scorching Heat Danger! ≡ƒöÑ' : 'Tap to Test Temperature ≡ƒîí∩╕Å'}
+                      {interactiveState.testedIron ? '⚠️ 98°C Scorching Heat Danger! 🔥' : 'Tap to Test Temperature 🌡️'}
                     </span>
                   </motion.button>
                 </div>
 
                 {interactiveState.testedBakelite && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full animate-fade-in shadow-md">
-                    ≡ƒÄë Perfect Science Discovery! Bakelite is a thermosetting polymer insulator. Its cross-linked chemical network blocks heat conduction, keeping your fingers safe at 26┬░C even when boiling 100┬░C water!
+                    🎉 Perfect Science Discovery! Bakelite is a thermosetting polymer insulator. Its cross-linked chemical network blocks heat conduction, keeping your fingers safe at 26°C even when boiling 100°C water!
                   </div>
                 )}
               </div>
@@ -1364,7 +1364,7 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 2: Molecular Heat Conduction */}
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-300 shadow-xl text-center flex flex-col items-center">
-                <span className="text-5xl mb-3 block">≡ƒîí∩╕Å≡ƒÑÿ</span>
+                <span className="text-5xl mb-3 block">🌡️🥘</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Molecular Heat Conduction</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
                   Metals conduct heat because free electrons vibrate rapidly across their crystal lattice. But Bakelite's densely cross-linked polymer network traps heat vibrations in place!
@@ -1376,7 +1376,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
                 >
-                  Thermal Conduction Mastered ≡ƒöÑ
+                  Thermal Conduction Mastered 🔥
                 </button>
               </div>
             )}
@@ -1385,23 +1385,23 @@ export const DynamicMissionEngine: React.FC = () => {
             {currentStepIndex >= 3 && (
               <InquiryQuestionCard
                 title="Cookware Safety Designer"
-                question="You are designing a chef frying pan that reaches 250┬░C on a gas burner. Which handle will protect the chef?"
-                scenarioEmoji="≡ƒì▓Γ£¿"
+                question="You are designing a chef frying pan that reaches 250°C on a gas burner. Which handle will protect the chef?"
+                scenarioEmoji="🍲✨"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'bakelite-grip',
                     label: 'Moulded Bakelite Insulator Grip',
-                    icon: '≡ƒ¢í∩╕Å≡ƒæ¿ΓÇì≡ƒì│',
+                    icon: '🛡️👨‍🍳',
                     isCorrect: true,
                     explanation: 'Bakelite prevents heat conduction, keeping the chef safe even when cooking over high flames!',
-                    hint: 'Which material blocks heat transfer into the chefΓÇÖs fingers?',
+                    hint: 'Which material blocks heat transfer into the chef’s fingers?',
                   },
                   {
                     id: 'copper-grip',
                     label: 'Bare Copper Metal Grip',
-                    icon: '≡ƒöÑ≡ƒì│',
+                    icon: '🔥🍳',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Copper is one of the fastest heat conductors and will cause serious burns!',
@@ -1412,9 +1412,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 10: THE PLASTIC PROBLEM (500-Year Soil Time Chamber)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 10:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -1436,7 +1436,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Time Travel Soil Chamber ΓÅ│
+                  Enter Time Travel Soil Chamber ⏳
                 </button>
               </div>
             )}
@@ -1445,7 +1445,7 @@ export const DynamicMissionEngine: React.FC = () => {
             {currentStepIndex === 1 && (
               <div className="w-full max-w-4xl flex flex-col items-center bg-white p-5 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-2xl">ΓÅ│≡ƒî▒</span>
+                  <span className="text-2xl">⏳🌱</span>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
                     500-Year Soil Time Travel Chamber
                   </h3>
@@ -1457,9 +1457,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 {/* Specimen Category Selector */}
                 <div className="flex flex-wrap justify-center gap-2 mb-5 w-full">
                   {[
-                    { id: 'cotton', label: '≡ƒæò 1. Cotton Fabric vs Plastic Bottle', natural: 'Cotton Fabric' },
-                    { id: 'apple', label: '≡ƒìÄ 2. Apple Fruit vs Plastic Bottle', natural: 'Apple Fruit' },
-                    { id: 'wood', label: '≡ƒ¬╡ 3. Wood Timber vs Plastic Pellets', natural: 'Wood Timber' },
+                    { id: 'cotton', label: '👕 1. Cotton Fabric vs Plastic Bottle', natural: 'Cotton Fabric' },
+                    { id: 'apple', label: '🍎 2. Apple Fruit vs Plastic Bottle', natural: 'Apple Fruit' },
+                    { id: 'wood', label: '🪵 3. Wood Timber vs Plastic Pellets', natural: 'Wood Timber' },
                   ].map((pair) => {
                     const isSelected = (interactiveState.soilPair || 'cotton') === pair.id;
                     return (
@@ -1493,10 +1493,10 @@ export const DynamicMissionEngine: React.FC = () => {
 
                   <div className="flex flex-wrap gap-2 justify-center">
                     {[
-                      { step: 0, label: '≡ƒî▒ Day 1 (Fresh)', voice: 'Day 1: Both materials are freshly buried in dark garden soil.' },
-                      { step: 1, label: 'ΓÅ│ 2 Weeks', voice: '2 Weeks later: Soil bacteria and moisture begin decomposing the natural item.' },
-                      { step: 2, label: '≡ƒìé 1 Year', voice: '1 Year later: Natural plant fibers crumble into rich garden compost!' },
-                      { step: 3, label: '≡ƒÜÇ 450+ Years', voice: '450 Years in the future: Natural organic matter vanished into fertile soil, but synthetic plastic is still polluting!' },
+                      { step: 0, label: '🌱 Day 1 (Fresh)', voice: 'Day 1: Both materials are freshly buried in dark garden soil.' },
+                      { step: 1, label: '⏳ 2 Weeks', voice: '2 Weeks later: Soil bacteria and moisture begin decomposing the natural item.' },
+                      { step: 2, label: '🍂 1 Year', voice: '1 Year later: Natural plant fibers crumble into rich garden compost!' },
+                      { step: 3, label: '🚀 450+ Years', voice: '450 Years in the future: Natural organic matter vanished into fertile soil, but synthetic plastic is still polluting!' },
                     ].map((t) => {
                       const isCurrent = (interactiveState.timeStep ?? 0) === t.step;
                       return (
@@ -1533,12 +1533,12 @@ export const DynamicMissionEngine: React.FC = () => {
                   let naturalImg = soilCottonDay1Img;
                   let naturalTitle = '100% Natural Cotton Swatch';
                   let naturalState = 'Freshly buried clean plant cellulose fibers in dark potting soil.';
-                  let naturalBadge = '≡ƒî▒ Fresh Organic Matter';
+                  let naturalBadge = '🌱 Fresh Organic Matter';
 
                   let syntheticImg = soilPlasticDay1Img;
                   let syntheticTitle = 'Synthetic PET Plastic Bottle';
                   let syntheticState = 'Brand new man-made polymer bottle resting in soil.';
-                  let syntheticBadge = '≡ƒº¬ Fresh Polymer Bottle';
+                  let syntheticBadge = '🧪 Fresh Polymer Bottle';
 
                   if (pair === 'cotton') {
                     naturalImg = step >= 1 ? soilCottonRottedImg : soilCottonDay1Img;
@@ -1546,32 +1546,32 @@ export const DynamicMissionEngine: React.FC = () => {
                     naturalState =
                       step === 0
                         ? 'Day 1: Clean woven cotton cloth buried fresh in soil cross-section.'
-                        : 'Composted into dark, fertile garden humus soil feeding plant root systems! Γ£ô';
-                    naturalBadge = step >= 1 ? 'Γ£ô 100% Biodegraded Compost' : '≡ƒî▒ Day 1 in Soil';
+                        : 'Composted into dark, fertile garden humus soil feeding plant root systems! ✓';
+                    naturalBadge = step >= 1 ? '✓ 100% Biodegraded Compost' : '🌱 Day 1 in Soil';
 
                     syntheticImg = step >= 2 ? soilPlastic450yrsImg : soilPlasticDay1Img;
                     syntheticTitle = 'Synthetic PET Plastic Bottle';
                     syntheticState =
                       step === 0
                         ? 'Day 1: Clean transparent plastic water bottle resting in soil.'
-                        : '450+ Years: Microbes cannot eat synthetic bonds. Plastic turns brittle and shatters into toxic microplastics! ΓÜá∩╕Å';
-                    syntheticBadge = step >= 2 ? 'ΓÜá∩╕Å 450+ Yrs Non-Biodegradable' : '≡ƒº¬ Day 1 in Soil';
+                        : '450+ Years: Microbes cannot eat synthetic bonds. Plastic turns brittle and shatters into toxic microplastics! ⚠️';
+                    syntheticBadge = step >= 2 ? '⚠️ 450+ Yrs Non-Biodegradable' : '🧪 Day 1 in Soil';
                   } else if (pair === 'apple') {
                     naturalImg = step >= 1 ? soilAppleRottedImg : soilAppleDay1Img;
                     naturalTitle = 'Natural Fresh Apple Fruit Core';
                     naturalState =
                       step === 0
                         ? 'Day 1: Fresh fruit organic core buried in the glass soil study box.'
-                        : '2 Weeks: Microbes completely broke down fruit into dark compost with a seedling growing! Γ£ô';
-                    naturalBadge = step >= 1 ? 'Γ£ô 100% Biodegraded Compost' : '≡ƒî▒ Day 1 in Soil';
+                        : '2 Weeks: Microbes completely broke down fruit into dark compost with a seedling growing! ✓';
+                    naturalBadge = step >= 1 ? '✓ 100% Biodegraded Compost' : '🌱 Day 1 in Soil';
 
                     syntheticImg = step >= 2 ? soilPlastic450yrsImg : soilPlasticDay1Img;
                     syntheticTitle = 'Synthetic PET Plastic Bottle';
                     syntheticState =
                       step === 0
                         ? 'Day 1: Clean transparent plastic water bottle in soil.'
-                        : '450+ Years: Still undigested in dirt! Soil bacteria cannot digest synthetic plastics. ΓÜá∩╕Å';
-                    syntheticBadge = step >= 2 ? 'ΓÜá∩╕Å 450+ Yrs Non-Biodegradable' : '≡ƒº¬ Day 1 in Soil';
+                        : '450+ Years: Still undigested in dirt! Soil bacteria cannot digest synthetic plastics. ⚠️';
+                    syntheticBadge = step >= 2 ? '⚠️ 450+ Yrs Non-Biodegradable' : '🧪 Day 1 in Soil';
                   } else {
                     // Wood pair
                     const woodImgs = [woodDecayDay1Img, woodDecay2WeeksImg, woodDecay100YrsImg, woodDecay450YrsImg];
@@ -1583,16 +1583,16 @@ export const DynamicMissionEngine: React.FC = () => {
                         ? 'Day 1: Solid natural tree cellulose block.'
                         : step === 1
                         ? '2 Weeks: Fungi and microbes soften wood fibers.'
-                        : '100+ Years: Fully decomposed into fertile soil compost! Γ£ô';
-                    naturalBadge = step >= 2 ? 'Γ£ô 100% Recycled to Nature' : '≡ƒî▒ Organic Cellulose';
+                        : '100+ Years: Fully decomposed into fertile soil compost! ✓';
+                    naturalBadge = step >= 2 ? '✓ 100% Recycled to Nature' : '🌱 Organic Cellulose';
 
                     syntheticImg = plasticImgs[step] || plasticImgs[0];
                     syntheticTitle = 'Synthetic Plastic Pellets';
                     syntheticState =
                       step === 0
                         ? 'Day 1: Brand new synthetic hydrocarbon plastic beads.'
-                        : '450+ Years: Still undigested by bacteria, breaking into microplastics! ΓÜá∩╕Å';
-                    syntheticBadge = step >= 2 ? 'ΓÜá∩╕Å 450+ Yrs Non-Biodegradable' : '≡ƒº¬ Synthetic Polymer';
+                        : '450+ Years: Still undigested by bacteria, breaking into microplastics! ⚠️';
+                    syntheticBadge = step >= 2 ? '⚠️ 450+ Yrs Non-Biodegradable' : '🧪 Synthetic Polymer';
                   }
 
                   return (
@@ -1677,9 +1677,9 @@ export const DynamicMissionEngine: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed">
-                    ≡ƒî┐ <strong>Biodegradable:</strong> Earthworms and soil bacteria naturally eat organic plant fibers (cotton, wood, fruit), recycling them into rich garden food within weeks.  
+                    🌿 <strong>Biodegradable:</strong> Earthworms and soil bacteria naturally eat organic plant fibers (cotton, wood, fruit), recycling them into rich garden food within weeks.  
                     <br />
-                    ΓÜá∩╕Å <strong>Non-Biodegradable:</strong> Bacteria <em>cannot</em> digest man-made plastic chemicals, so plastics stay trapped in Earth's soil for over 450 years!
+                    ⚠️ <strong>Non-Biodegradable:</strong> Bacteria <em>cannot</em> digest man-made plastic chemicals, so plastics stay trapped in Earth's soil for over 450 years!
                   </p>
                 </div>
               </div>
@@ -1688,7 +1688,7 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 2: Understand Biodegradable vs Non-Biodegradable */}
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-emerald-300 shadow-xl text-center flex flex-col items-center">
-                <span className="text-5xl mb-3 block">≡ƒî┐≡ƒö¼</span>
+                <span className="text-5xl mb-3 block">🌿🔬</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Biodegradable vs Non-Biodegradable</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
                   Materials that break down naturally by microbes and fungi are <strong>BIODEGRADABLE</strong> (cotton, wood, fruit peel). Synthetic plastics are <strong>NON-BIODEGRADABLE</strong> and last over 450 years.
@@ -1700,7 +1700,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-2xl cursor-pointer"
                 >
-                  I Understand the Science Terms! ≡ƒî┐
+                  I Understand the Science Terms! 🌿
                 </button>
               </div>
             )}
@@ -1714,10 +1714,10 @@ export const DynamicMissionEngine: React.FC = () => {
                 </p>
                 <div className="grid grid-cols-2 gap-4 w-full mb-6">
                   {[
-                    { id: 'reduce', title: '1. REDUCE', desc: 'Use less single-use plastic packaging', icon: '≡ƒôë' },
-                    { id: 'reuse', title: '2. REUSE', desc: 'Carry reusable bottles and cloth totes', icon: '≡ƒöä' },
-                    { id: 'recycle', title: '3. RECYCLE', desc: 'Sort plastics into blue recycling bins', icon: 'ΓÖ╗∩╕Å' },
-                    { id: 'refuse', title: '4. REFUSE', desc: 'Say no to single-use plastic straws', icon: '≡ƒÜ½' },
+                    { id: 'reduce', title: '1. REDUCE', desc: 'Use less single-use plastic packaging', icon: '📉' },
+                    { id: 'reuse', title: '2. REUSE', desc: 'Carry reusable bottles and cloth totes', icon: '🔄' },
+                    { id: 'recycle', title: '3. RECYCLE', desc: 'Sort plastics into blue recycling bins', icon: '♻️' },
+                    { id: 'refuse', title: '4. REFUSE', desc: 'Say no to single-use plastic straws', icon: '🚫' },
                   ].map((r) => (
                     <button
                       key={r.id}
@@ -1738,13 +1738,13 @@ export const DynamicMissionEngine: React.FC = () => {
                       <span className="text-3xl mb-1 block">{r.icon}</span>
                       <span className="font-black text-sm text-slate-900 block">{r.title}</span>
                       <span className="text-[11px] font-bold text-slate-600">{r.desc}</span>
-                      {interactiveState[r.id] && <span className="text-xs font-black text-emerald-600 mt-1 block">Γ£ô Mastered</span>}
+                      {interactiveState[r.id] && <span className="text-xs font-black text-emerald-600 mt-1 block">✓ Mastered</span>}
                     </button>
                   ))}
                 </div>
                 {interactiveState[`step_${currentStepIndex}`] && (
                   <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-center text-sm font-black text-emerald-950 w-full">
-                    ≡ƒÄë Outstanding! All 4 R's mastered! Tap Next Step ΓåÆ for the final eco-challenge!
+                    🎉 Outstanding! All 4 R's mastered! Tap Next Step → for the final eco-challenge!
                   </div>
                 )}
               </div>
@@ -1755,14 +1755,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Arjun's Grocery Shopping Choice"
                 question="Arjun is at the market counter with 5 items. Which bag choice protects our oceans and soil?"
-                scenarioEmoji="≡ƒ¢Æ≡ƒ¢ì∩╕Å"
+                scenarioEmoji="🛒🛍️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'jute-bag',
                     label: 'Reusable Jute Cloth Tote Bag',
-                    icon: '≡ƒî┐≡ƒ¢ì∩╕Å',
+                    icon: '🌿🛍️',
                     isCorrect: true,
                     explanation: 'Jute is a natural, 100% biodegradable plant fibre that can be reused hundreds of times without waste!',
                     hint: 'Choose the renewable plant material that can be reused over and over!',
@@ -1770,7 +1770,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'plastic-bag',
                     label: 'Single-Use Thin Plastic Carrier Bag',
-                    icon: '≡ƒ½ÖΓÜá∩╕Å',
+                    icon: '🫙⚠️',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Thin plastic bags take 450 years to break down and clog animal habitats and waterways.',
@@ -1781,9 +1781,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 11: STRETCH LAB (Race Car Tires & Synthetic Rubber)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 11:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -1792,9 +1792,9 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={vulcanizedCarTireTreadImg} alt="Vulcanized Car Tire" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">The Race Track Rubber Mystery! ≡ƒÅÄ∩╕Å≡ƒ¢₧</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Race Track Rubber Mystery! 🏎️🛞</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
-                  Natural rubber comes from milky tree latex. But racing cars at 300 km/h heat tyres up to 160┬░C! How did chemists transform rubber into high-grip racing tyres?
+                  Natural rubber comes from milky tree latex. But racing cars at 300 km/h heat tyres up to 160°C! How did chemists transform rubber into high-grip racing tyres?
                 </p>
                 <button
                   onClick={() => {
@@ -1804,7 +1804,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Tire Friction Lab ≡ƒ¢₧
+                  Enter Tire Friction Lab 🛞
                 </button>
               </div>
             )}
@@ -1824,15 +1824,15 @@ export const DynamicMissionEngine: React.FC = () => {
             {currentStepIndex >= 3 && (
               <InquiryQuestionCard
                 title="Formula 1 Grand Prix Tire Engineering"
-                question="Formula 1 race cars travel at 300 km/h with tyres reaching 160┬░C. Which rubber formulation must engineers specify?"
-                scenarioEmoji="≡ƒÅÄ∩╕Å≡ƒ¢₧"
+                question="Formula 1 race cars travel at 300 km/h with tyres reaching 160°C. Which rubber formulation must engineers specify?"
+                scenarioEmoji="🏎️🛞"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'synthetic-rubber',
                     label: 'Vulcanized Synthetic Buna Rubber Tire',
-                    icon: '≡ƒ¢₧ΓÜÖ∩╕Å',
+                    icon: '🛞⚙️',
                     isCorrect: true,
                     explanation: 'Synthetic rubber combined with vulcanized sulphur creates heat-resistant 3D cross-links that withstand immense road friction!',
                     hint: 'Which rubber is chemically engineered with sulfur cross-links to withstand extreme heat and friction?',
@@ -1840,7 +1840,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'latex-rubber',
                     label: 'Pure Uncured Tree Latex Sap',
-                    icon: '≡ƒî│≡ƒÄê',
+                    icon: '🌳🎈',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Natural uncured tree latex becomes sticky and melts into liquid paste under high road friction.',
@@ -1851,9 +1851,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 12: THE REPAIR STATION (Pressurized Pipe Simulator)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 12:
         return (
           <div className="w-full max-w-4xl flex flex-col items-center">
@@ -1862,7 +1862,7 @@ export const DynamicMissionEngine: React.FC = () => {
                 <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
                   <img src={epoxyResinAdhesiveGlueImg} alt="Epoxy Adhesive Sealant" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">The Emergency Repair Station! ≡ƒº¬≡ƒöº</h2>
+                <h2 className="text-3xl font-black text-slate-900 mb-2">The Emergency Repair Station! 🧪🔧</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
                   A high-pressure plumbing pipe cracked! Water is blasting out at 80 PSI! Let's choose the right synthetic adhesive to seal the leak!
                 </p>
@@ -1874,7 +1874,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Start Pipe Repair ≡ƒöº
+                  Start Pipe Repair 🔧
                 </button>
               </div>
             )}
@@ -1894,15 +1894,15 @@ export const DynamicMissionEngine: React.FC = () => {
             {currentStepIndex >= 3 && (
               <InquiryQuestionCard
                 title="Aerospace Spacecraft Heat-Shield Repair"
-                question="A spacecraft re-entering Earth's atmosphere experiences intense 1,500┬░C friction heat and mechanical vibration. Which adhesive bonds heat-shield tiles to the fuselage?"
-                scenarioEmoji="≡ƒÜÇ≡ƒ¢í∩╕Å"
+                question="A spacecraft re-entering Earth's atmosphere experiences intense 1,500°C friction heat and mechanical vibration. Which adhesive bonds heat-shield tiles to the fuselage?"
+                scenarioEmoji="🚀🛡️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'structural-epoxy',
                     label: 'High-Temperature Synthetic Structural Epoxy',
-                    icon: '≡ƒº¬≡ƒÜÇ',
+                    icon: '🧪🚀',
                     isCorrect: true,
                     explanation: 'Cross-linked synthetic polymer epoxies resist extreme thermal shock and hold space tiles securely during atmospheric re-entry!',
                     hint: 'Which adhesive cures into a cross-linked polymer network engineered for high-stress aerospace engineering?',
@@ -1910,10 +1910,10 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'wheat-paste',
                     label: 'Natural Flour & Water Starch Paste',
-                    icon: '≡ƒî╛≡ƒì₧',
+                    icon: '🌾🍞',
                     isCorrect: false,
                     explanation: '',
-                    hint: 'Organic flour paste burns to ash at 180┬░C and has virtually zero water or shear resistance.',
+                    hint: 'Organic flour paste burns to ash at 180°C and has virtually zero water or shear resistance.',
                   },
                 ]}
               />
@@ -1921,9 +1921,9 @@ export const DynamicMissionEngine: React.FC = () => {
           </div>
         );
 
-      /* ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      /* ─────────────────────────────────────────────────────────────
          MISSION 13: PIP'S SCIENCE CAMP (Grand Master Finale)
-      ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+      ───────────────────────────────────────────────────────────── */
       case 13:
         return (
           <div className="w-full max-w-3xl flex flex-col items-center text-center">
@@ -1931,14 +1931,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Challenge 1: Stormy Mountain Camp Shelter"
                 question="A sudden mountain rainstorm hits your campsite! Which tent fabric will keep all campers 100% dry and resist mildew?"
-                scenarioEmoji="≡ƒÅò∩╕Å≡ƒîº∩╕Å"
+                scenarioEmoji="🏕️🌧️"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'poly-tent',
                     label: 'Synthetic Polyester Fabric Tent',
-                    icon: 'Γ¢║≡ƒÆº',
+                    icon: '⛺💧',
                     isCorrect: true,
                     explanation: 'Polyester fibres are non-porous and hydrophobic, allowing rainwater to roll right off without soaking in!',
                     hint: 'Think about which fibre is naturally water-repellent and quick drying!',
@@ -1946,7 +1946,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'cotton-tent',
                     label: 'Natural Cotton Linen Fabric Tent',
-                    icon: '≡ƒî┐Γ¢║',
+                    icon: '🌿⛺',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Cotton absorbs heavy water, gets heavy, and begins leaking in prolonged rain.',
@@ -1959,14 +1959,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Challenge 2: Mountain Climbing Rope"
                 question="You are packing rope to climb a steep 500-meter rocky cliff. Which rope has tensile strength stronger than steel?"
-                scenarioEmoji="≡ƒºùΓÇìΓÖé∩╕Å≡ƒ¬ó"
+                scenarioEmoji="🧗‍♂️🪢"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'nylon-rope',
                     label: 'Braided Synthetic Nylon Rope',
-                    icon: '≡ƒ¬ó≡ƒÆ¬',
+                    icon: '🪢💪',
                     isCorrect: true,
                     explanation: 'Nylon has extraordinary tensile strength, elasticity, and resists abrasion, making it the universal choice for mountain rescue!',
                     hint: 'Which synthetic fibre was famously proven stronger than steel of the same thickness?',
@@ -1974,7 +1974,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'jute-rope',
                     label: 'Natural Jute Plant Twine String',
-                    icon: '≡ƒî╛≡ƒ¬ó',
+                    icon: '🌾🪢',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Plant twine has low tensile strength and snaps easily under heavy human climbing weight.',
@@ -1987,14 +1987,14 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Challenge 3: Campfire Cooking Safety"
                 question="The campsite fire is blazing as you roast marshmallows on skewers. What should you wear near the open flames?"
-                scenarioEmoji="≡ƒöÑΓ¢║"
+                scenarioEmoji="🔥⛺"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'cotton-apron',
                     label: '100% Natural Cotton Apron',
-                    icon: '≡ƒî┐≡ƒæ¿ΓÇì≡ƒì│',
+                    icon: '🌿👨‍🍳',
                     isCorrect: true,
                     explanation: 'Cotton burns slowly to soft gray ash and never melts, keeping your skin safe from severe plastic burns!',
                     hint: 'Remember which fabric does NOT melt into scalding sticky beads when near fire!',
@@ -2002,7 +2002,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   {
                     id: 'nylon-jacket',
                     label: 'Synthetic Nylon Windbreaker Jacket',
-                    icon: '≡ƒºÑ≡ƒöÑ',
+                    icon: '🧥🔥',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Synthetic nylon melts instantly near flame and sticks painfully to skin. Never wear near fire!',
@@ -2015,22 +2015,22 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Challenge 4: Campfire Tea Kettle Handle"
                 question="The campfire kettle is whistling hot with boiling water. Which handle material will keep your fingers completely cool?"
-                scenarioEmoji="≡ƒ½û≡ƒöÑ"
+                scenarioEmoji="🫖🔥"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'bakelite-kettle',
                     label: 'Thermosetting Bakelite Plastic Grip',
-                    icon: '≡ƒ¢í∩╕Å≡ƒ½û',
+                    icon: '🛡️🫖',
                     isCorrect: true,
-                    explanation: 'Bakelite is a thermosetting polymer that blocks thermal conduction, protecting hands from 100┬░C steam!',
+                    explanation: 'Bakelite is a thermosetting polymer that blocks thermal conduction, protecting hands from 100°C steam!',
                     hint: 'Look for the classic thermal insulator used across cookware handles!',
                   },
                   {
                     id: 'iron-kettle',
                     label: 'Solid Iron Metal Grip',
-                    icon: '≡ƒöÑ≡ƒì│',
+                    icon: '🔥🍳',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Iron is a thermal conductor and conducts the blazing heat directly into your palms.',
@@ -2043,22 +2043,22 @@ export const DynamicMissionEngine: React.FC = () => {
               <InquiryQuestionCard
                 title="Challenge 5: Leave No Trace Planet Cleanup"
                 question="Camp is ending! You have empty snack wrappers, juice bottles, and plastic containers. What is the scientist's duty?"
-                scenarioEmoji="ΓÖ╗∩╕Å≡ƒî┐"
+                scenarioEmoji="♻️🌿"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
                   {
                     id: 'recycle-bins',
                     label: 'Pack & Recycle in Designated Blue Bins',
-                    icon: 'ΓÖ╗∩╕Å≡ƒî▒',
+                    icon: '♻️🌱',
                     isCorrect: true,
                     explanation: 'Recycling plastics prevents microplastic accumulation and turns discarded polymers into new useful materials!',
-                    hint: 'Which choice follows the 3 RΓÇÖs (Reduce, Reuse, Recycle) to protect forest wildlife?',
+                    hint: 'Which choice follows the 3 R’s (Reduce, Reuse, Recycle) to protect forest wildlife?',
                   },
                   {
                     id: 'bury-soil',
                     label: 'Bury Plastic Wrappers in Forest Soil',
-                    icon: '≡ƒî▓ΓÜá∩╕Å',
+                    icon: '🌲⚠️',
                     isCorrect: false,
                     explanation: '',
                     hint: 'Plastics take over 450 years to decay and release toxic microplastics into forest soil and groundwater.',
@@ -2074,7 +2074,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   <img src={parachuteCanopyJumpImg} alt="Graduation Skydive" className="w-full h-full object-cover" />
                 </div>
                 <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Grand Science Champion! ≡ƒÅò∩╕Å
+                  Grand Science Champion! 🏕️
                 </h2>
                 <p className="text-sm md:text-base text-slate-600 font-bold mb-6 max-w-lg mx-auto">
                   You've tested raincoats, stretched super-nylon, explored polymers, mastered electrical insulation, passed fire safety, and cleaned up planet Earth! You are now an official Master of Synthetic Materials!
@@ -2086,7 +2086,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     <Home className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-black text-sm text-slate-900 mb-1">≡ƒÅá 1-Minute Home Science Quest</h4>
+                    <h4 className="font-black text-sm text-slate-900 mb-1">🏠 1-Minute Home Science Quest</h4>
                     <p className="text-xs font-bold text-slate-600">
                       Check 3 clothing tags in your wardrobe! Can you find one 100% Cotton shirt and one Polyester jacket?
                     </p>
@@ -2094,7 +2094,7 @@ export const DynamicMissionEngine: React.FC = () => {
                 </div>
 
                 <div className="p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl border-4 border-amber-300 w-full max-w-md mb-6 shadow-xl">
-                  <div className="text-2xl font-black text-amber-900 mb-1">≡ƒÅå Master Scientist Certificate</div>
+                  <div className="text-2xl font-black text-amber-900 mb-1">🏆 Master Scientist Certificate</div>
                   <p className="text-xs font-bold text-amber-700">13 of 13 Missions Mastered (100% Complete)</p>
                   <div className="flex items-center justify-center gap-1 mt-3">
                     {[...Array(5)].map((_, i) => (
@@ -2109,7 +2109,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="px-10 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-base rounded-2xl shadow-xl cursor-pointer active:scale-95"
                 >
-                  Claim Master Scientist Trophy Γ¡É
+                  Claim Master Scientist Trophy ⭐
                 </button>
               </div>
             )}
@@ -2127,7 +2127,7 @@ export const DynamicMissionEngine: React.FC = () => {
               {currentStep.instruction || 'Explore this science investigation and tap the button below to test your deduction!'}
             </p>
             <div className="p-4 bg-sky-50 rounded-2xl border-2 border-sky-200 w-full mb-6 text-xs font-bold text-sky-900">
-              <span>≡ƒÆí <strong>Science Focus:</strong> {mission.concepts.join(' ΓÇó ')}</span>
+              <span>💡 <strong>Science Focus:</strong> {mission.concepts.join(' • ')}</span>
             </div>
             <button
               onClick={() => {
@@ -2137,7 +2137,7 @@ export const DynamicMissionEngine: React.FC = () => {
               }}
               className="btn-3d-amber text-slate-950 font-black text-sm py-3 px-8 rounded-2xl cursor-pointer"
             >
-              Continue Mission Γ₧ö
+              Continue Mission ➔
             </button>
           </div>
         );
