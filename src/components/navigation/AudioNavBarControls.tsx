@@ -144,6 +144,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   isMissionMode = false,
 }) => {
   const navigate = useNavigate();
+  // Guidebook navigation helper
   const location = useLocation();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showClosetModal, setShowClosetModal] = useState(false);

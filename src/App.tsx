@@ -12,6 +12,7 @@ import { ParentDashboard } from '@/features/parent/ParentDashboard';
 import { ChapterHub } from '@/features/chapter-hub/ChapterHub';
 import { ChapterIntro } from '@/features/chapter-intro/ChapterIntro';
 import { UniversalMascotChapterIntro } from '@/features/chapter-intro/UniversalMascotChapterIntro';
+import { DigitalGuidebook } from '@/features/guidebook/DigitalGuidebook';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
 import { Theme1Hub } from '@/features/theme1/Theme1Hub';
 import { SuperSensesMissionEngine } from '@/features/theme1/SuperSensesMissionEngine';
@@ -58,6 +59,7 @@ export function App() {
           <Route path="/video-lab" element={<VideoLabPage />} />
           <Route path="/teacher-studio" element={<TeacherStudio />} />
           <Route path="/discovery-book" element={<DiscoveryBook />} />
+          <Route path="/guidebook" element={<DigitalGuidebook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 
                     {/* Dedicated Full-Screen Mascot Chapter Teaching Intros for All 4 Courses */}
