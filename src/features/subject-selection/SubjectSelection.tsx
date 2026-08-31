@@ -47,7 +47,7 @@ const SUBJECTS: Subject[] = [
     border: 'border-amber-400 hover:border-amber-500',
     active: true,
     chapterCount: 5,
-    unlockedChapters: 1,
+    unlockedChapters: 13,
     path: '/chapter-hub',
     syllabusCode: 'CBSE EVS Class 5 • Theme 6',
   },

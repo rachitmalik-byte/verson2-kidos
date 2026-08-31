@@ -99,6 +99,22 @@ export const DevDrawer: React.FC = () => {
     addCredits(amount);
   };
 
+  const handleSignUpFreshStudent = () => {
+    sounds.success();
+    resetProgress();
+    resetDiscoveries();
+    setChild({
+      name: 'Aarav (Grade 5)',
+      grade: '5',
+      interests: ['science', 'space', 'robotics', 'inventions', 'animals', 'water'],
+      avatar: '🔬',
+    });
+    setPin('1234');
+    completeSetup();
+    setIsOpen(false);
+    navigate('/subjects');
+  };
+
   const handleQuickSetupChild = () => {
     sounds.success();
     setChild({

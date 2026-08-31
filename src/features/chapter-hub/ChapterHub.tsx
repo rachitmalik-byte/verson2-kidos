@@ -187,6 +187,19 @@ export function ChapterHub() {
             {/* Quick Actions & View Switcher */}
             <div className="flex flex-wrap gap-2.5 mt-4 justify-center md:justify-start">
               <button
+                id="chapter-story-intro-btn"
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  navigate('/chapter/3');
+                }}
+                className="font-black text-xs py-2.5 px-4 rounded-2xl shadow-md bg-gradient-to-r from-sky-500 to-indigo-600 text-white flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all border-2 border-sky-400 ring-2 ring-sky-300"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>📖 Play Chapter Story Intro</span>
+              </button>
+
+              <button
                 id="tab-missions-btn"
                 onClick={() => {
                   sounds.pop();
