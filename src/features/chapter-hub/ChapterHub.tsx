@@ -75,7 +75,7 @@ export function ChapterHub() {
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
   const [activeTab, setActiveTab] = useState<'missions' | 'video' | 'guidebook'>('missions');
-  const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
+  const [viewMode, setViewMode] = useState<'map' | 'grid'>('grid');
 
   const totalStars = completedMissions.length * 3 + discoveries.length * 2;
   const isAllComplete = completedMissions.length === missions.length;
