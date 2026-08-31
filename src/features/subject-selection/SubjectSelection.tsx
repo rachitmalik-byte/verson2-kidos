@@ -1,3 +1,5 @@
+import { PipWardrobeShopModal } from '@/components/wardrobe/PipWardrobeShopModal';
+import { Shirt } from 'lucide-react';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -152,7 +154,13 @@ export const SubjectSelection: React.FC = () => {
 
         {/* Mascot Banner */}
         <div id="subject-intro-banner" className="bg-white/95 rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-xl flex flex-col md:flex-row items-center gap-6">
-          <Pip mood="celebrating" size="lg" />
+          <div className="flex flex-col items-center gap-2">
+            <Pip mood="celebrating" size="lg" onOpenWardrobe={() => setIsWardrobeOpen(true)} />
+            <button onClick={() => setIsWardrobeOpen(true)} className="px-3 py-1.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-black text-xs flex items-center gap-1.5 shadow-md hover:scale-105 active:scale-95 cursor-pointer">
+              <Shirt className="w-3.5 h-3.5" />
+              <span>Dressing Room 🥼</span>
+            </button>
+          </div>
           <div className="flex-1 text-center md:text-left">
             <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-2">
               CBSE Class 5 EVS Curriculum Hub 🌿
@@ -240,6 +248,7 @@ export const SubjectSelection: React.FC = () => {
           ))}
         </div>
       </div>
+      <PipWardrobeShopModal isOpen={isWardrobeOpen} onClose={() => setIsWardrobeOpen(false)} />
     </div>
   );
-};
+}

@@ -5,6 +5,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useProgressStore } from '@/stores/progressStore';
 import { usePipStore } from '@/stores/pipStore';
+import { Sparkles, Shirt } from 'lucide-react';
 
 export interface PipProps {
   mood?: PipMood;
@@ -17,6 +18,7 @@ export interface PipProps {
   outfitOverride?: string;
   headwearOverride?: string;
   onHighFive?: () => void;
+  onOpenWardrobe?: () => void;
 }
 
 export const Pip: React.FC<PipProps> = ({
@@ -30,6 +32,7 @@ export const Pip: React.FC<PipProps> = ({
   outfitOverride,
   headwearOverride,
   onHighFive,
+  onOpenWardrobe,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -60,6 +63,7 @@ export const Pip: React.FC<PipProps> = ({
   const [tapEffect, setTapEffect] = useState<{ id: number; icon: string }[]>([]);
   const [eyeOffset, setEyeOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [highFiveImpact, setHighFiveImpact] = useState(false);
+  const [showWardrobeQuickBtn, setShowWardrobeQuickBtn] = useState(false);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -98,21 +102,21 @@ export const Pip: React.FC<PipProps> = ({
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 150);
+      setTimeout(() => setIsBlinking(false), 160);
     }, 4800);
     return () => clearInterval(blinkInterval);
   }, []);
 
-  // ── 3. STRICT SPEECH LIP-SYNC VISEMES (ONLY WHEN ACTUALLY SPEAKING) ──
+  // ── 3. LIP-SYNC VISEMES ──
   useEffect(() => {
-    let visemeTimer: number | undefined;
-    if (currentState === 'speaking' && isSpeakingStore) {
+    let visemeTimer: number | null = null;
+    if (currentState === 'speaking' || isSpeakingStore) {
       const visemes: ('closed' | 'open-small' | 'open-wide' | 'smile')[] = [
         'open-small',
         'open-wide',
         'open-small',
         'smile',
-        'closed',
+        'open-small',
       ];
       let i = 0;
       visemeTimer = window.setInterval(() => {
@@ -137,7 +141,7 @@ export const Pip: React.FC<PipProps> = ({
     }
 
     const phrase = handleMascotClick();
-    const icons = ['⭐', '❤️', '💡', '🧪', '✨', '🥽', '🎉', '🪙'];
+    const icons = ['⭐', '❤️', '💡', '🧪', '✨', '🥽', '🎉', '🪙', '🚀', '🏔️', '🌊'];
     const randomIcon = icons[Math.floor(Math.random() * icons.length)];
     const newId = Date.now() + Math.random();
 
@@ -145,6 +149,18 @@ export const Pip: React.FC<PipProps> = ({
     setTimeout(() => {
       setTapEffect((prev) => prev.filter((p) => p.id !== newId));
     }, 1100);
+
+    // Speak cheerful reaction with voiceAssistant
+    sounds.bubble();
+    const greetings = [
+      "I'm Pip, your science buddy!",
+      "Ready to discover something amazing?",
+      "Science is full of superpowers!",
+      "Looking sharp and ready to learn!",
+      "High five for curiosity!",
+    ];
+    const picked = greetings[Math.floor(Math.random() * greetings.length)];
+    voiceAssistant.speak(picked);
   };
 
   const handleHighFiveClick = (e: React.MouseEvent) => {
@@ -156,7 +172,7 @@ export const Pip: React.FC<PipProps> = ({
     setTimeout(() => setHighFiveImpact(false), 1200);
   };
 
-  // ── 5. CALM STATE MACHINE ANIMATIONS (CALM DEFAULT, INTENTIONAL MOVEMENT) ──
+  // ── 5. ANIMATIONS ──
   const bodyVariants = {
     idle: {
       scaleY: [1, 1.015, 1],
@@ -180,238 +196,255 @@ export const Pip: React.FC<PipProps> = ({
       transition: { duration: 0.6, ease: 'easeOut' },
     },
     thinking: {
-      rotate: -4,
-      y: -3,
-      transition: { duration: 0.8, ease: 'easeInOut' },
+      rotate: [0, -4, 0],
+      y: [0, -2, 0],
+      transition: { duration: 2.0, repeat: Infinity, ease: 'easeInOut' },
     },
     correct: {
-      y: [0, -10, 0],
+      y: [0, -12, 0],
       scale: [1, 1.08, 1],
+      rotate: [0, -4, 4, 0],
       transition: { duration: 0.7, ease: 'easeOut' },
     },
     try_again: {
-      rotate: [-2, 2, -2],
-      y: [0, -2, 0],
-      transition: { duration: 1.4, ease: 'easeInOut' },
+      x: [0, -3, 3, -2, 2, 0],
+      transition: { duration: 0.5, ease: 'easeInOut' },
     },
     celebrating: {
-      y: [0, -16, 0],
-      rotate: [-5, 5, -5],
-      scale: [1, 1.12, 1],
-      transition: { duration: 0.6, repeat: 3, ease: 'easeOut' },
+      y: [0, -14, 0],
+      rotate: [0, -6, 6, 0],
+      scale: [1, 1.1, 1],
+      transition: { duration: 0.8, repeat: Infinity, repeatDelay: 1.2, ease: 'easeInOut' },
     },
     high_five: {
-      scale: 1.05,
-      y: -3,
-      transition: { duration: 0.4, ease: 'easeOut' },
+      scale: [1, 1.04, 1],
+      y: [0, -2, 0],
+      transition: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' },
     },
     speaking: {
-      y: [0, -2, 0],
-      transition: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' },
+      scaleY: [1, 1.02, 1],
+      transition: { duration: 0.4, repeat: Infinity, ease: 'easeInOut' },
     },
   };
 
   const isTeaching = currentState === 'teaching' || showPointerStick;
-  const isListening = currentState === 'listening' || isListeningStore;
   const isHighFive = currentState === 'high_five' || isHighFiveReadyStore;
 
   return (
     <motion.div
       ref={containerRef}
-      onClick={handleClick}
-      whileHover={interactive ? { scale: 1.04 } : undefined}
-      whileTap={interactive ? { scale: 0.95 } : undefined}
-      className={`relative inline-flex items-center justify-center select-none ${interactive ? 'cursor-pointer' : ''} ${sizeClasses[size]} ${className}`}
       variants={bodyVariants}
       animate={currentState}
-      title={interactive ? "Pip the Learning Companion • Tap to interact!" : undefined}
+      onClick={handleClick}
+      onMouseEnter={() => setShowWardrobeQuickBtn(true)}
+      onMouseLeave={() => setShowWardrobeQuickBtn(false)}
+      className={`relative select-none inline-block ${interactive ? 'cursor-pointer' : 'cursor-default'} ${sizeClasses[size]} ${className}`}
+      style={{ filter: 'drop-shadow(0 6px 12px rgba(109, 40, 217, 0.18))' }}
     >
-      {/* ── HIGH-FIVE IMPACT BURST ── */}
+      {/* Tap Floating Emojis */}
       <AnimatePresence>
-        {highFiveImpact && (
-          <motion.div
-            initial={{ scale: 0, opacity: 1 }}
-            animate={{ scale: 2, opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="absolute z-50 pointer-events-none text-4xl filter drop-shadow-lg"
-          >
-            ✨💥✋⭐
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── FLOATING TAP ICONS ── */}
-      <AnimatePresence>
-        {tapEffect.map((p) => (
+        {tapEffect.map((eff) => (
           <motion.span
-            key={p.id}
-            initial={{ opacity: 1, y: 0, scale: 0.5 }}
-            animate={{ opacity: 0, y: -45, scale: 1.4 }}
+            key={eff.id}
+            initial={{ opacity: 1, y: 0, scale: 0.6 }}
+            animate={{ opacity: 0, y: -45, scale: 1.4, x: (Math.random() - 0.5) * 30 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, ease: 'easeOut' }}
-            className="absolute text-2xl pointer-events-none z-50 select-none filter drop-shadow-md"
-            style={{ top: '10%' }}
+            transition={{ duration: 1.0, ease: 'easeOut' }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 text-2xl pointer-events-none z-30"
           >
-            {p.icon}
+            {eff.icon}
           </motion.span>
         ))}
       </AnimatePresence>
 
-      {/* ── LISTENING ACOUSTIC WAVE AURA ── */}
-      {isListening && (
-        <motion.div
-          animate={{ scale: [1, 1.22, 1], opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute inset-0 rounded-full border-4 border-indigo-400/60 bg-indigo-400/10 pointer-events-none z-0 filter blur-[2px]"
-        />
-      )}
+      {/* High-Five Golden Starburst */}
+      <AnimatePresence>
+        {highFiveImpact && (
+          <motion.div
+            initial={{ scale: 0, opacity: 1, rotate: 0 }}
+            animate={{ scale: 2.2, opacity: 0, rotate: 90 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: 'easeOut' }}
+            className="absolute -top-4 -right-4 z-40 pointer-events-none"
+          >
+            <Sparkles className="w-16 h-16 text-amber-400 fill-amber-300 filter drop-shadow-lg" />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg overflow-visible relative z-10">
+      {/* Main Vector SVG */}
+      <svg
+        viewBox="-40 -20 220 180"
+        className="w-full h-full overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
-          <linearGradient id="pipBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#A78BFA" />
-            <stop offset="50%" stopColor="#8B5CF6" />
-            <stop offset="100%" stopColor="#6D28D9" />
+          <linearGradient id="pipBodyGrad" x1="20" y1="20" x2="120" y2="130" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#A78BFA" />
+            <stop offset="0.6" stopColor="#8B5CF6" />
+            <stop offset="1" stopColor="#7C3AED" />
           </linearGradient>
-          <linearGradient id="pipCoatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="70%" stopColor="#F1F5F9" />
-            <stop offset="100%" stopColor="#CBD5E1" />
-          </linearGradient>
-          <linearGradient id="pipDetectiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FBBF24" />
-            <stop offset="40%" stopColor="#D97706" />
-            <stop offset="100%" stopColor="#92400E" />
-          </linearGradient>
-          <linearGradient id="pipAstroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38BDF8" />
-            <stop offset="60%" stopColor="#0284C7" />
-            <stop offset="100%" stopColor="#0369A1" />
-          </linearGradient>
-          <linearGradient id="pipParkaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FB7185" />
-            <stop offset="50%" stopColor="#E11D48" />
-            <stop offset="100%" stopColor="#9F1239" />
-          </linearGradient>
-          <linearGradient id="pipGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FEF08A" />
-            <stop offset="50%" stopColor="#EAB308" />
-            <stop offset="100%" stopColor="#A16207" />
-          </linearGradient>
-          <linearGradient id="pipSafariGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#A3E635" />
-            <stop offset="60%" stopColor="#65A30D" />
-            <stop offset="100%" stopColor="#365314" />
-          </linearGradient>
-          <radialGradient id="pipCheekGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#F472B6" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#F472B6" stopOpacity="0" />
+
+          <radialGradient id="pipBellyGrad" cx="70" cy="85" r="45" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#EDE9FE" />
+            <stop offset="0.8" stopColor="#DDD6FE" />
+            <stop offset="1" stopColor="#C4B5FD" />
           </radialGradient>
-          <radialGradient id="pipGogglesGrad" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.85" />
-            <stop offset="60%" stopColor="#38BDF8" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#0284C7" stopOpacity="0.75" />
+
+          <radialGradient id="pipCheekGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 0) scale(7 4.5)">
+            <stop stopColor="#F472B6" stopOpacity="0.75" />
+            <stop offset="1" stopColor="#F472B6" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="pipVisorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#22D3EE" />
-            <stop offset="100%" stopColor="#0284C7" />
+
+          <linearGradient id="pipCoatGrad" x1="30" y1="80" x2="110" y2="130" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FFFFFF" />
+            <stop offset="0.9" stopColor="#F1F5F9" />
+            <stop offset="1" stopColor="#E2E8F0" />
+          </linearGradient>
+
+          <linearGradient id="pipGogglesGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#38BDF8" stopOpacity="0.6" />
+            <stop offset="1" stopColor="#0284C7" stopOpacity="0.85" />
+          </linearGradient>
+
+          <linearGradient id="pipVisorGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#F43F5E" stopOpacity="0.8" />
+            <stop offset="1" stopColor="#FB7185" stopOpacity="0.9" />
+          </linearGradient>
+
+          <linearGradient id="pipGoldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#FDE047" />
+            <stop offset="1" stopColor="#EAB308" />
+          </linearGradient>
+
+          <linearGradient id="pipParkaGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#F43F5E" />
+            <stop offset="1" stopColor="#BE123C" />
+          </linearGradient>
+
+          <linearGradient id="pipAstroGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#E0F2FE" />
+            <stop offset="1" stopColor="#0284C7" />
+          </linearGradient>
+
+          <linearGradient id="pipDetectiveGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#D97706" />
+            <stop offset="1" stopColor="#92400E" />
+          </linearGradient>
+
+          <linearGradient id="pipSafariGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#65A30D" />
+            <stop offset="1" stopColor="#3F6212" />
+          </linearGradient>
+
+          <linearGradient id="pipScubaGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#06B6D4" />
+            <stop offset="1" stopColor="#0891B2" />
+          </linearGradient>
+
+          <linearGradient id="pipRoyalGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#7C3AED" />
+            <stop offset="1" stopColor="#4C1D95" />
+          </linearGradient>
+
+          <linearGradient id="pipHeroGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#EF4444" />
+            <stop offset="1" stopColor="#991B1B" />
+          </linearGradient>
+
+          <linearGradient id="pipRaincoatGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#FACC15" />
+            <stop offset="1" stopColor="#EAB308" />
+          </linearGradient>
+
+          <linearGradient id="pipCyberGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#0F172A" />
+            <stop offset="1" stopColor="#1E293B" />
+          </linearGradient>
+
+          <linearGradient id="pipNinjaGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="#18181B" />
+            <stop offset="1" stopColor="#27272A" />
           </linearGradient>
         </defs>
 
-        {/* ── LAYER 1: GROUND SHADOW ── */}
-        <ellipse cx="70" cy="128" rx="42" ry="7" fill="#000000" fillOpacity="0.14" />
-
-        {/* ── LAYER 2: EXPRESSIVE EARS (ATTENTIVE LISTENING / PERKED) ── */}
-        {/* Left Ear */}
+        {/* ── LAYER 1: EARS ── */}
         <motion.g
           animate={
-            isListening
-              ? { rotate: 18, x: 4, y: 2 }
+            currentState === 'listening'
+              ? { rotate: [-10, 10, -10] }
               : currentState === 'curious'
-              ? { rotate: 12, y: -2 }
-              : currentState === 'celebrating' || currentState === 'correct'
-              ? { rotate: [-4, 8, -4], y: -4 }
-              : currentState === 'thinking'
-              ? { rotate: -8, y: 1 }
-              : { rotate: 0, x: 0, y: 0 }
+              ? { rotate: -8, y: -2 }
+              : { rotate: [-2, 2, -2] }
           }
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          style={{ transformOrigin: '32px 30px' }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ transformOrigin: '32px 36px' }}
         >
-          <path d="M30 36 C20 22 28 8 36 18 C40 24 38 32 30 36 Z" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2.5" />
-          <path d="M30 30 C25 20 30 14 34 20" stroke="#C4B5FD" strokeWidth="2" strokeLinecap="round" />
+          <path d="M32 36 C18 16 22 2 36 12 C44 18 42 30 38 38 Z" fill="#7C3AED" stroke="#4C1D95" strokeWidth="2.5" />
+          <path d="M32 30 C25 18 27 10 35 16 C39 20 38 27 35 32 Z" fill="#DDD6FE" />
         </motion.g>
 
-        {/* Right Ear */}
         <motion.g
           animate={
-            isListening
-              ? { rotate: -18, x: -4, y: 2 }
+            currentState === 'listening'
+              ? { rotate: [10, -10, 10] }
               : currentState === 'curious'
-              ? { rotate: -4, y: 1 }
-              : currentState === 'celebrating' || currentState === 'correct'
-              ? { rotate: [4, -8, 4], y: -4 }
-              : currentState === 'thinking'
               ? { rotate: 12, y: -2 }
-              : { rotate: 0, x: 0, y: 0 }
+              : { rotate: [2, -2, 2] }
           }
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          style={{ transformOrigin: '108px 30px' }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ transformOrigin: '108px 36px' }}
         >
-          <path d="M110 36 C120 22 112 8 104 18 C100 24 102 32 110 36 Z" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="2.5" />
-          <path d="M110 30 C115 20 110 14 106 20" stroke="#C4B5FD" strokeWidth="2" strokeLinecap="round" />
+          <path d="M108 36 C122 16 118 2 104 12 C96 18 98 30 102 38 Z" fill="#7C3AED" stroke="#4C1D95" strokeWidth="2.5" />
+          <path d="M108 30 C115 18 113 10 105 16 C101 20 102 27 105 32 Z" fill="#DDD6FE" />
         </motion.g>
 
-        {/* ── LAYER 3: ROUND MASCOT BODY & HEAD ── */}
+        {/* ── LAYER 2: BODY & BELLY ── */}
         <path
-          d="M70 18 C38 18 20 44 20 76 C20 108 40 124 70 124 C100 124 120 108 120 76 C120 44 102 18 70 18 Z"
+          d="M20 72 C20 34 42 16 70 16 C98 16 120 34 120 72 C120 106 98 128 70 128 C42 128 20 106 20 72 Z"
           fill="url(#pipBodyGrad)"
           stroke="#4C1D95"
           strokeWidth="3.5"
         />
 
-        {/* Antenna Spark */}
-        <path d="M70 18 Q72 8 76 6" stroke="#5B21B6" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="77" cy="6" r="3.5" fill="#FBBF24" stroke="#D97706" strokeWidth="1.5" />
+        <ellipse cx="70" cy="85" rx="36" ry="32" fill="url(#pipBellyGrad)" />
 
-        {/* ── LAYER 4: PROPERLY FITTED TAILORED WARDROBE ── */}
+        {/* Feet / Paws */}
+        <ellipse cx="48" cy="126" rx="14" ry="7" fill="#6D28D9" stroke="#4C1D95" strokeWidth="2.5" />
+        <ellipse cx="92" cy="126" rx="14" ry="7" fill="#6D28D9" stroke="#4C1D95" strokeWidth="2.5" />
+
+        {/* ── LAYER 3 & 4: 12 HIGH-FIDELITY FORM-FITTED OUTFITS ── */}
         {currentOutfit === 'lab-coat' && (
           <g>
             <path
-              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              d="M24 80 C24 112 40 126 70 126 C100 126 116 112 116 80 C98 86 86 88 70 88 C54 88 42 86 24 80 Z"
               fill="url(#pipCoatGrad)"
-              stroke="#334155"
+              stroke="#0284C7"
               strokeWidth="2.5"
             />
-            {/* Curved Notched Lapels */}
-            <path d="M44 86 L56 102 L70 93 L84 102 L96 86" stroke="#334155" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="#FFFFFF" />
-            <path d="M70 93 L70 123" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
-            <circle cx="70" cy="104" r="2.2" fill="#F59E0B" />
-            <circle cx="70" cy="114" r="2.2" fill="#F59E0B" />
-            {/* Pocket with Pen */}
-            <rect x="86" y="98" width="14" height="12" rx="3" fill="#FFFFFF" stroke="#475569" strokeWidth="1.5" />
-            <rect x="90" y="93" width="3" height="7" rx="1.5" fill="#10B981" />
+            <path d="M42 82 L54 96 L70 88 L86 96 L98 82" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="#E2E8F0" />
+            <circle cx="70" cy="100" r="2.5" fill="#38BDF8" />
+            <circle cx="70" cy="112" r="2.5" fill="#38BDF8" />
+            <rect x="84" y="96" width="14" height="12" rx="2" fill="#E2E8F0" stroke="#0284C7" strokeWidth="1.5" />
+            <line x1="88" y1="94" x2="88" y2="100" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="93" y1="94" x2="93" y2="100" stroke="#3B82F6" strokeWidth="1.5" strokeLinecap="round" />
           </g>
         )}
 
         {currentOutfit === 'detective' && (
           <g>
-            {/* Natural Form-Fitted Double-Breasted Trenchcoat */}
             <path
               d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
               fill="url(#pipDetectiveGrad)"
               stroke="#78350F"
               strokeWidth="2.5"
             />
-            {/* Dark Storm Lapels */}
             <path d="M42 86 L54 100 L70 92 L86 100 L98 86" stroke="#78350F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="#92400E" />
-            {/* Double-Breasted Gold Buttons */}
             <circle cx="62" cy="102" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
             <circle cx="78" cy="102" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
             <circle cx="62" cy="112" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
             <circle cx="78" cy="112" r="2.2" fill="#FDE047" stroke="#78350F" strokeWidth="1" />
-            {/* Waist Belt with Brass Buckle */}
             <path d="M30 116 C55 120 85 120 110 116" stroke="#78350F" strokeWidth="4.5" strokeLinecap="round" fill="none" />
             <rect x="64" y="114" width="12" height="7" rx="2" fill="#FDE047" stroke="#78350F" strokeWidth="1.5" />
           </g>
@@ -425,7 +458,6 @@ export const Pip: React.FC<PipProps> = ({
               stroke="#075985"
               strokeWidth="2.5"
             />
-            {/* Chest Telemetry Computer */}
             <rect x="52" y="94" width="36" height="20" rx="5" fill="#0F172A" stroke="#38BDF8" strokeWidth="2" />
             <circle cx="60" cy="104" r="3" fill="#22C55E" className="animate-pulse" />
             <circle cx="70" cy="104" r="3" fill="#38BDF8" />
@@ -441,7 +473,6 @@ export const Pip: React.FC<PipProps> = ({
               stroke="#881337"
               strokeWidth="2.5"
             />
-            {/* Thick Fluffy Fleece Collar */}
             <path d="M34 86 C55 96 85 96 106 86" stroke="#FFFFFF" strokeWidth="8" strokeLinecap="round" />
             <circle cx="70" cy="104" r="3" fill="#FEF08A" />
             <circle cx="70" cy="114" r="3" fill="#FEF08A" />
@@ -475,26 +506,105 @@ export const Pip: React.FC<PipProps> = ({
           </g>
         )}
 
+        {currentOutfit === 'scuba-suit' && (
+          <g>
+            <path
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              fill="url(#pipScubaGrad)"
+              stroke="#155E75"
+              strokeWidth="2.5"
+            />
+            {/* Center Neon Oxygen Strip */}
+            <path d="M70 88 L70 124" stroke="#FACC15" strokeWidth="4" strokeLinecap="round" />
+            <circle cx="50" cy="104" r="5" fill="#0E7490" stroke="#155E75" strokeWidth="1.5" />
+            <circle cx="90" cy="104" r="5" fill="#0E7490" stroke="#155E75" strokeWidth="1.5" />
+          </g>
+        )}
+
+        {currentOutfit === 'royal-cape' && (
+          <g>
+            <path
+              d="M22 84 C22 116 40 128 70 128 C100 128 118 116 118 84 C98 88 86 90 70 90 C54 90 42 88 22 84 Z"
+              fill="url(#pipRoyalGrad)"
+              stroke="#FDE047"
+              strokeWidth="3"
+            />
+            {/* Gold Trim Collar & Ruby Gem */}
+            <path d="M32 86 C55 96 85 96 108 86" stroke="#FDE047" strokeWidth="4.5" strokeLinecap="round" />
+            <circle cx="70" cy="94" r="5" fill="#EF4444" stroke="#FDE047" strokeWidth="1.5" />
+          </g>
+        )}
+
+        {currentOutfit === 'superhero' && (
+          <g>
+            <path
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              fill="url(#pipHeroGrad)"
+              stroke="#991B1B"
+              strokeWidth="2.5"
+            />
+            {/* Golden Lightning Crest */}
+            <polygon points="72,92 64,104 71,104 67,118 77,102 70,102" fill="#FDE047" stroke="#CA8A04" strokeWidth="1" />
+          </g>
+        )}
+
+        {currentOutfit === 'raincoat-yellow' && (
+          <g>
+            <path
+              d="M24 80 C24 112 40 126 70 126 C100 126 116 112 116 80 C98 86 86 88 70 88 C54 88 42 86 24 80 Z"
+              fill="url(#pipRaincoatGrad)"
+              stroke="#CA8A04"
+              strokeWidth="2.5"
+            />
+            <path d="M70 88 L70 126" stroke="#CA8A04" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="62" cy="102" r="3" fill="#1E293B" />
+            <circle cx="62" cy="114" r="3" fill="#1E293B" />
+          </g>
+        )}
+
+        {currentOutfit === 'cyber-armor' && (
+          <g>
+            <path
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              fill="url(#pipCyberGrad)"
+              stroke="#38BDF8"
+              strokeWidth="2.5"
+            />
+            {/* Glowing Cyan Arc Reactor */}
+            <circle cx="70" cy="104" r="7" fill="#0284C7" stroke="#38BDF8" strokeWidth="2" className="animate-pulse" />
+            <circle cx="70" cy="104" r="3" fill="#E0F2FE" />
+          </g>
+        )}
+
+        {currentOutfit === 'ninja-gi' && (
+          <g>
+            <path
+              d="M26 84 C26 112 42 124 70 124 C98 124 114 112 114 84 C98 88 86 90 70 90 C54 90 42 88 26 84 Z"
+              fill="url(#pipNinjaGrad)"
+              stroke="#DC2626"
+              strokeWidth="2.5"
+            />
+            {/* Red Ninja Sash */}
+            <path d="M30 114 C55 118 85 118 110 114" stroke="#DC2626" strokeWidth="6" strokeLinecap="round" />
+          </g>
+        )}
+
         {/* Rosy Cheeks */}
         <ellipse cx="44" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
         <ellipse cx="96" cy="74" rx="7" ry="4.5" fill="url(#pipCheekGrad)" />
 
-        {/* ── LAYER 5: EYES & PUPILS (INTELLIGENT CURSOR TRACKING) ── */}
+        {/* ── LAYER 5: EYES & PUPILS ── */}
         {!isBlinking ? (
           <g>
-            {/* Left Eye White Base */}
+            {/* Left Eye */}
             <circle cx="52" cy="64" r="9.5" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
-            {/* Left Moving Pupil */}
             <circle cx={52 + eyeOffset.x} cy={64 + eyeOffset.y} r="6" fill="#1E1B4B" />
-            {/* Reflections */}
             <circle cx={54 + eyeOffset.x * 0.8} cy={62 + eyeOffset.y * 0.8} r="2.2" fill="#FFFFFF" />
             <circle cx={50 + eyeOffset.x * 0.8} cy={66 + eyeOffset.y * 0.8} r="1.2" fill="#FFFFFF" />
 
-            {/* Right Eye White Base */}
+            {/* Right Eye */}
             <circle cx="88" cy="64" r="9.5" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="1.5" />
-            {/* Right Moving Pupil */}
             <circle cx={88 + eyeOffset.x} cy={64 + eyeOffset.y} r="6" fill="#1E1B4B" />
-            {/* Reflections */}
             <circle cx={90 + eyeOffset.x * 0.8} cy={62 + eyeOffset.y * 0.8} r="2.2" fill="#FFFFFF" />
             <circle cx={86 + eyeOffset.x * 0.8} cy={66 + eyeOffset.y * 0.8} r="1.2" fill="#FFFFFF" />
           </g>
@@ -505,7 +615,7 @@ export const Pip: React.FC<PipProps> = ({
           </g>
         )}
 
-        {/* ── LAYER 6: MOUTH & SPEECH (CALM SMILE WHEN IDLE, MOVES ONLY WHEN SPEAKING) ── */}
+        {/* ── LAYER 6: MOUTH ── */}
         {currentState === 'speaking' && isSpeakingStore ? (
           mouthViseme === 'open-wide' ? (
             <ellipse cx="70" cy="78" rx="7" ry="5.5" fill="#BE185D" stroke="#1E1B4B" strokeWidth="2" />
@@ -526,7 +636,7 @@ export const Pip: React.FC<PipProps> = ({
           <path d="M63 75 Q70 82 77 75" stroke="#1E1B4B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
         )}
 
-        {/* ── LAYER 7: HEADWEAR & GLASSES ── */}
+        {/* ── LAYER 7: 11 ALIGNED HEADWEAR & ACCESSORIES ── */}
         {currentHeadwear === 'goggles' && (
           <g>
             <path d="M22 54 C35 50 105 50 118 54" stroke="#0369A1" strokeWidth="3.5" strokeLinecap="round" />
@@ -540,7 +650,6 @@ export const Pip: React.FC<PipProps> = ({
 
         {currentHeadwear === 'party-hat' && (
           <g>
-            {/* Properly Fitted Party Hat Sitting Snugly on Crown */}
             <polygon points="52,26 70,2 88,26" fill="#EC4899" stroke="#BE185D" strokeWidth="2" />
             <path d="M57,20 L83,20" stroke="#FBBF24" strokeWidth="3" />
             <path d="M63,12 L77,12" stroke="#38BDF8" strokeWidth="3" />
@@ -589,6 +698,41 @@ export const Pip: React.FC<PipProps> = ({
           </g>
         )}
 
+        {currentHeadwear === 'snorkel' && (
+          <g>
+            <rect x="36" y="48" width="68" height="24" rx="8" fill="url(#pipGogglesGrad)" stroke="#0E7490" strokeWidth="2.5" />
+            <path d="M104 60 C114 60 118 45 118 20 C118 10 110 6 104 6" stroke="#FACC15" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <ellipse cx="104" cy="6" rx="4" ry="2" fill="#CA8A04" />
+          </g>
+        )}
+
+        {currentHeadwear === 'astronaut-helmet' && (
+          <g>
+            <ellipse cx="70" cy="60" rx="44" ry="40" fill="url(#pipVisorGrad)" stroke="#0284C7" strokeWidth="3" opacity="0.85" />
+            <ellipse cx="56" cy="48" rx="14" ry="6" fill="#FFFFFF" opacity="0.6" />
+          </g>
+        )}
+
+        {currentHeadwear === 'fur-hat' && (
+          <g>
+            <path d="M38 28 C38 10 52 4 70 4 C88 4 102 10 102 28 Z" fill="#78350F" stroke="#451A03" strokeWidth="2.5" />
+            <rect x="34" y="24" width="72" height="10" rx="4" fill="#FDE68A" stroke="#B45309" strokeWidth="1.5" />
+            {/* Ear Flaps */}
+            <rect x="34" y="32" width="10" height="16" rx="3" fill="#FDE68A" />
+            <rect x="96" y="32" width="10" height="16" rx="3" fill="#FDE68A" />
+          </g>
+        )}
+
+        {currentHeadwear === 'ninja-headband' && (
+          <g>
+            <rect x="28" y="34" width="84" height="12" rx="3" fill="#DC2626" stroke="#991B1B" strokeWidth="2" />
+            <rect x="62" y="36" width="16" height="8" rx="2" fill="#E2E8F0" stroke="#64748B" strokeWidth="1" />
+            {/* Flying Tie Tails */}
+            <path d="M112 40 C122 36 130 46 136 42" stroke="#DC2626" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <path d="M112 44 C120 42 126 54 134 50" stroke="#DC2626" strokeWidth="4" strokeLinecap="round" fill="none" />
+          </g>
+        )}
+
         {/* ── LAYER 8: TEACHER POINTER WAND ── */}
         {isTeaching && (
           <motion.g
@@ -622,6 +766,23 @@ export const Pip: React.FC<PipProps> = ({
           </motion.g>
         )}
       </svg>
+
+      {/* Floating Wardrobe Quick Customizer Button */}
+      {showWardrobeQuickBtn && onOpenWardrobe && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenWardrobe();
+          }}
+          className="absolute -bottom-2 -right-2 p-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full shadow-lg border-2 border-white z-40 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+          title="Customize Pip's Outfit & Hats!"
+        >
+          <Shirt className="w-3.5 h-3.5" />
+        </motion.button>
+      )}
     </motion.div>
   );
 };

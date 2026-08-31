@@ -9,6 +9,7 @@ import { useAudioStore } from '@/stores/audioStore';
 import { usePipStore } from '@/stores/pipStore';
 import { useFXStore } from '@/stores/fxStore';
 import { Pip } from '@/components/pip/Pip';
+import { PipWardrobeShopModal, PIP_OUTFITS, PIP_HEADWEAR } from '@/components/wardrobe/PipWardrobeShopModal';
 import { missions } from '@/data/missions';
 import { materials } from '@/data/materials';
 import { sounds } from '@/lib/sounds';
@@ -32,12 +33,19 @@ import {
   ExternalLink,
   PlusCircle,
   Gem,
+  Droplets,
+  Home,
+  Leaf,
+  FlaskConical,
+  Wand2,
 } from 'lucide-react';
 
 export const DevDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
   if (location.pathname === '/teacher-studio') return null;
 
   const pipStoreState = usePipStore((s) => s.state);
@@ -50,6 +58,10 @@ export const DevDrawer: React.FC = () => {
     resetProgress,
     credits,
     addCredits,
+    equippedOutfit,
+    equippedHeadwear,
+    equipOutfit,
+    equipHeadwear,
     unlockedOutfits,
     unlockedHeadwear,
     unlockItem,
@@ -61,7 +73,7 @@ export const DevDrawer: React.FC = () => {
   const { child, setChild, pin, setPin, isSetUp, completeSetup, reset: resetParent } = useParentStore();
   const { isSfxMuted, isTtsMuted, toggleSfx, toggleTts } = useAudioStore();
 
-  const handleUnlockAll = () => {
+  const handleUnlockAllCurriculum = () => {
     sounds.fanfare();
     missions.forEach((m) => completeMission(m.id));
     materials.forEach((mat) => {
@@ -77,10 +89,8 @@ export const DevDrawer: React.FC = () => {
 
   const handleUnlockAllSkins = () => {
     sounds.fanfare();
-    const allOutfits = ['lab-coat', 'astronaut', 'winter-parka', 'gold-champion', 'detective'];
-    const allHats = ['goggles', 'visor', 'grad-cap', 'crown', 'party-hat'];
-    allOutfits.forEach((id) => unlockItem('outfit', id, 0));
-    allHats.forEach((id) => unlockItem('headwear', id, 0));
+    PIP_OUTFITS.forEach((o) => unlockItem('outfit', o.id, 0));
+    PIP_HEADWEAR.forEach((h) => unlockItem('headwear', h.id, 0));
     addCredits(500);
   };
 
@@ -94,7 +104,7 @@ export const DevDrawer: React.FC = () => {
     setChild({
       name: 'Aarav',
       grade: '5',
-      interests: ['space', 'robotics', 'science', 'inventions'],
+      interests: ['space', 'robotics', 'science', 'inventions', 'water'],
       avatar: '🧪',
     });
     setPin('1234');
@@ -108,400 +118,311 @@ export const DevDrawer: React.FC = () => {
     resetParent();
   };
 
-  const handleTestTts = (text: string) => {
-    voiceAssistant.speak(text);
-  };
-
   return (
     <>
-      {/* ── Collapsed Floating "DEV" Circle Badge ── */}
-      {!isOpen && (
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            sounds.pop();
-            setIsOpen(true);
-          }}
-          className="fixed bottom-6 right-6 z-[99990] w-12 h-12 rounded-full bg-slate-950 text-amber-400 border-2 border-amber-400 shadow-2xl flex flex-col items-center justify-center font-black text-[10px] uppercase tracking-wider cursor-pointer hover:bg-slate-900 transition-all ring-4 ring-slate-900/40"
-          title="Open Developer Testing Super-Hacks & Currency Cheats"
-        >
-          <Code className="w-4 h-4" />
-          <span>DEV</span>
-        </motion.button>
-      )}
+      {/* Dev Toggle Floating Button (Bottom Right) */}
+      <button
+        onClick={() => {
+          sounds.pop();
+          setIsOpen(true);
+        }}
+        className="fixed bottom-4 right-4 z-40 p-2.5 bg-slate-950/90 hover:bg-slate-900 text-amber-400 border-2 border-amber-400/80 rounded-2xl shadow-xl flex items-center gap-1.5 font-mono text-xs font-black cursor-pointer hover:scale-105 active:scale-95 transition-all"
+        title="Open Developer Super-Hacks Drawer"
+      >
+        <Code className="w-4 h-4 text-amber-400" />
+        <span>DEV</span>
+      </button>
 
-      {/* ── Slide-Out Super Hacks Drawer ── */}
-      {typeof document !== 'undefined' &&
+      {/* Wardrobe Modal */}
+      <PipWardrobeShopModal
+        isOpen={isWardrobeOpen}
+        onClose={() => setIsWardrobeOpen(false)}
+      />
+
+      {/* Slide-in Dev Drawer Portal */}
+      {isOpen &&
         createPortal(
-          <AnimatePresence>
-            {isOpen && (
-              <div className="fixed inset-0 z-[100000] flex justify-end">
-                {/* Backdrop */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.5 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setIsOpen(false)}
-                  className="fixed inset-0 bg-black/60 backdrop-blur-xs"
-                />
+          <div className="fixed inset-0 z-50 overflow-hidden font-sans select-none">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs"
+            />
 
-                {/* Panel */}
-                <motion.div
-                  initial={{ x: '100%' }}
-                  animate={{ x: 0 }}
-                  exit={{ x: '100%' }}
-                  transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-                  className="relative z-10 w-full max-w-md bg-slate-950 text-slate-100 h-full overflow-y-auto border-l-4 border-amber-400 p-6 flex flex-col font-sans shadow-2xl"
-                >
-                  {/* Header */}
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
-                    <div className="flex items-center gap-2">
-                      <Code className="w-6 h-6 text-amber-400" />
-                      <h2
-                        className="text-xl font-black text-amber-400 tracking-tight"
-                        style={{ fontFamily: 'Nunito, sans-serif' }}
-                      >
-                        Developer Super-Hacks ⚡
-                      </h2>
-                    </div>
-                    <button
-                      onClick={() => setIsOpen(false)}
-                      className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
-                    >
-                      <X className="w-5 h-5 stroke-[3]" />
-                    </button>
+            <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+                className="w-screen max-w-md bg-slate-950 text-slate-100 h-full overflow-y-auto border-l-4 border-amber-400 p-6 flex flex-col shadow-2xl"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
+                  <div className="flex items-center gap-2">
+                    <Code className="w-5 h-5 text-amber-400" />
+                    <h2 className="text-lg font-black text-amber-400" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      Developer Super-Hacks ⚡
+                    </h2>
                   </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
 
-                  <div className="space-y-6 flex-1 text-xs font-bold">
-                    {/* ── SECTION 1: CURRENCY & WALLET CHEATS ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-amber-300 font-black uppercase tracking-wider flex items-center gap-1.5">
-                          <Coins className="w-4 h-4 text-amber-400" />
-                          <span>PolyCredits Cheats</span>
-                        </span>
-                        <span className="px-2.5 py-0.5 bg-amber-400/20 text-amber-300 rounded-full font-black">
-                          {credits} 🪙
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => handleAddCredits(100)}
-                          className="py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 active:scale-95"
-                        >
-                          <PlusCircle className="w-3.5 h-3.5" />
-                          <span>+100 Coins 🪙</span>
-                        </button>
-
-                        <button
-                          onClick={() => handleAddCredits(9999)}
-                          className="py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 shadow-md active:scale-95"
-                        >
-                          <Gem className="w-3.5 h-3.5" />
-                          <span>Unlimited 9999 💎</span>
-                        </button>
-                      </div>
+                <div className="space-y-5 flex-1 text-xs font-bold">
+                  {/* ── 1. WALLET & COINS ── */}
+                  <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-amber-300 font-black uppercase flex items-center gap-1.5">
+                        <Coins className="w-4 h-4 text-amber-400" />
+                        <span>Science Coins Wallet</span>
+                      </span>
+                      <span className="px-2.5 py-0.5 bg-amber-400/20 text-amber-300 rounded-full font-black">
+                        {credits} 🪙
+                      </span>
                     </div>
 
-                    {/* ── SECTION 2: WARDROBE & SKINS UNLOCK ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-pink-500/40">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-pink-300 font-black uppercase tracking-wider flex items-center gap-1.5">
-                          <Shirt className="w-4 h-4 text-pink-400" />
-                          <span>Pip Skins & Wardrobe</span>
-                        </span>
-                        <span className="text-[10px] text-pink-400">
-                          {unlockedOutfits.length} Outfits / {unlockedHeadwear.length} Hats
-                        </span>
-                      </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => handleAddCredits(100)}
+                        className="py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                      >
+                        <PlusCircle className="w-3.5 h-3.5" />
+                        <span>+100 Coins 🪙</span>
+                      </button>
 
                       <button
-                        onClick={handleUnlockAllSkins}
-                        className="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md active:scale-95"
+                        onClick={() => handleAddCredits(9999)}
+                        className="py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 shadow-md active:scale-95"
                       >
-                        <Sparkles className="w-4 h-4" />
-                        <span>Unlock All 10 Outfits & Hats 🥼👑</span>
+                        <Gem className="w-3.5 h-3.5" />
+                        <span>Max 9999 💎</span>
                       </button>
                     </div>
+                  </div>
 
-                    {/* ── SECTION 3: MASCOT STUDIO PLAYGROUND & STATE MACHINE TESTER ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-violet-500/40">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-violet-300 font-black uppercase tracking-wider flex items-center gap-1.5">
-                          <Sparkles className="w-4 h-4 text-violet-400" />
-                          <span>Mascot State Studio</span>
-                        </span>
-                        <span className="px-2 py-0.5 bg-violet-400/20 text-violet-300 rounded-full text-[10px] font-black uppercase">
-                          State: {pipStoreState}
-                        </span>
-                      </div>
+                  {/* ── 2. WARDROBE & 12 SKINS UNLOCK ── */}
+                  <div className="bg-slate-900/90 p-4 rounded-2xl border border-pink-500/40 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-pink-300 font-black uppercase flex items-center gap-1.5">
+                        <Shirt className="w-4 h-4 text-pink-400" />
+                        <span>Mascot Wardrobe ({PIP_OUTFITS.length} Outfits)</span>
+                      </span>
+                      <span className="text-[10px] text-pink-400">
+                        {unlockedOutfits.length} Unlocked
+                      </span>
+                    </div>
 
-                      {/* Live Character Preview */}
-                      <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-center gap-4 mb-3">
-                        <Pip size="lg" interactive={true} />
-                        <div className="text-[11px] text-slate-400 font-medium">
-                          <p className="text-violet-300 font-bold">✨ Tap Pip to interact!</p>
-                          <p>Supports mouse cursor eyes & expressive ear mechanics.</p>
-                        </div>
-                      </div>
-
-                      {/* State Switcher Grid */}
-                      <div className="grid grid-cols-3 gap-1.5 mb-2">
-                        {[
-                          { id: 'idle', label: 'Idle 🧘' },
-                          { id: 'curious', label: 'Curious 🧐' },
-                          { id: 'teaching', label: 'Teaching 🪄' },
-                          { id: 'listening', label: 'Listening 👂' },
-                          { id: 'thinking', label: 'Thinking 🤔' },
-                          { id: 'correct', label: 'Correct 🎉' },
-                          { id: 'try_again', label: 'Try Again 💡' },
-                          { id: 'celebrating', label: 'Celebrate 🏆' },
-                          { id: 'high_five', label: 'High-Five ✋' },
-                        ].map((st) => (
-                          <button
-                            key={st.id}
-                            onClick={() => {
-                              sounds.pop();
-                              setPipState(st.id as any);
-                            }}
-                            className={`p-2 rounded-xl text-[11px] font-black border text-center transition-all cursor-pointer ${
-                              pipStoreState === st.id
-                                ? 'bg-violet-600 border-violet-400 text-white shadow-md'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
-                            }`}
-                          >
-                            {st.label}
-                          </button>
-                        ))}
-                      </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleUnlockAllSkins}
+                        className="flex-1 py-2 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md active:scale-95"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Unlock All 12 Outfits 🥼</span>
+                      </button>
 
                       <button
                         onClick={() => {
                           sounds.pop();
-                          pipSpeak("I am Pip, your science learning companion! Let's discover materials together!");
+                          setIsWardrobeOpen(true);
                         }}
-                        className="w-full py-2 bg-violet-900/60 hover:bg-violet-800 text-violet-200 border border-violet-700/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 text-[11px]"
+                        className="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-black cursor-pointer shadow-md"
                       >
-                        <span>Test Lip-Sync Speech 🗣️</span>
+                        Open Dressing Room ✨
                       </button>
                     </div>
 
-                    {/* ── SECTION 4: "TRY IT WITH ME" SPOTLIGHT CONTROLS ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
-                      <span className="text-amber-300 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
-                        <Compass className="w-4 h-4 text-amber-400" />
-                        <span>"Try It With Me" Spotlight Engine</span>
-                      </span>
-
-                      <div className="grid grid-cols-2 gap-2">
+                    {/* Quick Outfit Switcher Pills */}
+                    <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pt-1">
+                      {PIP_OUTFITS.map((o) => (
                         <button
+                          key={o.id}
                           onClick={() => {
                             sounds.sparkle();
-                            startTryWithMe();
-                            setIsOpen(false);
-                            navigate('/subjects');
+                            equipOutfit(o.id);
+                            voiceAssistant.speak(`Equipped ${o.name}!`);
                           }}
-                          className="py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1 shadow-md active:scale-95"
-                        >
-                          <Play className="w-3.5 h-3.5 fill-current" />
-                          <span>Launch Guide 🪄</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            sounds.pop();
-                            endTryWithMe();
-                          }}
-                          className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>End Guide</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* ── SECTION 4: CURRICULUM UNLOCKS & WARPS ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
-                      <span className="text-amber-400 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
-                        <Unlock className="w-4 h-4" />
-                        <span>Curriculum & Discoveries</span>
-                      </span>
-
-                      <div className="flex gap-2 mb-3">
-                        <button
-                          onClick={handleUnlockAll}
-                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
-                        >
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span>Unlock All 13 Missions</span>
-                        </button>
-
-                        <button
-                          onClick={handleResetAll}
-                          className="py-2.5 px-4 bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                          <span>Reset</span>
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-4 gap-1.5 max-h-40 overflow-y-auto pr-1">
-                        {missions.map((m) => (
-                          <button
-                            key={m.id}
-                            onClick={() => {
-                              sounds.pop();
-                              setIsOpen(false);
-                              navigate(`/chapter/3/mission/${m.number}`);
-                            }}
-                            className={`p-2 rounded-xl text-[11px] font-black border text-center transition-all cursor-pointer ${
-                              completedMissions.includes(m.id)
-                                ? 'bg-emerald-950/60 border-emerald-500/60 text-emerald-300'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
-                            }`}
-                          >
-                            M{m.number}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* ── SECTION 5: PARENT ACCOUNT QUICK-INJECT ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-violet-400 font-black uppercase tracking-wider flex items-center gap-1.5">
-                          <User className="w-4 h-4" />
-                          <span>Parent Profile State</span>
-                        </span>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
-                            isSetUp ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                          className={`px-2 py-1 rounded-lg text-[10px] font-black border flex items-center gap-1 cursor-pointer ${
+                            equippedOutfit === o.id
+                              ? 'bg-pink-600 border-pink-400 text-white'
+                              : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                           }`}
                         >
-                          {isSetUp ? 'Registered ✓' : 'Unregistered ❌'}
-                        </span>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <button
-                          onClick={handleQuickSetupChild}
-                          className="flex-1 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-black cursor-pointer shadow-md"
-                        >
-                          Auto-Register ("Aarav, Gr 5")
+                          <span>{o.icon}</span>
+                          <span className="truncate max-w-[80px]">{o.name.split(' ')[0]}</span>
                         </button>
-                        <button
-                          onClick={() => {
-                            sounds.pop();
-                            resetParent();
-                          }}
-                          className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-black cursor-pointer"
-                        >
-                          Clear ID
-                        </button>
-                      </div>
+                      ))}
                     </div>
+                  </div>
 
-                    {/* ── SECTION 6: AUDIO SOUNDBOARD TESTER ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
-                      <span className="text-slate-400 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
-                        <Volume2 className="w-4 h-4 text-amber-400" />
-                        <span>Audio Soundboard Tester</span>
-                      </span>
+                  {/* ── 3. CURRICULUM THEME WARP JUMPS ── */}
+                  <div className="bg-slate-900/90 p-4 rounded-2xl border border-indigo-500/40">
+                    <span className="text-indigo-300 font-black uppercase block mb-2.5 flex items-center gap-1.5">
+                      <Layers className="w-4 h-4 text-indigo-400" />
+                      <span>Instant Theme Warps</span>
+                    </span>
 
-                      <div className="grid grid-cols-3 gap-2 mb-3">
-                        <button
-                          onClick={() => sounds.sparkle()}
-                          className="p-2 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl text-center cursor-pointer"
-                        >
-                          ✨ Sparkle
-                        </button>
-                        <button
-                          onClick={() => sounds.fanfare()}
-                          className="p-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-xl text-center cursor-pointer"
-                        >
-                          🎺 Fanfare
-                        </button>
-                        <button
-                          onClick={() => sounds.boing()}
-                          className="p-2 bg-slate-800 hover:bg-slate-700 text-rose-300 rounded-xl text-center cursor-pointer"
-                        >
-                          ⚡ Boing
-                        </button>
-                      </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => {
+                          sounds.pop();
+                          setIsOpen(false);
+                          navigate('/theme/water/hub');
+                        }}
+                        className="p-2.5 bg-sky-950/80 hover:bg-sky-900 border border-sky-600/50 text-sky-300 rounded-xl text-left font-black cursor-pointer"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <Droplets className="w-3.5 h-3.5 text-sky-400" />
+                          <span>Water Theme 🌊</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 block mt-0.5">2D Water Cycle Sim</span>
+                      </button>
 
                       <button
-                        onClick={() => handleTestTts('Hello master scientist! Pip audio test is running perfectly!')}
-                        className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5"
+                        onClick={() => {
+                          sounds.pop();
+                          setIsOpen(false);
+                          navigate('/theme/shelter/hub');
+                        }}
+                        className="p-2.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-600/50 text-indigo-300 rounded-xl text-left font-black cursor-pointer"
                       >
-                        <Volume2 className="w-3.5 h-3.5 text-violet-400" />
-                        <span>Test Pip TTS Voice</span>
+                        <div className="flex items-center gap-1.5">
+                          <Home className="w-3.5 h-3.5 text-indigo-400" />
+                          <span>Shelter Hub 🏔️</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Ladakh & Everest</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          sounds.pop();
+                          setIsOpen(false);
+                          navigate('/theme/1/hub');
+                        }}
+                        className="p-2.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/50 text-emerald-300 rounded-xl text-left font-black cursor-pointer"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <Leaf className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Living World 🌿</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Super Senses</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          sounds.pop();
+                          setIsOpen(false);
+                          navigate('/chapter-hub');
+                        }}
+                        className="p-2.5 bg-amber-950/80 hover:bg-amber-900 border border-amber-600/50 text-amber-300 rounded-xl text-left font-black cursor-pointer"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <FlaskConical className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Materials Lab 🧪</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Synthetic Fibers</span>
                       </button>
                     </div>
 
-                    {/* ── SECTION 7: FULL-SCREEN ENVIRONMENTAL FX TESTER ── */}
-                    <div className="bg-slate-900/90 p-4 rounded-2xl border border-cyan-500/40">
-                      <span className="text-cyan-400 font-black uppercase tracking-wider block mb-3 flex items-center gap-1.5">
-                        <Sparkles className="w-4 h-4 text-cyan-400" />
-                        <span>Environmental FX Simulator</span>
+                    <button
+                      onClick={() => {
+                        sounds.pop();
+                        setIsOpen(false);
+                        navigate('/teacher-studio');
+                      }}
+                      className="w-full mt-2 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+                    >
+                      <Wand2 className="w-3.5 h-3.5" />
+                      <span>No-Code Teacher Studio 👩‍🏫</span>
+                    </button>
+                  </div>
+
+                  {/* ── 4. MASCOT STATE STUDIO ── */}
+                  <div className="bg-slate-900/90 p-4 rounded-2xl border border-violet-500/40 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-violet-300 font-black uppercase flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-violet-400" />
+                        <span>Mascot State Tester</span>
                       </span>
+                      <span className="px-2 py-0.5 bg-violet-400/20 text-violet-300 rounded-full text-[10px] font-black uppercase">
+                        {pipStoreState}
+                      </span>
+                    </div>
 
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => {
-                            sounds.splash();
-                            useFXStore.getState().triggerFX('rain', 3500);
-                          }}
-                          className="p-2.5 bg-cyan-950/60 border border-cyan-500/40 hover:bg-cyan-900 text-cyan-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          🌧️ Rainstorm FX (3.5s)
-                        </button>
+                    {/* Mascot Preview & Tap Interactivity */}
+                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-center gap-4">
+                      <Pip size="lg" interactive={true} />
+                      <div className="text-[11px] text-slate-400">
+                        <p className="text-violet-300 font-bold">✨ Tap Pip to talk & react!</p>
+                        <p>Tracks mouse pupils & expresses emotions.</p>
+                      </div>
+                    </div>
 
+                    {/* State Grid */}
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {[
+                        { id: 'idle', label: 'Idle 🧘' },
+                        { id: 'curious', label: 'Curious 🧐' },
+                        { id: 'teaching', label: 'Teaching 🪄' },
+                        { id: 'thinking', label: 'Thinking 🤔' },
+                        { id: 'correct', label: 'Correct 🎉' },
+                        { id: 'celebrating', label: 'Celebrate 🏆' },
+                      ].map((st) => (
                         <button
-                          onClick={() => {
-                            sounds.sparkle();
-                            useFXStore.getState().triggerFX('spark', 2000);
-                          }}
-                          className="p-2.5 bg-amber-950/60 border border-amber-500/40 hover:bg-amber-900 text-amber-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          ⚡ Electric Sparks (2s)
-                        </button>
-
-                        <button
+                          key={st.id}
                           onClick={() => {
                             sounds.pop();
-                            useFXStore.getState().triggerFX('steam', 2500);
+                            setPipState(st.id as any);
                           }}
-                          className="p-2.5 bg-orange-950/60 border border-orange-500/40 hover:bg-orange-900 text-orange-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
+                          className={`p-2 rounded-xl text-[11px] font-black border text-center transition-all cursor-pointer ${
+                            pipStoreState === st.id
+                              ? 'bg-violet-600 border-violet-400 text-white shadow-md'
+                              : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                          }`}
                         >
-                          🔥 Steam / Heat (2.5s)
+                          {st.label}
                         </button>
-
-                        <button
-                          onClick={() => {
-                            sounds.fanfare();
-                            useFXStore.getState().triggerFX('timelapse', 3000);
-                          }}
-                          className="p-2.5 bg-indigo-950/60 border border-indigo-500/40 hover:bg-indigo-900 text-indigo-300 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          ⏳ 500-Yr Wormhole (3s)
-                        </button>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Footer */}
-                  <div className="pt-4 border-t border-slate-800 text-[10px] text-slate-500 font-mono flex items-center justify-between">
-                    <span>Antigravity Developer Mode</span>
-                    <span>v2.4.0</span>
+                  {/* ── 5. CURRICULUM UNLOCK ALL & RESET ── */}
+                  <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                    <span className="text-slate-400 font-black uppercase block mb-2.5 flex items-center gap-1.5">
+                      <Unlock className="w-4 h-4 text-emerald-400" />
+                      <span>Curriculum Actions</span>
+                    </span>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleUnlockAllCurriculum}
+                        className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Unlock All 13 Missions</span>
+                      </button>
+
+                      <button
+                        onClick={handleResetAll}
+                        className="py-2.5 px-4 bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50 rounded-xl font-black cursor-pointer flex items-center justify-center gap-1"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                        <span>Reset</span>
+                      </button>
+                    </div>
                   </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>,
+                </div>
+              </motion.div>
+            </div>
+          </div>,
           document.body
         )}
     </>
