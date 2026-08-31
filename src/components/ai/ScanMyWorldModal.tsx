@@ -51,6 +51,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
   const [cameraActive, setCameraActive] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [result, setResult] = useState<MaterialAnalysisResult | null>(null);
   const [selectedPointerId, setSelectedPointerId] = useState<string | null>(null);
   const [quizAnswered, setQuizAnswered] = useState<boolean>(false);
@@ -58,7 +59,6 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
 
   // API Key State & Prompt
   const [showKeyInput, setShowKeyInput] = useState(false);
-  const [needsKeyPrompt, setNeedsKeyPrompt] = useState(false);
   const [customKey, setCustomKey] = useState(getApiKey());
   const [keySaved, setKeySaved] = useState(false);
 
@@ -168,14 +168,14 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
   };
 
   const analyzePhoto = async (imageInput: string, sampleTypeHint?: string) => {
-    // If no API key and it is not a built-in sample, show the key input dialog
+    setAnalysisError(null);
+
+    // If no API key and it is not a built-in sample, show the key input drawer
     if (!geminiService.hasApiKey() && !sampleTypeHint) {
-      setNeedsKeyPrompt(true);
       setShowKeyInput(true);
       return;
     }
 
-    setNeedsKeyPrompt(false);
     setIsAnalyzing(true);
     setResult(null);
     setSelectedPointerId(null);
@@ -194,12 +194,13 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
         `${res.sceneDescription} Detected ${res.pointers.length} materials.`
       );
     } catch (err: any) {
+      console.error('Vision analysis error:', err);
       if (err.message === 'NO_API_KEY') {
-        setNeedsKeyPrompt(true);
         setShowKeyInput(true);
       } else {
-        console.error('Vision analysis error:', err);
+        setAnalysisError(err.message || 'Vision AI analysis failed. Please check your Gemini API key.');
       }
+      sounds.boing();
     } finally {
       setIsAnalyzing(false);
     }
@@ -207,16 +208,16 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
 
   const handleSaveApiKey = () => {
     sounds.pop();
-    setApiKey(customKey);
+    const clean = customKey.trim();
+    setApiKey(clean);
     setKeySaved(true);
     setTimeout(() => {
       setKeySaved(false);
-      setShowKeyInput(false);
-      setNeedsKeyPrompt(false);
-      if (capturedImage) {
-        analyzePhoto(capturedImage);
-      }
-    }, 1200);
+    }, 1500);
+
+    if (capturedImage) {
+      analyzePhoto(capturedImage);
+    }
   };
 
   const handlePointerClick = (pointer: DetectedMaterialPointer) => {
@@ -274,7 +275,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     setSelectedPointerId(null);
     setQuizAnswered(false);
     setSelectedOption(null);
-    setNeedsKeyPrompt(false);
+    setAnalysisError(null);
     startCamera();
   };
 
@@ -346,7 +347,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
             </div>
 
             {/* Expandable API Key Setup Drawer */}
-            {(showKeyInput || needsKeyPrompt) && (
+            {showKeyInput && (
               <div className="p-4 bg-amber-50 border-b-2 border-amber-300 flex flex-col gap-2.5">
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -381,9 +382,28 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     className="w-full sm:w-auto px-5 py-2 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-950 font-black text-xs rounded-xl cursor-pointer flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all shrink-0"
                   >
                     {keySaved ? <Check className="w-4 h-4 text-emerald-950" /> : <Key className="w-4 h-4" />}
-                    <span>{keySaved ? 'Saved & Analyzing!' : 'Save & Analyze Image 🚀'}</span>
+                    <span>{keySaved ? 'Saved!' : 'Save & Analyze Image 🚀'}</span>
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* Live Error Banner if API error occurs */}
+            {analysisError && (
+              <div className="mx-4 sm:mx-6 mt-3 p-3.5 bg-rose-50 border-2 border-rose-300 rounded-2xl flex items-start gap-2.5 text-xs text-rose-900">
+                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <span className="font-black block uppercase text-[10px] tracking-wider text-rose-700">
+                    Vision AI Analysis Error:
+                  </span>
+                  <span>{analysisError}</span>
+                </div>
+                <button
+                  onClick={() => analyzePhoto(capturedImage || sampleCottonImg)}
+                  className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white font-black text-[11px] rounded-xl cursor-pointer shadow-xs active:scale-95 shrink-0"
+                >
+                  Retry 🔄
+                </button>
               </div>
             )}
 
@@ -415,7 +435,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                           <div className="w-8 h-8 border-t-4 border-r-4 border-amber-400 rounded-tr-xl" />
                         </div>
                         <div className="text-[11px] font-mono font-black text-amber-400 bg-slate-950/80 px-3 py-1 rounded-full border border-amber-400/50 backdrop-blur-xs">
-                          AIM AT WARRIORS, CLOTHES, VEHICLES, TOOLS & DESKS
+                          AIM AT ANY OBJECT, APPAREL, INFOGRAPHIC OR TOOL
                         </div>
                         <div className="w-full flex justify-between">
                           <div className="w-8 h-8 border-b-4 border-l-4 border-amber-400 rounded-bl-xl" />

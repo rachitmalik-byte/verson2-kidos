@@ -53,20 +53,20 @@ export interface WhatIfResult {
 export const getApiKey = (): string => {
   if (typeof window !== 'undefined') {
     const customKey = localStorage.getItem('gemini_api_key');
-    if (customKey && customKey.trim().length > 10 && !customKey.startsWith('AQ.')) {
+    if (customKey && customKey.trim().length > 5) {
       return customKey.trim();
     }
   }
   const envKey = import.meta.env.VITE_GEMINI_API_KEY || '';
-  if (envKey && envKey.length > 10 && !envKey.startsWith('AQ.')) {
-    return envKey;
+  if (envKey && envKey.trim().length > 5) {
+    return envKey.trim();
   }
   return '';
 };
 
 export const setApiKey = (key: string): void => {
   if (typeof window !== 'undefined') {
-    if (key && key.trim().length > 10) {
+    if (key && key.trim().length > 5) {
       localStorage.setItem('gemini_api_key', key.trim());
     } else {
       localStorage.removeItem('gemini_api_key');
@@ -74,14 +74,16 @@ export const setApiKey = (key: string): void => {
   }
 };
 
-// Official Google Gemini Vision Models
+// Candidate Google Gemini Vision Models
 const CANDIDATE_MODELS = [
   'gemini-2.0-flash',
   'gemini-1.5-flash',
+  'gemini-2.0-flash-exp',
+  'gemini-1.5-pro',
 ];
 
 /**
- * Executes a Gemini API request with strict 6s timeout
+ * Executes a Gemini API request with fallback across models
  */
 async function generateContentCascade(requestBody: any): Promise<string> {
   const apiKey = getApiKey();
@@ -89,12 +91,12 @@ async function generateContentCascade(requestBody: any): Promise<string> {
     throw new Error('NO_API_KEY');
   }
 
-  let lastError: any = null;
+  let lastErrorText = '';
 
   for (const model of CANDIDATE_MODELS) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     try {
       const response = await fetch(url, {
@@ -111,17 +113,18 @@ async function generateContentCascade(requestBody: any): Promise<string> {
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
         if (text) return text;
       } else {
-        const errText = await response.text();
-        console.warn(`Gemini Vision error on ${model}:`, errText);
-        lastError = new Error(`Status ${response.status}: ${errText}`);
+        const errJson = await response.json().catch(() => null);
+        const errMsg = errJson?.error?.message || (await response.text().catch(() => `HTTP ${response.status}`));
+        console.warn(`Gemini Vision error on ${model}:`, errMsg);
+        lastErrorText = errMsg;
       }
-    } catch (err) {
+    } catch (err: any) {
       clearTimeout(timeoutId);
-      lastError = err;
+      lastErrorText = err.message || 'Network / timeout error';
     }
   }
 
-  throw lastError || new Error('Cloud AI unavailable.');
+  throw new Error(lastErrorText || 'Google Gemini API connection failed. Please verify your API key.');
 }
 
 /**
@@ -317,21 +320,21 @@ Rules:
     if (mimeMatch) mimeType = mimeMatch[1];
     const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
 
-    const prompt = `You are Pip, an advanced AI Materials Science Detective analyzing a real user photo for a 5th grade student.
-Analyze the EXACT visual contents of this image with 100% visual accuracy.
+    const prompt = `You are Pip, an advanced AI Materials Science Detective analyzing a user photo for a 5th grade student.
+Look closely at the EXACT pixels and contents of this image.
 
 INSTRUCTIONS:
-1. Describe the scene in 1 to 2 clear, friendly sentences. Identify exactly who or what is present (e.g. an ancient warrior with a spear, a car on a road, a cat on a rug, a student with books, a bicycle, a tree, tools, food, clothing).
-2. Perform DENSE OBJECT DETECTION: Return a JSON array of EVERY distinct object, tool, garment, weapon, or component visible in the photo (aim for 4 to 8 distinct detections).
+1. Describe the scene accurately in 1-2 friendly sentences. Identify exactly who or what is present (e.g. an ancient warrior with a spear, an infographic comparing American vs British pants, an animal, a bicycle, food, tools, cars, etc.).
+2. Perform DENSE OBJECT DETECTION: Return a JSON array of EVERY distinct object, tool, garment, or part visible in the photo (aim for 4 to 8 distinct items).
 3. CATEGORIZE ACCURATELY:
    - 'Metallic': Refined metals and alloys (Steel, iron, brass, copper, aluminum, bronze, zinc).
-   - 'Natural': Raw organic materials (Wood, cotton, linen, silk, wool, leather, hemp, feathers).
-   - 'Synthetic': Petrochemical plastics, nylon, polyester, acrylic, PVC, synthetic rubber.
+   - 'Natural': Raw organic materials (Wood, cotton, linen, silk, wool, leather, hemp, paper cellulose).
+   - 'Synthetic': Petrochemical plastics, nylon, polyester, acrylic, PVC, synthetic rubber, spandex.
    - 'Mineral': Glass, ceramics, stone, clay, graphite, plaster.
-   - 'Mixed': Blends (poly-cotton, fiberglass, composite).
+   - 'Mixed': Blends (poly-cotton, denim with elastane, composite).
 4. Provide precise percentage coordinates pinX (10 to 90) and pinY (10 to 90) on the image where each object is located.
 
-Return ONLY a valid JSON object matching this schema with NO markdown fences:
+Return ONLY a valid JSON object matching this schema with NO markdown formatting:
 {
   "sceneDescription": "1-2 friendly sentences accurately describing what is in this photo",
   "materialName": "Primary material family",
@@ -343,8 +346,8 @@ Return ONLY a valid JSON object matching this schema with NO markdown fences:
   "pointers": [
     {
       "id": "p1",
-      "itemName": "Specific item or part with emoji (e.g. '🗡️ Spearhead', '🧥 Overcoat', '🥾 Leather Boots', '🪵 Spear Shaft')",
-      "materialName": "Exact material name (e.g. 'Forged Iron Metal Alloy', 'Heavy Weathered Wool', 'Tanned Animal Leather')",
+      "itemName": "Specific item or part with emoji (e.g. '👖 Denim Jeans (Trousers)', '🩲 Cotton Underwear', '🗡️ Spearhead', '🪵 Spear Shaft')",
+      "materialName": "Exact material name (e.g. '100% Woven Cotton Denim', 'Combed Cotton & Elastic Spandex', 'Forged Steel Alloy')",
       "category": "Natural" or "Synthetic" or "Metallic" or "Mineral" or "Mixed",
       "icon": "Relevant emoji icon",
       "whyUsed": "1 sentence explaining why this material is used for this specific part",
@@ -380,7 +383,7 @@ Return ONLY a valid JSON object matching this schema with NO markdown fences:
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]) as MaterialAnalysisResult;
     }
-    throw new Error('Could not parse Gemini vision JSON');
+    throw new Error('Could not parse Gemini vision response.');
   },
 
   /**
