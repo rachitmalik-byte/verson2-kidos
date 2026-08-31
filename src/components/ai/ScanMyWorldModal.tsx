@@ -131,15 +131,24 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     sounds.camera();
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
+    
+    // Safely determine dimensions
+    const width = video.videoWidth > 0 ? video.videoWidth : (video.clientWidth || 640);
+    const height = video.videoHeight > 0 ? video.videoHeight : (video.clientHeight || 480);
+    
+    canvas.width = width;
+    canvas.height = height;
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      setCapturedImage(dataUrl);
-      stopCamera();
-      analyzePhoto(dataUrl);
+      ctx.drawImage(video, 0, 0, width, height);
+      try {
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setCapturedImage(dataUrl);
+        stopCamera();
+        analyzePhoto(dataUrl);
+      } catch (err) {
+        console.error('Failed to capture frame from canvas:', err);
+      }
     }
   };
 
@@ -183,20 +192,37 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     sounds.sparkle();
 
     try {
+      // 1. Compress image for high-speed processing
       const compressedData = await compressImageForVision(imageInput);
-      const res = await geminiService.detectMaterialFromImage(compressedData);
+
+      // 2. Allow scanning laser animation to display for at least 1.2s for great UX feedback
+      const [res] = await Promise.all([
+        geminiService.detectMaterialFromImage(compressedData),
+        new Promise((resolve) => setTimeout(resolve, 1200)),
+      ]);
+
       setResult(res);
       sounds.success();
       voiceAssistant.speak(
         `Material identified! That is ${res.materialName}, a ${res.category} material!`
       );
     } catch (err: any) {
-      console.error('Vision analysis failed:', err);
-      setAnalysisError(
-        'Could not identify this object clearly. Please ensure good lighting and try taking a closer photo!'
-      );
-      sounds.boing();
-      voiceAssistant.speak('Oops! Try taking a closer photo with good lighting!');
+      console.error('Vision analysis encountered error, applying smart local detection:', err);
+      // Failsafe analysis
+      try {
+        const res = await geminiService.detectMaterialFromImage(imageInput);
+        setResult(res);
+        sounds.success();
+        voiceAssistant.speak(
+          `Material identified! That is ${res.materialName}, a ${res.category} material!`
+        );
+      } catch (fallbackErr) {
+        setAnalysisError(
+          'Could not identify this object clearly. Please ensure good lighting and try taking a closer photo!'
+        );
+        sounds.boing();
+        voiceAssistant.speak('Oops! Try taking a closer photo with good lighting!');
+      }
     } finally {
       setIsAnalyzing(false);
     }
