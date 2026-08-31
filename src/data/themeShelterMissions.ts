@@ -1,6 +1,7 @@
 export interface ShelterChapter {
   id: string;
   chapterNumber: number;
+  curriculumCode?: string;
   cbseChapterRef: string;
   title: string;
   subtitle: string;

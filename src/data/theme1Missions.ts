@@ -1,6 +1,7 @@
 export interface Theme1Chapter {
   id: string;
   chapterNumber: number;
+  curriculumCode?: string;
   title: string;
   subtitle: string;
   icon: string;

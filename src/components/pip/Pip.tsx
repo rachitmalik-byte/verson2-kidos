@@ -140,7 +140,8 @@ export const Pip: React.FC<PipProps> = ({
         i++;
       }, 140);
     } else {
-      setMouthViseme('smile');
+      const timeout = window.setTimeout(() => setMouthViseme('smile'), 0);
+      return () => clearTimeout(timeout);
     }
     return () => {
       if (visemeTimer) clearInterval(visemeTimer);

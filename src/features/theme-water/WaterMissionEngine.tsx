@@ -198,7 +198,7 @@ const WATER_CYCLE_DATA: InteractiveDiagramData = {
       yPercent: 82,
       title: '4. Collection & Groundwater Infiltration',
       explanation: 'Precipitation collects in oceans, rivers, lakes, and seeps underground into freshwater aquifers and wells!',
-      animationType: 'flow_river',
+      animationType: 'flow_water',
       funFact: 'Over 97% of all water on Earth is salty ocean water; only 1% is accessible liquid freshwater!',
     },
   ],
@@ -317,7 +317,7 @@ export function WaterMissionEngine() {
                     </span>
                     <button
                       onClick={() => {
-                        sounds.bubble();
+                        sounds.pop();
                         voiceAssistant.speak(`${introData.title}. ${introData.pipTeaching} ${introData.goldenLaw}`);
                       }}
                       className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer transition-all active:scale-95"

@@ -1,6 +1,7 @@
 export interface WaterChapter {
   id: string;
   chapterNumber: number;
+  curriculumCode?: string;
   title: string;
   subtitle: string;
   cbseChapterRef: string;

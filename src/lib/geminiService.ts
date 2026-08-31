@@ -1001,5 +1001,14 @@ export function generateFallbackLessonConfig(prompt: string, targetGrade: number
         ],
       },
     ],
-  };
+  
+  async generateParentAIAnalytics(childName: string, completedMissionsCount: number, discoveriesCount: number): Promise<{ summary: string; strengths: string[]; recommendations: string[] }> {
+    return {
+      summary: `${childName} is demonstrating exceptional inquiry skills and scientific reasoning across materials science and physical geography.`,
+      strengths: ['Hypothesis generation', 'Material property classification', 'Visual micrograph deduction'],
+      recommendations: ['Conduct kitchen buoyancy experiments with salt and eggs', 'Explore outdoor seed dispersal in garden pods']
+    };
+  }
+
+};
 }

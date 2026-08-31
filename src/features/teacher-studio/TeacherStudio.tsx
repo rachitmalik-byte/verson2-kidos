@@ -74,7 +74,7 @@ export function TeacherStudio() {
     const timer1 = setTimeout(() => {
       setGenerationStep(2);
       setGenerationProgress(55);
-      sounds.bubble();
+      sounds.pop();
     }, 400);
 
     // Step 2: 2D Visual Synthesis
