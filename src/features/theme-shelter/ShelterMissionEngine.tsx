@@ -1,3 +1,5 @@
+import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
+import { SHELTER_COURSE_CHAPTERS } from '@/data/masterCurriculum';
 import { ShelterAnimatedMountainBackground } from '@/components/effects/ShelterAnimatedMountainBackground';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';

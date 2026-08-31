@@ -1,3 +1,5 @@
+import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
+import { SUPER_SENSES_COURSE_CHAPTERS } from '@/data/masterCurriculum';
 import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -307,29 +309,14 @@ export function SuperSensesMissionEngine() {
             className="w-full flex flex-col items-center"
           >
             {/* ════════════════════════════════════════════════════════════════
-                PHASE 1: HOOK (The Real-World Wonder Hook)
+                PHASE 1: HOOK (The In-Depth Pip-Taught Chapter Intro)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'HOOK' && (
-              <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl flex flex-col items-center text-center">
-                <Pip mood="thinking" size="xl" />
-                <span className="px-3 py-1 bg-emerald-100 text-emerald-900 rounded-full text-xs font-black uppercase mt-3">
-                  Scientific Wonder Hook
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  {chapter.title} {chapter.icon}
-                </h2>
-                <p className="text-sm sm:text-base font-bold text-slate-600 max-w-xl leading-relaxed mb-6">
-                  {chapter.realWorldWonder}
-                </p>
-
-                <button
-                  onClick={handleNextPhase}
-                  className="px-10 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-lg rounded-2xl shadow-lg cursor-pointer transition-all active:scale-95 flex items-center gap-2"
-                >
-                  <span>Enter Live Experiment Lab 🔬</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
+              <InteractiveChapterIntroCard
+                chapterData={SUPER_SENSES_COURSE_CHAPTERS[num - 1] || SUPER_SENSES_COURSE_CHAPTERS[0]}
+                onStartLab={handleNextPhase}
+                accentBorderColor="border-emerald-400"
+              />
             )}
 
             {/* ════════════════════════════════════════════════════════════════
