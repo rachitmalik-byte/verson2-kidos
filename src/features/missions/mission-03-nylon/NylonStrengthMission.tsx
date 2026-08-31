@@ -11,14 +11,21 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { ExperimentFocusSpotlight } from '@/components/interactive/ExperimentFocusSpotlight';
 
-// Real Studio Macro Educational Photography (Clean Before & After Pairs)
+// Real Studio Macro Educational Photography
 import cottonThreadIntactImg from '@/assets/images/experiments/cotton_thread_intact.jpg';
 import cottonThreadBreakingImg from '@/assets/images/experiments/cotton_thread_breaking.jpg';
 import nylonCordIntactImg from '@/assets/images/experiments/nylon_cord_intact.jpg';
 import nylonRopeHeavyWeightImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
 import nylonParachuteSkyImg from '@/assets/images/raincoat/nylon_parachute_sky.jpg';
-import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
-import polyesterFabricZoomImg from '@/assets/images/raincoat/polyester_fabric_zoom.jpg';
+import silkwormSilkCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
+import steelWireSpecimenImg from '@/assets/images/experiments/steel_wire_specimen.jpg';
+
+// 100x SEM Micrographs
+import cottonMicrograph100xImg from '@/assets/images/microscope/cotton_micrograph_100x.jpg';
+import nylonMicrograph100xImg from '@/assets/images/microscope/nylon_micrograph_100x.jpg';
+import silkMicrograph100xImg from '@/assets/images/microscope/silk_micrograph_100x.jpg';
+import woolMicrograph100xImg from '@/assets/images/microscope/wool_micrograph_100x.jpg';
+
 import { Sparkles, ArrowRight, ShieldCheck, Scale, Dumbbell, Zap, Check, AlertCircle, ZoomIn } from 'lucide-react';
 
 type Phase = 'HOOK' | 'TENSILE_TEST' | 'MICROSCOPE' | 'APPLY';
@@ -28,7 +35,7 @@ export function NylonStrengthMission() {
   const [weightKg, setWeightKg] = useState(2);
   const [isTestingTensile, setIsTestingTensile] = useState(false);
   const [testedThreads, setTestedThreads] = useState<Record<string, { snapped: boolean; max: number }>>({});
-  const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'cotton' | 'nylon'>('cotton');
+  const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'cotton' | 'nylon' | 'silk' | 'wool'>('cotton');
   const [microscopeZoomLevel, setMicroscopeZoomLevel] = useState<number>(250);
   const [showCelebration, setShowCelebration] = useState(false);
   const [applyAnswer, setApplyAnswer] = useState<string | null>(null);
@@ -59,8 +66,8 @@ export function NylonStrengthMission() {
       addDiscovery({
         materialId: 'nylon',
         discoveredAt: Date.now(),
-        properties: ['High Tensile Strength', 'Stronger than Steel', 'Elastic & Light'],
-        uses: ['Climbing ropes', 'Toothbrush bristles', 'Parachutes', 'Sleeping bags'],
+        properties: ['High Tensile Strength', 'Stronger than Steel by weight', 'Elastic & Light'],
+        uses: ['Climbing ropes', 'Parachutes', 'Fishing lines', 'Industrial cables'],
         scienceWord: 'High tensile strength',
       });
       setShowCelebration(true);
@@ -106,6 +113,19 @@ export function NylonStrengthMission() {
       max: 2,
       origin: 'Plant Cellulose (Short Overlapping Fibers)',
       color: 'amber',
+      intactImage: cottonThreadIntactImg,
+      breakingImage: cottonThreadBreakingImg,
+      icon: '🧵',
+    },
+    {
+      id: 'silk',
+      name: 'Natural Silk Filament',
+      max: 5,
+      origin: 'Animal Fibroin (Continuous Smooth Triangular Strands)',
+      color: 'purple',
+      intactImage: silkwormSilkCocoonImg,
+      breakingImage: silkwormSilkCocoonImg,
+      icon: '🐛',
     },
     {
       id: 'nylon',
@@ -113,6 +133,19 @@ export function NylonStrengthMission() {
       max: 25,
       origin: 'Polymer Chains (Continuous Unbroken Filaments)',
       color: 'sky',
+      intactImage: nylonCordIntactImg,
+      breakingImage: nylonRopeHeavyWeightImg,
+      icon: '🪢',
+    },
+    {
+      id: 'steel',
+      name: 'Braided Stainless Steel Wire',
+      max: 40,
+      origin: 'Metallic Iron Alloy (Multi-Strand Braided Cable)',
+      color: 'slate',
+      intactImage: steelWireSpecimenImg,
+      breakingImage: steelWireSpecimenImg,
+      icon: '⚙️',
     },
   ];
 
@@ -126,7 +159,7 @@ export function NylonStrengthMission() {
       if (kg > thread.max) {
         sounds.tensionSnap();
         setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: true, max: thread.max } }));
-        voiceAssistant.speak(`Snap! The ${thread.name} snapped at ${kg} kilograms because its natural fibers pulled apart!`);
+        voiceAssistant.speak(`Snap! The ${thread.name} snapped at ${kg} kilograms because pulling tension exceeded its breaking limit!`);
       } else {
         sounds.success();
         setTestedThreads((prev) => ({ ...prev, [threadId]: { snapped: false, max: thread.max } }));
@@ -177,28 +210,22 @@ export function NylonStrengthMission() {
                 The Great Tensile Strength Showdown! 🏋️
               </h2>
               <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
-                Mountain climbers and skydivers trust thin cords with their lives! Can you test how much weight a thin{' '}
-                <span className="text-amber-600 font-black">Cotton thread</span> can hold before snapping versus synthetic{' '}
-                <span className="text-sky-600 font-black">Nylon cord</span>?
+                Mountain climbers and skydivers trust thin cords with their lives! Can you test how much load{' '}
+                <span className="text-amber-600 font-black">Cotton</span>, <span className="text-purple-600 font-black">Silk</span>,{' '}
+                <span className="text-sky-600 font-black">Nylon</span>, and <span className="text-slate-800 font-black">Braided Steel</span> can hold before snapping?
               </p>
 
-              {/* Clean Intact Specimen Preview */}
-              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-8">
-                <div className="bg-white p-4 rounded-3xl border-3 border-amber-300 shadow-md flex flex-col items-center text-center">
-                  <div className="w-32 h-32 rounded-2xl overflow-hidden mb-2 bg-slate-50 border border-slate-100 p-1">
-                    <img src={cottonThreadIntactImg} alt="Intact Cotton Thread" className="w-full h-full object-cover rounded-xl" />
+              {/* 4 Clean Specimen Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl mb-8">
+                {THREADS.map((t) => (
+                  <div key={t.id} className="bg-white p-3 rounded-2xl border-2 border-slate-200 shadow-md flex flex-col items-center text-center">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden mb-2 bg-slate-900 border border-slate-100 p-0.5">
+                      <img src={t.intactImage} alt={t.name} className="w-full h-full object-cover rounded-lg" />
+                    </div>
+                    <span className="font-black text-xs text-slate-800 truncate w-full">{t.name}</span>
+                    <span className="text-[10px] font-bold text-slate-500 mt-0.5">{t.origin.split('(')[0]}</span>
                   </div>
-                  <span className="font-black text-xs text-slate-800">1. Natural Cotton</span>
-                  <span className="text-[10px] font-bold text-amber-700">Short Plant Cellulose Fibers</span>
-                </div>
-
-                <div className="bg-white p-4 rounded-3xl border-3 border-sky-300 shadow-md flex flex-col items-center text-center">
-                  <div className="w-32 h-32 rounded-2xl overflow-hidden mb-2 bg-slate-50 border border-slate-100 p-1">
-                    <img src={nylonCordIntactImg} alt="Intact Nylon Cord" className="w-full h-full object-cover rounded-xl" />
-                  </div>
-                  <span className="font-black text-xs text-slate-800">2. Synthetic Nylon</span>
-                  <span className="text-[10px] font-bold text-sky-700">Continuous Polymer Cables</span>
-                </div>
+                ))}
               </div>
 
               <button
@@ -206,400 +233,248 @@ export function NylonStrengthMission() {
                 className="bg-amber-400 border-2 border-amber-600 shadow-[0_6px_0_#D97706] active:translate-y-1.5 active:shadow-none text-slate-900 font-black text-xl py-4 px-12 rounded-3xl hover:bg-amber-300 transition-all cursor-pointer flex items-center gap-2"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
-                <span>Enter the Tensile Lab 🔬</span>
+                <span>Enter the Tensile Rig Lab 🔬</span>
                 <ArrowRight className="w-6 h-6 stroke-[3]" />
               </button>
             </div>
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: TENSILE LAB (Weight Drop Sandbox with True Before/After)
+              PHASE 2: TENSILE LAB (Weight Drop Sandbox with 4 Materials)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'TENSILE_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-4">
-                <Pip mood="explaining" size="lg" />
-                <PipSpeechBubble
-                  message="Hang different cast-iron weights on both cords to test their breaking limit!"
-                  isVisible={true}
-                />
+                <Pip mood="thinking" size="sm" />
+                <span className="text-base md:text-lg font-black text-slate-800">
+                  Select a weight and pull the load on each material!
+                </span>
               </div>
 
-              {/* Weight Selector Bar */}
-              <div className="bg-white p-4 rounded-3xl border-3 border-slate-200 shadow-md flex items-center gap-3 mb-6 flex-wrap justify-center">
-                <span className="text-xs font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
-                  <Scale className="w-4 h-4 text-amber-500" />
-                  <span>Select Test Weight:</span>
+              {/* Weight Selector Stepper */}
+              <div className="flex items-center gap-2 mb-6 bg-white p-3 rounded-2xl border-2 border-slate-300 shadow-sm flex-wrap justify-center">
+                <span className="font-black text-xs text-slate-600 mr-2 flex items-center gap-1">
+                  <Scale className="w-4 h-4 text-amber-500" /> Choose Weight Load:
                 </span>
-                {[1, 2, 5, 10, 25].map((kg) => (
+                {[2, 5, 15, 25, 40].map((kg) => (
                   <button
                     key={kg}
                     onClick={() => {
                       sounds.pop();
                       setWeightKg(kg);
                     }}
-                    className={`px-4 py-2 rounded-2xl font-black text-xs md:text-sm flex items-center gap-1.5 transition-all cursor-pointer ${
+                    className={`px-4 py-2 rounded-xl font-black text-xs cursor-pointer transition-all ${
                       weightKg === kg
-                        ? 'bg-amber-400 text-slate-950 shadow-md scale-105 ring-2 ring-amber-300'
+                        ? 'bg-amber-400 text-slate-950 shadow-md ring-2 ring-amber-300 scale-105'
                         : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                     }`}
                   >
-                    <Dumbbell className="w-3.5 h-3.5" />
-                    <span>{kg} kg</span>
+                    {kg} kg 🏋️
                   </button>
                 ))}
               </div>
 
-              {/* Dual Test Rig Cards Wrapped in Focus Spotlight */}
-              <ExperimentFocusSpotlight
-                isActive={isTestingTensile}
-                activeLabel={`🏋️ Testing ${weightKg}kg Tension Stress...`}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {/* Cotton Test Rig */}
-                  <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                    <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
-                      Natural Cotton Thread
-                    </span>
-                    <span className="text-[11px] font-bold text-slate-500 mb-3">
-                      {testedThreads['cotton']?.snapped
-                        ? `💥 Snapped under ${weightKg}kg load`
-                        : 'Intact thread suspended on test hook'}
-                    </span>
+              {/* 4 Materials Testing Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                {THREADS.map((thread) => {
+                  const testResult = testedThreads[thread.id];
+                  const hasSnapped = testResult?.snapped === true;
+                  const hasPassed = testResult && !testResult.snapped;
 
-                    {/* Real Photo with True Before/After */}
-                    <motion.div
-                      animate={isTestingTensile ? { x: [-3, 3, -3, 3, 0] } : {}}
-                      transition={{ duration: 0.2, repeat: 3 }}
-                      className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2"
+                  return (
+                    <div
+                      key={thread.id}
+                      className={`p-4 rounded-3xl border-3 bg-white shadow-md flex flex-col justify-between transition-all ${
+                        hasSnapped
+                          ? 'border-rose-400 bg-rose-50/40'
+                          : hasPassed
+                          ? 'border-emerald-400 bg-emerald-50/40'
+                          : 'border-slate-200'
+                      }`}
                     >
-                      <AnimatePresence mode="wait">
-                        <motion.img
-                          key={testedThreads['cotton']?.snapped ? 'cotton-snapped' : 'cotton-intact'}
-                          src={testedThreads['cotton']?.snapped ? cottonThreadBreakingImg : cottonThreadIntactImg}
-                          alt={testedThreads['cotton']?.snapped ? 'Cotton Thread Snapped' : 'Cotton Thread Intact'}
-                          initial={{ opacity: 0.4, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0.4, scale: 1.05 }}
-                          transition={{ duration: 0.4 }}
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </AnimatePresence>
-                      {testedThreads['cotton']?.snapped && (
-                        <div className="absolute inset-0 bg-rose-500/20 backdrop-blur-[1px] flex items-center justify-center">
-                          <span className="text-4xl animate-bounce">🧵💥</span>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xl">{thread.icon}</span>
+                          <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                            Limit: {thread.max}kg
+                          </span>
                         </div>
-                      )}
-                    </motion.div>
+                        <h4 className="font-black text-sm text-slate-900 truncate">{thread.name}</h4>
+                        <p className="text-[10px] font-bold text-slate-500 line-clamp-2 mt-0.5">{thread.origin}</p>
 
-                    <button
-                      onClick={() => handleApplyWeight('cotton', weightKg)}
-                      className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
-                    >
-                      <Dumbbell className="w-4 h-4" />
-                      <span>Hang {weightKg} kg Weight on Cotton</span>
-                    </button>
+                        {/* Visual Rig Inset */}
+                        <div className="w-full h-32 rounded-2xl overflow-hidden my-3 bg-slate-950 border border-slate-200 relative">
+                          <img
+                            src={hasSnapped ? thread.breakingImage : thread.intactImage}
+                            alt={thread.name}
+                            className="w-full h-full object-cover"
+                          />
+                          {hasSnapped && (
+                            <div className="absolute inset-0 bg-rose-950/60 flex items-center justify-center">
+                              <span className="bg-rose-600 text-white font-black text-xs px-2.5 py-1 rounded-full border border-white shadow-md">
+                                ⚡ SNAPPED!
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-                    {testedThreads['cotton'] && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={`mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs ${
-                          testedThreads['cotton'].snapped
-                            ? 'bg-rose-50 border-rose-300 text-rose-700'
-                            : 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                        }`}
+                      <button
+                        onClick={() => handleApplyWeight(thread.id, weightKg)}
+                        disabled={isTestingTensile}
+                        className="w-full py-2.5 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs rounded-xl cursor-pointer shadow-xs active:scale-95 transition-all disabled:opacity-50"
                       >
-                        {testedThreads['cotton'].snapped
-                          ? `💥 SNAPPED! Cotton broke under ${weightKg}kg (Natural fibers separated)`
-                          : `✅ Cotton held ${weightKg}kg successfully!`}
-                      </motion.div>
-                    )}
-                  </div>
-
-                  {/* Synthetic Nylon Test Rig */}
-                  <div className="bg-white p-6 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                    <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-1">
-                      Synthetic Nylon Cord
-                    </span>
-                    <span className="text-[11px] font-bold text-slate-500 mb-3">
-                      {testedThreads['nylon']
-                        ? `✨ Holds ${weightKg}kg with zero strain`
-                        : 'Intact polymer cord on test hook'}
-                    </span>
-
-                    {/* Real Photo with True Before/After */}
-                    <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center p-2">
-                      <AnimatePresence mode="wait">
-                        <motion.img
-                          key={testedThreads['nylon'] ? 'nylon-heavy' : 'nylon-intact'}
-                          src={testedThreads['nylon'] ? nylonRopeHeavyWeightImg : nylonCordIntactImg}
-                          alt={testedThreads['nylon'] ? 'Nylon Holding Heavy Weight' : 'Intact Nylon Cord'}
-                          initial={{ opacity: 0.4, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0.4, scale: 1.05 }}
-                          transition={{ duration: 0.4 }}
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </AnimatePresence>
-                      {testedThreads['nylon'] && !testedThreads['nylon'].snapped && (
-                        <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2.5 py-0.5 rounded-full text-xs font-black shadow-md">
-                          ✨ Holds Effortlessly!
-                        </div>
-                      )}
+                        Apply {weightKg}kg Pull ⬇️
+                      </button>
                     </div>
+                  );
+                })}
+              </div>
 
-                    <button
-                      onClick={() => handleApplyWeight('nylon', weightKg)}
-                      className="w-full py-3.5 mt-3 rounded-2xl font-black text-sm bg-sky-500 hover:bg-sky-600 text-white shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
-                    >
-                      <Dumbbell className="w-4 h-4" />
-                      <span>Hang {weightKg} kg Weight on Nylon</span>
-                    </button>
-
-                    {testedThreads['nylon'] && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-3 p-3 rounded-2xl w-full text-center border font-bold text-xs bg-emerald-50 border-emerald-300 text-emerald-700"
-                      >
-                        🌟 UNSTOPPABLE! Nylon holds {weightKg}kg with zero strain!
-                      </motion.div>
-                    )}
-                  </div>
-                </div>
-              </ExperimentFocusSpotlight>
+              {Object.keys(testedThreads).length >= 2 && (
+                <button
+                  onClick={handleNextPhase}
+                  className="mt-6 py-3 px-8 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-2xl cursor-pointer shadow-lg active:scale-95 transition-all flex items-center gap-2"
+                >
+                  <span>Examine Fibers Under Microscope ➔</span>
+                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                </button>
+              )}
             </div>
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 3: OPTICAL MICROSCOPE STUDIO + GOLDEN SCIENCE LAW
+              PHASE 3: MICROSCOPE (True 100x SEM Micrographs)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'MICROSCOPE' && (
-            <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="celebrating" size="lg" />
-                <PipSpeechBubble
-                  message="Look at both fibers under high magnification! See how polymer chains form unbreakable molecular cables!"
-                  isVisible={true}
-                />
-              </div>
-
-              {/* ── OPTICAL MICROSCOPE STAGE ── */}
-              <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">
-                <div className="flex items-center justify-between w-full mb-4 z-10 flex-wrap gap-2">
-                  <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-500/50 px-3 py-1 rounded-full flex items-center gap-1.5">
-                    <ZoomIn className="w-4 h-4 text-amber-400 animate-pulse" />
-                    <span>Molecular Fiber Tensile Studio</span>
-                  </span>
-
-                  <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                    {[
-                      { level: 100, label: '100x' },
-                      { level: 250, label: '250x' },
-                      { level: 500, label: '500x' },
-                    ].map((z) => (
-                      <button
-                        key={z.level}
-                        onClick={() => {
-                          sounds.pop();
-                          setMicroscopeZoomLevel(z.level);
-                        }}
-                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                          microscopeZoomLevel === z.level
-                            ? 'bg-amber-400 text-slate-950 shadow-md scale-105'
-                            : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {z.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Microscope Lens Viewport */}
-                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 ring-4 ring-amber-400/80 my-2 flex items-center justify-center">
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
-                      src={activeMicroscopeSpecimen === 'cotton' ? cottonThreadIntactImg : nylonCordIntactImg}
-                      alt="Microscope Specimen"
-                      initial={{ scale: 0.8, opacity: 0.3 }}
-                      animate={{
-                        scale: microscopeZoomLevel === 100 ? 1.05 : microscopeZoomLevel === 250 ? 1.45 : 2.0,
-                        opacity: 1,
-                      }}
-                      exit={{ scale: 1.2, opacity: 0.3 }}
-                      transition={{ type: 'spring', damping: 20, stiffness: 180 }}
-                      className="w-full h-full object-cover select-none pointer-events-none"
-                    />
-                  </AnimatePresence>
-
-                  <div className="absolute inset-0 pointer-events-none border border-cyan-400/30 rounded-full flex items-center justify-center">
-                    <div className="w-full h-[1px] bg-cyan-400/30 absolute" />
-                    <div className="h-full w-[1px] bg-cyan-400/30 absolute" />
-                    <div className="w-24 h-24 rounded-full border border-cyan-400/40 absolute" />
-                  </div>
-                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent rounded-full" />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg mt-4 z-10">
-                  <button
-                    onClick={() => {
-                      sounds.pop();
-                      setActiveMicroscopeSpecimen('cotton');
-                    }}
-                    className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
-                      activeMicroscopeSpecimen === 'cotton'
-                        ? 'bg-amber-400 border-amber-300 text-slate-950 shadow-lg scale-102 ring-4 ring-amber-400/40'
-                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
-                    }`}
-                  >
-                    <span>🌿 Cotton: Short Plant Staples</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      sounds.pop();
-                      setActiveMicroscopeSpecimen('nylon');
-                    }}
-                    className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
-                      activeMicroscopeSpecimen === 'nylon'
-                        ? 'bg-sky-400 border-sky-300 text-slate-950 shadow-lg scale-102 ring-4 ring-sky-400/40'
-                        : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
-                    }`}
-                  >
-                    <span>⚡ Nylon: Long Polymer Cables</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* ── THE GOLDEN SCIENCE LAW ── */}
-              <div className="w-full bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-300 shadow-xl mb-6">
-                <h3 className="text-center text-xs font-black uppercase tracking-widest text-sky-600 mb-6 bg-sky-100 px-4 py-1.5 rounded-full w-fit mx-auto">
-                  ⚡ The Golden Science Law
+            <div className="w-full max-w-3xl flex flex-col items-center">
+              <div className="flex items-center gap-3 mb-4">
+                <Pip mood="explaining" size="sm" />
+                <h3 className="text-xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  100x Electron Microscope Inspection 🔬
                 </h3>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-                  <div className="p-5 rounded-3xl bg-amber-50 border-3 border-amber-300 text-center flex flex-col items-center shadow-md">
-                    <span className="text-4xl mb-2">🧱</span>
-                    <span className="font-black text-slate-800 text-base">1. MATERIAL</span>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">What it is MADE OF</p>
-                    <span className="text-[11px] font-black text-amber-900 bg-amber-200 px-3 py-0.5 rounded-full mt-2">
-                      Synthetic Nylon Polymer
-                    </span>
-                  </div>
+              {/* Specimen Switcher */}
+              <div className="flex items-center gap-2 mb-4 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex-wrap justify-center">
+                {[
+                  { id: 'cotton', label: 'Cotton (Porous)', icon: '🧵', img: cottonMicrograph100xImg, note: 'Twisted, hollow ribbon-like tubes with microscopic pores.' },
+                  { id: 'nylon', label: 'Nylon (Solid)', icon: '🪢', img: nylonMicrograph100xImg, note: 'Solid, perfectly smooth cylindrical polymer filaments.' },
+                  { id: 'silk', label: 'Silk (Triangular)', icon: '🐛', img: silkMicrograph100xImg, note: 'Smooth continuous filaments with rounded triangular cross-sections.' },
+                  { id: 'wool', label: 'Wool (Scales)', icon: '🐑', img: woolMicrograph100xImg, note: 'Overlapping keratin cuticle scales that trap warm air.' },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      sounds.pop();
+                      setActiveMicroscopeSpecimen(s.id as any);
+                    }}
+                    className={`px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
+                      activeMicroscopeSpecimen === s.id
+                        ? 'bg-amber-400 text-slate-950 shadow-md ring-2 ring-amber-300'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                  >
+                    <span>{s.icon}</span>
+                    <span>{s.label}</span>
+                  </button>
+                ))}
+              </div>
 
-                  <div className="p-5 rounded-3xl bg-sky-50 border-3 border-sky-300 text-center flex flex-col items-center shadow-md">
-                    <span className="text-4xl mb-2">⚡</span>
-                    <span className="font-black text-slate-800 text-base">2. PROPERTY</span>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">What it CAN DO</p>
-                    <span className="text-[11px] font-black text-sky-900 bg-sky-200 px-3 py-0.5 rounded-full mt-2">
-                      High Tensile Strength & Elastic
-                    </span>
-                  </div>
-
-                  <div className="p-5 rounded-3xl bg-emerald-50 border-3 border-emerald-300 text-center flex flex-col items-center shadow-md">
-                    <span className="text-4xl mb-2">🎯</span>
-                    <span className="font-black text-slate-800 text-base">3. USE</span>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">What it is USED FOR</p>
-                    <span className="text-[11px] font-black text-emerald-900 bg-emerald-200 px-3 py-0.5 rounded-full mt-2">
-                      Climbing Ropes & Parachutes
-                    </span>
-                  </div>
+              {/* Circular Reticle Lens */}
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden shadow-2xl border-8 border-slate-800 bg-slate-950 mb-4">
+                <img
+                  src={
+                    activeMicroscopeSpecimen === 'nylon'
+                      ? nylonMicrograph100xImg
+                      : activeMicroscopeSpecimen === 'silk'
+                      ? silkMicrograph100xImg
+                      : activeMicroscopeSpecimen === 'wool'
+                      ? woolMicrograph100xImg
+                      : cottonMicrograph100xImg
+                  }
+                  alt="Micrograph"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 pointer-events-none border border-amber-400/40 rounded-full flex items-center justify-center">
+                  <div className="w-full h-0.5 bg-amber-400/30" />
+                  <div className="h-full w-0.5 bg-amber-400/30 absolute" />
+                  <div className="w-24 h-24 rounded-full border border-dashed border-amber-400/60" />
+                </div>
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-slate-950/85 text-amber-300 font-black text-[10px] px-3 py-0.5 rounded-full border border-amber-400/40">
+                  100x SEM Micrograph
                 </div>
               </div>
 
-              {/* Real World Life-Saving Application Card */}
-              <div className="w-full bg-slate-900 text-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col md:flex-row items-center gap-6">
-                <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-lg shrink-0">
-                  <img
-                    src={nylonParachuteSkyImg}
-                    alt="Nylon Parachute in Sky"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <p className="text-xs sm:text-sm font-bold text-slate-600 text-center max-w-lg mb-6">
+                {activeMicroscopeSpecimen === 'nylon'
+                  ? 'Continuous unbroken polymer chains allow synthetic nylon to stretch and withstand immense tension!'
+                  : activeMicroscopeSpecimen === 'silk'
+                  ? 'Triangular natural fibroin protein filaments give silk its lustrous sheen and surprising tensile strength!'
+                  : activeMicroscopeSpecimen === 'wool'
+                  ? 'Overlapping keratin cuticle scales act as thermal insulators in cold weather!'
+                  : 'Hollow, porous cellulose tubes absorb water easily but pull apart under heavy mechanical tension.'}
+              </p>
 
-                <div>
-                  <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full">
-                    🪂 Real-World Application: Skydiving Parachutes
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-black text-white mt-2 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    Why Chemists Replaced Silk & Cotton With Nylon
-                  </h3>
-                  <p className="text-xs md:text-sm text-slate-300 font-bold leading-relaxed">
-                    Before 1935, parachutes were made of fragile natural silk. Synthetic Nylon was invented with extreme tensile strength: a cord as thin as a pencil can lift a family car without snapping!
-                  </p>
-                </div>
-              </div>
+              <button
+                onClick={handleNextPhase}
+                className="py-3 px-8 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer shadow-md active:scale-95 transition-all flex items-center gap-2"
+              >
+                <span>Take the Parachute Challenge ➔</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
+              </button>
             </div>
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 4: APPLY (The Rock Climbing Challenge)
+              PHASE 4: APPLY (The Skydiver Challenge)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
-            <div className="w-full max-w-2xl flex flex-col items-center text-center">
-              <Pip mood="thinking" size="lg" />
-              <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Rock Climbing Safety Challenge 🧗
-              </h2>
-              <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
-                Pip is preparing for a mountain expedition. Which rope material should Pip pack to ensure 100% safety against heavy falls?
+            <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-3xl border-3 border-amber-400 shadow-xl flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-sky-100 flex items-center justify-center text-3xl mb-3 shadow-inner">
+                🪂
+              </div>
+              <h3 className="text-xl md:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                The Paratrooper Equipment Challenge!
+              </h3>
+              <p className="text-xs sm:text-sm font-bold text-slate-600 mt-2 mb-6">
+                A skydiving team needs cords that are lightweight, flexible, and capable of holding hundreds of kilograms of sudden opening shock. Which material must they choose?
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
-                <button
-                  onClick={() => {
-                    sounds.boing();
-                    setApplyAnswer('cotton');
-                  }}
-                  className={`p-5 rounded-3xl border-3 font-black text-sm transition-all cursor-pointer flex flex-col items-center gap-2 ${
-                    applyAnswer === 'cotton'
-                      ? 'bg-rose-100 border-rose-500 text-rose-800'
-                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <span className="text-3xl">🧵</span>
-                  <span>Natural Cotton Rope</span>
-                  <span className="text-xs font-bold text-slate-500">Snaps easily under sudden shock load</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    sounds.fanfare();
-                    setApplyAnswer('nylon');
-                  }}
-                  className={`p-5 rounded-3xl border-3 font-black text-sm transition-all cursor-pointer flex flex-col items-center gap-2 ${
-                    applyAnswer === 'nylon'
-                      ? 'bg-emerald-100 border-emerald-500 text-emerald-900 shadow-xl ring-4 ring-emerald-300 scale-105'
-                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <span className="text-3xl">🪢✨</span>
-                  <span>Synthetic Nylon Dynamic Rope</span>
-                  <span className="text-xs font-bold text-slate-500">High tensile strength & elastic shock absorber</span>
-                </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mb-6">
+                {[
+                  { id: 'cotton', title: 'Natural Cotton Cord', desc: 'Lightweight but snaps under sudden opening shock.', isCorrect: false },
+                  { id: 'nylon', title: 'Synthetic Nylon Cord', desc: 'High tensile strength & elasticity for safe deceleration.', isCorrect: true },
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => {
+                      sounds.pop();
+                      setApplyAnswer(opt.id);
+                      if (opt.isCorrect) sounds.fanfare();
+                      else sounds.boing();
+                    }}
+                    className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
+                      applyAnswer === opt.id
+                        ? opt.isCorrect
+                          ? 'bg-emerald-50 border-emerald-400 ring-4 ring-emerald-200'
+                          : 'bg-rose-50 border-rose-400 ring-4 ring-rose-200'
+                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span className="font-black text-sm text-slate-900 block">{opt.title}</span>
+                    <span className="text-xs font-bold text-slate-500 mt-1 block">{opt.desc}</span>
+                  </button>
+                ))}
               </div>
 
-              {applyAnswer === 'cotton' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-700 font-bold text-xs max-w-md"
-                >
-                  ⚠️ Danger! Natural cotton fibers break under sudden shock weight. Climbers need synthetic Nylon cords!
-                </motion.div>
-              )}
-
               {applyAnswer === 'nylon' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold text-xs max-w-md"
+                <button
+                  onClick={handleNextPhase}
+                  className="w-full py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-base rounded-2xl cursor-pointer shadow-lg active:scale-95 transition-all animate-pulse"
                 >
-                  🎉 Perfect scientific choice! Nylon stretches to absorb fall energy and will never snap!
-                </motion.div>
+                  Claim Mission 3 Trophy! ⭐⭐⭐
+                </button>
               )}
             </div>
           )}
