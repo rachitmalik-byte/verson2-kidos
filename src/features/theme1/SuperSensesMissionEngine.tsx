@@ -271,7 +271,7 @@ export function SuperSensesMissionEngine() {
         }}
       />
 
-      <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+      <div className="w-full max-w-4xl mx-auto flex flex-col items-center relative z-10">
         {/* Top Navbar */}
         <div className="w-full flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 rounded-3xl border-2 border-emerald-200 shadow-md mb-4">
           <button

@@ -1,4 +1,3 @@
-import { WaterAnimatedOceanBackground } from '@/components/effects/WaterAnimatedOceanBackground';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,8 +7,14 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { WATER_CHAPTERS, WaterChapter } from '@/data/themeWaterMissions';
 import { InteractiveDiagramEngine } from '@/components/engine/InteractiveDiagramEngine';
+import { WaterAnimatedOceanBackground } from '@/components/effects/WaterAnimatedOceanBackground';
+import {
+  GhadisarStepwellWaterSim,
+  DensityBuoyancyDeadSeaSim,
+  MosquitoLarvaeEcologySim,
+} from '@/components/interactive/ThemeWaterSimulators';
 import type { InteractiveDiagramData } from '@/types/lessonEngine';
-import { ArrowLeft, Sparkles, Droplets, CheckCircle2, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Sparkles, Droplets, CheckCircle2, RotateCcw, ArrowRight } from 'lucide-react';
 
 const WATER_CYCLE_DATA: InteractiveDiagramData = {
   id: 'water-cycle-step',
@@ -59,16 +64,16 @@ const WATER_CYCLE_DATA: InteractiveDiagramData = {
       funFact: 'The fastest falling raindrops can reach speeds over 30 kilometers per hour!',
     },
     {
-      id: 'collect',
-      name: 'Collection & Runoff',
+      id: 'coll',
+      name: 'Collection',
       stageNumber: 4,
       icon: '🌊',
-      xPercent: 42,
-      yPercent: 86,
-      title: '4. Collection & Reservoir Storage',
-      explanation: 'Rainwater flows down mountains into rivers, streams, and oceans. The cycle is complete and ready to begin all over again!',
-      animationType: 'flow_water',
-      funFact: "97% of Earth's water is stored in oceans, while only 1% is accessible fresh drinking water!",
+      xPercent: 40,
+      yPercent: 82,
+      title: '4. Collection & Groundwater Infiltration',
+      explanation: 'Precipitation collects in oceans, rivers, lakes, and seeps underground into freshwater aquifers and wells!',
+      animationType: 'flow_river',
+      funFact: 'Over 97% of all water on Earth is salty ocean water; only 1% is accessible liquid freshwater!',
     },
   ],
 };
@@ -76,16 +81,17 @@ const WATER_CYCLE_DATA: InteractiveDiagramData = {
 export function WaterMissionEngine() {
   const { chapterNum } = useParams<{ chapterNum: string }>();
   const navigate = useNavigate();
-  const num = parseInt(chapterNum || '1', 10);
-  const chapter: WaterChapter = WATER_CHAPTERS.find((c) => c.chapterNumber === num) || WATER_CHAPTERS[0];
 
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
+  const num = Math.max(1, Math.min(4, parseInt(chapterNum || '1', 10)));
+  const chapter: WaterChapter =
+    WATER_CHAPTERS.find((c) => c.chapterNumber === num) || WATER_CHAPTERS[0];
+
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [showCelebration, setShowCelebration] = useState<boolean>(false);
 
   useEffect(() => {
-    sounds.pop();
-    voiceAssistant.stop();
     setIsCompleted(false);
+    setShowCelebration(false);
   }, [num]);
 
   const handleComplete = () => {
@@ -141,29 +147,44 @@ export function WaterMissionEngine() {
           />
         )}
 
-        {/* Chapter 2, 3, 4: Rich Interactive Water Labs */}
-        {num > 1 && (
-          <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-sky-400 shadow-xl flex flex-col items-center text-center">
-            <Pip mood="explaining" size="xl" />
-            <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mt-3">
-              {chapter.cbseChapterRef}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              {chapter.title} {chapter.icon}
-            </h2>
-            <p className="text-sm sm:text-base font-bold text-slate-600 max-w-xl leading-relaxed mb-6">
-              {chapter.subtitle}
-            </p>
-
-            <div className="p-4 bg-sky-50 rounded-2xl border-2 border-sky-200 text-xs font-bold text-sky-900 mb-6 w-full max-w-md">
-              💡 <strong>Key Concepts:</strong> {chapter.concepts.join(' • ')}
-            </div>
-
+        {/* Chapter 2: Rajasthan Bawris & 9-Tank Interconnection Sim */}
+        {num === 2 && (
+          <div className="w-full flex flex-col items-center gap-4">
+            <GhadisarStepwellWaterSim onCompleted={handleComplete} />
             <button
               onClick={handleComplete}
-              className="px-8 py-3.5 bg-gradient-to-r from-sky-400 to-blue-500 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer active:scale-95"
+              className="px-8 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer active:scale-95 flex items-center gap-2"
             >
-              Complete Chapter & Unlock Next ➔
+              <span>Complete Chapter 2 & Unlock Density Lab ➔</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Chapter 3: Dead Sea Salt Density & Buoyancy Sim */}
+        {num === 3 && (
+          <div className="w-full flex flex-col items-center gap-4">
+            <DensityBuoyancyDeadSeaSim onCompleted={handleComplete} />
+            <button
+              onClick={handleComplete}
+              className="px-8 py-3.5 bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer active:scale-95 flex items-center gap-2"
+            >
+              <span>Complete Chapter 3 & Unlock Ecology Lab ➔</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Chapter 4: Mosquito Larvae & Water Ecology Sim */}
+        {num === 4 && (
+          <div className="w-full flex flex-col items-center gap-4">
+            <MosquitoLarvaeEcologySim onCompleted={handleComplete} />
+            <button
+              onClick={handleComplete}
+              className="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer active:scale-95 flex items-center gap-2"
+            >
+              <span>Claim Water Scientist Badge 🏆</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
