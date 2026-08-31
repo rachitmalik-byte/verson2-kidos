@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { McqAssessmentData, McqOption } from '@/types/lessonEngine';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { CheckCircle2, XCircle, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle2, XCircle, Sparkles, HelpCircle, ArrowRight, RotateCcw } from 'lucide-react';
 
 interface Props {
   data: McqAssessmentData;
@@ -18,7 +18,7 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
   const selectedOption = data.options.find((o) => o.id === selectedOptionId);
 
   const handleSelectOption = (opt: McqOption) => {
-    if (isAnswered) return;
+    if (isAnswered && selectedOption?.isCorrect) return;
     sounds.pop();
     setSelectedOptionId(opt.id);
     setIsAnswered(true);
@@ -63,16 +63,15 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
           return (
             <motion.button
               key={opt.id}
-              whileHover={!isAnswered ? { scale: 1.015, x: 2 } : {}}
-              whileTap={!isAnswered ? { scale: 0.985 } : {}}
+              whileHover={!isAnswered || !selectedOption?.isCorrect ? { scale: 1.015, x: 2 } : {}}
+              whileTap={!isAnswered || !selectedOption?.isCorrect ? { scale: 0.985 } : {}}
               onClick={() => handleSelectOption(opt)}
-              disabled={isAnswered && !isSelected}
               className={`w-full text-left p-4 rounded-2xl border-2 transition-all flex items-center justify-between gap-3 cursor-pointer ${
                 isSelected
                   ? opt.isCorrect
                     ? 'bg-emerald-50 border-emerald-400 ring-4 ring-emerald-200'
                     : 'bg-rose-50 border-rose-400 ring-4 ring-rose-200'
-                  : isAnswered
+                  : isAnswered && selectedOption?.isCorrect
                   ? 'bg-slate-50 border-slate-200 opacity-60'
                   : 'bg-white border-slate-200 hover:border-amber-300 hover:bg-amber-50/50 shadow-xs'
               }`}
@@ -98,26 +97,43 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-4 rounded-2xl border-2 ${
+          className={`p-4 rounded-2xl border-2 flex flex-col gap-3 ${
             selectedOption.isCorrect
               ? 'bg-emerald-100/80 border-emerald-300 text-emerald-950'
               : 'bg-rose-100/80 border-rose-300 text-rose-950'
           }`}
         >
-          <div className="flex items-center gap-2 font-black text-sm mb-1">
-            {selectedOption.isCorrect ? <Sparkles className="w-4 h-4 text-emerald-600" /> : <HelpCircle className="w-4 h-4 text-rose-600" />}
-            <span>{selectedOption.isCorrect ? 'Outstanding Science Reasoning!' : 'Think Again:'}</span>
+          <div>
+            <div className="flex items-center gap-2 font-black text-sm mb-1">
+              {selectedOption.isCorrect ? <Sparkles className="w-4 h-4 text-emerald-600" /> : <HelpCircle className="w-4 h-4 text-rose-600" />}
+              <span>{selectedOption.isCorrect ? 'Outstanding Science Reasoning!' : 'Think Again:'}</span>
+            </div>
+            <p className="text-xs sm:text-sm font-bold leading-relaxed">
+              {selectedOption.isCorrect ? data.explanation : selectedOption.feedback}
+            </p>
           </div>
-          <p className="text-xs sm:text-sm font-bold leading-relaxed">
-            {selectedOption.isCorrect ? data.explanation : selectedOption.feedback}
-          </p>
 
-          {!selectedOption.isCorrect && (
+          {/* Action Button: Continue if Correct, Try Again if Incorrect */}
+          {selectedOption.isCorrect ? (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                sounds.success();
+                onComplete();
+              }}
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg cursor-pointer animate-pulse"
+            >
+              <span>Continue to Next Step</span>
+              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+            </motion.button>
+          ) : (
             <button
               onClick={handleTryAgain}
-              className="mt-3 px-4 py-2 bg-slate-900 text-white rounded-xl font-black text-xs cursor-pointer shadow-xs active:scale-95"
+              className="w-full py-2.5 px-4 rounded-xl bg-rose-200 hover:bg-rose-300 text-rose-950 font-black text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all"
             >
-              Try Another Option 🔄
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Try Again</span>
             </button>
           )}
         </motion.div>
