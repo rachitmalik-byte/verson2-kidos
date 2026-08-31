@@ -14,6 +14,7 @@ import { bgmEngine } from '@/lib/bgmEngine';
 import { useFXStore } from '@/stores/fxStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { InquiryQuestionCard } from '@/components/interactive/InquiryQuestionCard';
+import { SummerComfortVectorLab } from '@/components/interactive/SummerComfortVectorLab';
 import { RaincoatMission } from '@/features/missions/mission-01-raincoat/RaincoatMission';
 import { SortingMission } from '@/features/missions/mission-02-sorting/SortingMission';
 import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/NylonStrengthMission';
@@ -137,7 +138,7 @@ export const DynamicMissionEngine: React.FC = () => {
     sounds.pop();
 
     if (missionNumber === 5) bgmEngine.setTrack('rainy-storm');
-    else if (missionNumber === 6) bgmEngine.setTrack('chill-study');
+    else if (missionNumber === 6) bgmEngine.setTrack('playful-lab');
     else if (missionNumber === 7) bgmEngine.setTrack('playful-lab');
     else if (missionNumber === 8) bgmEngine.setTrack('high-energy-sprint');
     else if (missionNumber === 10) bgmEngine.setTrack('cosmic-explorer');
