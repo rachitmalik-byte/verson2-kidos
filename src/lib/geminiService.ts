@@ -1,3 +1,4 @@
+import type { LessonMissionConfig, LessonStepData } from '@/types/lessonEngine';
 /**
  * Google Gemini AI Multi-Object Scene & Material Detective Service
  * Pure open-ended multimodal AI vision powered exclusively by Gemini 2.x & 3.x generation models.
@@ -570,3 +571,326 @@ Return ONLY valid JSON:
     throw new Error('Could not parse AI dictionary JSON');
   },
 };
+
+/**
+ * Automated AI Level Generator for Teacher Studio
+ * Generates valid, Grade 5 calibrated LessonMissionConfig from plain English prompts.
+ */
+export async function generateLessonFromPrompt(
+  prompt: string,
+  targetGrade: number = 5
+): Promise<LessonMissionConfig> {
+  const apiKey = getApiKey();
+
+  const systemInstruction = `
+You are an expert Grade ${targetGrade} (Ages 10-11) Science Curriculum Architect.
+Given a teacher's topic or request, generate a strictly structured JSON mission configuration.
+
+The output MUST be valid JSON adhering to the following TypeScript structure:
+{
+  "id": "custom-mission-1",
+  "number": 1,
+  "title": "Short Fun Mission Title",
+  "subtitle": "Clear Grade 5 Learning Objective",
+  "icon": "🧪",
+  "themeColor": "sky",
+  "targetGrade": ${targetGrade},
+  "bgmTrack": "playful-lab",
+  "concepts": ["Concept 1", "Concept 2"],
+  "steps": [
+    {
+      "id": "step_1",
+      "type": "sorting_tray" | "matching_pairs" | "tensile_strength_rig" | "microscopic_zoom_viewer" | "water_absorption_lab" | "mcq_assessment" | "concept_summary",
+      "title": "Step Title",
+      "pipPrompt": "Friendly Grade 5 Pip explanation",
+      ... specific activity fields
+    }
+  ]
+}
+
+Ensure all scientific explanations are calibrated for 10-11 year olds (Grade 5).
+Output ONLY the raw JSON object with NO markdown ticks, NO commentary.
+`;
+
+  if (!apiKey) {
+    // Generate intelligent template based on prompt keyword matching
+    return generateFallbackLessonConfig(prompt, targetGrade);
+  }
+
+  const models = await getAvailableVisionModels(apiKey);
+
+  for (const model of models) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                { text: `${systemInstruction}\n\nTeacher Request: "${prompt}"` },
+              ],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 2048,
+          },
+        }),
+      });
+
+      if (!response.ok) continue;
+
+      const data = await response.json();
+      let rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+      const parsed = JSON.parse(rawText) as LessonMissionConfig;
+      if (parsed && parsed.title && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
+        return parsed;
+      }
+    } catch (err) {
+      console.warn(`Model ${model} failed to generate level:`, err);
+    }
+  }
+
+  return generateFallbackLessonConfig(prompt, targetGrade);
+}
+
+/**
+ * Intelligent Fallback Generator when API is offline or key missing
+ */
+export function generateFallbackLessonConfig(prompt: string, targetGrade: number = 5): LessonMissionConfig {
+  const p = prompt.toLowerCase();
+
+  if (p.includes('match') || p.includes('pair')) {
+    return {
+      id: 'ai-matching-mission',
+      number: 1,
+      title: 'Materials & Superpowers Match!',
+      subtitle: 'Connect everyday objects to their special science properties',
+      icon: '✨',
+      themeColor: 'amber',
+      targetGrade,
+      bgmTrack: 'high-energy-sprint',
+      concepts: ['Material Properties', 'Tensile Strength', 'Water Resistance'],
+      steps: [
+        {
+          id: 'step_1',
+          type: 'matching_pairs',
+          title: 'Object & Property Matching Rig',
+          instruction: 'Tap an object on the left, then connect it to its superpower property on the right!',
+          pipPrompt: 'Every material was chosen for a reason! Can you match each object to what it does best?',
+          feedbackSuccess: 'Awesome job! You matched all items to their correct scientific properties!',
+          pairs: [
+            {
+              id: 'pair-1',
+              leftText: 'Raincoat',
+              leftIcon: '🧥',
+              rightText: 'Hydrophobic & Waterproof',
+              rightIcon: '💧',
+              explanation: 'Synthetic polyester sheds water droplets so you stay 100% dry in the rain!',
+            },
+            {
+              id: 'pair-2',
+              leftText: 'Climbing Rope',
+              leftIcon: '🪢',
+              rightText: 'Extreme Tensile Strength',
+              rightIcon: '🏋️',
+              explanation: 'Continuous nylon polymer chains can hold heavy human climbers without snapping!',
+            },
+            {
+              id: 'pair-3',
+              leftText: 'Kettle Handle',
+              leftIcon: '🫖',
+              rightText: 'Thermoset Heat Insulator',
+              rightIcon: '🛡️',
+              explanation: 'Bakelite plastic blocks heat from the stove so you do not burn your hands!',
+            },
+            {
+              id: 'pair-4',
+              leftText: 'Electric Wire Core',
+              leftIcon: '⚡',
+              rightText: 'Electrical Conductor',
+              rightIcon: '💡',
+              explanation: 'Copper metal has free electrons that carry electric current to light bulbs!',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  if (p.includes('tensile') || p.includes('strength') || p.includes('weight') || p.includes('break')) {
+    return {
+      id: 'ai-tensile-mission',
+      number: 1,
+      title: 'The Great Tensile Strength Championship',
+      subtitle: 'Discover which fiber holds the most weight before snapping',
+      icon: '🏋️',
+      themeColor: 'sky',
+      targetGrade,
+      bgmTrack: 'playful-lab',
+      concepts: ['Tensile Strength', 'Breaking Force', 'Polymer Chains'],
+      steps: [
+        {
+          id: 'step_1',
+          type: 'tensile_strength_rig',
+          title: '1v1 Heavy Weight Pull Test',
+          pipPrompt: 'Pull the weight slider to test how many kilograms each material can carry before breaking!',
+          weightIncrementGrams: 1000,
+          maxWeightGrams: 50000,
+          scientificTakeaway: 'Synthetic nylon and metallic steel cables hold massive loads because of unbroken continuous molecular bonds!',
+          specimens: [
+            {
+              id: 'cotton',
+              name: 'Natural Cotton Rope',
+              material: 'Plant Cellulose',
+              icon: '🧵',
+              breakingWeightGrams: 2000,
+              elasticDeformationMm: 4,
+              snapSound: 'snap',
+              description: 'Short plant fibers twisted together.',
+              realWorldUse: 'Lightweight clothing and summer shirts',
+            },
+            {
+              id: 'wool',
+              name: 'Natural Wool Cord',
+              material: 'Sheep Fleece Hair',
+              icon: '🧶',
+              breakingWeightGrams: 3000,
+              elasticDeformationMm: 8,
+              snapSound: 'snap',
+              description: 'Curly animal fleece fibers that stretch and snap.',
+              realWorldUse: 'Warm winter sweaters and blankets',
+            },
+            {
+              id: 'silk',
+              name: 'Natural Silk Cord',
+              material: 'Silkworm Fibroin',
+              icon: '🐛',
+              breakingWeightGrams: 5000,
+              elasticDeformationMm: 6,
+              snapSound: 'snap',
+              description: 'Continuous glossy thread spun by caterpillars.',
+              realWorldUse: 'Luxury fabrics and surgical sutures',
+            },
+            {
+              id: 'nylon',
+              name: 'Synthetic Nylon Rope',
+              material: 'Synthetic Polyamide',
+              icon: '🪢',
+              breakingWeightGrams: 25000,
+              elasticDeformationMm: 15,
+              snapSound: 'tensionSnap',
+              description: 'Continuous unbroken synthetic plastic polymer chains.',
+              realWorldUse: 'Climbing ropes, parachutes, and fishing nets',
+            },
+            {
+              id: 'steel',
+              name: 'Braided Steel Wire Cable',
+              material: 'Stainless Steel Alloy',
+              icon: '⚙️',
+              breakingWeightGrams: 50000,
+              elasticDeformationMm: 2,
+              snapSound: 'none',
+              description: 'Braided aircraft-grade stainless steel wires.',
+              realWorldUse: 'Elevator cables and suspension bridge cables',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  // Default: Classification & Sorting Trays
+  return {
+    id: 'ai-sorting-mission',
+    number: 1,
+    title: 'Natural vs. Synthetic Classification Lab',
+    subtitle: 'Sort everyday specimens into Nature-Grown vs. Factory-Synthesized Trays',
+    icon: '🔬',
+    themeColor: 'sage',
+    targetGrade,
+    bgmTrack: 'playful-lab',
+    concepts: ['Natural Materials', 'Synthetic Materials', 'Chemical Synthesis'],
+    steps: [
+      {
+        id: 'step_1',
+        type: 'sorting_tray',
+        title: 'Two-Tray Classification Workbench',
+        pipPrompt: 'Help me sort these materials! Did they come from living nature, or were they synthesized by chemists in a factory?',
+        trays: [
+          {
+            id: 'natural',
+            title: '🌿 From Living Nature',
+            icon: '🌿',
+            themeColor: 'sage',
+            allowedCategories: ['natural'],
+            description: 'Grown by plants, animals, or Earth',
+          },
+          {
+            id: 'synthetic',
+            title: '🏭 Made by People (Chemicals)',
+            icon: '🏭',
+            themeColor: 'sky',
+            allowedCategories: ['synthetic'],
+            description: 'Synthesized in factories from petroleum',
+          },
+        ],
+        items: [
+          {
+            id: 'item-1',
+            name: 'Fluffy Cotton Boll',
+            icon: '🌿',
+            category: 'natural',
+            hint: 'Does this grow on a plant in agricultural fields?',
+            originDetails: 'Harvested from cotton shrub bolls',
+          },
+          {
+            id: 'item-2',
+            name: 'Sheep Wool Fleece',
+            icon: '🐑',
+            category: 'natural',
+            hint: 'Does this grow on an animal for warmth?',
+            originDetails: 'Sheared from sheep fleece',
+          },
+          {
+            id: 'item-3',
+            name: 'Nylon Parachute Cord',
+            icon: '🪢',
+            category: 'synthetic',
+            hint: 'Was this synthesized from petroleum chemicals?',
+            originDetails: 'Engineered in chemical factories',
+          },
+          {
+            id: 'item-4',
+            name: 'Polyester Rain Jacket',
+            icon: '🧥',
+            category: 'synthetic',
+            hint: 'Is this made from non-porous plastic polymers?',
+            originDetails: 'Manufactured from synthetic polyester',
+          },
+          {
+            id: 'item-5',
+            name: 'Silkworm Cocoon',
+            icon: '🐛',
+            category: 'natural',
+            hint: 'Is this spun by a caterpillar insect?',
+            originDetails: 'Spun by silkworm larvae',
+          },
+          {
+            id: 'item-6',
+            name: 'PET Plastic Water Bottle',
+            icon: '🫙',
+            category: 'synthetic',
+            hint: 'Is this molded from heated plastic pellets?',
+            originDetails: 'Blow-molded from polyethylene terephthalate',
+          },
+        ],
+      },
+    ],
+  };
+}

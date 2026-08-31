@@ -4,7 +4,9 @@ import { WaterAbsorptionLabEngine } from './WaterAbsorptionLabEngine';
 import { MicroscopicZoomViewerEngine } from './MicroscopicZoomViewerEngine';
 import { SortingTrayEngine } from './SortingTrayEngine';
 import { TensileStrengthRigEngine } from './TensileStrengthRigEngine';
+import { MatchingGameEngine } from './MatchingGameEngine';
 import { McqAssessmentEngine } from './McqAssessmentEngine';
+import { SummerComfortVectorLab } from '@/components/interactive/SummerComfortVectorLab';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 
 interface Props {
@@ -51,10 +53,27 @@ export const ActivityRenderer: React.FC<Props> = ({ stepData, onComplete, isComp
         />
       );
 
+    case 'matching_pairs':
+      return (
+        <MatchingGameEngine
+          data={stepData}
+          onComplete={onComplete}
+          isCompleted={isCompleted}
+        />
+      );
+
     case 'mcq_assessment':
       return (
         <McqAssessmentEngine
           data={stepData}
+          onComplete={onComplete}
+          isCompleted={isCompleted}
+        />
+      );
+
+    case 'summer_comfort_sim':
+      return (
+        <SummerComfortVectorLab
           onComplete={onComplete}
           isCompleted={isCompleted}
         />
@@ -98,6 +117,10 @@ export const ActivityRenderer: React.FC<Props> = ({ stepData, onComplete, isComp
       );
 
     default:
-      return null;
+      return (
+        <div className="p-6 bg-white rounded-2xl border-2 border-slate-200 text-center">
+          <p className="text-sm font-bold text-slate-600">Activity type not supported yet</p>
+        </div>
+      );
   }
 };

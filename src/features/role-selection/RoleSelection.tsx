@@ -6,7 +6,7 @@ import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { Sparkles, Play, Shield, Users, Compass, UserCheck, X } from 'lucide-react';
+import { Sparkles, Play, Shield, Users, Compass, GraduationCap, UserCheck, X } from 'lucide-react';
 import {
   RaincoatSyntheticIllustration,
   CottonIllustration,
@@ -121,50 +121,77 @@ export function RoleSelection() {
           </div>
         )}
 
-        {/* ── Two Big Chunky 3D Entry Cards ── */}
-        <div className="flex flex-col sm:flex-row gap-6 w-full max-w-2xl mt-8">
+        {/* ── 3 Big Chunky 3D Entry Cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full max-w-4xl mt-8">
           {/* Scientist Card */}
           <motion.button
-            whileHover={{ scale: 1.04, y: -4 }}
+            whileHover={{ scale: 1.03, y: -4 }}
             whileTap={{ scale: 0.96 }}
             onClick={handleScientistClick}
-            className="flex-1 bg-gradient-to-b from-sky-400 to-sky-600 border-4 border-sky-300 shadow-[0_10px_0_#0369A1] active:translate-y-2 active:shadow-none p-8 rounded-3xl flex flex-col items-center justify-center text-white cursor-pointer group"
+            className="bg-gradient-to-b from-sky-400 to-sky-600 border-4 border-sky-300 shadow-[0_10px_0_#0369A1] active:translate-y-2 active:shadow-none p-6 rounded-3xl flex flex-col items-center justify-center text-white cursor-pointer group"
           >
-            <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Compass className="w-12 h-12 text-white stroke-[2.5]" />
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Compass className="w-9 h-9 text-white stroke-[2.5]" />
             </div>
-            <h2 className="font-black text-2xl md:text-3xl tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <h2 className="font-black text-xl md:text-2xl tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
               I'M A SCIENTIST!
             </h2>
-            <p className="text-sky-100 text-xs md:text-sm font-bold mt-1.5">
+            <p className="text-sky-100 text-xs font-bold mt-1">
               Explore hands-on experiments & earn stars
             </p>
 
-            <div className="mt-5 px-6 py-2.5 bg-amber-400 border-2 border-amber-600 text-slate-950 font-black text-sm rounded-2xl shadow-md flex items-center gap-2">
-              <Play className="w-4 h-4 fill-current" />
+            <div className="mt-4 px-4 py-2 bg-amber-400 border-2 border-amber-600 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center gap-1.5">
+              <Play className="w-3.5 h-3.5 fill-current" />
               <span>Enter Lab!</span>
+            </div>
+          </motion.button>
+
+          {/* Teacher Studio Card */}
+          <motion.button
+            whileHover={{ scale: 1.03, y: -4 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => {
+              sounds.pop();
+              voiceAssistant.stop();
+              navigate('/teacher-studio');
+            }}
+            className="bg-gradient-to-b from-purple-500 to-indigo-700 border-4 border-purple-300 shadow-[0_10px_0_#4338CA] active:translate-y-2 active:shadow-none p-6 rounded-3xl flex flex-col items-center justify-center text-white cursor-pointer group"
+          >
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <GraduationCap className="w-9 h-9 text-white stroke-[2.5]" />
+            </div>
+            <h2 className="font-black text-xl md:text-2xl tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              TEACHER STUDIO
+            </h2>
+            <p className="text-purple-100 text-xs font-bold mt-1">
+              No-code builder & AI level generator
+            </p>
+
+            <div className="mt-4 px-4 py-2 bg-amber-400 border-2 border-amber-600 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
+              <span>Create Level!</span>
             </div>
           </motion.button>
 
           {/* Parent Card */}
           <motion.button
-            whileHover={{ scale: 1.04, y: -4 }}
+            whileHover={{ scale: 1.03, y: -4 }}
             whileTap={{ scale: 0.96 }}
             onClick={handleParentClick}
-            className="flex-1 bg-gradient-to-b from-indigo-500 to-indigo-700 border-4 border-indigo-300 shadow-[0_10px_0_#3730A3] active:translate-y-2 active:shadow-none p-8 rounded-3xl flex flex-col items-center justify-center text-white cursor-pointer group"
+            className="bg-gradient-to-b from-emerald-500 to-teal-700 border-4 border-emerald-300 shadow-[0_10px_0_#065F46] active:translate-y-2 active:shadow-none p-6 rounded-3xl flex flex-col items-center justify-center text-white cursor-pointer group"
           >
-            <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Shield className="w-12 h-12 text-white stroke-[2.5]" />
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Shield className="w-9 h-9 text-white stroke-[2.5]" />
             </div>
-            <h2 className="font-black text-2xl md:text-3xl tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <h2 className="font-black text-xl md:text-2xl tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
               PARENT PORTAL
             </h2>
-            <p className="text-indigo-100 text-xs md:text-sm font-bold mt-1.5">
-              Curriculum tracking & 5-min home activities
+            <p className="text-emerald-100 text-xs font-bold mt-1">
+              Progress tracking & 5-min home activities
             </p>
 
-            <div className="mt-5 px-6 py-2.5 bg-white/20 border-2 border-white/40 text-white font-black text-sm rounded-2xl shadow-sm flex items-center gap-2">
-              <Users className="w-4 h-4" />
+            <div className="mt-4 px-4 py-2 bg-white/20 border-2 border-white/40 text-white font-black text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5" />
               <span>Parent Access</span>
             </div>
           </motion.button>

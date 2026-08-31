@@ -1,3 +1,4 @@
+import { TeacherStudio } from '@/features/teacher-studio/TeacherStudio';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { RoleSelection } from '@/features/role-selection/RoleSelection';
@@ -48,6 +49,7 @@ export function App() {
 
           {/* Chapter Hub, Discovery Journal & Mystery Lab */}
           <Route path="/chapter-hub" element={<ChapterHub />} />
+          <Route path="/teacher-studio" element={<TeacherStudio />} />
           <Route path="/discovery-book" element={<DiscoveryBook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 

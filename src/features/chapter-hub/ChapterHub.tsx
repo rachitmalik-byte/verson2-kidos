@@ -25,7 +25,7 @@ import {
   Sun,
   Layers,
   Compass,
-  FlaskConical,
+  FlaskConical, GraduationCap,
   Zap,
   RotateCcw,
   Map,
@@ -117,6 +117,19 @@ export function ChapterHub() {
                 CBSE Class 5 EVS • Things We Make & Do
               </span>
             </div>
+
+            <button
+              onClick={() => {
+                sounds.pop();
+                voiceAssistant.stop();
+                navigate('/teacher-studio');
+              }}
+              className="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-300 font-black text-xs flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-xs ml-2"
+              title="Open Teacher Studio"
+            >
+              <GraduationCap className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Teacher Studio</span>
+            </button>
           </div>
 
           <AudioNavBarControls showProfile={true} />

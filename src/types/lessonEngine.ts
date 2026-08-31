@@ -8,7 +8,9 @@ export type ActivityType =
   | 'microscopic_zoom_viewer'
   | 'sorting_tray'
   | 'tensile_strength_rig'
+  | 'matching_pairs'
   | 'mcq_assessment'
+  | 'summer_comfort_sim'
   | 'read_aloud_coach'
   | 'scenario_sim'
   | 'concept_summary';
@@ -109,6 +111,8 @@ export interface TensileSpecimen {
   snapSound: string;
   description: string;
   realWorldUse: string;
+  intactImage?: string;
+  snappedImage?: string;
 }
 
 export interface TensileStrengthRigData extends BaseStepData {
@@ -119,12 +123,32 @@ export interface TensileStrengthRigData extends BaseStepData {
   scientificTakeaway: string;
 }
 
-// 5. MCQ Assessment Schema
+// 5. Matching Pairs Schema
+export interface MatchingPairItem {
+  id: string;
+  leftText: string;
+  leftIcon?: string;
+  leftImage?: string;
+  rightText: string;
+  rightIcon?: string;
+  rightImage?: string;
+  explanation: string;
+}
+
+export interface MatchingPairsData extends BaseStepData {
+  type: 'matching_pairs';
+  instruction: string;
+  pairs: MatchingPairItem[];
+  feedbackSuccess: string;
+}
+
+// 6. MCQ Assessment Schema
 export interface McqOption {
   id: string;
   text: string;
   isCorrect: boolean;
   feedback: string;
+  icon?: string;
 }
 
 export interface McqAssessmentData extends BaseStepData {
@@ -135,9 +159,19 @@ export interface McqAssessmentData extends BaseStepData {
   explanation: string;
   hint?: string;
   illustrationImage?: string;
+  scenarioEmoji?: string;
 }
 
-// 6. Speech Read-Aloud Coach Schema
+// 7. Summer Comfort 2D Vector Sim Schema
+export interface SummerComfortSimData extends BaseStepData {
+  type: 'summer_comfort_sim';
+  ambientTempC: number;
+  cottonCoolingRate: number;
+  polyesterHeatingRate: number;
+  takeaway: string;
+}
+
+// 8. Speech Read-Aloud Coach Schema
 export interface ReadAloudCoachData extends BaseStepData {
   type: 'read_aloud_coach';
   targetSentence: string;
@@ -146,7 +180,7 @@ export interface ReadAloudCoachData extends BaseStepData {
   scienceDefinition?: string;
 }
 
-// 7. Scenario Simulation Schema
+// 9. Scenario Simulation Schema
 export interface ScenarioSimulationData extends BaseStepData {
   type: 'scenario_sim';
   scenarioType: 'pipe_leak' | 'race_tire' | 'molecular_vulcanization' | 'epoxy_mixer' | 'circuit_bench';
@@ -159,7 +193,7 @@ export interface ScenarioSimulationData extends BaseStepData {
   }[];
 }
 
-// 8. Concept Summary Schema
+// 10. Concept Summary Schema
 export interface ConceptSummaryData extends BaseStepData {
   type: 'concept_summary';
   takeawayCards: {
@@ -182,7 +216,9 @@ export type LessonStepData =
   | MicroscopicZoomData
   | SortingTrayData
   | TensileStrengthRigData
+  | MatchingPairsData
   | McqAssessmentData
+  | SummerComfortSimData
   | ReadAloudCoachData
   | ScenarioSimulationData
   | ConceptSummaryData;
@@ -195,6 +231,7 @@ export interface LessonMissionConfig {
   subtitle: string;
   icon: string;
   themeColor: string;
+  targetGrade?: number;
   bgmTrack?: string;
   concepts: string[];
   steps: LessonStepData[];
