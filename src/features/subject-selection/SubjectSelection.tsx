@@ -1,6 +1,6 @@
 import { PipWardrobeShopModal } from '@/components/wardrobe/PipWardrobeShopModal';
 import { Shirt } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Pip } from '@/components/pip/Pip';
@@ -118,6 +118,7 @@ const SUBJECTS: Subject[] = [
 
 export const SubjectSelection: React.FC = () => {
   const navigate = useNavigate();
+  const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 
