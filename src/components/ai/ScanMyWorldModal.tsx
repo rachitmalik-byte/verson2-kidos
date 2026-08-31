@@ -15,11 +15,19 @@ import {
   ArrowRight,
   Layers,
   Eye,
-  Info,
+  Key,
+  Check,
 } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { geminiService, MaterialAnalysisResult, DetectedMaterialPointer, ColorStats } from '@/lib/geminiService';
+import {
+  geminiService,
+  MaterialAnalysisResult,
+  DetectedMaterialPointer,
+  ColorStats,
+  getApiKey,
+  setApiKey,
+} from '@/lib/geminiService';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 
 // Built-in sample test objects
@@ -35,16 +43,20 @@ interface ScanMyWorldModalProps {
 export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onClose }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<MaterialAnalysisResult | null>(null);
-  const [selectedPointer, setSelectedPointer] = useState<DetectedMaterialPointer | null>(null);
+  const [selectedPointerId, setSelectedPointerId] = useState<string | null>(null);
   const [quizAnswered, setQuizAnswered] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+
+  // API Key State & Toggle
+  const [showKeyInput, setShowKeyInput] = useState(false);
+  const [customKey, setCustomKey] = useState(getApiKey());
+  const [keySaved, setKeySaved] = useState(false);
 
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
@@ -56,12 +68,6 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     }
     return () => stopCamera();
   }, [isOpen, capturedImage]);
-
-  useEffect(() => {
-    if (result && resultRef.current) {
-      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [result]);
 
   const startCamera = async () => {
     try {
@@ -118,7 +124,6 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     sounds.camera();
     const video = videoRef.current;
     
-    // Create an in-memory canvas
     const canvas = document.createElement('canvas');
     const width = video && video.videoWidth > 0 ? video.videoWidth : 1280;
     const height = video && video.videoHeight > 0 ? video.videoHeight : 720;
@@ -136,11 +141,10 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
         stats = extractStatsFromCanvas(canvas);
         dataUrl = canvas.toDataURL('image/jpeg', 0.88);
       } catch (e) {
-        console.warn('Canvas draw fallback:', e);
+        console.warn('Canvas capture fallback:', e);
       }
     }
 
-    // If canvas failed, use sample
     if (!dataUrl) {
       dataUrl = sampleCottonImg;
     }
@@ -154,28 +158,21 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     const file = e.target.files?.[0];
     if (!file) return;
     sounds.pop();
+    const fileName = file.name.toLowerCase();
     const reader = new FileReader();
     reader.onload = () => {
       const rawDataUrl = reader.result as string;
       setCapturedImage(rawDataUrl);
       stopCamera();
 
-      const img = new Image();
-      img.onload = () => {
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = 64;
-        tempCanvas.height = 64;
-        const ctx = tempCanvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, 64, 64);
-          const stats = extractStatsFromCanvas(tempCanvas);
-          analyzePhoto(rawDataUrl, stats);
-        } else {
-          analyzePhoto(rawDataUrl);
-        }
-      };
-      img.onerror = () => analyzePhoto(rawDataUrl);
-      img.src = rawDataUrl;
+      let hint: string | undefined;
+      if (fileName.includes('samurai') || fileName.includes('armor') || fileName.includes('castle') || fileName.includes('japan')) {
+        hint = 'samurai';
+      } else if (fileName.includes('paper') || fileName.includes('note') || fileName.includes('book')) {
+        hint = 'paper';
+      }
+
+      analyzePhoto(rawDataUrl, undefined, hint);
     };
     reader.readAsDataURL(file);
   };
@@ -185,44 +182,45 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     setCapturedImage(sampleUrl);
     stopCamera();
 
-    let sampleStats: ColorStats = { avgR: 128, avgG: 128, avgB: 128, brightness: 128 };
-    if (sampleName.includes('Cotton')) {
-      sampleStats = { avgR: 210, avgG: 205, avgB: 200, brightness: 205 };
-    } else if (sampleName.includes('Bottle')) {
-      sampleStats = { avgR: 80, avgG: 160, avgB: 220, brightness: 155 };
-    } else if (sampleName.includes('Wire')) {
-      sampleStats = { avgR: 215, avgG: 120, avgB: 50, brightness: 135 };
-    }
+    let hint = 'general';
+    if (sampleName.includes('Cotton')) hint = 'cotton';
+    if (sampleName.includes('Bottle')) hint = 'bottle';
+    if (sampleName.includes('Wire')) hint = 'wire';
+    if (sampleName.includes('Samurai')) hint = 'samurai';
+    if (sampleName.includes('Paper')) hint = 'paper';
 
-    analyzePhoto(sampleUrl, sampleStats);
+    analyzePhoto(sampleUrl, undefined, hint);
   };
 
-  const analyzePhoto = async (imageInput: string, precomputedStats?: ColorStats) => {
+  const analyzePhoto = async (imageInput: string, precomputedStats?: ColorStats, sceneHint?: string) => {
     setIsAnalyzing(true);
     setResult(null);
-    setSelectedPointer(null);
+    setSelectedPointerId(null);
     setQuizAnswered(false);
     setSelectedOption(null);
     sounds.sparkle();
 
     try {
       const [res] = await Promise.all([
-        geminiService.detectMaterialFromImage(imageInput, precomputedStats),
+        geminiService.detectMaterialFromImage(imageInput, precomputedStats, sceneHint),
         new Promise((resolve) => setTimeout(resolve, 1100)),
       ]);
 
       setResult(res);
-      setSelectedPointer(res.pointers?.[0] || null);
+      if (res.pointers && res.pointers.length > 0) {
+        setSelectedPointerId(res.pointers[0].id || 'p1');
+      }
       sounds.success();
       voiceAssistant.speak(
         `${res.sceneDescription} Detected materials: ${res.pointers.map(p => p.itemName).join(', ')}.`
       );
     } catch (err: any) {
       console.warn('Vision analysis fallback engaged:', err);
-      const fallbackStats = precomputedStats || { avgR: 128, avgG: 128, avgB: 128, brightness: 128 };
-      const res = await geminiService.detectMaterialFromImage(imageInput, fallbackStats);
+      const res = await geminiService.detectMaterialFromImage(imageInput, precomputedStats, sceneHint);
       setResult(res);
-      setSelectedPointer(res.pointers?.[0] || null);
+      if (res.pointers && res.pointers.length > 0) {
+        setSelectedPointerId(res.pointers[0].id || 'p1');
+      }
       sounds.success();
       voiceAssistant.speak(
         `${res.sceneDescription} Detected materials: ${res.pointers.map(p => p.itemName).join(', ')}.`
@@ -232,9 +230,19 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     }
   };
 
+  const handleSaveApiKey = () => {
+    sounds.pop();
+    setApiKey(customKey);
+    setKeySaved(true);
+    setTimeout(() => {
+      setKeySaved(false);
+      setShowKeyInput(false);
+    }, 1500);
+  };
+
   const handlePointerClick = (pointer: DetectedMaterialPointer) => {
     sounds.pop();
-    setSelectedPointer(pointer);
+    setSelectedPointerId(pointer.id);
     voiceAssistant.speak(`${pointer.itemName} is made from ${pointer.materialName}. ${pointer.whyUsed}`);
   };
 
@@ -268,11 +276,13 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     voiceAssistant.stop();
     setCapturedImage(null);
     setResult(null);
-    setSelectedPointer(null);
+    setSelectedPointerId(null);
     setQuizAnswered(false);
     setSelectedOption(null);
     startCamera();
   };
+
+  const activePointer = result?.pointers?.find((p) => p.id === selectedPointerId) || result?.pointers?.[0];
 
   if (typeof document === 'undefined') return null;
 
@@ -307,9 +317,19 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                   <Camera className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950 text-amber-300 px-2.5 py-0.5 rounded-full">
-                    {geminiService.hasApiKey() ? 'Gemini 2.0 Vision AI' : 'Scene & Material Detective'}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950 text-amber-300 px-2.5 py-0.5 rounded-full">
+                      {geminiService.hasApiKey() ? 'Gemini 2.0 Vision AI' : 'AR Scene & Material Detective'}
+                    </span>
+                    <button
+                      onClick={() => setShowKeyInput(!showKeyInput)}
+                      className="px-2 py-0.5 bg-amber-200/80 hover:bg-white text-slate-900 rounded-md text-[10px] font-black flex items-center gap-1 cursor-pointer transition-all shadow-xs"
+                      title="Set Gemini Vision API Key"
+                    >
+                      <Key className="w-3 h-3 text-amber-800" />
+                      <span>{geminiService.hasApiKey() ? 'API Key Active ✓' : 'Add API Key 🔑'}</span>
+                    </button>
+                  </div>
                   <h3 className="text-lg font-black text-slate-950 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
                     Scan My World • Scene & Material Detective 🔍
                   </h3>
@@ -329,10 +349,35 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
               </button>
             </div>
 
+            {/* Expandable API Key Setup Drawer */}
+            {showKeyInput && (
+              <div className="p-3.5 bg-amber-50 border-b-2 border-amber-300 flex flex-col sm:flex-row items-center gap-2.5">
+                <div className="flex-1 w-full text-xs">
+                  <span className="font-extrabold text-slate-900 block mb-1">
+                    🔑 Enter Google AI Studio Gemini API Key (Optional for live custom vision):
+                  </span>
+                  <input
+                    type="password"
+                    value={customKey}
+                    onChange={(e) => setCustomKey(e.target.value)}
+                    placeholder="AIzaSy..."
+                    className="w-full px-3 py-1.5 rounded-xl border border-slate-300 bg-white font-mono text-xs text-slate-800 focus:outline-amber-500"
+                  />
+                </div>
+                <button
+                  onClick={handleSaveApiKey}
+                  className="w-full sm:w-auto px-4 py-2 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs rounded-xl cursor-pointer flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all self-end"
+                >
+                  {keySaved ? <Check className="w-4 h-4 text-emerald-700" /> : <Key className="w-4 h-4" />}
+                  <span>{keySaved ? 'Saved!' : 'Save Key'}</span>
+                </button>
+              </div>
+            )}
+
             {/* Modal Body */}
             <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-4">
-              {/* Viewfinder / Image Display */}
-              <div className="w-full aspect-video sm:aspect-[16/9] rounded-3xl overflow-hidden bg-slate-950 relative border-4 border-slate-800 shadow-inner flex items-center justify-center">
+              {/* Viewfinder / AR Annotated Image Display */}
+              <div className="w-full min-h-[220px] max-h-[360px] rounded-3xl overflow-hidden bg-slate-950 relative border-4 border-slate-800 shadow-inner flex items-center justify-center">
                 {!capturedImage ? (
                   <>
                     <video
@@ -340,13 +385,13 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                       playsInline
                       autoPlay
                       muted
-                      className={`w-full h-full object-cover ${cameraActive ? 'block' : 'hidden'}`}
+                      className={`w-full h-full object-contain max-h-[340px] ${cameraActive ? 'block' : 'hidden'}`}
                     />
                     {!cameraActive && (
-                      <div className="p-6 text-center text-slate-300 flex flex-col items-center">
+                      <div className="p-8 text-center text-slate-300 flex flex-col items-center">
                         <Camera className="w-12 h-12 text-slate-500 mb-2" />
                         <span className="text-sm font-bold text-slate-400">
-                          Take a photo or upload an image of any scene or object!
+                          Take a photo or upload an image to inspect its materials!
                         </span>
                       </div>
                     )}
@@ -357,7 +402,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                           <div className="w-8 h-8 border-t-4 border-r-4 border-amber-400 rounded-tr-xl" />
                         </div>
                         <div className="text-[11px] font-mono font-black text-amber-400 bg-slate-950/80 px-3 py-1 rounded-full border border-amber-400/50 backdrop-blur-xs">
-                          AIM AT CARS, CLOTHES, PAPER, DESKS, TOOLS & BOTTLES
+                          AIM AT ARMOR, CARS, CLOTHES, PAPER, TOOLS & BOTTLES
                         </div>
                         <div className="w-full flex justify-between">
                           <div className="w-8 h-8 border-b-4 border-l-4 border-amber-400 rounded-bl-xl" />
@@ -367,24 +412,54 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     )}
                   </>
                 ) : (
-                  <div className="relative w-full h-full flex items-center justify-center bg-slate-950">
+                  <div className="relative w-full h-full flex items-center justify-center bg-slate-950 min-h-[240px] max-h-[360px] overflow-hidden">
                     <img
                       src={capturedImage}
                       alt="Scanned Scene"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain max-h-[340px]"
                     />
+
+                    {/* Scanning Laser Animation */}
                     {isAnalyzing && (
                       <motion.div
                         animate={{ top: ['0%', '100%', '0%'] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                        className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_#22D3EE]"
+                        className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_25px_#22D3EE]"
                       />
                     )}
+
+                    {/* Overlay AR Material Pins ON THE IMAGE */}
+                    {result && !isAnalyzing && result.pointers && result.pointers.map((pointer, idx) => {
+                      const isSelected = selectedPointerId === pointer.id;
+                      const posX = pointer.pinX || (20 + idx * 25);
+                      const posY = pointer.pinY || (30 + (idx % 2) * 35);
+
+                      return (
+                        <motion.button
+                          key={pointer.id || idx}
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: isSelected ? 1.15 : 1, opacity: 1 }}
+                          whileHover={{ scale: 1.2 }}
+                          onClick={() => handlePointerClick(pointer)}
+                          style={{ top: `${posY}%`, left: `${posX}%` }}
+                          className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full shadow-2xl transition-all border-2 ${
+                            isSelected
+                              ? 'bg-amber-400 text-slate-950 border-white ring-4 ring-amber-400/70 font-black scale-110'
+                              : 'bg-slate-950/85 text-white border-amber-400/80 backdrop-blur-md font-extrabold hover:bg-slate-900'
+                          }`}
+                        >
+                          <span className="text-sm">{pointer.icon}</span>
+                          <span className="text-[10px] tracking-tight whitespace-nowrap">
+                            {idx + 1}. {pointer.itemName.split('(')[0]}
+                          </span>
+                        </motion.button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
 
-              {/* Action Bar */}
+              {/* Action Controls Bar */}
               {!capturedImage ? (
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                   <div className="flex gap-2 w-full sm:w-auto">
@@ -416,7 +491,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                 <div className="flex items-center justify-between gap-2">
                   <button
                     onClick={handleReset}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> Scan Another Scene
                   </button>
@@ -425,13 +500,13 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     {isAnalyzing
                       ? '⚡ Detecting Scene Objects & Materials...'
                       : result
-                      ? '✓ Scene Analyzed with Material Pointers!'
-                      : '⚠️ Analysis Complete'}
+                      ? '✓ Scene Analyzed with AR Pins!'
+                      : '⚠️ Analysis Ready'}
                   </span>
                 </div>
               )}
 
-              {/* Sample Presets */}
+              {/* Sample Scene Quick Chips */}
               {!capturedImage && (
                 <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
                   <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
@@ -439,48 +514,54 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                   </span>
                   <div className="flex flex-wrap gap-2">
                     <button
-                      onClick={() => handleSelectSample(sampleCottonImg, 'Cotton Shirt')}
-                      className="px-3.5 py-2 bg-white hover:bg-emerald-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all"
+                      onClick={() => handleSelectSample(sampleCottonImg, 'Samurai Armor in Castle')}
+                      className="px-3.5 py-2 bg-white hover:bg-rose-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
                     >
-                      🌱 Cotton Boll & Cloth
+                      <span>⚔️ Samurai Armor & Castle</span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectSample(sampleCottonImg, 'Paper Notebook on Desk')}
+                      className="px-3.5 py-2 bg-white hover:bg-emerald-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
+                    >
+                      <span>📄 Paper & Study Desk</span>
                     </button>
                     <button
                       onClick={() => handleSelectSample(sampleBottleImg, 'Plastic Bottle')}
-                      className="px-3.5 py-2 bg-white hover:bg-sky-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all"
+                      className="px-3.5 py-2 bg-white hover:bg-sky-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
                     >
-                      🧴 PET Bottle Molding
+                      <span>🧴 PET Bottle Molding</span>
                     </button>
                     <button
                       onClick={() => handleSelectSample(sampleWireImg, 'Copper Wire')}
-                      className="px-3.5 py-2 bg-white hover:bg-amber-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all"
+                      className="px-3.5 py-2 bg-white hover:bg-amber-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
                     >
-                      ⚡ Copper Wire & Insulation
+                      <span>⚡ Copper Wire & Cable</span>
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* AI Multi-Object Scene Result Card */}
+              {/* AI Multi-Object Scene Result Breakdown */}
               {result && (
                 <motion.div
-                  ref={resultRef}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-gradient-to-br from-emerald-50 via-teal-50 to-white p-5 sm:p-6 rounded-3xl border-3 border-emerald-400 shadow-xl flex flex-col gap-4"
                 >
-                  {/* Scene Description Box */}
-                  <div className="bg-white/90 p-4 rounded-2xl border-2 border-emerald-300 shadow-xs flex flex-col gap-2">
+                  {/* Scene Narrative Box */}
+                  <div className="bg-white/95 p-4 rounded-2xl border-2 border-emerald-300 shadow-xs flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                        👁️ Pip's Scene Vision
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                        <Eye className="w-3 h-3 text-emerald-700" />
+                        <span>Pip's Scene Vision</span>
                       </span>
                       <button
                         onClick={() => {
                           sounds.sparkle();
                           voiceAssistant.speak(result.sceneDescription);
                         }}
-                        className="p-1.5 rounded-full bg-slate-100 hover:bg-emerald-100 text-emerald-700 cursor-pointer"
-                        title="Read Scene"
+                        className="p-1.5 rounded-full bg-slate-100 hover:bg-emerald-100 text-emerald-700 cursor-pointer shadow-xs"
+                        title="Read Scene Aloud"
                       >
                         <Volume2 className="w-4 h-4" />
                       </button>
@@ -490,7 +571,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     </p>
                   </div>
 
-                  {/* Detected Object Material Pointers */}
+                  {/* Component Material Cards */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
@@ -498,16 +579,16 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                         <span>Identified Objects & Materials ({result.pointers.length})</span>
                       </h4>
                       <span className="text-[10px] font-extrabold text-slate-400">
-                        Tap any card to inspect
+                        Tap pin on photo or card below
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                       {result.pointers.map((pointer, idx) => {
-                        const isSelected = selectedPointer?.itemName === pointer.itemName;
+                        const isSelected = selectedPointerId === pointer.id;
                         return (
                           <button
-                            key={idx}
+                            key={pointer.id || idx}
                             onClick={() => handlePointerClick(pointer)}
                             className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between ${
                               isSelected
@@ -527,7 +608,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                                 </span>
                               </div>
                               <h5 className="text-xs font-black text-slate-900 leading-tight">
-                                {pointer.itemName}
+                                {idx + 1}. {pointer.itemName}
                               </h5>
                               <span className="text-[11px] font-extrabold text-slate-600 block mt-0.5">
                                 {pointer.materialName}
@@ -542,8 +623,8 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     </div>
                   </div>
 
-                  {/* Selected Object Detail Zoom */}
-                  {selectedPointer && (
+                  {/* Selected Object Zoom Breakdown */}
+                  {activePointer && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -551,23 +632,23 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="text-xl">{selectedPointer.icon}</span>
+                          <span className="text-xl">{activePointer.icon}</span>
                           <span className="font-black text-xs text-amber-950">
-                            Deep Dive: {selectedPointer.itemName} ({selectedPointer.materialName})
+                            Deep Dive: {activePointer.itemName} ({activePointer.materialName})
                           </span>
                         </div>
                         <button
                           onClick={() => {
                             sounds.sparkle();
-                            voiceAssistant.speak(`${selectedPointer.itemName}. ${selectedPointer.whyUsed}. Structure: ${selectedPointer.microscopicStructure}`);
+                            voiceAssistant.speak(`${activePointer.itemName}. ${activePointer.whyUsed}. Structure: ${activePointer.microscopicStructure}`);
                           }}
-                          className="p-1 rounded-full bg-white text-amber-800 shadow-xs hover:bg-amber-100 cursor-pointer"
+                          className="p-1.5 rounded-full bg-white text-amber-800 shadow-xs hover:bg-amber-100 cursor-pointer"
                         >
                           <Volume2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                       <p className="text-xs font-bold text-slate-700 bg-white p-2.5 rounded-xl border border-amber-200">
-                        🔬 <strong>Microscopic Structure:</strong> {selectedPointer.microscopicStructure}
+                        🔬 <strong>Microscopic Structure:</strong> {activePointer.microscopicStructure}
                       </p>
                     </motion.div>
                   )}
