@@ -19,10 +19,10 @@ export const MatchingGameEngine: React.FC<Props> = ({ data, onComplete }) => {
 
   // Shuffle right items once for playful challenge
   const [shuffledRightItems] = useState(() => {
-    return [...data.pairs].sort(() => Math.random() - 0.5);
+    return [...pairs].sort(() => Math.random() - 0.5);
   });
 
-  const isAllMatched = matchedIds.length === data.pairs.length;
+  const isAllMatched = matchedIds.length === pairs.length;
 
   const handleLeftClick = (id: string) => {
     if (matchedIds.includes(id)) return;
@@ -45,13 +45,13 @@ export const MatchingGameEngine: React.FC<Props> = ({ data, onComplete }) => {
       setMatchedIds(updated);
       setSelectedLeftId(null);
 
-      const matchedPair = data.pairs.find((p) => p.id === rightPairId);
+      const matchedPair = pairs.find((p) => p.id === rightPairId);
       if (matchedPair) {
         setActiveFeedback(matchedPair.explanation);
         voiceAssistant.speak(`Great match! ${matchedPair.explanation}`);
       }
 
-      if (updated.length === data.pairs.length) {
+      if (updated.length === pairs.length) {
         sounds.fanfare();
         onComplete();
       }
@@ -79,7 +79,7 @@ export const MatchingGameEngine: React.FC<Props> = ({ data, onComplete }) => {
           <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Matching Pairs Challenge
         </span>
         <span className="text-xs font-black text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">
-          Matched: {matchedIds.length} of {data.pairs.length}
+          Matched: {matchedIds.length} of {pairs.length}
         </span>
       </div>
 
@@ -97,7 +97,7 @@ export const MatchingGameEngine: React.FC<Props> = ({ data, onComplete }) => {
           <span className="text-xs font-black uppercase text-slate-500 tracking-wider">
             1. Select Object
           </span>
-          {data.pairs.map((pair) => {
+          {pairs.map((pair) => {
             const isSelected = selectedLeftId === pair.id;
             const isMatched = matchedIds.includes(pair.id);
 

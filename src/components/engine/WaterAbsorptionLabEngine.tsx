@@ -12,11 +12,12 @@ interface Props {
 }
 
 export const WaterAbsorptionLabEngine: React.FC<Props> = ({ data, onComplete }) => {
-  const [selectedSpecimenId, setSelectedSpecimenId] = useState<string>(data.specimens[0]?.id || '');
+  const specimens = data?.specimens || [];
+  const [selectedSpecimenId, setSelectedSpecimenId] = useState<string>(specimens[0]?.id || '');
   const [sprayedSpecimens, setSprayedSpecimens] = useState<Record<string, boolean>>({});
   const [isSpraying, setIsSpraying] = useState(false);
 
-  const currentSpecimen = data.specimens.find((s) => s.id === selectedSpecimenId) || data.specimens[0];
+  const currentSpecimen = specimens.find((s) => s.id === selectedSpecimenId) || specimens[0];
   const isCurrentSprayed = Boolean(sprayedSpecimens[selectedSpecimenId]);
 
   const handleSpray = () => {
@@ -28,7 +29,7 @@ export const WaterAbsorptionLabEngine: React.FC<Props> = ({ data, onComplete }) 
     setTimeout(() => {
       setSprayedSpecimens((prev) => {
         const next = { ...prev, [selectedSpecimenId]: true };
-        const nowAllDone = data.specimens.every((s) => next[s.id]);
+        const nowAllDone = specimens.every((s) => next[s.id]);
         if (nowAllDone) {
           sounds.fanfare();
           onComplete();
@@ -50,7 +51,7 @@ export const WaterAbsorptionLabEngine: React.FC<Props> = ({ data, onComplete }) 
     <div className="w-full flex flex-col items-center gap-5">
       {/* Specimen Switcher Tabs */}
       <div className="flex flex-wrap items-center justify-center gap-2">
-        {data.specimens.map((s) => {
+        {specimens.map((s) => {
           const isDone = sprayedSpecimens[s.id];
           const isSelected = s.id === selectedSpecimenId;
           return (

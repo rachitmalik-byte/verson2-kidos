@@ -57,7 +57,7 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
     sounds.pop();
     setSelectedItemId(null);
     setTrayItems({});
-    setUnplacedItems(data.items);
+    setUnplacedItems(data?.items || []);
     setHintMessage(null);
   };
 
@@ -65,7 +65,7 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
     <div className="w-full flex flex-col items-center gap-4 sm:gap-6">
       {/* Classification Trays Dropzones */}
       <div className="w-full max-w-4xl flex flex-col sm:flex-row gap-3 sm:gap-4">
-        {data.trays.map((tray) => {
+        {trays.map((tray) => {
           const placed = trayItems[tray.id] || [];
           return (
             <div

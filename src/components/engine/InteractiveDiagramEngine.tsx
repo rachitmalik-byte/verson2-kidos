@@ -27,8 +27,9 @@ interface Props {
 }
 
 export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) => {
-  const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(data.hotspots[0]?.id || null);
-  const [visitedHotspots, setVisitedHotspots] = useState<string[]>([data.hotspots[0]?.id].filter(Boolean));
+  const hotspots = data?.hotspots || [];
+  const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(hotspots[0]?.id || null);
+  const [visitedHotspots, setVisitedHotspots] = useState<string[]>([hotspots[0]?.id].filter(Boolean));
   
   // Interactive Simulation Controls
   const [sunHeatLevel, setSunHeatLevel] = useState<'normal' | 'super_hot'>('normal');
@@ -36,8 +37,8 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
   const [isRaining, setIsRaining] = useState(false);
   const [isAutoTouring, setIsAutoTouring] = useState(false);
 
-  const selectedHotspot = data.hotspots.find((h) => h.id === selectedHotspotId) || data.hotspots[0];
-  const isAllVisited = visitedHotspots.length === data.hotspots.length;
+  const selectedHotspot = hotspots.find((h) => h.id === selectedHotspotId) || hotspots[0];
+  const isAllVisited = visitedHotspots.length === hotspots.length;
 
   const handleSelectHotspot = (hotspot: DiagramHotspot) => {
     sounds.pop();
@@ -45,7 +46,7 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
     if (!visitedHotspots.includes(hotspot.id)) {
       const nextVisited = [...visitedHotspots, hotspot.id];
       setVisitedHotspots(nextVisited);
-      if (nextVisited.length === data.hotspots.length) {
+      if (nextVisited.length === hotspots.length) {
         sounds.fanfare();
         onComplete();
       }
@@ -92,8 +93,8 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
     setIsAutoTouring(true);
     sounds.success();
 
-    for (let i = 0; i < data.hotspots.length; i++) {
-      const h = data.hotspots[i];
+    for (let i = 0; i < hotspots.length; i++) {
+      const h = hotspots[i];
       handleSelectHotspot(h);
       await new Promise((resolve) => setTimeout(resolve, 4000));
     }
@@ -102,8 +103,8 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
 
   const handleReset = () => {
     sounds.pop();
-    setSelectedHotspotId(data.hotspots[0]?.id || null);
-    setVisitedHotspots([data.hotspots[0]?.id].filter(Boolean));
+    setSelectedHotspotId(hotspots[0]?.id || null);
+    setVisitedHotspots([hotspots[0]?.id].filter(Boolean));
     setSunHeatLevel('normal');
     setCloudDensity('fluffy');
     setIsRaining(false);
@@ -119,7 +120,7 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
         </span>
         <div className="flex items-center gap-2">
           <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
-            Stages Explored: {visitedHotspots.length} of {data.hotspots.length}
+            Stages Explored: {visitedHotspots.length} of {hotspots.length}
           </span>
         </div>
       </div>
@@ -306,7 +307,7 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
         {/* ══════════════════════════════════════════════════════════════════
             INTERACTIVE HOTSPOT BUTTONS (Overlaid at Key Coordinates)
         ══════════════════════════════════════════════════════════════════ */}
-        {data.hotspots.map((hotspot) => {
+        {hotspots.map((hotspot) => {
           const isSelected = selectedHotspotId === hotspot.id;
           const isVisited = visitedHotspots.includes(hotspot.id);
 
@@ -395,7 +396,7 @@ export const InteractiveDiagramEngine: React.FC<Props> = ({ data, onComplete }) 
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
               <span className="text-[10px] font-black uppercase tracking-wider bg-sky-200 text-sky-900 px-2 py-0.5 rounded">
-                Stage {selectedHotspot.stageNumber} of {data.hotspots.length}
+                Stage {selectedHotspot.stageNumber} of {hotspots.length}
               </span>
               <h4 className="font-black text-base text-slate-900 truncate">
                 {selectedHotspot.title}
