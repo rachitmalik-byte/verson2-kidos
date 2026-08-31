@@ -346,7 +346,7 @@ Rules:
             parts: [{ text: `${systemPrompt}\n\nQuestion: "${question}"` }],
           },
         ],
-        generationConfig: { maxOutputTokens: 400, temperature: 0.2 },
+        generationConfig: { maxOutputTokens: 1024, temperature: 0.3, thinkingConfig: { thinkingBudget: 0 } },
       };
 
       return await generateContentCascade(requestBody);
@@ -521,14 +521,23 @@ Return ONLY valid JSON:
    */
   async chatWithLivePip(userInput: string, pageContext?: string): Promise<string> {
     try {
-      const prompt = `You are Pip, a playful cartoon robot science buddy for a CBSE Class 5 student (age 9-11).
+      const prompt = `You are Pip, a friendly and smart cartoon science mentor for a CBSE Class 5 student (age 9-11).
 Current page: ${pageContext || 'PolyQuest Science Academy'}.
-User message: "${userInput}"
-Reply in exactly 2 to 3 short sentences using simple everyday words with 1-2 fun emojis.`;
+User question: "${userInput}"
+
+INSTRUCTIONS:
+1. Explain the answer accurately in 2 to 4 friendly, clear, and complete sentences.
+2. If asked about science topics (e.g. boiling points, vaporization, polymers, animals, water, electricity), give the exact interesting facts clearly.
+3. Use simple everyday language suited for a 10-year-old with 1-2 fun emojis.
+4. Always conclude with a complete closing sentence. Never stop midway.`;
 
       const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 300, temperature: 0.3 },
+        generationConfig: {
+          maxOutputTokens: 1024,
+          temperature: 0.4,
+          thinkingConfig: { thinkingBudget: 0 },
+        },
       };
 
       return await generateContentCascade(requestBody);
@@ -560,7 +569,7 @@ Return ONLY valid JSON:
 
     const requestBody = {
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 400, temperature: 0.2 },
+      generationConfig: { maxOutputTokens: 1024, temperature: 0.3, thinkingConfig: { thinkingBudget: 0 } },
     };
 
     const rawText = await generateContentCascade(requestBody);
