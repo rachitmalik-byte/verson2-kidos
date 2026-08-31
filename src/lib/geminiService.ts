@@ -1,6 +1,6 @@
 /**
  * Google Gemini AI Multi-Object Scene & Material Detective Service
- * Real-time vision analysis with multi-object material breakdowns, interactive AR pointers, and Socratic tutoring.
+ * Pure open-ended multimodal AI vision with dense per-object detection.
  */
 
 export interface ColorStats {
@@ -14,11 +14,11 @@ export type MaterialCategory = 'Natural' | 'Synthetic' | 'Metallic' | 'Mineral' 
 
 export interface DetectedMaterialPointer {
   id: string;
-  itemName: string;       // e.g. "School Uniform Shirt", "Pleated Skirt", "Iron Armor Plates", "Paper Sheet"
-  materialName: string;   // e.g. "Poly-Cotton Blend (65% Polyester / 35% Cotton)", "Forged Iron Metal Alloy"
+  itemName: string;       // e.g. "Spearhead", "Linen Tunic", "Leather Boots", "Pleated Skirt"
+  materialName: string;   // e.g. "Forged Iron Metal Alloy", "Woven Plant Linen", "Tanned Leather"
   category: MaterialCategory;
-  icon: string;           // e.g. "👔", "👗", "🧦", "⚔️", "🧵", "🪵", "📄", "🚗", "🧴", "⚡"
-  whyUsed: string;        // e.g. "Polyester prevents wrinkles while cotton provides breathable airflow."
+  icon: string;           // e.g. "🗡️", "🧥", "🥾", "🪵", "👔", "👗", "📄", "🚗", "🧴", "⚡"
+  whyUsed: string;        // e.g. "Forged metal provides hardness and piercing durability."
   microscopicStructure: string;
   pinX?: number;          // Percentage position on image (10 to 90)
   pinY?: number;          // Percentage position on image (10 to 90)
@@ -81,12 +81,12 @@ const CANDIDATE_MODELS = [
 ];
 
 /**
- * Executes a Gemini API request with strict 5s timeout
+ * Executes a Gemini API request with strict 6s timeout
  */
 async function generateContentCascade(requestBody: any): Promise<string> {
   const apiKey = getApiKey();
   if (!apiKey) {
-    throw new Error('No Gemini API key provided.');
+    throw new Error('NO_API_KEY');
   }
 
   let lastError: any = null;
@@ -94,7 +94,7 @@ async function generateContentCascade(requestBody: any): Promise<string> {
   for (const model of CANDIDATE_MODELS) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
 
     try {
       const response = await fetch(url, {
@@ -125,299 +125,141 @@ async function generateContentCascade(requestBody: any): Promise<string> {
 }
 
 /**
- * Generates exact, dense 5-8 object detections for specific domains with accurate Metallic/Mineral/Natural/Synthetic tagging
+ * Built-in science specimens for offline demo testing
  */
-export function getPredefinedSceneBreakdown(theme: string): MaterialAnalysisResult {
-  const t = theme.toLowerCase();
+export function getSampleSpecimenBreakdown(sampleType: string): MaterialAnalysisResult {
+  const s = sampleType.toLowerCase();
 
-  // 1. School Uniforms, Dresses, Clothes, Shirts, Skirts, Apparel (Dense 7-Object Detection)
-  if (
-    t.includes('dress') ||
-    t.includes('uniform') ||
-    t.includes('shirt') ||
-    t.includes('skirt') ||
-    t.includes('cloth') ||
-    t.includes('wear') ||
-    t.includes('apparel') ||
-    t.includes('general')
-  ) {
+  if (s.includes('cotton')) {
     return {
-      sceneDescription: 'Looking at this image, I can see student school uniform apparel featuring tailored shirts, pleated skirts, shorts, neckties, buckles, socks, and shoes.',
-      materialName: 'Poly-Cotton Textile Blend & Metal Fasteners',
-      family: 'Synthetic, Natural & Metallic Composite System',
-      category: 'Mixed',
-      microscopicStructure: 'Woven matrix combining high-elasticity synthetic polyester polymer strands with breathable, porous natural cotton cellulose tubes and refined metallic buckles.',
-      confidence: 0.98,
-      funFact: 'Poly-cotton blends are the #1 fabric in school uniforms worldwide because they resist playground tears while staying wrinkle-free all day!',
+      sceneDescription: 'Looking at this sample, I can see natural raw cotton fibers harvested directly from the Gossypium plant boll.',
+      materialName: '100% Natural Organic Cotton Cellulose',
+      family: 'Plant Cellulose Biopolymer',
+      category: 'Natural',
+      microscopicStructure: 'Hollow spiral tubes of organic plant cellulose with microscopic pores that absorb liquid moisture.',
+      confidence: 0.99,
+      funFact: 'Cotton fibers grow inside a fluffy protective seed pod called a boll on the Gossypium plant!',
       pointers: [
         {
           id: 'p1',
-          itemName: '👔 School Uniform Shirt & Collar',
-          materialName: 'Poly-Cotton Blend (65% Polyester / 35% Cotton)',
-          category: 'Mixed',
-          icon: '👔',
-          whyUsed: 'Synthetic polyester prevents wrinkles after washing, while natural cotton provides breathable airflow for students.',
-          microscopicStructure: 'Interwoven synthetic polyester chains and hollow organic cotton fibers.',
-          pinX: 28,
-          pinY: 22,
-        },
-        {
-          id: 'p2',
-          itemName: '👗 Pleated Uniform Skirt',
-          materialName: '100% Synthetic Polyester Twill (Synthetic)',
-          category: 'Synthetic',
-          icon: '👗',
-          whyUsed: 'Polyester polymer chains hold sharp heat-set pleats permanently and resist grass stains from the playground.',
-          microscopicStructure: 'Long-chain synthetic ester polymers with high tensile strength.',
-          pinX: 25,
-          pinY: 48,
-        },
-        {
-          id: 'p3',
-          itemName: '🩳 Uniform Tailored Shorts',
-          materialName: 'Durable Polyester & Viscose Fabric (Synthetic)',
-          category: 'Synthetic',
-          icon: '🩳',
-          whyUsed: 'Abrasion-resistant weave prevents fabric wear when sitting on school benches and playing sports.',
-          microscopicStructure: 'Dense synthetic fiber weave.',
-          pinX: 74,
+          itemName: '🌱 Cotton Seed Boll',
+          materialName: 'Natural Plant Cellulose (Natural)',
+          category: 'Natural',
+          icon: '🌱',
+          whyUsed: 'Protects growing plant seeds and provides lightweight seed dispersal in nature.',
+          microscopicStructure: 'Porous organic cellulose matrix.',
+          pinX: 50,
           pinY: 45,
         },
         {
-          id: 'p4',
-          itemName: '🎀 School Necktie & Ribbons',
-          materialName: 'Woven Microfiber Polyester (Synthetic)',
-          category: 'Synthetic',
-          icon: '🎀',
-          whyUsed: 'Glossy synthetic yarns maintain vivid school colors without fading in the sun or laundry.',
-          microscopicStructure: 'High-density micro-filament polyester fibers.',
-          pinX: 60,
-          pinY: 28,
-        },
-        {
-          id: 'p5',
-          itemName: '⚙️ Belt Buckles & Metal Eyelets',
-          materialName: 'Refined Zinc & Steel Alloy (Metallic)',
-          category: 'Metallic',
-          icon: '⚙️',
-          whyUsed: 'Refined metallic alloy provides high tensile shear strength to secure belts and fasteners firmly.',
-          microscopicStructure: 'Crystalline metal lattice with shared delocalized electron cloud.',
-          pinX: 26,
-          pinY: 34,
-        },
-        {
-          id: 'p6',
-          itemName: '🔘 Fastener Buttons',
-          materialName: 'Molded Urea-Formaldehyde Resin (Synthetic)',
-          category: 'Synthetic',
-          icon: '🔘',
-          whyUsed: 'Thermoset resin buttons withstand boiling laundry water and high-heat irons without melting.',
-          microscopicStructure: 'Cross-linked 3D thermosetting polymer.',
-          pinX: 75,
-          pinY: 25,
-        },
-        {
-          id: 'p7',
-          itemName: '🧦 Combed Cotton Socks',
-          materialName: '100% Natural Cotton Cellulose (Natural)',
-          category: 'Natural',
-          icon: '🧦',
-          whyUsed: 'Natural cotton capillary channels absorb perspiration rapidly to keep students feet dry and comfortable.',
-          microscopicStructure: 'Hollow spiral organic plant cellulose fibers.',
-          pinX: 35,
-          pinY: 78,
-        },
-      ],
-      interactiveChallenge: {
-        question: 'Why are belt buckles and zippers made from METALLIC alloys instead of soft natural cotton?',
-        options: [
-          { text: 'Metals have high tensile strength and rigidity to withstand daily mechanical tension without snapping', isCorrect: true },
-          { text: 'Metals are lighter than feathers and dissolve in laundry water', isCorrect: false },
-        ],
-        explanation: 'Refined metallic alloys possess strong metallic bonds that resist deformation under mechanical tension.',
-      },
-    };
-  }
-
-  // 2. Samurai Armor, Historical Gear & Castles (Dense 7-Object Detection)
-  if (t.includes('samurai') || t.includes('armor') || t.includes('castle') || t.includes('japan')) {
-    return {
-      sceneDescription: 'Looking at this image, I can see traditional Japanese samurai armor (Kachū) displayed inside a historical castle hall.',
-      materialName: 'Forged Iron Metal, Silk Cords, and Lacquered Wood',
-      family: 'Ancient Metal Alloy & Natural Organic Composite',
-      category: 'Mixed',
-      microscopicStructure: 'Layered iron scales (Kozane) tied with high-tensile silk cords and sealed with natural tree urushi lacquer.',
-      confidence: 0.98,
-      funFact: 'Samurai armor was designed to be ultra-flexible—thousands of individual iron scales were laced together with over 300 meters of pure silk cord!',
-      pointers: [
-        {
-          id: 'p1',
-          itemName: '⚔️ Iron Kabuto Helmet & Dō Breastplate',
-          materialName: 'Forged Iron & High-Carbon Steel Alloy (Metallic)',
-          category: 'Metallic',
-          icon: '⚔️',
-          whyUsed: 'Refined iron and steel provide exceptional hardness to deflect sword blades and arrow strikes.',
-          microscopicStructure: 'Dense iron-carbon metallic crystal lattice.',
-          pinX: 50,
-          pinY: 30,
-        },
-        {
           id: 'p2',
-          itemName: '🧵 Odoshi Lacing Cords',
-          materialName: '100% Natural Silk Fibroin (Natural)',
+          itemName: '🧵 Raw Fiber Strands',
+          materialName: 'Cellulose Microfibrils (Natural)',
           category: 'Natural',
           icon: '🧵',
-          whyUsed: 'Natural silk fibers have immense tensile strength and flexibility to absorb shockwaves during battle.',
-          microscopicStructure: 'Triangular fibroin protein filaments.',
-          pinX: 42,
+          whyUsed: 'Long staple fibers can be spun into soft, breathable yarn for clothing.',
+          microscopicStructure: 'Helical crystalline cellulose chains.',
+          pinX: 62,
           pinY: 55,
-        },
-        {
-          id: 'p3',
-          itemName: '🪵 Armor Stand & Frame',
-          materialName: 'Lacquered Hinoki Cypress Hardwood (Natural)',
-          category: 'Natural',
-          icon: '🪵',
-          whyUsed: 'Natural timber provides a rigid vertical support frame that holds heavy armor without warping.',
-          microscopicStructure: 'Cellulose fibers cemented with natural lignin and urushi tree resin.',
-          pinX: 55,
-          pinY: 82,
-        },
-        {
-          id: 'p4',
-          itemName: '🏯 Castle Fortress Wall',
-          materialName: 'Natural Lime Plaster & Stone (Mineral)',
-          category: 'Mineral',
-          icon: '🏯',
-          whyUsed: 'Mineral lime plaster creates fireproof, breathable fortress walls that withstand weather for centuries.',
-          microscopicStructure: 'Calcium carbonate mineral matrix.',
-          pinX: 18,
-          pinY: 22,
-        },
-        {
-          id: 'p5',
-          itemName: '🗡️ Sword Guard (Tsuba) & Fittings',
-          materialName: 'Refined Brass & Copper Alloy (Metallic)',
-          category: 'Metallic',
-          icon: '🗡️',
-          whyUsed: 'Ductile copper and brass absorb impact vibrations and resist corrosion.',
-          microscopicStructure: 'Metallic copper-zinc crystal alloy.',
-          pinX: 68,
-          pinY: 62,
-        },
-        {
-          id: 'p6',
-          itemName: '🥋 Under-Armor Garment (Hitatare)',
-          materialName: 'Natural Hemp & Linen Plant Fiber (Natural)',
-          category: 'Natural',
-          icon: '🥋',
-          whyUsed: 'Rough plant fibers cushion heavy armor against skin and absorb sweat.',
-          microscopicStructure: 'Bast fiber cellulose bundles.',
-          pinX: 32,
-          pinY: 65,
         },
       ],
       interactiveChallenge: {
-        question: 'Why did ancient samurai armorers lace iron plates with natural SILK cords rather than rigid metal rivets?',
+        question: 'Why are cotton shirts comfortable in hot summer weather?',
         options: [
-          { text: 'Silk cords are flexible and lightweight, allowing the warrior to run and swing a sword with ease', isCorrect: true },
-          { text: 'Silk melts in cold weather to keep the warrior warm', isCorrect: false },
+          { text: 'Microscopic pores absorb sweat so cool breezes can evaporate it', isCorrect: true },
+          { text: 'Cotton traps hot body heat like plastic cling wrap', isCorrect: false },
         ],
-        explanation: 'Natural silk has high tensile strength and elasticity, giving samurai mobility while keeping the iron plates tightly connected.',
+        explanation: 'Natural cellulose fibers have capillary channels that wick away perspiration.',
       },
     };
   }
 
-  // 3. Paper, Books, Notebooks, Study Desks (Dense 6-Object Detection)
-  if (t.includes('paper') || t.includes('book') || t.includes('study') || t.includes('note') || t.includes('desk')) {
+  if (s.includes('bottle')) {
     return {
-      sceneDescription: 'Looking at this image, I can see a student workspace with paper, notebook sheets, wooden furniture, and writing tools.',
-      materialName: 'Plant Wood Cellulose Pulp, Metal & Polymers',
-      family: 'Natural Cellulose & Synthetic Polymer Composite',
-      category: 'Mixed',
-      microscopicStructure: 'Flattened plant cellulose fibers pressed together into a porous absorbent sheet that bonds with writing ink.',
-      confidence: 0.96,
-      funFact: 'Paper was first invented in ancient China around 105 AD using crushed mulberry tree bark and cloth rags!',
+      sceneDescription: 'Looking at this sample, I can see a molded transparent plastic water bottle engineered from synthetic PET polymer.',
+      materialName: 'Polyethylene Terephthalate (PET Plastic)',
+      family: 'Thermoplastic Synthetic Polymer',
+      category: 'Synthetic',
+      microscopicStructure: 'Tightly linked repeating ester polymer chains that create an impermeable, waterproof, shatterproof barrier.',
+      confidence: 0.98,
+      funFact: 'Recycled PET beverage bottles can be shredded, melted, and spun into warm synthetic fleece winter clothing!',
       pointers: [
         {
           id: 'p1',
-          itemName: '📄 Paper / Notebook Sheet',
-          materialName: 'Plant Wood Pulp Cellulose (Natural)',
-          category: 'Natural',
-          icon: '📄',
-          whyUsed: 'Interwoven cellulose fibers absorb ink droplets and provide a smooth, flat writing surface.',
-          microscopicStructure: 'Porous organic cellulose matrix.',
-          pinX: 45,
-          pinY: 55,
+          itemName: '🧴 Bottle Body',
+          materialName: 'PET Plastic (Synthetic Polymer)',
+          category: 'Synthetic',
+          icon: '🧴',
+          whyUsed: 'Lightweight, 100% waterproof, and shatterproof so liquids do not leak.',
+          microscopicStructure: 'Ester polymer chain network.',
+          pinX: 50,
+          pinY: 50,
         },
         {
           id: 'p2',
-          itemName: '🖊️ Plastic Pen Body & Grip',
-          materialName: 'Molded Polypropylene Plastic (Synthetic)',
+          itemName: '🔘 Screw Cap',
+          materialName: 'High-Density Polyethylene (HDPE)',
           category: 'Synthetic',
-          icon: '🖊️',
-          whyUsed: 'Lightweight synthetic plastic can be moulded into ergonomic grips that seal liquid ink securely.',
-          microscopicStructure: 'Long-chain synthetic polymer.',
-          pinX: 68,
-          pinY: 48,
-        },
-        {
-          id: 'p3',
-          itemName: '📎 Metal Paperclips & Spiral Wire',
-          materialName: 'Galvanized Steel Wire (Metallic)',
-          category: 'Metallic',
-          icon: '📎',
-          whyUsed: 'Springy metallic elasticity holds multiple sheets of paper securely without snapping.',
-          microscopicStructure: 'Crystalline steel alloy with zinc coating.',
-          pinX: 38,
-          pinY: 40,
-        },
-        {
-          id: 'p4',
-          itemName: '🪵 Study Desk Surface',
-          materialName: 'Natural Hardwood Timber (Natural)',
-          category: 'Natural',
-          icon: '🪵',
-          whyUsed: 'Durable, sturdy, and natural insulator that provides a stable workspace.',
-          microscopicStructure: 'Lignin-reinforced cellulose fibers.',
-          pinX: 25,
-          pinY: 75,
-        },
-        {
-          id: 'p5',
-          itemName: '✏️ Pencil Graphite Core',
-          materialName: 'Crystalline Carbon & Clay Mineral (Mineral)',
-          category: 'Mineral',
-          icon: '✏️',
-          whyUsed: 'Microscopic carbon layers slide off smoothly onto paper under gentle pressure.',
-          microscopicStructure: 'Hexagonal carbon crystal sheets (Graphene layers).',
-          pinX: 58,
-          pinY: 62,
-        },
-        {
-          id: 'p6',
-          itemName: '🧹 Synthetic Eraser',
-          materialName: 'Plasticized Polyvinyl Chloride (Synthetic)',
-          category: 'Synthetic',
-          icon: '🧹',
-          whyUsed: 'Synthetic polymers generate friction and adhere to graphite particles, lifting them cleanly off paper.',
-          microscopicStructure: 'Flexible synthetic polymer matrix.',
-          pinX: 78,
-          pinY: 65,
+          icon: '🔘',
+          whyUsed: 'Tough and flexible to form a tight, airtight seal on the bottle neck.',
+          microscopicStructure: 'Linear polyethylene polymer chains.',
+          pinX: 50,
+          pinY: 20,
         },
       ],
       interactiveChallenge: {
-        question: 'Why is paper 100% biodegradable in natural soil, while plastic pens remain for hundreds of years?',
+        question: 'What makes PET plastic ideal for holding water and juices?',
         options: [
-          { text: 'Soil microbes possess natural enzymes that digest plant wood cellulose into fertile compost', isCorrect: true },
-          { text: 'Paper is made from crude oil chemicals that dissolve in rain', isCorrect: false },
+          { text: 'It is 100% waterproof, lightweight, and shatterproof', isCorrect: true },
+          { text: 'It dissolves completely in cold drinking water', isCorrect: false },
         ],
-        explanation: 'Because paper comes from tree wood cellulose, nature knows how to digest and recycle it naturally.',
+        explanation: 'Synthetic PET polymers are hydrophobic (water-repelling) and non-reactive with liquids.',
       },
     };
   }
 
-  return getPredefinedSceneBreakdown('uniform');
+  // Copper Wire Sample
+  return {
+    sceneDescription: 'Looking at this sample, I can see an electrical cable with conductive copper metal wiring and protective plastic insulation.',
+    materialName: 'Pure Copper Metal Conductor & PVC Polymer Insulator',
+    family: 'Transition Metal & Synthetic Polymer Compound',
+    category: 'Mixed',
+    microscopicStructure: 'Free-flowing electrons move rapidly across the inner copper metal lattice, while outer PVC polymer chains block electrical shocks.',
+    confidence: 0.98,
+    funFact: 'Copper is one of the best conductors on Earth, allowing electrical energy to travel at nearly the speed of light!',
+    pointers: [
+      {
+        id: 'p1',
+        itemName: '⚡ Copper Conductor Core',
+        materialName: 'Pure Copper Metal (Metallic)',
+        category: 'Metallic',
+        icon: '⚡',
+        whyUsed: 'Free valence electrons carry electric current with minimal resistance and heat loss.',
+        microscopicStructure: 'Crystalline copper metal lattice.',
+        pinX: 48,
+        pinY: 45,
+      },
+      {
+        id: 'p2',
+        itemName: '🛡️ Flexible PVC Insulation',
+        materialName: 'Polyvinyl Chloride Plastic (Synthetic)',
+        category: 'Synthetic',
+        icon: '🛡️',
+        whyUsed: 'Synthetic PVC plastic is a high-resistance electrical insulator that prevents shocks.',
+        microscopicStructure: 'Tightly bound PVC polymer chains.',
+        pinX: 65,
+        pinY: 65,
+      },
+    ],
+    interactiveChallenge: {
+      question: 'Why are electrical charger cables made with metal inside and plastic outside?',
+      options: [
+        { text: 'The metal conducts electricity inside, while the outer plastic insulator protects our hands', isCorrect: true },
+        { text: 'Both materials are used solely to make the cable colorful', isCorrect: false },
+      ],
+      explanation: 'Engineers combine conductors (copper) and insulators (PVC plastic) to transmit power safely.',
+    },
+  };
 }
 
 export const geminiService = {
@@ -449,49 +291,49 @@ Rules:
 
       return await generateContentCascade(requestBody);
     } catch {
-      const q = question.toLowerCase();
-      if (q.includes('synthetic') || q.includes('plastic') || q.includes('nylon')) {
-        return 'Synthetic materials are made in laboratories from petroleum chemicals rather than harvested from nature. Because scientists design their polymer chains, they can be super strong, waterproof, or heat-resistant! 🧪✨';
-      }
-      if (q.includes('cotton') || q.includes('natural') || q.includes('wood') || q.includes('silk')) {
-        return 'Natural materials come directly from plants, animals, or the earth, like cotton bolls and silkworm cocoons. They are breathable and biodegradable because nature knows how to recycle organic fibers! 🌿🐑';
-      }
       return 'Great science question! In science, every material has unique physical properties like elasticity, electrical insulation, and strength that determine how we use it! 🔬⭐';
     }
   },
 
   /**
-   * 🔍 Dense Multi-Object Detection & Material Analysis (5-8 Objects per scene)
+   * 🔍 Pure Open-Ended AI Multimodal Vision Detective (Analyzes ANY photo with zero preset bias)
    */
   async detectMaterialFromImage(
     base64Image: string,
-    precomputedStats?: ColorStats,
-    userSceneHint?: string
+    sampleTypeHint?: string
   ): Promise<MaterialAnalysisResult> {
+    // If it's a built-in sample specimen button click
+    if (sampleTypeHint && (sampleTypeHint.includes('sample-cotton') || sampleTypeHint.includes('sample-bottle') || sampleTypeHint.includes('sample-wire'))) {
+      return getSampleSpecimenBreakdown(sampleTypeHint);
+    }
+
     const apiKey = getApiKey();
+    if (!apiKey) {
+      throw new Error('NO_API_KEY');
+    }
 
-    if (apiKey) {
-      try {
-        let mimeType = 'image/jpeg';
-        const mimeMatch = base64Image.match(/^data:([a-zA-Z0-9/+-]+);base64,/);
-        if (mimeMatch) mimeType = mimeMatch[1];
-        const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
+    let mimeType = 'image/jpeg';
+    const mimeMatch = base64Image.match(/^data:([a-zA-Z0-9/+-]+);base64,/);
+    if (mimeMatch) mimeType = mimeMatch[1];
+    const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
 
-        const prompt = `You are Pip, an advanced AI Science Detective analyzing a real photo for a 5th grade student.
-IMPORTANT OBJECT DETECTION INSTRUCTIONS:
-1. Describe what is ACTUALLY in this photo in 1-2 friendly sentences (e.g. if school uniform dresses with skirts and shirts, say so; if samurai armor, say so; if paper, cars, food, tools, or bottles, identify accurately).
-2. Perform DENSE OBJECT DETECTION: Return a JSON array of EVERY distinct object, garment, part, or component visible in the photo (MUST DETECT BETWEEN 5 TO 8 DISTINCT OBJECTS).
-3. CATEGORIZATION RULES:
-   - 'Natural': Raw plant fibers (cotton, linen, hemp), animal products (wool, silk), natural wood, leather.
+    const prompt = `You are Pip, an advanced AI Materials Science Detective analyzing a real user photo for a 5th grade student.
+Analyze the EXACT visual contents of this image with 100% visual accuracy.
+
+INSTRUCTIONS:
+1. Describe the scene in 1 to 2 clear, friendly sentences. Identify exactly who or what is present (e.g. an ancient warrior with a spear, a car on a road, a cat on a rug, a student with books, a bicycle, a tree, tools, food, clothing).
+2. Perform DENSE OBJECT DETECTION: Return a JSON array of EVERY distinct object, tool, garment, weapon, or component visible in the photo (aim for 4 to 8 distinct detections).
+3. CATEGORIZE ACCURATELY:
+   - 'Metallic': Refined metals and alloys (Steel, iron, brass, copper, aluminum, bronze, zinc).
+   - 'Natural': Raw organic materials (Wood, cotton, linen, silk, wool, leather, hemp, feathers).
    - 'Synthetic': Petrochemical plastics, nylon, polyester, acrylic, PVC, synthetic rubber.
-   - 'Metallic': Refined metals & alloys (steel, aluminum, copper, brass, iron, zinc, bronze).
-   - 'Mineral': Glass, ceramics, stone, sand, graphite, plaster.
+   - 'Mineral': Glass, ceramics, stone, clay, graphite, plaster.
    - 'Mixed': Blends (poly-cotton, fiberglass, composite).
 4. Provide precise percentage coordinates pinX (10 to 90) and pinY (10 to 90) on the image where each object is located.
 
 Return ONLY a valid JSON object matching this schema with NO markdown fences:
 {
-  "sceneDescription": "1-2 friendly sentences describing what is in this photo",
+  "sceneDescription": "1-2 friendly sentences accurately describing what is in this photo",
   "materialName": "Primary material family",
   "family": "Material family name",
   "category": "Natural" or "Synthetic" or "Metallic" or "Mineral" or "Mixed",
@@ -501,8 +343,8 @@ Return ONLY a valid JSON object matching this schema with NO markdown fences:
   "pointers": [
     {
       "id": "p1",
-      "itemName": "Specific item or part with emoji (e.g. '👔 School Shirt', '👗 Pleated Skirt', '⚙️ Belt Buckle', '🧦 Cotton Socks')",
-      "materialName": "Exact material name (e.g. 'Poly-Cotton Blend', 'Polyester Twill', 'Zinc-Steel Metal Alloy')",
+      "itemName": "Specific item or part with emoji (e.g. '🗡️ Spearhead', '🧥 Overcoat', '🥾 Leather Boots', '🪵 Spear Shaft')",
+      "materialName": "Exact material name (e.g. 'Forged Iron Metal Alloy', 'Heavy Weathered Wool', 'Tanned Animal Leather')",
       "category": "Natural" or "Synthetic" or "Metallic" or "Mineral" or "Mixed",
       "icon": "Relevant emoji icon",
       "whyUsed": "1 sentence explaining why this material is used for this specific part",
@@ -521,35 +363,24 @@ Return ONLY a valid JSON object matching this schema with NO markdown fences:
   }
 }`;
 
-        const requestBody = {
-          contents: [
-            {
-              parts: [
-                { text: prompt },
-                { inlineData: { mimeType, data: cleanBase64 } },
-              ],
-            },
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            { text: prompt },
+            { inlineData: { mimeType, data: cleanBase64 } },
           ],
-          generationConfig: { maxOutputTokens: 2000, temperature: 0.1 },
-        };
+        },
+      ],
+      generationConfig: { maxOutputTokens: 2000, temperature: 0.1 },
+    };
 
-        const rawText = await generateContentCascade(requestBody);
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          return JSON.parse(jsonMatch[0]) as MaterialAnalysisResult;
-        }
-      } catch (err) {
-        console.warn('Gemini Vision request error, engaging smart scene fallback:', err);
-      }
+    const rawText = await generateContentCascade(requestBody);
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]) as MaterialAnalysisResult;
     }
-
-    // Context / Hint-aware fallback
-    if (userSceneHint) {
-      return getPredefinedSceneBreakdown(userSceneHint);
-    }
-
-    // Default to rich School Uniforms / Clothing / Apparel breakdown
-    return getPredefinedSceneBreakdown('uniform');
+    throw new Error('Could not parse Gemini vision JSON');
   },
 
   /**
