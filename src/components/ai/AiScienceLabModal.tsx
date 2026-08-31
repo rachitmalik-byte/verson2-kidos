@@ -3,14 +3,12 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Camera,
-  Bot,
   FlaskConical,
   X,
   Sparkles,
   ArrowRight,
   Star,
   Zap,
-  Volume2,
 } from 'lucide-react';
 import { Pip } from '@/components/pip/Pip';
 import { sounds } from '@/lib/sounds';
@@ -19,7 +17,6 @@ interface AiScienceLabModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenScan: () => void;
-  onOpenAskPip: () => void;
   onOpenWhatIf: () => void;
 }
 
@@ -27,7 +24,6 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
   isOpen,
   onClose,
   onOpenScan,
-  onOpenAskPip,
   onOpenWhatIf,
 }) => {
   if (typeof document === 'undefined') return null;
@@ -83,7 +79,7 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
             {/* Body Cards */}
             <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-4 bg-slate-50">
               <p className="text-xs sm:text-sm font-bold text-slate-600 text-center">
-                Choose an interactive AI science tool below to explore real materials, ask voice questions, or simulate physical reactions!
+                Choose an interactive AI science tool below to explore real materials or simulate physical reactions!
               </p>
 
               <div className="grid grid-cols-1 gap-3.5">
@@ -124,44 +120,7 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
                   </div>
                 </motion.div>
 
-                {/* 2. Ask Pip AI Socratic Tutor */}
-                <motion.div
-                  whileHover={{ scale: 1.015 }}
-                  whileTap={{ scale: 0.985 }}
-                  onClick={() => {
-                    sounds.sparkle();
-                    onClose();
-                    onOpenAskPip();
-                  }}
-                  className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-lg cursor-pointer border-3 border-sky-300 flex items-center justify-between gap-4 transition-all"
-                >
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center shrink-0 shadow-inner">
-                      <Bot className="w-8 h-8 text-amber-300" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950/30 text-sky-100 px-2 py-0.5 rounded-full">
-                          Socratic Voice Tutor
-                        </span>
-                        <span className="text-xs font-black text-amber-300 flex items-center gap-1">
-                          <Volume2 className="w-3.5 h-3.5" /> Spoken Audio
-                        </span>
-                      </div>
-                      <h4 className="text-base sm:text-lg font-black tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                        Ask Pip Live AI Science Mentor 🤖
-                      </h4>
-                      <p className="text-xs font-bold text-sky-100 leading-snug">
-                        Ask any question about materials, electricity, or nature and get friendly clues!
-                      </p>
-                    </div>
-                  </div>
-                  <div className="w-9 h-9 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
-                  </div>
-                </motion.div>
-
-                {/* 3. What If Sandbox */}
+                {/* 2. What If Sandbox */}
                 <motion.div
                   whileHover={{ scale: 1.015 }}
                   whileTap={{ scale: 0.985 }}

@@ -29,7 +29,7 @@ import { PipClosetModal } from '@/features/closet/PipClosetModal';
 import { ScienceArcadeModal } from '@/features/arcade/ScienceArcadeModal';
 import { FirstTimeTutorialOverlay } from '@/components/tutorial/FirstTimeTutorialOverlay';
 import { ScanMyWorldModal } from '@/components/ai/ScanMyWorldModal';
-import { SocraticPipAITutorModal } from '@/components/ai/SocraticPipAITutorModal';
+
 import { WhatIfScienceSandboxModal } from '@/components/ai/WhatIfScienceSandboxModal';
 import { AiScienceLabModal } from '@/components/ai/AiScienceLabModal';
 
@@ -46,7 +46,7 @@ export const MissionAudioControls: React.FC = () => {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showAiLabModal, setShowAiLabModal] = useState(false);
   const [showScanModal, setShowScanModal] = useState(false);
-  const [showPipChatModal, setShowPipChatModal] = useState(false);
+  
   const [showWhatIfModal, setShowWhatIfModal] = useState(false);
   const { isSfxMuted, isBgmMuted, toggleBgm, toggleSfx } = useAudioStore();
 
@@ -120,11 +120,11 @@ export const MissionAudioControls: React.FC = () => {
         isOpen={showAiLabModal}
         onClose={() => setShowAiLabModal(false)}
         onOpenScan={() => setShowScanModal(true)}
-        onOpenAskPip={() => setShowPipChatModal(true)}
+        
         onOpenWhatIf={() => setShowWhatIfModal(true)}
       />
       <ScanMyWorldModal isOpen={showScanModal} onClose={() => setShowScanModal(false)} />
-      <SocraticPipAITutorModal isOpen={showPipChatModal} onClose={() => setShowPipChatModal(false)} />
+      
       <WhatIfScienceSandboxModal isOpen={showWhatIfModal} onClose={() => setShowWhatIfModal(false)} />
       <AudioSettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
     </>
@@ -146,7 +146,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const [showTutorialModal, setShowTutorialModal] = useState(false);
   const [showAiLabHubModal, setShowAiLabHubModal] = useState(false);
   const [showScanModal, setShowScanModal] = useState(false);
-  const [showPipChatModal, setShowPipChatModal] = useState(false);
+  
   const [showWhatIfModal, setShowWhatIfModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -380,7 +380,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
         isOpen={showAiLabHubModal}
         onClose={() => setShowAiLabHubModal(false)}
         onOpenScan={() => setShowScanModal(true)}
-        onOpenAskPip={() => setShowPipChatModal(true)}
+        
         onOpenWhatIf={() => setShowWhatIfModal(true)}
       />
       <AudioSettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
@@ -388,7 +388,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
       <ScienceArcadeModal isOpen={showArcadeModal} onClose={() => setShowArcadeModal(false)} />
       <FirstTimeTutorialOverlay isOpen={showTutorialModal} onClose={() => setShowTutorialModal(false)} />
       <ScanMyWorldModal isOpen={showScanModal} onClose={() => setShowScanModal(false)} />
-      <SocraticPipAITutorModal isOpen={showPipChatModal} onClose={() => setShowPipChatModal(false)} />
+      
       <WhatIfScienceSandboxModal isOpen={showWhatIfModal} onClose={() => setShowWhatIfModal(false)} />
     </>
   );
