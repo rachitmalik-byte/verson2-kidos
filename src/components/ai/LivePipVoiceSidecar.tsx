@@ -37,6 +37,7 @@ const QUICK_PROMPTS = [
 
 export const LivePipVoiceSidecar: React.FC = () => {
   const location = useLocation();
+  if (location.pathname === '/teacher-studio') return null;
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);

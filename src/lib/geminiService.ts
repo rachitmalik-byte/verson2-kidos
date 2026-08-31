@@ -576,23 +576,32 @@ Return ONLY valid JSON:
  * Automated AI Level Generator for Teacher Studio
  * Generates valid, Grade 5 calibrated LessonMissionConfig from plain English prompts.
  */
+/**
+ * Automated AI Level Generator for Teacher Studio
+ * Generates valid, Grade 5 calibrated LessonMissionConfig from plain English prompts.
+ */
 export async function generateLessonFromPrompt(
   prompt: string,
   targetGrade: number = 5
 ): Promise<LessonMissionConfig> {
   const apiKey = getApiKey();
 
+  // If no API key or rapid fallback needed, generate rich interactive diagram/level
+  if (!apiKey) {
+    return generateFallbackLessonConfig(prompt, targetGrade);
+  }
+
   const systemInstruction = `
 You are an expert Grade ${targetGrade} (Ages 10-11) Science Curriculum Architect.
 Given a teacher's topic or request, generate a strictly structured JSON mission configuration.
 
-The output MUST be valid JSON adhering to the following TypeScript structure:
+The output MUST be valid JSON adhering to this TypeScript structure:
 {
   "id": "custom-mission-1",
   "number": 1,
   "title": "Short Fun Mission Title",
   "subtitle": "Clear Grade 5 Learning Objective",
-  "icon": "🧪",
+  "icon": "🌊",
   "themeColor": "sky",
   "targetGrade": ${targetGrade},
   "bgmTrack": "playful-lab",
@@ -600,10 +609,18 @@ The output MUST be valid JSON adhering to the following TypeScript structure:
   "steps": [
     {
       "id": "step_1",
-      "type": "sorting_tray" | "matching_pairs" | "tensile_strength_rig" | "microscopic_zoom_viewer" | "water_absorption_lab" | "mcq_assessment" | "concept_summary",
+      "type": "interactive_diagram" | "sorting_tray" | "matching_pairs" | "tensile_strength_rig" | "microscopic_zoom_viewer" | "water_absorption_lab" | "mcq_assessment" | "concept_summary",
       "title": "Step Title",
       "pipPrompt": "Friendly Grade 5 Pip explanation",
-      ... specific activity fields
+      // If interactive_diagram:
+      "diagramTitle": "Earth\'s Water Cycle Simulation",
+      "learningObjective": "Discover how solar energy drives evaporation, condensation, and rain!",
+      "hotspots": [
+        { "id": "evap", "name": "Evaporation", "stageNumber": 1, "icon": "☀️", "xPercent": 25, "yPercent": 50, "title": "1. Evaporation", "explanation": "Sunlight heats water into rising vapor!", "funFact": "Water vapor is an invisible gas!" },
+        { "id": "cond", "name": "Condensation", "stageNumber": 2, "icon": "☁️", "xPercent": 75, "yPercent": 25, "title": "2. Condensation", "explanation": "Cold air cools water vapor into clouds!", "funFact": "Clouds are made of billions of floating micro-droplets!" },
+        { "id": "precip", "name": "Precipitation", "stageNumber": 3, "icon": "🌧️", "xPercent": 80, "yPercent": 60, "title": "3. Precipitation", "explanation": "Heavy droplets fall as rain or snow!", "funFact": "Raindrops fall at up to 30 km/h!" },
+        { "id": "collect", "name": "Collection", "stageNumber": 4, "icon": "🌊", "xPercent": 40, "yPercent": 85, "title": "4. Collection", "explanation": "Water pools in oceans, rivers, and lakes!", "funFact": "The water cycle has run non-stop for 4 billion years!" }
+      ]
     }
   ]
 }
@@ -612,59 +629,141 @@ Ensure all scientific explanations are calibrated for 10-11 year olds (Grade 5).
 Output ONLY the raw JSON object with NO markdown ticks, NO commentary.
 `;
 
-  if (!apiKey) {
-    // Generate intelligent template based on prompt keyword matching
-    return generateFallbackLessonConfig(prompt, targetGrade);
-  }
+  try {
+    const models = await getAvailableVisionModels(apiKey);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
 
-  const models = await getAvailableVisionModels(apiKey);
-
-  for (const model of models) {
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [
-                { text: `${systemInstruction}\n\nTeacher Request: "${prompt}"` },
-              ],
+    for (const model of models) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            contents: [
+              {
+                role: 'user',
+                parts: [
+                  { text: `${systemInstruction}\n\nTeacher Request: "${prompt}"` },
+                ],
+              },
+            ],
+            generationConfig: {
+              temperature: 0.3,
+              maxOutputTokens: 2048,
             },
-          ],
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 2048,
-          },
-        }),
-      });
+          }),
+        });
 
-      if (!response.ok) continue;
+        clearTimeout(timeoutId);
+        if (!response.ok) continue;
 
-      const data = await response.json();
-      let rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+        const data = await response.json();
+        let rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-      const parsed = JSON.parse(rawText) as LessonMissionConfig;
-      if (parsed && parsed.title && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
-        return parsed;
+        const parsed = JSON.parse(rawText) as LessonMissionConfig;
+        if (parsed && parsed.title && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
+          return parsed;
+        }
+      } catch {
+        // Try next model or fallback
       }
-    } catch (err) {
-      console.warn(`Model ${model} failed to generate level:`, err);
     }
+  } catch {
+    // Timeout or network error, proceed to instant fallback
   }
 
   return generateFallbackLessonConfig(prompt, targetGrade);
 }
 
 /**
- * Intelligent Fallback Generator when API is offline or key missing
+ * Intelligent Fallback Generator for Any Science Topic
  */
 export function generateFallbackLessonConfig(prompt: string, targetGrade: number = 5): LessonMissionConfig {
   const p = prompt.toLowerCase();
 
+  // 1. Water Cycle & Weather Interactive Animated Diagram
+  if (p.includes('water') || p.includes('cycle') || p.includes('rain') || p.includes('cloud') || p.includes('weather') || p.includes('evaporat')) {
+    return {
+      id: 'ai-water-cycle-mission',
+      number: 1,
+      title: "Earth\'s Water Cycle Investigation",
+      subtitle: 'Discover how solar energy and atmosphere recycle Earth\'s water non-stop',
+      icon: '🌊',
+      themeColor: 'sky',
+      targetGrade,
+      bgmTrack: 'rainy-storm',
+      concepts: ['Evaporation', 'Condensation', 'Precipitation', 'Solar Energy', 'Collection'],
+      steps: [
+        {
+          id: 'step_1',
+          type: 'interactive_diagram',
+          title: 'Interactive 2D Water Cycle Simulation',
+          pipPrompt: 'Water on Earth travels in an endless circle! Tap each stage in the animated diagram or use the weather controls to see how it works.',
+          topic: 'water_cycle',
+          diagramTitle: "Earth\'s Water Cycle Simulation",
+          backgroundTheme: 'sky_ocean',
+          learningObjective: 'Explore how solar heat evaporates water into vapor, condenses it into clouds, and falls as rain!',
+          summaryTakeaway: 'The water cycle has been recycling the exact same water molecules on Earth for over 4 billion years!',
+          hotspots: [
+            {
+              id: 'evap',
+              name: 'Evaporation',
+              stageNumber: 1,
+              icon: '☀️',
+              xPercent: 28,
+              yPercent: 45,
+              title: '1. Evaporation & Solar Heating',
+              explanation: 'Heat energy from the Sun warms oceans and lakes, turning liquid water into invisible water vapor gas that rises into the sky!',
+              animationType: 'evaporate_steam',
+              funFact: 'Over 1,000 cubic kilometers of water evaporate into the sky every single day!',
+            },
+            {
+              id: 'cond',
+              name: 'Condensation',
+              stageNumber: 2,
+              icon: '☁️',
+              xPercent: 72,
+              yPercent: 24,
+              title: '2. Condensation & Cloud Formation',
+              explanation: 'As warm water vapor climbs higher into the cold atmosphere, it cools down and clumps into billions of tiny droplets, creating clouds!',
+              animationType: 'condense_cloud',
+              funFact: 'A single fluffy cumulus cloud can weigh over 500,000 kilograms — as heavy as 100 elephants!',
+            },
+            {
+              id: 'precip',
+              name: 'Precipitation',
+              stageNumber: 3,
+              icon: '🌧️',
+              xPercent: 78,
+              yPercent: 58,
+              title: '3. Precipitation (Rain, Snow & Hail)',
+              explanation: 'When water droplets inside clouds get too heavy to float, gravity pulls them down to Earth as rain, snow, sleet, or hail!',
+              animationType: 'rain_drops',
+              funFact: 'The fastest falling raindrops can reach speeds over 30 kilometers per hour!',
+            },
+            {
+              id: 'collect',
+              name: 'Collection & Runoff',
+              stageNumber: 4,
+              icon: '🌊',
+              xPercent: 42,
+              yPercent: 86,
+              title: '4. Collection & Reservoir Storage',
+              explanation: 'Rainwater flows down mountains into rivers, streams, and oceans. The cycle is complete and ready to begin all over again!',
+              animationType: 'flow_water',
+              funFact: '97% of Earth\'s water is stored in oceans, while only 1% is accessible fresh drinking water!',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  // 2. Matching Pairs
   if (p.includes('match') || p.includes('pair')) {
     return {
       id: 'ai-matching-mission',
@@ -723,7 +822,8 @@ export function generateFallbackLessonConfig(prompt: string, targetGrade: number
     };
   }
 
-  if (p.includes('tensile') || p.includes('strength') || p.includes('weight') || p.includes('break')) {
+  // 3. Tensile Rig
+  if (p.includes('tensile') || p.includes('strength') || p.includes('weight') || p.includes('break') || p.includes('pull')) {
     return {
       id: 'ai-tensile-mission',
       number: 1,
@@ -805,7 +905,7 @@ export function generateFallbackLessonConfig(prompt: string, targetGrade: number
     };
   }
 
-  // Default: Classification & Sorting Trays
+  // 4. Default: Sorting Trays
   return {
     id: 'ai-sorting-mission',
     number: 1,

@@ -1,3 +1,4 @@
+import { InteractiveDiagramEngine } from './InteractiveDiagramEngine';
 import React from 'react';
 import type { LessonStepData } from '@/types/lessonEngine';
 import { WaterAbsorptionLabEngine } from './WaterAbsorptionLabEngine';
@@ -17,6 +18,15 @@ interface Props {
 
 export const ActivityRenderer: React.FC<Props> = ({ stepData, onComplete, isCompleted }) => {
   switch (stepData.type) {
+    case 'interactive_diagram':
+      return (
+        <InteractiveDiagramEngine
+          data={stepData}
+          onComplete={onComplete}
+          isCompleted={isCompleted}
+        />
+      );
+
     case 'water_absorption_lab':
       return (
         <WaterAbsorptionLabEngine

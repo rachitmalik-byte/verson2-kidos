@@ -76,6 +76,70 @@ export function TeacherStudio() {
     let newStep: LessonStepData;
 
     switch (type) {
+      case 'interactive_diagram':
+        newStep = {
+          id: `step_${Date.now()}`,
+          type: 'interactive_diagram',
+          title: "Earth's Water Cycle Simulation",
+          topic: 'water_cycle',
+          diagramTitle: "Earth's Water Cycle Simulation",
+          backgroundTheme: 'sky_ocean',
+          pipPrompt: 'Water on Earth travels in an endless circle! Tap each stage in the animated diagram or use the weather controls to see how it works.',
+          learningObjective: 'Explore how solar heat evaporates water into vapor, condenses it into clouds, and falls as rain!',
+          summaryTakeaway: 'The water cycle has been recycling the exact same water molecules on Earth for over 4 billion years!',
+          hotspots: [
+            {
+              id: 'evap',
+              name: 'Evaporation',
+              stageNumber: 1,
+              icon: '☀️',
+              xPercent: 28,
+              yPercent: 45,
+              title: '1. Evaporation & Solar Heating',
+              explanation: 'Heat energy from the Sun warms oceans and lakes, turning liquid water into invisible water vapor gas that rises into the sky!',
+              animationType: 'evaporate_steam',
+              funFact: 'Over 1,000 cubic kilometers of water evaporate into the sky every single day!',
+            },
+            {
+              id: 'cond',
+              name: 'Condensation',
+              stageNumber: 2,
+              icon: '☁️',
+              xPercent: 72,
+              yPercent: 24,
+              title: '2. Condensation & Cloud Formation',
+              explanation: 'As warm water vapor climbs higher into the cold atmosphere, it cools down and clumps into billions of tiny droplets, creating clouds!',
+              animationType: 'condense_cloud',
+              funFact: 'A single fluffy cumulus cloud can weigh over 500,000 kilograms — as heavy as 100 elephants!',
+            },
+            {
+              id: 'precip',
+              name: 'Precipitation',
+              stageNumber: 3,
+              icon: '🌧️',
+              xPercent: 78,
+              yPercent: 58,
+              title: '3. Precipitation (Rain, Snow & Hail)',
+              explanation: 'When water droplets inside clouds get too heavy to float, gravity pulls them down to Earth as rain, snow, sleet, or hail!',
+              animationType: 'rain_drops',
+              funFact: 'The fastest falling raindrops can reach speeds over 30 kilometers per hour!',
+            },
+            {
+              id: 'collect',
+              name: 'Collection & Runoff',
+              stageNumber: 4,
+              icon: '🌊',
+              xPercent: 42,
+              yPercent: 86,
+              title: '4. Collection & Reservoir Storage',
+              explanation: 'Rainwater flows down mountains into rivers, streams, and oceans. The cycle is complete and ready to begin all over again!',
+              animationType: 'flow_water',
+              funFact: '97% of Earth\'s water is stored in oceans, while only 1% is accessible fresh drinking water!',
+            },
+          ],
+        };
+        break;
+
       case 'matching_pairs':
         newStep = {
           id: `step_${Date.now()}`,
@@ -257,6 +321,7 @@ export function TeacherStudio() {
           <div className="flex items-center gap-2 flex-wrap text-xs">
             <span className="text-[11px] font-bold text-indigo-300">Try Prompts:</span>
             {[
+              '🌊 Water Cycle with Animated Diagram ☀️🌧️',
               '🌿 Natural vs Synthetic 4-item Sorting',
               '✨ Raincoat vs Parachute Matching Pairs',
               '🏋️ Tensile Rig: Steel vs Nylon vs Cotton',
@@ -323,6 +388,7 @@ export function TeacherStudio() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
+                { type: 'interactive_diagram', label: '2D Science Sim', icon: '🌊' },
                 { type: 'sorting_tray', label: 'Sorting Trays', icon: '🌿' },
                 { type: 'matching_pairs', label: 'Matching Pairs', icon: '✨' },
                 { type: 'tensile_strength_rig', label: '1v1 Tensile Rig', icon: '🏋️' },

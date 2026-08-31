@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { useParentStore } from '@/stores/parentStore';
@@ -37,6 +37,8 @@ import {
 export const DevDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  if (location.pathname === '/teacher-studio') return null;
 
   const pipStoreState = usePipStore((s) => s.state);
   const setPipState = usePipStore((s) => s.setState);

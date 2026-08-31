@@ -4,6 +4,7 @@
  */
 
 export type ActivityType =
+  | 'interactive_diagram'
   | 'water_absorption_lab'
   | 'microscopic_zoom_viewer'
   | 'sorting_tray'
@@ -210,8 +211,43 @@ export interface ConceptSummaryData extends BaseStepData {
   };
 }
 
+// 11. Interactive Animated Diagram Schema
+export interface DiagramHotspot {
+  id: string;
+  name: string;
+  stageNumber: number;
+  icon: string;
+  xPercent: number; // 0 to 100 on canvas
+  yPercent: number; // 0 to 100 on canvas
+  title: string;
+  explanation: string;
+  animationType: 'evaporate_steam' | 'rain_drops' | 'condense_cloud' | 'flow_water' | 'pulse_sun' | 'spin_electrons' | 'flow_energy';
+  audioPrompt?: string;
+  funFact?: string;
+}
+
+export interface DiagramControlToggle {
+  id: string;
+  label: string;
+  icon: string;
+  activeColor: string;
+  actionType: 'heat_sun' | 'cool_sky' | 'trigger_rain' | 'flow_current' | 'speed_cycle';
+}
+
+export interface InteractiveDiagramData extends BaseStepData {
+  type: 'interactive_diagram';
+  topic: 'water_cycle' | 'photosynthesis' | 'electric_circuit' | 'states_of_matter' | 'solar_system' | 'custom';
+  diagramTitle: string;
+  backgroundTheme: 'sky_ocean' | 'nature_field' | 'circuit_board' | 'deep_space' | 'science_lab';
+  hotspots: DiagramHotspot[];
+  controls?: DiagramControlToggle[];
+  learningObjective: string;
+  summaryTakeaway: string;
+}
+
 // Union of all step data types
 export type LessonStepData =
+  | InteractiveDiagramData
   | WaterAbsorptionLabData
   | MicroscopicZoomData
   | SortingTrayData
