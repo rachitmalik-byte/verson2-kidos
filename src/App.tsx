@@ -6,11 +6,6 @@ import { ParentPinGate } from '@/features/parent/ParentPinGate';
 import { ParentDashboard } from '@/features/parent/ParentDashboard';
 import { ChapterHub } from '@/features/chapter-hub/ChapterHub';
 import { ChapterIntro } from '@/features/chapter-intro/ChapterIntro';
-import { RaincoatMission } from '@/features/missions/mission-01-raincoat/RaincoatMission';
-import { SortingMission } from '@/features/missions/mission-02-sorting/SortingMission';
-import { NylonStrengthMission } from '@/features/missions/mission-03-nylon/NylonStrengthMission';
-import { FireSafetyMission } from '@/features/missions/mission-04-fire/FireSafetyMission';
-import { WireMission } from '@/features/missions/mission-08-wire/WireMission';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
 import { Theme1Hub } from '@/features/theme1/Theme1Hub';
 import { SuperSensesMissionEngine } from '@/features/theme1/SuperSensesMissionEngine';
@@ -54,13 +49,8 @@ export function App() {
           <Route path="/discovery-book" element={<DiscoveryBook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 
-          {/* Chapter 3 Missions */}
+          {/* Chapter 3 Missions — All 13 Missions Dynamic Learning Engine */}
           <Route path="/chapter/3" element={<ChapterIntro />} />
-          <Route path="/chapter/3/mission/1" element={<RaincoatMission />} />
-          <Route path="/chapter/3/mission/2" element={<SortingMission />} />
-          <Route path="/chapter/3/mission/3" element={<NylonStrengthMission />} />
-          <Route path="/chapter/3/mission/5" element={<FireSafetyMission />} />
-          <Route path="/chapter/3/mission/8" element={<WireMission />} />
           <Route path="/chapter/3/mission/:missionNum" element={<DynamicMissionEngine />} />
 
           {/* Fallback */}
