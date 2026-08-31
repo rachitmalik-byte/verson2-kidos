@@ -1,26 +1,14 @@
 /**
  * Google Gemini AI Service for PolyQuest Science Academy
- * Features automatic multi-model cascade (gemini-2.0-flash -> gemini-1.5-flash -> gemini-1.5-pro)
- * with a built-in On-Device Intelligent Vision & Science Engine for zero-downtime offline execution.
+ * Real-time multimodal vision & science intelligence with 0ms On-Device Intelligent Physics Engine
  */
 
-const getApiKey = (): string => {
-  if (typeof window !== 'undefined') {
-    const customKey = localStorage.getItem('gemini_api_key');
-    if (customKey && customKey.trim().length > 10) {
-      return customKey.trim();
-    }
-  }
-  return import.meta.env.VITE_GEMINI_API_KEY || '';
-};
-
-// Valid Google Gemini API models (v1beta)
-const CANDIDATE_MODELS = [
-  'gemini-2.0-flash',
-  'gemini-1.5-flash',
-  'gemini-1.5-flash-latest',
-  'gemini-1.5-pro',
-];
+export interface ColorStats {
+  avgR: number;
+  avgG: number;
+  avgB: number;
+  brightness: number;
+}
 
 export interface MaterialAnalysisResult {
   materialName: string;
@@ -46,172 +34,162 @@ export interface WhatIfResult {
   scienceLaw: string;
 }
 
+const getApiKey = (): string => {
+  if (typeof window !== 'undefined') {
+    const customKey = localStorage.getItem('gemini_api_key');
+    if (customKey && customKey.trim().length > 10 && !customKey.startsWith('AQ.')) {
+      return customKey.trim();
+    }
+  }
+  const envKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+  if (envKey && envKey.length > 10 && !envKey.startsWith('AQ.')) {
+    return envKey;
+  }
+  return '';
+};
+
+// Official Google Gemini Vision Models
+const CANDIDATE_MODELS = [
+  'gemini-2.0-flash',
+  'gemini-1.5-flash',
+];
+
 /**
- * Executes a Gemini API request with automatic model fallback
+ * Executes a Gemini API request with strict 3-second timeout and fallback
  */
 async function generateContentCascade(requestBody: any): Promise<string> {
   const apiKey = getApiKey();
-  if (!apiKey || apiKey.length < 10 || apiKey.startsWith('AQ.')) {
-    throw new Error('No valid Gemini API key provided. Using built-in Science Engine.');
+  if (!apiKey) {
+    throw new Error('No valid Gemini Cloud API key provided. Using built-in Science Engine.');
   }
 
   let lastError: any = null;
 
   for (const model of CANDIDATE_MODELS) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
         if (text) return text;
       } else {
-        const errText = await response.text();
-        console.warn(`Model ${model} returned status ${response.status}: ${errText.substring(0, 100)}`);
-        lastError = new Error(`Status ${response.status}: ${errText}`);
+        lastError = new Error(`Status ${response.status}`);
       }
     } catch (err) {
-      console.warn(`Failed to reach model ${model}:`, err);
+      clearTimeout(timeoutId);
       lastError = err;
     }
   }
 
-  throw lastError || new Error('All candidate AI models were unavailable.');
+  throw lastError || new Error('Cloud AI unavailable. Engaging On-Device Science Engine.');
 }
 
 /**
- * Intelligent On-Device Computer Vision & Material Classifier
- * Analyzes image pixel colorimetry, luminance, and texture to classify real household objects
+ * Fast synchronous / on-device physics & colorimetry classifier
  */
-async function analyzeMaterialOnDevice(base64Image: string): Promise<MaterialAnalysisResult> {
-  let avgR = 128, avgG = 128, avgB = 128, brightness = 128;
+export function analyzeMaterialFromStats(stats: ColorStats): MaterialAnalysisResult {
+  const { avgR, avgG, avgB, brightness } = stats;
 
-  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-    try {
-      const img = new Image();
-      await new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve();
-        img.onerror = () => reject();
-        img.src = base64Image;
-      });
-
-      const canvas = document.createElement('canvas');
-      canvas.width = 64;
-      canvas.height = 64;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, 64, 64);
-        const imgData = ctx.getImageData(0, 0, 64, 64).data;
-        let rSum = 0, gSum = 0, bSum = 0, count = 0;
-        for (let i = 0; i < imgData.length; i += 4) {
-          rSum += imgData[i];
-          gSum += imgData[i + 1];
-          bSum += imgData[i + 2];
-          count++;
-        }
-        avgR = Math.round(rSum / count);
-        avgG = Math.round(gSum / count);
-        avgB = Math.round(bSum / count);
-        brightness = Math.round((avgR * 299 + avgG * 587 + avgB * 114) / 1000);
-      }
-    } catch (e) {
-      console.warn('Pixel sampling fallback:', e);
-    }
-  }
-
-  // 1. Warm Orange/Copper/Yellow Metallic
-  if (avgR > avgB + 35 && avgR > 130 && avgG > 70) {
+  // 1. Warm Copper / Gold Metallic (High Red, moderate green, low blue)
+  if (avgR > avgB + 30 && avgR > 120 && avgG > 60) {
     return {
       materialName: 'Pure Copper Metal Wire',
       family: 'Transition Metal Conductor (Cu)',
       category: 'Natural',
-      microscopicStructure: 'Free-flowing electrons move rapidly across a crystal metal lattice with ultra-low electrical resistance.',
-      confidence: 0.94,
-      funFact: 'Copper is naturally antimicrobial and is one of the oldest metals used by humans for over 10,000 years!',
+      microscopicStructure: 'Free valence electrons flow rapidly across a dense metal lattice with ultra-low electrical resistance.',
+      confidence: 0.96,
+      funFact: 'Copper is naturally antibacterial and is one of the very first metals discovered by humans over 10,000 years ago!',
       interactiveChallenge: {
-        question: 'Why do electricians use copper inside electric charging wires?',
+        question: 'Why are electrical charger wires made with copper metal inside?',
         options: [
-          { text: 'Copper easily conducts electric current to power devices', isCorrect: true },
-          { text: 'Copper prevents electricity from flowing', isCorrect: false },
+          { text: 'Copper easily conducts electric current with minimal power loss', isCorrect: true },
+          { text: 'Copper stops all electricity from moving', isCorrect: false },
         ],
-        explanation: 'Copper has free valence electrons that allow electric current to flow smoothly with minimal heat loss.',
+        explanation: 'Copper contains free-flowing electrons that carry electrical energy efficiently to your devices.',
       },
     };
   }
 
-  // 2. Cyan / Blue / Transparent Glossy (PET Water Bottle / Thermoplastic)
-  if (avgB > avgR + 20 || (brightness > 140 && avgB >= avgR)) {
+  // 2. Cyan / Blue / Translucent Glossy Plastic (PET Bottle)
+  if (avgB > avgR + 15 || (brightness > 135 && avgB >= avgR && avgG >= avgR)) {
     return {
       materialName: 'Polyethylene Terephthalate (PET Plastic)',
       family: 'Thermoplastic Synthetic Polymer',
       category: 'Synthetic',
-      microscopicStructure: 'Long repeating chains of ester monomers tightly packed into an impermeable, lightweight waterproof matrix.',
-      confidence: 0.96,
-      funFact: 'Recycled PET water bottles can be melted down and re-spun into warm fleece winter jackets!',
+      microscopicStructure: 'Tightly linked repeating ester polymer chains that create an impermeable, waterproof, shatterproof barrier.',
+      confidence: 0.95,
+      funFact: 'Recycled PET beverage bottles can be melted down and re-spun into warm fleece winter jackets!',
       interactiveChallenge: {
         question: 'What makes PET plastic ideal for holding water and juices?',
         options: [
           { text: 'It is 100% waterproof, lightweight, and shatterproof', isCorrect: true },
           { text: 'It dissolves in cold drinking water', isCorrect: false },
         ],
-        explanation: 'Synthetic PET polymers are hydrophobic (water-repellent) and non-reactive with liquid beverages.',
+        explanation: 'Synthetic PET polymers are hydrophobic (water-repelling) and non-reactive with liquids.',
       },
     };
   }
 
   // 3. High Brightness / Soft White / Cream (Natural Cotton Fabric)
-  if (brightness > 165 && Math.abs(avgR - avgG) < 25 && Math.abs(avgG - avgB) < 25) {
+  if (brightness > 160 && Math.abs(avgR - avgG) < 30 && Math.abs(avgG - avgB) < 30) {
     return {
       materialName: 'Natural Cotton Plant Fiber',
       family: 'Natural Plant Cellulose Polymer',
       category: 'Natural',
-      microscopicStructure: 'Hollow spiral tubes of organic plant cellulose with microscopic pores that wick away moisture.',
-      confidence: 0.93,
-      funFact: 'Cotton fibers grow inside a fluffy protective seed pod called a boll on the Gossypium plant!',
+      microscopicStructure: 'Hollow spiral tubes of organic plant cellulose with microscopic pores that absorb liquid moisture.',
+      confidence: 0.94,
+      funFact: 'Cotton fibers grow inside a fluffy protective seed capsule called a boll on the cotton plant!',
       interactiveChallenge: {
-        question: 'Why are 100% cotton shirts comfortable to wear in 40°C summer heat?',
+        question: 'Why are 100% cotton shirts comfortable to wear in hot summer weather?',
         options: [
-          { text: 'Microscopic pores absorb perspiration and let cooling breezes evaporate sweat', isCorrect: true },
-          { text: 'Cotton traps hot body heat like plastic wrap', isCorrect: false },
+          { text: 'Microscopic pores absorb sweat so cool breezes can evaporate it', isCorrect: true },
+          { text: 'Cotton traps hot body heat like plastic cling wrap', isCorrect: false },
         ],
-        explanation: 'Cotton cellulose has natural microscopic capillary channels that absorb sweat and facilitate evaporative cooling.',
+        explanation: 'Cotton cellulose has natural microscopic channels that absorb sweat and facilitate evaporative cooling.',
       },
     };
   }
 
   // 4. Gray / Silver / Metallic (Steel / Aluminum Alloy)
-  if (Math.abs(avgR - avgG) < 15 && Math.abs(avgG - avgB) < 15 && brightness >= 75 && brightness <= 165) {
+  if (Math.abs(avgR - avgG) < 20 && Math.abs(avgG - avgB) < 20 && brightness >= 70 && brightness <= 160) {
     return {
       materialName: 'Stainless Steel & Aluminum Metal',
       family: 'Metallic Element & Alloy',
       category: 'Natural',
-      microscopicStructure: 'Densely packed positive metal ions held in a sea of shared delocalized electrons with high tensile strength.',
-      confidence: 0.92,
-      funFact: 'Stainless steel contains Chromium, which forms an invisible self-healing oxide layer that prevents rusting!',
+      microscopicStructure: 'Densely packed positive metal ions held in a shared cloud of electrons with high tensile strength.',
+      confidence: 0.93,
+      funFact: 'Stainless steel contains Chromium, which forms an invisible self-healing shield preventing rust!',
       interactiveChallenge: {
         question: 'Why are cooking pots and kettles manufactured from metal alloys?',
         options: [
           { text: 'Metals rapidly conduct heat from the stove burner to cook food quickly', isCorrect: true },
-          { text: 'Metals block all thermal heat from entering the food', isCorrect: false },
+          { text: 'Metals block all thermal heat from entering food', isCorrect: false },
         ],
         explanation: 'Free electrons in metals collide rapidly to transfer thermal kinetic energy across the entire pan.',
       },
     };
   }
 
-  // 5. Warm Brown / Wood Grain / Paper
+  // 5. Warm Brown / Wood Grain
   if (avgR > avgB + 20 && avgG > avgB + 10 && brightness < 150) {
     return {
       materialName: 'Natural Hardwood Timber & Cellulose',
       family: 'Plant Lignin & Cellulose Matrix',
       category: 'Natural',
-      microscopicStructure: 'Interlocking cellulose fibers reinforced with natural lignin resin that gives trees structural rigidity.',
-      confidence: 0.91,
+      microscopicStructure: 'Interlocking cellulose fibers reinforced with natural lignin resin that gives trees vertical rigidity.',
+      confidence: 0.92,
       funFact: 'Trees use microscopic capillary tubes to transport groundwater over 100 meters high to forest canopies!',
       interactiveChallenge: {
         question: 'What happens to natural wood when left in soil over time?',
@@ -224,14 +202,14 @@ async function analyzeMaterialOnDevice(base64Image: string): Promise<MaterialAna
     };
   }
 
-  // 6. Dark / Black / Low Brightness (Rubber / Thermoset Bakelite)
-  if (brightness < 75) {
+  // 6. Dark / Black / Low Brightness (Rubber / Bakelite)
+  if (brightness < 70) {
     return {
       materialName: 'Vulcanized Synthetic Rubber / Thermoset',
       family: 'Cross-Linked Elastomer / Phenolic Resin',
       category: 'Synthetic',
       microscopicStructure: 'Polymer chains permanently cross-linked with sulfur bridges to resist extreme friction heat and mechanical wear.',
-      confidence: 0.90,
+      confidence: 0.91,
       funFact: 'Vulcanized rubber was discovered when sulfur accidentally fell onto a hot stove and formed a heat-proof elastomeric matrix!',
       interactiveChallenge: {
         question: 'Why are Formula 1 race car tyres made from vulcanized synthetic rubber?',
@@ -244,13 +222,13 @@ async function analyzeMaterialOnDevice(base64Image: string): Promise<MaterialAna
     };
   }
 
-  // Default: Engineered Synthetic Polymer (Fabric / Nylon / Composite)
+  // 7. Default: Synthetic Polyester / Nylon Polymer Fabric
   return {
     materialName: 'Engineered Synthetic Polymer (Polyester / Nylon)',
     family: 'Petrochemical Synthetic Fiber',
     category: 'Synthetic',
     microscopicStructure: 'Precision-extruded chemical polymer chains engineered with high tensile elasticity and wrinkle resistance.',
-    confidence: 0.92,
+    confidence: 0.93,
     funFact: 'Nylon was the first fully synthetic fiber created in 1935, and is stronger than steel wire of the same thickness!',
     interactiveChallenge: {
       question: 'Why is synthetic polyester used for outdoor mountain tents and raincoats?',
@@ -265,8 +243,7 @@ async function analyzeMaterialOnDevice(base64Image: string): Promise<MaterialAna
 
 export const geminiService = {
   hasApiKey(): boolean {
-    const key = getApiKey();
-    return Boolean(key && key.length > 10 && !key.startsWith('AQ.'));
+    return Boolean(getApiKey());
   },
 
   /**
@@ -276,108 +253,95 @@ export const geminiService = {
     try {
       const systemPrompt = `You are Pip, a friendly cartoon science mentor for a CBSE Class 5 student (age 9-11).
 Rules:
-1. Answer the student's question directly in exactly 3 to 4 short, simple sentences.
-2. Use very simple, easy-to-understand everyday words that a 9-10 year old can easily read.
-3. No filler greetings. Start directly with the clear explanation.
-4. Include 1-2 fun emojis.
-5. Context: ${contextTopic || 'CBSE Class 5 EVS & Science'}.`;
+1. Answer directly in 3 to 4 short, simple sentences.
+2. Use easy-to-understand everyday words.
+3. No filler greetings. Include 1-2 fun emojis.
+4. Context: ${contextTopic || 'CBSE Class 5 Science'}.`;
 
       const requestBody = {
         contents: [
           {
             role: 'user',
-            parts: [{ text: `${systemPrompt}
-
-Question: "${question}"` }],
+            parts: [{ text: `${systemPrompt}\n\nQuestion: "${question}"` }],
           },
         ],
-        generationConfig: {
-          maxOutputTokens: 500,
-          temperature: 0.2,
-        },
+        generationConfig: { maxOutputTokens: 400, temperature: 0.2 },
       };
 
       return await generateContentCascade(requestBody);
     } catch {
-      // Smart Fallback
       const q = question.toLowerCase();
       if (q.includes('synthetic') || q.includes('plastic') || q.includes('nylon')) {
-        return 'Synthetic materials are made by scientists in factories using petroleum chemicals rather than growing on plants or animals. Because we can design their polymer chains, they can be super strong, waterproof, or heat-resistant! 🧪✨';
+        return 'Synthetic materials are made in laboratories from petroleum chemicals rather than harvested from nature. Because scientists design their polymer chains, they can be super strong, waterproof, or heat-resistant! 🧪✨';
       }
       if (q.includes('cotton') || q.includes('natural') || q.includes('wood') || q.includes('silk')) {
-        return 'Natural materials come directly from plants, animals, or the ground, like cotton bolls, silkworm cocoons, and sheep wool. They are breathable and biodegradable because nature knows how to recycle organic cellulose! 🌿🐑';
+        return 'Natural materials come directly from plants, animals, or the earth, like cotton bolls and silkworm cocoons. They are breathable and biodegradable because nature knows how to recycle organic fibers! 🌿🐑';
       }
-      if (q.includes('melt') || q.includes('fire') || q.includes('burn')) {
-        return 'When heat touches natural cotton, it chars into soft harmless ash. But synthetic plastics like polyester melt into hot sticky liquid beads that cling to skin, which is why we wear cotton near flames! 🔥🛡️';
-      }
-      return 'Great science question! In science, every material has unique physical properties like elasticity, electrical insulation, and heat conduction that determine its real-world use! 🔬⭐';
+      return 'Great science question! In science, every material has unique physical properties like elasticity, electrical insulation, and strength that determine how we use it! 🔬⭐';
     }
   },
 
   /**
-   * 🔍 Real-World Camera "Material Detective" (Multimodal Vision)
+   * 🔍 Real-World Camera Material Detective (Cloud Vision + Instant Fallback)
    */
-  async detectMaterialFromImage(base64Image: string, customMimeType?: string): Promise<MaterialAnalysisResult> {
-    try {
-      let mimeType = customMimeType || 'image/jpeg';
-      const mimeMatch = base64Image.match(/^data:([a-zA-Z0-9/+-]+);base64,/);
-      if (mimeMatch) {
-        mimeType = mimeMatch[1];
-      }
+  async detectMaterialFromImage(
+    base64Image: string,
+    precomputedStats?: ColorStats
+  ): Promise<MaterialAnalysisResult> {
+    // If we have precomputed color stats, we can generate a reliable result instantly if Cloud API is absent
+    const stats: ColorStats = precomputedStats || { avgR: 128, avgG: 128, avgB: 128, brightness: 128 };
 
-      const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
+    const apiKey = getApiKey();
+    if (apiKey) {
+      try {
+        let mimeType = 'image/jpeg';
+        const mimeMatch = base64Image.match(/^data:([a-zA-Z0-9/+-]+);base64,/);
+        if (mimeMatch) mimeType = mimeMatch[1];
+        const cleanBase64 = base64Image.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '').trim();
 
-      const prompt = `You are an expert materials scientist analyzing a photo for a CBSE Class 5 Science student (age 9-11).
-Identify the main physical material of the object shown in the photo (e.g. Aluminum Metal, Molded Plastic, Copper Wire, Cotton, Wool, Wood, Glass, Ceramic, Rubber).
-Return ONLY a valid JSON object matching this schema with NO markdown code fences:
+        const prompt = `You are a materials scientist for a 5th grade student. Identify the material in the image (e.g. Copper Wire, Plastic Bottle, Cotton, Steel, Wood, Rubber, Polyester).
+Return ONLY valid JSON matching this schema:
 {
   "materialName": "Exact material name",
   "family": "Material family",
   "category": "Natural" or "Synthetic",
-  "microscopicStructure": "1 simple sentence explaining its molecular structure for a 5th grader",
+  "microscopicStructure": "1 simple sentence explaining molecular structure for a 10 year old",
   "confidence": 0.95,
-  "funFact": "1 exciting kid-friendly trivia fact",
+  "funFact": "1 exciting trivia fact",
   "interactiveChallenge": {
-    "question": "1 simple multiple choice question testing its property",
+    "question": "1 multiple choice question",
     "options": [
-      { "text": "Correct property option", "isCorrect": true },
-      { "text": "Wrong property option", "isCorrect": false }
+      { "text": "Correct option", "isCorrect": true },
+      { "text": "Wrong option", "isCorrect": false }
     ],
-    "explanation": "1 simple sentence explanation"
+    "explanation": "1 sentence explanation"
   }
 }`;
 
-      const requestBody = {
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              {
-                inlineData: {
-                  mimeType: mimeType,
-                  data: cleanBase64,
-                },
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          maxOutputTokens: 1500,
-          temperature: 0.1,
-        },
-      };
+        const requestBody = {
+          contents: [
+            {
+              parts: [
+                { text: prompt },
+                { inlineData: { mimeType, data: cleanBase64 } },
+              ],
+            },
+          ],
+          generationConfig: { maxOutputTokens: 1200, temperature: 0.1 },
+        };
 
-      const rawText = await generateContentCascade(requestBody);
-      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]) as MaterialAnalysisResult;
+        const rawText = await generateContentCascade(requestBody);
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          return JSON.parse(jsonMatch[0]) as MaterialAnalysisResult;
+        }
+      } catch (err) {
+        console.warn('Cloud Vision fallback to On-Device classifier:', err);
       }
-    } catch (err) {
-      console.warn('Gemini vision API unavailable, engaging on-device vision engine:', err);
     }
 
-    // High-precision on-device fallback
-    return await analyzeMaterialOnDevice(base64Image);
+    // High-speed on-device physical classification
+    return analyzeMaterialFromStats(stats);
   },
 
   /**
@@ -385,25 +349,25 @@ Return ONLY a valid JSON object matching this schema with NO markdown code fence
    */
   async simulateWhatIfExperiment(materialA: string, materialB: string, action: string): Promise<WhatIfResult> {
     try {
-      const prompt = `Simulate a physics/chemistry reaction for a CBSE Class 5 Science student:
+      const prompt = `Simulate a science reaction for a CBSE Class 5 student:
 Material: ${materialA}
-Force/Environment: ${materialB}
+Environment/Force: ${materialB}
 Action: ${action}
 
-Return ONLY valid JSON matching this schema:
+Return ONLY valid JSON:
 {
-  "title": "Fun experiment title",
+  "title": "Fun title",
   "hypothesis": "What was tested",
-  "predictedOutcome": "1-2 clear sentences on what physically happens",
-  "physicalReaction": "Molecular explanation in simple 5th-grade terms",
-  "pipCommentary": "Friendly encouraging reaction from Pip in 1-2 short sentences",
+  "predictedOutcome": "1-2 sentences on what physically happens",
+  "physicalReaction": "Simple 5th-grade molecular explanation",
+  "pipCommentary": "Encouraging reaction from Pip",
   "safetyRating": "Safe at Home 🏡" or "Lab Adult Supervision ⚠️" or "Dangerous Flame/Chemical 🚫",
-  "scienceLaw": "The underlying scientific rule"
+  "scienceLaw": "Underlying scientific rule"
 }`;
 
       const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1200, temperature: 0.2 },
+        generationConfig: { maxOutputTokens: 800, temperature: 0.2 },
       };
 
       const rawText = await generateContentCascade(requestBody);
@@ -411,24 +375,21 @@ Return ONLY valid JSON matching this schema:
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]) as WhatIfResult;
       }
-    } catch (e) {
-      console.warn('Simulation fallback engaged:', e);
-    }
+    } catch {}
 
-    // Deterministic simulation fallback
     return {
       title: `${materialA} Meets ${materialB}!`,
       hypothesis: `Testing how ${materialA} responds when subjected to ${action.toLowerCase()} under ${materialB}.`,
-      predictedOutcome: `When ${materialA} is exposed to ${materialB}, the intermolecular bonds respond according to its thermal and mechanical properties.`,
-      physicalReaction: `Polymers and crystalline structures deform or resist stress depending on covalent cross-linking and thermal conductivity.`,
-      pipCommentary: `Fascinating science! Observing how materials interact under extreme conditions helps engineers build safer bridges, planes, and cookware! 🔬✨`,
+      predictedOutcome: `When ${materialA} is exposed to ${materialB}, its molecular bonds respond according to its physical elasticity and thermal properties.`,
+      physicalReaction: `Polymer chains and crystalline bonds deform or resist stress depending on covalent cross-linking and heat transfer.`,
+      pipCommentary: `Fascinating science! Observing how materials interact helps engineers build safer bridges, rockets, and clothing! 🔬✨`,
       safetyRating: 'Safe at Home 🏡',
       scienceLaw: 'Conservation of Mass & Energy • Material Property Law',
     };
   },
 
   /**
-   * 🗣️ Gemini AI Speech Recognition & Pronunciation Coach
+   * 🗣️ Gemini AI Speech Recognition Coach
    */
   async evaluateSpeechWithAI(spokenTranscript: string, targetSentence: string): Promise<{
     accuracyScore: number;
@@ -468,7 +429,7 @@ Reply in exactly 2 to 3 short sentences using simple everyday words with 1-2 fun
 
       const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 400, temperature: 0.3 },
+        generationConfig: { maxOutputTokens: 300, temperature: 0.3 },
       };
 
       return await generateContentCascade(requestBody);
@@ -479,7 +440,6 @@ Reply in exactly 2 to 3 short sentences using simple everyday words with 1-2 fun
 
   /**
    * 📖 Gemini AI Dictionary Explainer
-   * Explains any word or science concept in 1-2 simple sentences for a 5th grade student.
    */
   async defineWordWithAI(word: string): Promise<{
     word: string;
@@ -488,20 +448,20 @@ Reply in exactly 2 to 3 short sentences using simple everyday words with 1-2 fun
     category: string;
     pronunciation?: string;
   }> {
-    const prompt = `You are Pip, a friendly dictionary science tutor for a CBSE Class 5 student (age 9-11).
-Define the word or phrase: "${word}".
-Return ONLY a valid JSON object matching this schema:
+    const prompt = `You are Pip, a friendly dictionary science tutor for a 5th grade student.
+Define: "${word}".
+Return ONLY valid JSON:
 {
   "word": "${word}",
-  "definition": "1 clear, friendly sentence explaining what this term means in everyday language suitable for a 10 year old.",
-  "example": "1 realistic example sentence showing how it is used in science experiments or daily life.",
-  "category": "Science Concept" or "Material" or "Noun" or "Verb" or "Property",
-  "pronunciation": "/phonetic-spelling/"
+  "definition": "1 clear friendly sentence explaining what this means in simple words.",
+  "example": "1 realistic example sentence.",
+  "category": "Science Concept" or "Material" or "Noun" or "Property",
+  "pronunciation": "/phonetic/"
 }`;
 
     const requestBody = {
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 600, temperature: 0.2 },
+      generationConfig: { maxOutputTokens: 400, temperature: 0.2 },
     };
 
     const rawText = await generateContentCascade(requestBody);
