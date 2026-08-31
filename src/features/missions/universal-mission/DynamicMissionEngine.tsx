@@ -696,12 +696,12 @@ export const DynamicMissionEngine: React.FC = () => {
             {/* Step 0: Hook */}
             {currentStepIndex === 0 && (
               <div className="text-center max-w-2xl bg-white p-8 rounded-3xl border-4 border-amber-300 shadow-xl">
-                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 mx-auto border-2 border-slate-100 shadow-md">
-                  <img src={cottonFabricZoomImg} alt="Porous Cotton Weave Macro" className="w-full h-full object-cover" />
+                <div className="w-64 h-64 rounded-3xl overflow-hidden mb-4 mx-auto border-4 border-amber-200 shadow-lg">
+                  <img src={summerComfortEvaporationImg} alt="Summer Comfort Thermal Test" className="w-full h-full object-cover" />
                 </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The 42°C Scorching Summer Mystery</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base leading-relaxed">
-                  When you run outside in the summer sun, your body perspires (sweats) to cool you down. But why does wearing a synthetic shirt feel like wrapping yourself in plastic wrap?
+                  When you run outside in the summer sun, your body perspires (sweats) to cool you down. But why does wearing a synthetic shirt feel like wrapping yourself in hot plastic wrap?
                 </p>
                 <button
                   onClick={() => {
@@ -711,71 +711,135 @@ export const DynamicMissionEngine: React.FC = () => {
                   }}
                   className="btn-3d-amber text-slate-950 font-black text-base py-3.5 px-10 rounded-2xl cursor-pointer"
                 >
-                  Enter Breathability Lab ☀️
+                  Enter Thermal Evaporation Lab ☀️
                 </button>
               </div>
             )}
 
-            {/* Step 1: Evaporative Cooling Sandbox with Real Photos */}
+            {/* Step 1: Evaporative Cooling Sandbox with Large Thermal Image */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Perspiration & Evaporation Simulator</h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
-                  Spray water droplets onto each fabric and turn on the cooling breeze fan!
+              <div className="w-full max-w-4xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl">
+                <div className="flex items-center justify-between w-full mb-3 flex-wrap gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-800 bg-amber-100 px-3 py-1 rounded-full">
+                    32°C Thermal Laboratory Mannequin Test
+                  </span>
+                  <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+                    Evaporative Cooling Rate
+                  </span>
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2 text-center">Cotton Cooling vs. Polyester Sweat Trap</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center max-w-2xl">
+                  Tap 'Activate Perspiration & Breeze' to spray moisture and start the fan. Watch the thermal infrared cameras measure the skin cooling rate!
                 </p>
 
-                <div className="grid grid-cols-2 gap-6 w-full mb-6">
-                  {/* Cotton */}
-                  <div className="p-5 bg-emerald-50 rounded-2xl border-3 border-emerald-300 text-center flex flex-col items-center">
-                    <span className="font-black text-slate-900 mb-2">1. Natural Cotton</span>
-                    <div className="w-36 h-36 rounded-2xl bg-white border-2 border-emerald-300 overflow-hidden shadow-md p-1 flex items-center justify-center">
-                      <img src={cottonBlueSmoothImg} alt="Breathable Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
+                {/* Large Full-Width High-Resolution Thermal Stage */}
+                <div className="relative w-full h-80 sm:h-96 rounded-3xl overflow-hidden border-4 border-slate-300 shadow-2xl bg-slate-950 mb-6">
+                  <img
+                    src={summerComfortEvaporationImg}
+                    alt="Thermal Evaporation Test"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/30 pointer-events-none" />
+
+                  {/* Left Overlay: Porous Cotton */}
+                  <div className="absolute top-4 left-4 bg-emerald-950/85 backdrop-blur-md border border-emerald-400 text-white p-3.5 rounded-2xl max-w-xs shadow-xl">
+                    <div className="flex items-center gap-1.5 font-black text-sm text-emerald-300">
+                      <span>🌿</span> 1. 100% Breathable Cotton
                     </div>
-                    <span className="text-[11px] font-bold text-emerald-800 mt-2">
-                      {interactiveState.sprayed ? '✓ Absorbs Perspiration & Cools Skin!' : 'Porous natural plant cellulose'}
+                    <div className="text-2xl font-black text-white mt-1">26.5°C ❄️</div>
+                    <p className="text-[11px] font-bold text-emerald-100 mt-0.5">
+                      Porous plant fibers wick sweat outwards. Rapid evaporation pulls heat away, cooling the skin!
+                    </p>
+                  </div>
+
+                  {/* Right Overlay: Synthetic Polyester */}
+                  <div className="absolute top-4 right-4 bg-rose-950/85 backdrop-blur-md border border-rose-400 text-white p-3.5 rounded-2xl max-w-xs shadow-xl text-right">
+                    <div className="flex items-center justify-end gap-1.5 font-black text-sm text-rose-300">
+                      <span>👕</span> 2. Synthetic Polyester
+                    </div>
+                    <div className="text-2xl font-black text-rose-300 mt-1">31.8°C 🔥</div>
+                    <p className="text-[11px] font-bold text-rose-100 mt-0.5">
+                      Non-porous solid plastic threads trap hot sweat against the body like plastic cling wrap!
+                    </p>
+                  </div>
+
+                  {/* Bottom Status Banner */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-white/20 flex items-center justify-between text-white text-xs font-black">
+                    <span>💨 Breeze Speed: 15 km/h</span>
+                    <span>💧 Relative Humidity: 45%</span>
+                    <span className="text-emerald-400">Cotton is 5.3°C Cooler!</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 flex-wrap justify-center">
+                  <button
+                    onClick={() => {
+                      sounds.splash();
+                      setInteractiveState({ sprayed: true, [`step_${currentStepIndex}`]: true });
+                    }}
+                    className="px-8 py-4 bg-gradient-to-r from-sky-400 to-indigo-500 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer active:scale-95"
+                  >
+                    💦 Spray Perspiration & Measure Cooling!
+                  </button>
+
+                  {interactiveState[`step_${currentStepIndex}`] && (
+                    <motion.button
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      onClick={handleNextStep}
+                      className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer flex items-center gap-2 animate-pulse"
+                    >
+                      <span>Continue to Microscopic Inspection ➔</span>
+                    </motion.button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Microscopic Porosity Cross-Section with Side-by-Side SEM Micrographs */}
+            {currentStepIndex === 2 && (
+              <div className="w-full max-w-4xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl text-center flex flex-col items-center">
+                <span className="text-xs font-black uppercase tracking-wider text-amber-800 bg-amber-100 px-3 py-1 rounded-full mb-2">
+                  100x SEM Micrograph Fiber Comparison
+                </span>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Why Cotton Breathes & Polyester Traps Sweat</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 max-w-2xl">
+                  Look inside the actual electron microscope images below to see the physical difference between plant pores and synthetic plastic rods!
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+                  {/* Cotton Hollow Lumen */}
+                  <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300 text-center flex flex-col items-center">
+                    <span className="font-black text-emerald-950 text-sm mb-2">🌿 Natural Cotton (100x Micrograph)</span>
+                    <div className="w-full h-56 rounded-2xl overflow-hidden bg-slate-950 border-2 border-emerald-400 shadow-md mb-2">
+                      <img src={cottonMicrograph100xImg} alt="Cotton Micrograph 100x" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-xs font-bold text-emerald-900 leading-relaxed">
+                      💡 <strong>Hollow Lumen Pores:</strong> Cotton fibers are hollow plant tubes with millions of micro-pores that wick liquid sweat away like tiny drinking straws!
                     </span>
                   </div>
 
-                  {/* Polyester */}
-                  <div className="p-5 bg-rose-50 rounded-2xl border-3 border-rose-300 text-center flex flex-col items-center">
-                    <span className="font-black text-slate-900 mb-2">2. Synthetic Polyester</span>
-                    <div className="w-36 h-36 rounded-2xl bg-white border-2 border-rose-300 overflow-hidden shadow-md p-1 flex items-center justify-center">
-                      <img src={polyesterSportShirtImg} alt="Polyester Shirt" className="w-full h-full object-cover rounded-xl" />
+                  {/* Polyester Solid Filament */}
+                  <div className="p-4 bg-rose-50 rounded-2xl border-2 border-rose-300 text-center flex flex-col items-center">
+                    <span className="font-black text-rose-950 text-sm mb-2">👕 Synthetic Polyester (100x Micrograph)</span>
+                    <div className="w-full h-56 rounded-2xl overflow-hidden bg-slate-950 border-2 border-rose-400 shadow-md mb-2">
+                      <img src={nylonMicrograph100xImg} alt="Synthetic Micrograph 100x" className="w-full h-full object-cover" />
                     </div>
-                    <span className="text-[11px] font-bold text-rose-700 mt-2">
-                      {interactiveState.sprayed ? '⚠️ Traps Hot Sweat & Heat Pockets!' : 'Non-porous synthetic polymer'}
+                    <span className="text-xs font-bold text-rose-900 leading-relaxed">
+                      ⚠️ <strong>Solid Plastic Cylinders:</strong> Synthetic fibers are smooth solid plastic rods with ZERO pores. Moisture cannot enter, trapping heat and sweat inside!
                     </span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => {
-                    sounds.splash();
-                    setInteractiveState({ sprayed: true, [`step_${currentStepIndex}`]: true });
-                  }}
-                  className="px-8 py-3.5 bg-gradient-to-r from-sky-400 to-indigo-500 text-white font-black text-sm rounded-2xl shadow-md cursor-pointer active:scale-95"
-                >
-                  💦 Spray Perspiration & Turn On Fan!
-                </button>
-              </div>
-            )}
-
-            {/* Step 2: Microscopic Porosity Cross-Section */}
-            {currentStepIndex === 2 && (
-              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-xl text-center flex flex-col items-center">
-                <span className="text-5xl mb-3 block">🔬💨</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Microscopic Porosity Cross-Section</h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
-                  Cotton fibres have hollow microscopic pores (lumens) that wick liquid sweat away from your skin through capillary action, evaporating in the breeze and cooling you down!
-                </p>
-                <button
-                  onClick={() => {
                     sounds.sparkle();
                     setInteractiveState({ [`step_${currentStepIndex}`]: true });
+                    handleNextStep();
                   }}
-                  className="px-8 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-sm rounded-2xl cursor-pointer"
+                  className="px-8 py-3.5 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-sm rounded-2xl cursor-pointer shadow-md active:scale-95 transition-all"
                 >
-                  Got It! Capillary Evaporation Rules! 💨
+                  Continue to Summer Outfit Challenge ➔
                 </button>
               </div>
             )}

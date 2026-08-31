@@ -13,11 +13,14 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 // Real Dedicated Laboratory Rope Photography
 import cottonRopeIntactImg from '@/assets/images/experiments/cotton_rope_intact.jpg';
 import cottonRopeSnappedImg from '@/assets/images/experiments/cotton_rope_snapped.jpg';
-import nylonCordIntactImg from '@/assets/images/experiments/nylon_cord_intact.jpg';
-import nylonRopeHeavyImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
-import silkwormSilkCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
-import syntheticAcrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
-import steelWireSpecimenImg from '@/assets/images/experiments/steel_wire_specimen.jpg';
+import woolRopeIntactImg from '@/assets/images/experiments/wool_rope_intact.jpg';
+import woolRopeSnappedImg from '@/assets/images/experiments/wool_rope_snapped.jpg';
+import silkCordIntactImg from '@/assets/images/experiments/silk_cord_intact.jpg';
+import silkCordSnappedImg from '@/assets/images/experiments/silk_cord_snapped.jpg';
+import nylonRopeIntactImg from '@/assets/images/experiments/nylon_rope_intact.jpg';
+import nylonRopeSnappedImg from '@/assets/images/experiments/nylon_rope_snapped.jpg';
+import steelCableIntactImg from '@/assets/images/experiments/steel_cable_intact.jpg';
+import steelCableHoldingImg from '@/assets/images/experiments/steel_cable_holding.jpg';
 
 // 100x SEM Micrographs
 import cottonMicrograph100xImg from '@/assets/images/microscope/cotton_micrograph_100x.jpg';
@@ -62,9 +65,9 @@ const ROPES: RopeSpecimen[] = [
     icon: '🧶',
     breakingLimitKg: 3,
     simpleExplanation: 'Made from soft, curly sheep fleece hairs.',
-    failureReason: 'Curly animal hairs stretched out and snapped under tension!',
-    intactImage: syntheticAcrylicYarnImg,
-    snappedImage: syntheticAcrylicYarnImg,
+    failureReason: 'Curly animal hairs stretched out and snapped apart in the clamps!',
+    intactImage: woolRopeIntactImg,
+    snappedImage: woolRopeSnappedImg,
     color: 'amber',
   },
   {
@@ -74,9 +77,9 @@ const ROPES: RopeSpecimen[] = [
     icon: '🐛',
     breakingLimitKg: 5,
     simpleExplanation: 'Spun by silkworm caterpillars into smooth shiny threads.',
-    failureReason: 'Stronger than cotton, but still snapped under heavy weight!',
-    intactImage: silkwormSilkCocoonImg,
-    snappedImage: silkwormSilkCocoonImg,
+    failureReason: 'Fine caterpillar protein strands snapped under heavy tensile load!',
+    intactImage: silkCordIntactImg,
+    snappedImage: silkCordSnappedImg,
     color: 'purple',
   },
   {
@@ -87,8 +90,8 @@ const ROPES: RopeSpecimen[] = [
     breakingLimitKg: 25,
     simpleExplanation: 'Made from continuous, super-strong plastic polymer chains.',
     failureReason: 'Held immense weight before finally snapping at extreme force!',
-    intactImage: nylonCordIntactImg,
-    snappedImage: nylonRopeHeavyImg,
+    intactImage: nylonRopeIntactImg,
+    snappedImage: nylonRopeSnappedImg,
     color: 'sky',
   },
   {
@@ -99,8 +102,8 @@ const ROPES: RopeSpecimen[] = [
     breakingLimitKg: 50,
     simpleExplanation: 'Made of strong braided metal wires locked tightly together.',
     failureReason: 'Never snaps! Steel wire cables can easily lift cars and elevators!',
-    intactImage: steelWireSpecimenImg,
-    snappedImage: steelWireSpecimenImg,
+    intactImage: steelCableIntactImg,
+    snappedImage: steelCableHoldingImg,
     color: 'slate',
   },
 ];
