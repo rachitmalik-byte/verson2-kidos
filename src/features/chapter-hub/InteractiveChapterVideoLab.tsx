@@ -432,7 +432,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
     if (isCorrect) {
       sounds.fanfare();
       setQuizAnswers((prev) => ({ ...prev, [quizKey]: true }));
-      voiceAssistant.speak(`Spot on, Young Scientist! ${activeTimestamp.quickQuestion.explanation}`);
+      voiceAssistant.speak(`Spot on, Young Scientist! ${activeTimestamp?.quickQuestion?.explanation || ''}`);
     } else {
       sounds.boing();
       voiceAssistant.speak('Look closely at the key scientific law above and try again!');
@@ -713,11 +713,11 @@ export const InteractiveChapterVideoLab: React.FC = () => {
               </div>
 
               <h4 className="text-xs sm:text-sm font-black text-slate-900 leading-snug">
-                {activeTimestamp.quickQuestion.question}
+                {activeTimestamp?.quickQuestion?.question || ''}
               </h4>
 
               <div className="flex flex-col gap-2">
-                {activeTimestamp.quickQuestion.options.map((opt, oIdx) => {
+                {(activeTimestamp?.quickQuestion?.options || []).map((opt, oIdx) => {
                   const isSelected = selectedQuizOption === oIdx;
                   return (
                     <motion.button
@@ -748,7 +748,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
                   onClick={() => handleSelectTimestamp(activeTimestampIndex + 1)}
                   className="w-full mt-2 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-95"
                 >
-                  <span>Next Video Chapter ({timestamps[activeTimestampIndex + 1].timeLabel})</span>
+                  <span>Next Video Chapter ({timestamps[activeTimestampIndex + 1]?.timeLabel || ''})</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               ) : (
@@ -777,7 +777,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
                 Key Takeaways from "{activeCourse.title.split(':')[0]}"
               </h3>
               <p className="text-xs sm:text-sm font-bold text-slate-600 mt-1.5 leading-relaxed">
-                {activeCourse.postAnalysis.takeawaySummary}
+                {activeCourse?.postAnalysis?.takeawaySummary || ''}
               </p>
             </div>
           </div>
@@ -793,7 +793,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {activeCourse.postAnalysis.transformationSteps.map((step, sIdx) => (
+              {(activeCourse?.postAnalysis?.transformationSteps || []).map((step, sIdx) => (
                 <div key={sIdx} className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-200 flex flex-col justify-between text-center">
                   <span className="text-2xl mb-1">{step.icon}</span>
                   <div>
@@ -830,7 +830,7 @@ export const InteractiveChapterVideoLab: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="font-bold text-slate-700 divide-y divide-slate-100">
-                {activeCourse.postAnalysis.comparisonTable.map((row, rIdx) => (
+                {(activeCourse?.postAnalysis?.comparisonTable || []).map((row, rIdx) => (
                   <tr key={rIdx} className="hover:bg-slate-50 transition-colors">
                     <td className="p-3 font-black text-slate-900">{row.material}</td>
                     <td className="p-3 text-[11px]">{row.source}</td>
