@@ -1,3 +1,4 @@
+import { WaterAnimatedOceanBackground } from '@/components/effects/WaterAnimatedOceanBackground';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -21,6 +22,7 @@ export function ThemeWaterHub() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-sky-400 via-blue-100 to-indigo-100 flex flex-col pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+      <WaterAnimatedOceanBackground />
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-6 relative z-10">
         {/* ── Top Game Navbar ── */}
         <div className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-sky-300 shadow-md">
