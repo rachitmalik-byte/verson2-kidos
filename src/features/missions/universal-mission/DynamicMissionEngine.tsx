@@ -58,8 +58,9 @@ import {
 } from 'lucide-react';
 
 // Real Studio Macro Educational Photography
-import cottonSwatchCleanImg from '@/assets/images/experiments/cotton_swatch_clean.jpg';
-import cottonSwatchWrinkledImg from '@/assets/images/experiments/cotton_swatch_wrinkled.jpg';
+import cottonBlueSmoothImg from '@/assets/images/experiments/cotton_blue_smooth.jpg';
+import cottonSwatchWrinkledImg from '@/assets/images/experiments/cotton_blue_wrinkled.jpg';
+import polyesterBlueSmoothImg from '@/assets/images/experiments/polyester_blue_smooth.jpg';
 import cottonBurningAshImg from '@/assets/images/experiments/cotton_burning_ash.jpg';
 import polyesterSwatchCleanImg from '@/assets/images/experiments/polyester_swatch_clean.jpg';
 import polyesterMeltingBeadImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
@@ -262,7 +263,7 @@ export const DynamicMissionEngine: React.FC = () => {
                       <AnimatePresence mode="wait">
                         <motion.img
                           key={interactiveState.crumpled ? 'wrinkled' : 'clean'}
-                          src={interactiveState.crumpled ? cottonSwatchWrinkledImg : cottonSwatchCleanImg}
+                          src={interactiveState.crumpled ? cottonSwatchWrinkledImg : cottonBlueSmoothImg}
                           alt="Cotton Swatch"
                           initial={{ opacity: 0.4, scale: interactiveState.crumpled ? 0.85 : 1.05 }}
                           animate={{ opacity: 1, scale: interactiveState.crumpled ? 0.95 : 1, rotate: interactiveState.crumpled ? 3 : 0 }}
@@ -305,7 +306,7 @@ export const DynamicMissionEngine: React.FC = () => {
 
                     <div className="relative w-36 h-36 md:w-40 md:h-40 rounded-2xl overflow-hidden border-3 border-sky-300 bg-white shadow-md p-1 flex items-center justify-center">
                       <motion.img
-                        src={polyesterSwatchCleanImg}
+                        src={polyesterBlueSmoothImg}
                         alt="Polyester Swatch"
                         animate={
                           interactiveState.crumpled
@@ -542,7 +543,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     <span className="font-black text-slate-900 mb-2">1. 100% Natural Cotton</span>
                     <div className="w-36 h-36 rounded-2xl overflow-hidden border-2 border-emerald-300 bg-white shadow-md p-1 flex items-center justify-center">
                       <img
-                        src={interactiveState.burnedCotton ? cottonBurningAshImg : cottonSwatchCleanImg}
+                        src={interactiveState.burnedCotton ? cottonBurningAshImg : cottonBlueSmoothImg}
                         alt="Cotton Swatch"
                         className="w-full h-full object-cover rounded-xl"
                       />
@@ -570,7 +571,7 @@ export const DynamicMissionEngine: React.FC = () => {
                     <span className="font-black text-slate-900 mb-2">2. Synthetic Polyester</span>
                     <div className="w-36 h-36 rounded-2xl overflow-hidden border-2 border-rose-300 bg-white shadow-md p-1 flex items-center justify-center">
                       <img
-                        src={interactiveState.burnedPoly ? polyesterMeltingBeadImg : polyesterSwatchCleanImg}
+                        src={interactiveState.burnedPoly ? polyesterMeltingBeadImg : polyesterBlueSmoothImg}
                         alt="Polyester Swatch"
                         className="w-full h-full object-cover rounded-xl"
                       />
@@ -728,7 +729,7 @@ export const DynamicMissionEngine: React.FC = () => {
                   <div className="p-5 bg-emerald-50 rounded-2xl border-3 border-emerald-300 text-center flex flex-col items-center">
                     <span className="font-black text-slate-900 mb-2">1. Natural Cotton</span>
                     <div className="w-36 h-36 rounded-2xl bg-white border-2 border-emerald-300 overflow-hidden shadow-md p-1 flex items-center justify-center">
-                      <img src={cottonSwatchCleanImg} alt="Breathable Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
+                      <img src={cottonBlueSmoothImg} alt="Breathable Cotton Fabric" className="w-full h-full object-cover rounded-xl" />
                     </div>
                     <span className="text-[11px] font-bold text-emerald-800 mt-2">
                       {interactiveState.sprayed ? '✓ Absorbs Perspiration & Cools Skin!' : 'Porous natural plant cellulose'}
