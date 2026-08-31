@@ -1,3 +1,4 @@
+import { VideoLabPage } from '@/features/video-lab/VideoLabPage';
 import { ThemeWaterHub } from '@/features/theme-water/ThemeWaterHub';
 import { WaterMissionEngine } from '@/features/theme-water/WaterMissionEngine';
 import { TeacherStudio } from '@/features/teacher-studio/TeacherStudio';
@@ -53,6 +54,7 @@ export function App() {
 
           {/* Chapter Hub, Discovery Journal & Mystery Lab */}
           <Route path="/chapter-hub" element={<ChapterHub />} />
+          <Route path="/video-lab" element={<VideoLabPage />} />
           <Route path="/teacher-studio" element={<TeacherStudio />} />
           <Route path="/discovery-book" element={<DiscoveryBook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
