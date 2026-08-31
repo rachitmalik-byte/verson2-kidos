@@ -74,7 +74,7 @@ export function ChapterHub() {
   const discoveries = useDiscoveryStore((state) => state.discoveries);
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
-  const [activeTab, setActiveTab] = useState<'missions' | 'guidebook'>('missions');
+  const [activeTab, setActiveTab] = useState<'missions' | 'video' | 'guidebook'>('missions');
   const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
 
   const totalStars = completedMissions.length * 3 + discoveries.length * 2;
@@ -186,6 +186,23 @@ export function ChapterHub() {
               >
                 <Compass className="w-3.5 h-3.5" />
                 <span>13 Hands-on Missions 🗺️</span>
+              </button>
+
+              <button
+                id="tab-video-btn"
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  setActiveTab('video');
+                }}
+                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                  activeTab === 'video'
+                    ? 'bg-sky-500 border-2 border-sky-700 text-white ring-2 ring-sky-300 shadow-sky-200'
+                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
+                }`}
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Video Lab (Synced Chapters) 🎬</span>
               </button>
 
 
