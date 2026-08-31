@@ -1,0 +1,385 @@
+/**
+ * Declarative Lesson Configuration Data Schema for PolyQuest
+ * Class 5 Science • The World of Natural & Synthetic Materials
+ */
+
+import type { LessonMissionConfig } from '@/types/lessonEngine';
+
+// Real Studio Macro Educational Photography
+import raincoatWaterproofImg from '@/assets/images/raincoat/polyester_raincoat_waterproof.jpg';
+import cottonBollSpecimenImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
+import cottonSwatchCleanImg from '@/assets/images/experiments/cotton_swatch_clean.jpg';
+import polyesterSwatchCleanImg from '@/assets/images/experiments/polyester_swatch_clean.jpg';
+import polyesterFabricRollImg from '@/assets/images/specimens/polyester_fabric_roll.jpg';
+import nylonRopeHeavyImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
+import cottonFabricZoomImg from '@/assets/images/raincoat/cotton_fabric_zoom.jpg';
+import polyesterFabricZoomImg from '@/assets/images/raincoat/polyester_fabric_zoom.jpg';
+import circuitWireLightbulbImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
+
+export const lessonConfigs: Record<number, LessonMissionConfig> = {
+  // Mission 1: The Raincoat Mystery (Water Repellency Lab)
+  1: {
+    id: 'mission-01',
+    number: 1,
+    title: 'The Raincoat Mystery',
+    subtitle: 'Why are modern raincoats made from synthetic polyester instead of cotton?',
+    icon: '🧥',
+    themeColor: 'sky',
+    bgmTrack: 'rainy-storm',
+    concepts: ['Hydrophobic', 'Waterproof', 'Natural Cellulose', 'Polyester'],
+    steps: [
+      {
+        id: 'm1-s1',
+        type: 'water_absorption_lab',
+        title: 'Water Droplet Spray Test',
+        subtitle: 'Spray water mist on both swatches to observe absorption vs hydrophobic beading.',
+        pipPrompt: 'Spray both swatches with water mist! Notice how water behaves completely differently on cotton versus polyester.',
+        pipMood: 'curious',
+        conceptBadge: 'Water Repellency',
+        learningGoal: 'Discover that synthetic polymers form a non-porous hydrophobic barrier.',
+        specimens: [
+          {
+            id: 'cotton-swatch',
+            name: 'Natural Cotton Swatch',
+            materialType: 'cotton',
+            category: 'Natural',
+            dryImage: cottonSwatchCleanImg,
+            wetImage: cottonSwatchCleanImg,
+            isHydrophobic: false,
+            absorptionRateSec: 0.5,
+            description: 'Woven organic plant cellulose fibers harvested from the cotton boll.',
+            microscopicNote: 'Hollow, porous organic cellulose capillary tubes rapidly suck up and absorb liquid water.',
+          },
+          {
+            id: 'polyester-swatch',
+            name: 'Synthetic Polyester Swatch',
+            materialType: 'polyester',
+            category: 'Synthetic',
+            dryImage: polyesterSwatchCleanImg,
+            wetImage: raincoatWaterproofImg,
+            isHydrophobic: true,
+            absorptionRateSec: 999,
+            description: 'Synthetic polymer fibers engineered from tightly woven polyester filaments.',
+            microscopicNote: 'Smooth, non-porous petrochemical polymer chains create a high surface tension barrier that repels water droplets.',
+          },
+        ],
+      },
+      {
+        id: 'm1-s2',
+        type: 'microscopic_zoom_viewer',
+        title: 'Microscopic Zoom: Cotton vs Polyester',
+        subtitle: 'Inspect the fiber matrix under 1x, 10x, and 100x optical magnification.',
+        pipPrompt: 'Take a look through the microscope! Notice the hollow porous structure of cotton compared to smooth polyester.',
+        pipMood: 'explaining',
+        conceptBadge: 'Microscopic Structure',
+        specimenName: 'Polyester Polymer Matrix',
+        specimenCategory: 'Synthetic',
+        tiers: [
+          {
+            magnification: '1x',
+            label: 'Fabric Overview',
+            image: polyesterFabricRollImg,
+            scaleBarText: '10 mm',
+            structuralFeatures: ['Smooth glossy surface sheen', 'Even industrial weave'],
+            scientificExplanation: 'At normal scale, polyester fabric looks uniform, smooth, and lightweight.',
+          },
+          {
+            magnification: '10x',
+            label: 'Woven Yarn Surface',
+            image: polyesterFabricZoomImg,
+            scaleBarText: '1 mm',
+            structuralFeatures: ['Tightly interlocked filaments', 'Zero visible pores or gaps'],
+            scientificExplanation: 'Under 10x magnification, the tightly spun synthetic filament matrix blocks liquid water droplets from penetrating.',
+          },
+          {
+            magnification: '100x',
+            label: 'Polymer Filaments',
+            image: polyesterFabricZoomImg,
+            scaleBarText: '100 µm',
+            structuralFeatures: ['Continuous smooth synthetic strands', 'Hydrophobic surface tension'],
+            scientificExplanation: 'At 100x zoom, synthetic ester polymer chains are continuous with no hollow capillary channels.',
+          },
+        ],
+      },
+      {
+        id: 'm1-s3',
+        type: 'mcq_assessment',
+        title: 'Raincoat Material Evaluation',
+        subtitle: 'Apply your experimental observations to explain why raincoats are made from synthetic polyester.',
+        pipPrompt: 'Now, young scientist! Why is synthetic polyester the ideal material for a rainy day coat?',
+        pipMood: 'thinking',
+        conceptBadge: 'Scientific Reasoning',
+        question: 'Why do outdoor gear manufacturers choose synthetic polyester for raincoats instead of natural cotton?',
+        options: [
+          {
+            id: 'opt-1',
+            text: 'Polyester fibers are non-porous and hydrophobic, shedding rain without becoming heavy or waterlogged.',
+            isCorrect: true,
+            feedback: 'Spot on! Hydrophobic synthetic polymers keep the wearer completely dry.',
+          },
+          {
+            id: 'opt-2',
+            text: 'Cotton dissolves completely into a liquid when exposed to cold rainwater.',
+            isCorrect: false,
+            feedback: 'Cotton does not dissolve in water — it absorbs water and becomes heavy and soggy.',
+          },
+          {
+            id: 'opt-3',
+            text: 'Polyester contains microscopic heaters that boil away raindrops on contact.',
+            isCorrect: false,
+            feedback: 'Polyester simply repels water through surface tension; it does not generate heat.',
+          },
+        ],
+        explanation: 'Polyester fibers are smooth, hydrophobic polymers that do not absorb water, making raincoats lightweight and waterproof.',
+      },
+      {
+        id: 'm1-s4',
+        type: 'read_aloud_coach',
+        title: 'Science Speech Coach: Hydrophobic',
+        subtitle: 'Read the scientific sentence aloud into your microphone.',
+        pipPrompt: 'Read this scientific sentence clearly to earn your Science Stars!',
+        pipMood: 'encouraging',
+        targetSentence: 'Polyester is a hydrophobic synthetic material that repels water droplets on raincoats.',
+        conceptBadge: 'Speech Coach',
+      },
+      {
+        id: 'm1-s5',
+        type: 'concept_summary',
+        title: 'Mission 1 Completed! 🏆',
+        subtitle: 'You discovered how material properties dictate real-world engineering uses.',
+        pipPrompt: 'Fantastic scientific investigation! You have mastered the Raincoat Mystery!',
+        pipMood: 'celebrating',
+        takeawayCards: [
+          {
+            icon: '🧱',
+            title: 'Material Property Law',
+            description: 'Material Structure ➔ Physical Property ➔ Engineered Use',
+          },
+          {
+            icon: '💧',
+            title: 'Hydrophobic vs Hydrophilic',
+            description: 'Cotton absorbs moisture (hydrophilic), while polyester repels water (hydrophobic).',
+          },
+        ],
+      },
+    ],
+  },
+
+  // Mission 2: The Sorting Desk (Natural vs Synthetic Classification)
+  2: {
+    id: 'mission-02',
+    number: 2,
+    title: 'The Sorting Desk',
+    subtitle: 'Classify everyday materials into Natural (plants/animals/ground) vs Synthetic (man-made polymers).',
+    icon: '📦',
+    themeColor: 'sage',
+    bgmTrack: 'playful-lab',
+    concepts: ['Natural', 'Synthetic', 'Classification', 'Biopolymers'],
+    steps: [
+      {
+        id: 'm2-s1',
+        type: 'sorting_tray',
+        title: 'Classify Natural vs Synthetic Specimens',
+        subtitle: 'Sort the mixed specimens into their correct science classification tray.',
+        pipPrompt: 'Can you help me sort these materials? Ask yourself: does it come directly from nature, or was it synthesized in a chemical factory?',
+        pipMood: 'curious',
+        conceptBadge: 'Classification',
+        trays: [
+          {
+            id: 'natural',
+            title: '🌿 Natural Materials',
+            icon: '🌿',
+            themeColor: 'sage',
+            allowedCategories: ['natural'],
+            description: 'Harvested directly from plants, animals, minerals, or the Earth.',
+          },
+          {
+            id: 'synthetic',
+            title: '🏭 Synthetic Materials',
+            icon: '🏭',
+            themeColor: 'sky',
+            allowedCategories: ['synthetic'],
+            description: 'Synthesized by chemical engineers from petroleum hydrocarbons.',
+          },
+        ],
+        items: [
+          { id: 'item-cotton', name: 'Cotton Plant Boll', icon: '🌱', category: 'natural', hint: 'Grows on Gossypium plant bushes.', originDetails: 'Plant cellulose' },
+          { id: 'item-wool', name: 'Sheep Fleece Wool', icon: '🐑', category: 'natural', hint: 'Sheared from animal fur.', originDetails: 'Animal keratin protein' },
+          { id: 'item-silk', name: 'Silkworm Cocoon', icon: '🐛', category: 'natural', hint: 'Spun by silkworm caterpillars.', originDetails: 'Animal fibroin protein' },
+          { id: 'item-timber', name: 'Natural Wood Timber', icon: '🪵', category: 'natural', hint: 'Harvested from tree trunks.', originDetails: 'Plant lignin & cellulose' },
+          { id: 'item-nylon', name: 'Nylon Polymer Thread', icon: '🧵', category: 'synthetic', hint: 'Synthesized in petrochemical labs.', originDetails: 'Polyamide polymer' },
+          { id: 'item-plastic', name: 'PET Plastic Bottle', icon: '🧴', category: 'synthetic', hint: 'Molded from thermoplastic pellets.', originDetails: 'Polyethylene terephthalate' },
+          { id: 'item-acrylic', name: 'Acrylic Winter Yarn', icon: '🧶', category: 'synthetic', hint: 'Artificial wool synthesized in factories.', originDetails: 'Polyacrylonitrile' },
+          { id: 'item-polyester', name: 'Polyester Sports Shirt', icon: '👕', category: 'synthetic', hint: 'Synthetic polymer fibers made from petroleum.', originDetails: 'Ester polymer' },
+        ],
+      },
+      {
+        id: 'm2-s2',
+        type: 'mcq_assessment',
+        title: 'Definition Check: Synthetic Materials',
+        subtitle: 'Verify your understanding of scientific classification.',
+        pipPrompt: 'What is the core scientific definition of a synthetic material?',
+        pipMood: 'thinking',
+        conceptBadge: 'Concept Mastery',
+        question: 'What defines a SYNTHETIC material in science?',
+        options: [
+          {
+            id: 'opt-1',
+            text: 'A material created by people in laboratories or factories using chemical reactions on raw substances.',
+            isCorrect: true,
+            feedback: 'Exactly! Synthetic materials are synthesized through chemical engineering.',
+          },
+          {
+            id: 'opt-2',
+            text: 'Any material that is green in color and found growing in soil.',
+            isCorrect: false,
+            feedback: 'Materials growing in soil are natural plant materials.',
+          },
+          {
+            id: 'opt-3',
+            text: 'A substance that only exists in outer space on distant asteroids.',
+            isCorrect: false,
+            feedback: 'Synthetic materials are made and used right here on Earth every single day.',
+          },
+        ],
+        explanation: 'Synthetic materials are artificial compounds produced through chemical processes, usually derived from petroleum.',
+      },
+      {
+        id: 'm2-s3',
+        type: 'read_aloud_coach',
+        title: 'Speech Coach: Natural vs Synthetic',
+        subtitle: 'Read the definition sentence clearly.',
+        pipPrompt: 'Read this science sentence aloud with confidence!',
+        pipMood: 'encouraging',
+        targetSentence: 'Natural materials come from plants and animals, while synthetic materials are made in factories.',
+        conceptBadge: 'Speech Coach',
+      },
+      {
+        id: 'm2-s4',
+        type: 'concept_summary',
+        title: 'Mission 2 Completed! ⭐',
+        subtitle: 'You are now an expert at classifying natural vs synthetic materials.',
+        pipPrompt: 'Brilliant work! You know the exact origins of all everyday substances!',
+        pipMood: 'celebrating',
+        takeawayCards: [
+          { icon: '🌿', title: 'Natural Origin', description: 'Cotton, Wool, Silk, Timber (Biological & Earth origin)' },
+          { icon: '🏭', title: 'Synthetic Origin', description: 'Nylon, Polyester, Plastic, Acrylic (Engineered polymers)' },
+        ],
+      },
+    ],
+  },
+
+  // Mission 3: Nylon Climbing Rope (Tensile Strength Rig)
+  3: {
+    id: 'mission-03',
+    number: 3,
+    title: 'The Super-Strong Thread',
+    subtitle: 'Test the tensile breaking strength of cotton vs wool vs synthetic nylon.',
+    icon: '🪢',
+    themeColor: 'amber',
+    bgmTrack: 'high-energy-sprint',
+    concepts: ['Tensile Strength', 'Nylon', 'Polyamide Chains', 'Elasticity'],
+    steps: [
+      {
+        id: 'm3-s1',
+        type: 'tensile_strength_rig',
+        title: 'Tensile Strength Testing Rig',
+        subtitle: 'Add weights to the hanging pan to test which fiber supports the heaviest load before snapping.',
+        pipPrompt: 'Load weights onto each thread to test its tensile strength! Notice how much weight synthetic nylon can hold before snapping!',
+        pipMood: 'curious',
+        conceptBadge: 'Tensile Strength',
+        weightIncrementGrams: 50,
+        maxWeightGrams: 1000,
+        scientificTakeaway: 'Nylon polymer chains align under tension to support immense loads.',
+        specimens: [
+          {
+            id: 'specimen-cotton-thread',
+            name: 'Natural Cotton Thread',
+            material: 'Cotton Plant Cellulose',
+            icon: '🧵',
+            breakingWeightGrams: 150,
+            elasticDeformationMm: 4,
+            snapSound: 'snap-light',
+            description: 'Short cellulose staple fibers twisted into yarn.',
+            realWorldUse: 'Lightweight clothing and sewing thread.',
+          },
+          {
+            id: 'specimen-wool-thread',
+            name: 'Natural Wool Thread',
+            material: 'Animal Keratin Protein',
+            icon: '🧶',
+            breakingWeightGrams: 200,
+            elasticDeformationMm: 12,
+            snapSound: 'snap-light',
+            description: 'Crimped animal fibers with good stretch but low ultimate tensile strength.',
+            realWorldUse: 'Warm winter sweaters and blankets.',
+          },
+          {
+            id: 'specimen-nylon-cord',
+            name: 'Synthetic Nylon Cord',
+            material: 'Synthetic Polyamide Polymer',
+            icon: '🪢',
+            breakingWeightGrams: 600,
+            elasticDeformationMm: 25,
+            snapSound: 'snap-heavy',
+            description: 'Continuous molecular polymer chains aligned under high tension.',
+            realWorldUse: 'Parachute cords, rock climbing ropes, and fishing lines.',
+          },
+        ],
+      },
+      {
+        id: 'm3-s2',
+        type: 'mcq_assessment',
+        title: 'Tensile Strength Engineering Choice',
+        subtitle: 'Why is nylon chosen for critical safety equipment?',
+        pipPrompt: 'Why do mountaineers and paratroopers trust nylon for life-saving ropes?',
+        pipMood: 'thinking',
+        conceptBadge: 'Tensile Physics',
+        question: 'Why is NYLON chosen over cotton for rock climbing ropes and parachutes?',
+        options: [
+          {
+            id: 'opt-1',
+            text: 'Nylon has extremely high tensile strength and elasticity, holding heavy body weight without snapping.',
+            isCorrect: true,
+            feedback: 'Correct! Nylon can hold more than triple the load of equivalent natural fibers.',
+          },
+          {
+            id: 'opt-2',
+            text: 'Nylon is made of solid pure gold.',
+            isCorrect: false,
+            feedback: 'Nylon is a synthetic polyamide polymer, not a precious metal.',
+          },
+          {
+            id: 'opt-3',
+            text: 'Cotton threads are heavier than steel girders.',
+            isCorrect: false,
+            feedback: 'Cotton is lightweight but lacks the tensile breaking strength of nylon.',
+          },
+        ],
+        explanation: 'Continuous synthetic polymer chains give nylon superior tensile strength and shock absorption.',
+      },
+      {
+        id: 'm3-s3',
+        type: 'read_aloud_coach',
+        title: 'Speech Coach: Nylon Tensile Strength',
+        subtitle: 'Read the science sentence aloud.',
+        pipPrompt: 'Speak clearly into the microphone to earn your stars!',
+        pipMood: 'encouraging',
+        targetSentence: 'Nylon is a super strong synthetic polymer used for mountaineering ropes and parachutes.',
+        conceptBadge: 'Speech Coach',
+      },
+      {
+        id: 'm3-s4',
+        type: 'concept_summary',
+        title: 'Mission 3 Completed! 🪢',
+        subtitle: 'You proved that synthetic nylon provides superior tensile strength for engineering.',
+        pipPrompt: 'Outstanding! You understand why materials are engineered for strength!',
+        pipMood: 'celebrating',
+        takeawayCards: [
+          { icon: '🪢', title: 'Tensile Strength', description: 'The maximum pulling force a material can withstand before breaking.' },
+          { icon: '🔬', title: 'Nylon Superpower', description: 'Long polymer chains stretch and distribute load without breaking.' },
+        ],
+      },
+    ],
+  },
+};
