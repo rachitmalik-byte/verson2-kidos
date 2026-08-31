@@ -1,3 +1,4 @@
+import { ShelterAnimatedMountainBackground } from '@/components/effects/ShelterAnimatedMountainBackground';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -285,7 +286,7 @@ export function ShelterMissionEngine() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-indigo-100 via-sky-50 to-amber-50 flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative">
+    <div className="min-h-screen w-full relative overflow-x-hidden flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative">
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"
