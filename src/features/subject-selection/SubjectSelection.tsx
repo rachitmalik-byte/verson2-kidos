@@ -48,7 +48,7 @@ const SUBJECTS: Subject[] = [
     active: true,
     chapterCount: 5,
     unlockedChapters: 13,
-    path: '/chapter-hub',
+    path: '/intro/materials',
     syllabusCode: 'CBSE EVS Class 5 • Theme 6',
   },
   {
@@ -61,7 +61,7 @@ const SUBJECTS: Subject[] = [
     active: true,
     chapterCount: 4,
     unlockedChapters: 4,
-    path: '/theme/1/hub',
+    path: '/intro/senses',
     syllabusCode: 'CBSE EVS Class 5 • Theme 1',
   },
   {
@@ -74,7 +74,7 @@ const SUBJECTS: Subject[] = [
     active: true,
     chapterCount: 4,
     unlockedChapters: 4,
-    path: '/theme/water/hub',
+    path: '/intro/water',
     syllabusCode: 'CBSE EVS Class 5 • Theme 2 & 4',
   },
   {
@@ -87,7 +87,7 @@ const SUBJECTS: Subject[] = [
     active: true,
     chapterCount: 5,
     unlockedChapters: 5,
-    path: '/theme/shelter/hub',
+    path: '/intro/shelter',
     syllabusCode: 'CBSE EVS Class 5 • Theme 3 & 5',
   },
   {

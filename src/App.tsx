@@ -11,6 +11,7 @@ import { ParentPinGate } from '@/features/parent/ParentPinGate';
 import { ParentDashboard } from '@/features/parent/ParentDashboard';
 import { ChapterHub } from '@/features/chapter-hub/ChapterHub';
 import { ChapterIntro } from '@/features/chapter-intro/ChapterIntro';
+import { UniversalMascotChapterIntro } from '@/features/chapter-intro/UniversalMascotChapterIntro';
 import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
 import { Theme1Hub } from '@/features/theme1/Theme1Hub';
 import { SuperSensesMissionEngine } from '@/features/theme1/SuperSensesMissionEngine';
@@ -59,6 +60,11 @@ export function App() {
           <Route path="/discovery-book" element={<DiscoveryBook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 
+                    {/* Dedicated Full-Screen Mascot Chapter Teaching Intros for All 4 Courses */}
+          <Route path="/intro/:courseKey" element={<UniversalMascotChapterIntro />} />
+          <Route path="/theme/1/intro" element={<UniversalMascotChapterIntro />} />
+          <Route path="/theme/water/intro" element={<UniversalMascotChapterIntro />} />
+          <Route path="/theme/shelter/intro" element={<UniversalMascotChapterIntro />} />
           {/* Chapter 3 Missions — All 13 Missions Dynamic Learning Engine */}
           <Route path="/chapter/3" element={<ChapterIntro />} />
           <Route path="/chapter/3/mission/:missionNum" element={<DynamicMissionEngine />} />

@@ -191,7 +191,7 @@ export function ChapterHub() {
                 onClick={() => {
                   sounds.pop();
                   voiceAssistant.stop();
-                  navigate('/chapter/3');
+                  navigate('/intro/materials');
                 }}
                 className="font-black text-xs py-2.5 px-4 rounded-2xl shadow-md bg-gradient-to-r from-sky-500 to-indigo-600 text-white flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all border-2 border-sky-400 ring-2 ring-sky-300"
               >
