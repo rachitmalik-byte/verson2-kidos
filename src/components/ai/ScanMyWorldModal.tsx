@@ -24,6 +24,7 @@ import {
   geminiService,
   MaterialAnalysisResult,
   DetectedMaterialPointer,
+  MaterialCategory,
   ColorStats,
   getApiKey,
   setApiKey,
@@ -120,10 +121,24 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     }
   };
 
-  const capturePhoto = () => {
+  /**
+   * Robust camera frame capture with readyState check
+   */
+  const capturePhoto = async () => {
     sounds.camera();
     const video = videoRef.current;
     
+    // Ensure video frame is actively rendering
+    if (video && video.readyState < 2) {
+      await new Promise<void>((resolve) => {
+        const checkReady = () => {
+          if (video.readyState >= 2) resolve();
+          else setTimeout(checkReady, 50);
+        };
+        checkReady();
+      });
+    }
+
     const canvas = document.createElement('canvas');
     const width = video && video.videoWidth > 0 ? video.videoWidth : 1280;
     const height = video && video.videoHeight > 0 ? video.videoHeight : 720;
@@ -139,7 +154,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
       try {
         ctx.drawImage(video, 0, 0, width, height);
         stats = extractStatsFromCanvas(canvas);
-        dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        dataUrl = canvas.toDataURL('image/jpeg', 0.92);
       } catch (e) {
         console.warn('Canvas capture fallback:', e);
       }
@@ -170,6 +185,8 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
         hint = 'samurai';
       } else if (fileName.includes('paper') || fileName.includes('note') || fileName.includes('book')) {
         hint = 'paper';
+      } else if (fileName.includes('dress') || fileName.includes('uniform') || fileName.includes('shirt') || fileName.includes('skirt')) {
+        hint = 'uniform';
       }
 
       analyzePhoto(rawDataUrl, undefined, hint);
@@ -188,6 +205,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     if (sampleName.includes('Wire')) hint = 'wire';
     if (sampleName.includes('Samurai')) hint = 'samurai';
     if (sampleName.includes('Paper')) hint = 'paper';
+    if (sampleName.includes('Uniform')) hint = 'uniform';
 
     analyzePhoto(sampleUrl, undefined, hint);
   };
@@ -212,7 +230,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
       }
       sounds.success();
       voiceAssistant.speak(
-        `${res.sceneDescription} Detected materials: ${res.pointers.map(p => p.itemName).join(', ')}.`
+        `${res.sceneDescription} Detected ${res.pointers.length} materials.`
       );
     } catch (err: any) {
       console.warn('Vision analysis fallback engaged:', err);
@@ -223,7 +241,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
       }
       sounds.success();
       voiceAssistant.speak(
-        `${res.sceneDescription} Detected materials: ${res.pointers.map(p => p.itemName).join(', ')}.`
+        `${res.sceneDescription} Detected ${res.pointers.length} materials.`
       );
     } finally {
       setIsAnalyzing(false);
@@ -244,6 +262,22 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
     sounds.pop();
     setSelectedPointerId(pointer.id);
     voiceAssistant.speak(`${pointer.itemName} is made from ${pointer.materialName}. ${pointer.whyUsed}`);
+  };
+
+  const getCategoryBadgeClass = (category: MaterialCategory) => {
+    switch (category) {
+      case 'Metallic':
+        return 'bg-amber-400 text-amber-950 border border-amber-500';
+      case 'Natural':
+        return 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+      case 'Synthetic':
+        return 'bg-sky-100 text-sky-800 border border-sky-300';
+      case 'Mineral':
+        return 'bg-purple-100 text-purple-800 border border-purple-300';
+      case 'Mixed':
+      default:
+        return 'bg-teal-100 text-teal-800 border border-teal-300';
+    }
   };
 
   const handleQuizChoice = (optionIndex: number, isCorrect: boolean) => {
@@ -308,7 +342,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', damping: 24, stiffness: 300 }}
-            className="relative z-10 bg-white w-full max-w-3xl rounded-3xl md:rounded-[36px] border-4 border-amber-400 shadow-2xl overflow-hidden flex flex-col max-h-[94vh]"
+            className="relative z-10 bg-white w-full max-w-4xl rounded-3xl md:rounded-[36px] border-4 border-amber-400 shadow-2xl overflow-hidden flex flex-col max-h-[94vh]"
           >
             {/* Header */}
             <div className="p-4 sm:p-5 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 flex items-center justify-between text-slate-950 border-b-2 border-amber-500 shrink-0">
@@ -319,11 +353,11 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950 text-amber-300 px-2.5 py-0.5 rounded-full">
-                      {geminiService.hasApiKey() ? 'Gemini 2.0 Vision AI' : 'AR Scene & Material Detective'}
+                      {geminiService.hasApiKey() ? 'Gemini 2.0 Vision AI (Active)' : 'Dense Scene & Material Detective'}
                     </span>
                     <button
                       onClick={() => setShowKeyInput(!showKeyInput)}
-                      className="px-2 py-0.5 bg-amber-200/80 hover:bg-white text-slate-900 rounded-md text-[10px] font-black flex items-center gap-1 cursor-pointer transition-all shadow-xs"
+                      className="px-2.5 py-0.5 bg-amber-200/90 hover:bg-white text-slate-900 rounded-md text-[10px] font-black flex items-center gap-1 cursor-pointer transition-all shadow-xs"
                       title="Set Gemini Vision API Key"
                     >
                       <Key className="w-3 h-3 text-amber-800" />
@@ -331,7 +365,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     </button>
                   </div>
                   <h3 className="text-lg font-black text-slate-950 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    Scan My World • Scene & Material Detective 🔍
+                    Scan My World • Dense Material Detective 🔍
                   </h3>
                 </div>
               </div>
@@ -391,7 +425,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                       <div className="p-8 text-center text-slate-300 flex flex-col items-center">
                         <Camera className="w-12 h-12 text-slate-500 mb-2" />
                         <span className="text-sm font-bold text-slate-400">
-                          Take a photo or upload an image to inspect its materials!
+                          Take a photo or upload an image to detect all materials!
                         </span>
                       </div>
                     )}
@@ -402,7 +436,7 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                           <div className="w-8 h-8 border-t-4 border-r-4 border-amber-400 rounded-tr-xl" />
                         </div>
                         <div className="text-[11px] font-mono font-black text-amber-400 bg-slate-950/80 px-3 py-1 rounded-full border border-amber-400/50 backdrop-blur-xs">
-                          AIM AT ARMOR, CARS, CLOTHES, PAPER, TOOLS & BOTTLES
+                          AIM AT CLOTHES, UNIFORMS, TOOLS, ARMOR, DESKS & APPLIANCES
                         </div>
                         <div className="w-full flex justify-between">
                           <div className="w-8 h-8 border-b-4 border-l-4 border-amber-400 rounded-bl-xl" />
@@ -428,11 +462,11 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                       />
                     )}
 
-                    {/* Overlay AR Material Pins ON THE IMAGE */}
+                    {/* Overlay AR Material Pins ON THE IMAGE (Dynamically mapped for all objects) */}
                     {result && !isAnalyzing && result.pointers && result.pointers.map((pointer, idx) => {
                       const isSelected = selectedPointerId === pointer.id;
-                      const posX = pointer.pinX || (20 + idx * 25);
-                      const posY = pointer.pinY || (30 + (idx % 2) * 35);
+                      const posX = pointer.pinX || (15 + (idx % 4) * 22);
+                      const posY = pointer.pinY || (25 + Math.floor(idx / 4) * 35);
 
                       return (
                         <motion.button
@@ -442,14 +476,14 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                           whileHover={{ scale: 1.2 }}
                           onClick={() => handlePointerClick(pointer)}
                           style={{ top: `${posY}%`, left: `${posX}%` }}
-                          className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full shadow-2xl transition-all border-2 ${
+                          className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 flex items-center gap-1 px-2.5 py-1 rounded-full shadow-2xl transition-all border-2 ${
                             isSelected
                               ? 'bg-amber-400 text-slate-950 border-white ring-4 ring-amber-400/70 font-black scale-110'
-                              : 'bg-slate-950/85 text-white border-amber-400/80 backdrop-blur-md font-extrabold hover:bg-slate-900'
+                              : 'bg-slate-950/90 text-white border-amber-400/80 backdrop-blur-md font-extrabold hover:bg-slate-900'
                           }`}
                         >
                           <span className="text-sm">{pointer.icon}</span>
-                          <span className="text-[10px] tracking-tight whitespace-nowrap">
+                          <span className="text-[10px] tracking-tight whitespace-nowrap font-black">
                             {idx + 1}. {pointer.itemName.split('(')[0]}
                           </span>
                         </motion.button>
@@ -498,9 +532,9 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
 
                   <span className="text-xs font-mono font-black text-slate-600">
                     {isAnalyzing
-                      ? '⚡ Detecting Scene Objects & Materials...'
+                      ? '⚡ Detecting All Objects & Materials...'
                       : result
-                      ? '✓ Scene Analyzed with AR Pins!'
+                      ? `✓ Detected ${result.pointers?.length || 0} Objects & Materials!`
                       : '⚠️ Analysis Ready'}
                   </span>
                 </div>
@@ -510,9 +544,15 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
               {!capturedImage && (
                 <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
                   <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
-                    Or Test Sample Scene Presets:
+                    Or Test Sample Dense Scene Presets:
                   </span>
                   <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => handleSelectSample(sampleCottonImg, 'School Uniform Dresses & Apparel')}
+                      className="px-3.5 py-2 bg-white hover:bg-blue-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
+                    >
+                      <span>👔 School Uniforms & Skirts</span>
+                    </button>
                     <button
                       onClick={() => handleSelectSample(sampleCottonImg, 'Samurai Armor in Castle')}
                       className="px-3.5 py-2 bg-white hover:bg-rose-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
@@ -530,12 +570,6 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                       className="px-3.5 py-2 bg-white hover:bg-sky-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
                     >
                       <span>🧴 PET Bottle Molding</span>
-                    </button>
-                    <button
-                      onClick={() => handleSelectSample(sampleWireImg, 'Copper Wire')}
-                      className="px-3.5 py-2 bg-white hover:bg-amber-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 cursor-pointer shadow-xs active:scale-95 transition-all flex items-center gap-1"
-                    >
-                      <span>⚡ Copper Wire & Cable</span>
                     </button>
                   </div>
                 </div>
@@ -571,20 +605,20 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                     </p>
                   </div>
 
-                  {/* Component Material Cards */}
+                  {/* Component Material Cards (Dynamic responsive grid mapping over ALL objects) */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                         <Layers className="w-4 h-4 text-amber-500" />
-                        <span>Identified Objects & Materials ({result.pointers.length})</span>
+                        <span>Identified Objects & Materials ({result.pointers?.length || 0})</span>
                       </h4>
                       <span className="text-[10px] font-extrabold text-slate-400">
                         Tap pin on photo or card below
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-                      {result.pointers.map((pointer, idx) => {
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
+                      {result.pointers && result.pointers.map((pointer, idx) => {
                         const isSelected = selectedPointerId === pointer.id;
                         return (
                           <button
@@ -597,13 +631,9 @@ export const ScanMyWorldModal: React.FC<ScanMyWorldModalProps> = ({ isOpen, onCl
                             }`}
                           >
                             <div>
-                              <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center justify-between mb-1.5">
                                 <span className="text-lg">{pointer.icon}</span>
-                                <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
-                                  pointer.category === 'Natural'
-                                    ? 'bg-emerald-100 text-emerald-800'
-                                    : 'bg-sky-100 text-sky-800'
-                                }`}>
+                                <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${getCategoryBadgeClass(pointer.category)}`}>
                                   {pointer.category}
                                 </span>
                               </div>
