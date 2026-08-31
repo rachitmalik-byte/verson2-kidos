@@ -8,7 +8,77 @@ export interface VocabEntry {
 }
 
 export const vocabulary: VocabEntry[] = [
-  // ── Core Textbook Definitions ──
+  // ── Core Materials & Chemistry ──
+  {
+    word: 'Polymer',
+    definition: 'A large chemical structure made of many small repeating molecular units (monomers) linked together like train carriages.',
+    example: 'Plastics, nylon, and rubber are all polymers made of long chemical chains.',
+    category: 'Material',
+    pronunciation: 'POL-ih-mur',
+  },
+  {
+    word: 'Polymer chains',
+    definition: 'Long repeating molecular strands linked together that give synthetic materials like plastics and nylon their elasticity and strength.',
+    example: 'In polyester, flexible polymer chains slide and snap back like microscopic springs, keeping fabric wrinkle-free!',
+    category: 'Material',
+    pronunciation: 'POL-ih-mur chaynz',
+  },
+  {
+    word: 'Monomer',
+    definition: 'A small single molecule that bonds together with other monomers to create a giant polymer chain.',
+    example: 'Glucose molecules are the single monomers that join together to form natural starch.',
+    category: 'Material',
+    pronunciation: 'MON-oh-mur',
+  },
+  {
+    word: 'Cross-linking',
+    definition: 'Chemical bridges and bonds that tie parallel polymer chains together to make a material much stronger and heat-proof.',
+    example: 'Sulfur bridges cross-link rubber chains during vulcanization so car tires do not melt at high speed.',
+    category: 'Science Law',
+    pronunciation: 'KROSS-ling-king',
+  },
+  {
+    word: 'Sulfur bridges',
+    definition: 'Strong chemical bonds formed with sulfur atoms that lock polymer chains into a permanent 3D heat-resistant network.',
+    example: 'Sulfur bridges in vulcanized rubber keep race car tires firm on hot racing tracks.',
+    category: 'Science Law',
+    pronunciation: 'SUL-fur BRIJ-ez',
+  },
+  {
+    word: 'Thermosetting plastic',
+    definition: 'A rigid plastic that permanently sets into shape upon heating and can NEVER be melted or reshaped again.',
+    example: 'Bakelite pan handles and electric wall switches are thermosetting plastics that resist extreme heat.',
+    category: 'Material',
+    pronunciation: 'THUR-moh-set-ing PLAS-tik',
+  },
+  {
+    word: 'Thermoplastic',
+    definition: 'A plastic that softens and melts when heated and hardens when cooled, allowing it to be remoulded and recycled repeatedly.',
+    example: 'PET water bottles and LEGO bricks are thermoplastics that can be melted and reshaped.',
+    category: 'Material',
+    pronunciation: 'THUR-moh-plas-tik',
+  },
+  {
+    word: 'Bakelite',
+    definition: 'The very first fully synthetic thermoset plastic invented in 1907, famous for high heat resistance and electrical insulation.',
+    example: 'Kettle handles and vintage telephone casings were crafted from heat-proof Bakelite.',
+    category: 'Material',
+    pronunciation: 'BAY-kuh-lyt',
+  },
+  {
+    word: 'Vulcanization',
+    definition: 'A chemical process invented by Charles Goodyear where natural rubber is heated with sulfur to make it tough, elastic, and heat-proof.',
+    example: 'Car tires and shoe soles undergo vulcanization to withstand friction and weather.',
+    category: 'Science Law',
+    pronunciation: 'vul-kuh-ny-ZAY-shun',
+  },
+  {
+    word: 'Epoxy resin',
+    definition: 'A high-strength 2-part synthetic adhesive that cures through a chemical reaction into a waterproof, rock-hard structural bond.',
+    example: 'Epoxy resin is used to seal leaking high-pressure water pipes and repair aeroplane parts.',
+    category: 'Material',
+    pronunciation: 'ee-POK-see REZ-in',
+  },
   {
     word: 'Material',
     definition: 'A substance from which physical objects and things can be made — like wood, metal, cloth, or plastic.',
@@ -66,13 +136,6 @@ export const vocabulary: VocabEntry[] = [
     pronunciation: 'by-oh-dih-GRAY-duh-bul',
   },
   {
-    word: 'Resistant',
-    definition: 'Not easily affected, damaged, or changed by something (like heat, water, electricity, or insects).',
-    example: 'Kettle handles are made of heat-resistant plastic so they never burn your fingers.',
-    category: 'Property',
-    pronunciation: 'ree-ZIS-tunt',
-  },
-  {
     word: 'Latex',
     definition: 'A thick, milky white sap produced naturally by certain rubber trees, harvested as the raw source of natural rubber.',
     example: 'Workers tap the bark of rubber trees to collect latex in small buckets.',
@@ -109,7 +172,7 @@ export const vocabulary: VocabEntry[] = [
   },
   {
     word: 'Acrylic',
-    definition: 'A synthetic fibre made from acrylic acid and alcohol that mimics the warmth, bulk, and softness of sheep wool.',
+    definition: 'A synthetic fibre made from acrylic chemicals that mimics the warmth, bulk, and softness of sheep wool.',
     example: 'Acrylic blankets and sweaters keep you warm and cannot be eaten by moths.',
     category: 'Material',
     pronunciation: 'uh-KRIL-ik',
@@ -143,13 +206,6 @@ export const vocabulary: VocabEntry[] = [
     pronunciation: 'MY-kroh-plas-tiks',
   },
   {
-    word: 'Moulded',
-    definition: 'Formed or pressed into a specific custom shape using heat, cooling, and high pressure.',
-    example: 'Molten plastic is moulded into toy bricks and water bottles in factories.',
-    category: 'Science Law',
-    pronunciation: 'MOHL-ded',
-  },
-  {
     word: 'Wrinkle-free',
     definition: 'Resistant to creasing or crumpling, maintaining a crisp smooth shape without needing ironing.',
     example: 'Polyester uniforms are wrinkle-free and easy to wash.',
@@ -178,25 +234,53 @@ export const vocabulary: VocabEntry[] = [
     pronunciation: 'pur-spuh-RAY-shun',
   },
   {
-    word: 'Chemical',
-    definition: 'A distinct compound or substance produced by or used in a chemical process.',
-    example: 'Chemists synthesize plastics and nylon by linking chemical molecules together.',
-    category: 'Science Law',
-    pronunciation: 'KEM-ih-kul',
-  },
-  {
-    word: 'Petroleum',
-    definition: 'Naturally occurring crude oil extracted from deep underground, used as fuel and the raw chemical base for plastics.',
-    example: 'Crude petroleum is refined to create synthetic polymers and fibres.',
+    word: 'Pashmina',
+    definition: 'An ultra-fine, ultra-warm luxury wool collected from the underbelly fur of Changthangi goats living at 5,000m in Ladakh.',
+    example: 'A pure Pashmina shawl is 6 times warmer than sheep wool and as thin as 12 micrometers!',
     category: 'Material',
-    pronunciation: 'puh-TROH-lee-um',
+    pronunciation: 'pash-MEE-nuh',
   },
   {
-    word: 'Recycling',
-    definition: 'Collecting and processing waste materials into new useful products rather than throwing them into landfills.',
-    example: 'Recycling plastic bottles helps keep oceans clean and saves raw energy.',
-    category: 'Environment',
-    pronunciation: 'ree-SY-kling',
+    word: 'Barometer',
+    definition: 'A scientific instrument that measures atmospheric air pressure, used to forecast weather and calculate altitude.',
+    example: 'Mountaineers on Mt. Everest use a barometer to track dropping air pressure as they climb.',
+    category: 'Science Law',
+    pronunciation: 'buh-ROM-ih-tur',
+  },
+  {
+    word: 'Atmospheric pressure',
+    definition: 'The physical weight and downward force of air molecules in the atmosphere pressing down on surfaces.',
+    example: 'Atmospheric pressure is highest at sea level and drops thin on high mountain peaks.',
+    category: 'Science Law',
+    pronunciation: 'at-mus-FEER-ik PRESH-ur',
+  },
+  {
+    word: 'Pheromone trail',
+    definition: 'Invisible scent chemicals laid down by ants and insects to communicate pathways and food locations to their colony.',
+    example: 'Ants follow a pheromone trail in a single line towards sweet sugar granules.',
+    category: 'Science Law',
+    pronunciation: 'FAIR-uh-mohn trayl',
+  },
+  {
+    word: 'Pit organs',
+    definition: 'Specialized thermal sensing facial cavities in snakes that detect infrared heat radiation emitted by warm-blooded prey.',
+    example: 'Pit vipers hunt field mice in pitch-black darkness using their heat-sensing pit organs.',
+    category: 'Science Law',
+    pronunciation: 'PIT OR-gunz',
+  },
+  {
+    word: 'Seismic structure',
+    definition: 'A building engineered with flexible joints, shock dampers, and deep foundations to survive earthquake ground tremors.',
+    example: 'Modern seismic structures sway gently during earthquakes without collapsing.',
+    category: 'Science Law',
+    pronunciation: 'SYZ-mik STRUK-chur',
+  },
+  {
+    word: 'Persian wheel',
+    definition: 'An ancient mechanical gear-and-pot water wheel powered by oxen to lift groundwater uphill into forts and irrigation canals.',
+    example: 'The Persian wheel at Golconda Fort lifted water to roof gardens 400 years ago!',
+    category: 'Science Law',
+    pronunciation: 'PUR-zhun weel',
   },
   {
     word: 'Property',
@@ -207,18 +291,18 @@ export const vocabulary: VocabEntry[] = [
   },
 ];
 
-// Smart lookup function with plural & tense normalization
+// Smart lookup function with plural, tense, and multi-word normalization
 export function findVocabWord(rawQuery: string): VocabEntry | undefined {
   if (!rawQuery) return undefined;
 
-  const clean = rawQuery.trim().toLowerCase().replace(/^[^\w]+|[^\w]+$/g, '');
+  const clean = rawQuery.trim().toLowerCase().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '');
   if (!clean) return undefined;
 
   // 1. Direct match
   const direct = vocabulary.find((v) => v.word.toLowerCase() === clean);
   if (direct) return direct;
 
-  // 2. Singularize rules
+  // 2. Singularize / Plural rules
   const singularForms = [
     clean.endsWith('s') ? clean.slice(0, -1) : null,
     clean.endsWith('es') ? clean.slice(0, -2) : null,
@@ -232,22 +316,16 @@ export function findVocabWord(rawQuery: string): VocabEntry | undefined {
     if (match) return match;
   }
 
-  // 3. Substring match for phrases (e.g. "synthetic material" matches "synthetic")
+  // 3. Multi-word phrase matching (e.g. "polymer chains" or "polymer chain")
+  const phraseMatch = vocabulary.find((v) => {
+    const vLower = v.word.toLowerCase();
+    return clean === vLower || clean.startsWith(vLower) || vLower.startsWith(clean);
+  });
+  if (phraseMatch) return phraseMatch;
+
+  // 4. Substring component match
   const partial = vocabulary.find((v) => clean.includes(v.word.toLowerCase()) || v.word.toLowerCase().includes(clean));
   if (partial) return partial;
 
   return undefined;
-}
-
-// Fallback explainer for any general word selected by a student
-export function generateSmartDefinition(rawWord: string): VocabEntry {
-  const clean = rawWord.trim().replace(/^[^\w]+|[^\w]+$/g, '');
-  const capitalized = clean.charAt(0).toUpperCase() + clean.slice(1);
-
-  return {
-    word: capitalized,
-    definition: `In science, "${capitalized}" refers to a specific concept or object discussed in your science investigation.`,
-    example: `Explore how ${capitalized.toLowerCase()} is used across materials and science experiments!`,
-    category: 'General',
-  };
 }

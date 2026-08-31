@@ -476,4 +476,39 @@ Reply in exactly 2 to 3 short sentences using simple everyday words with 1-2 fun
       return `Hello young scientist! I'm Pip, your science lab assistant. Ask me anything about materials, forces, animals, or space and we will investigate together! 🧪✨`;
     }
   },
+
+  /**
+   * 📖 Gemini AI Dictionary Explainer
+   * Explains any word or science concept in 1-2 simple sentences for a 5th grade student.
+   */
+  async defineWordWithAI(word: string): Promise<{
+    word: string;
+    definition: string;
+    example: string;
+    category: string;
+    pronunciation?: string;
+  }> {
+    const prompt = `You are Pip, a friendly dictionary science tutor for a CBSE Class 5 student (age 9-11).
+Define the word or phrase: "${word}".
+Return ONLY a valid JSON object matching this schema:
+{
+  "word": "${word}",
+  "definition": "1 clear, friendly sentence explaining what this term means in everyday language suitable for a 10 year old.",
+  "example": "1 realistic example sentence showing how it is used in science experiments or daily life.",
+  "category": "Science Concept" or "Material" or "Noun" or "Verb" or "Property",
+  "pronunciation": "/phonetic-spelling/"
+}`;
+
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 600, temperature: 0.2 },
+    };
+
+    const rawText = await generateContentCascade(requestBody);
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    throw new Error('Could not parse AI dictionary JSON');
+  },
 };
