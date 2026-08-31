@@ -1,7 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { LessonMissionConfig, LessonStepData, ActivityType, SortingItem, SortingTray, MatchingPairItem, TensileSpecimen, McqOption } from '@/types/lessonEngine';
+import type {
+  LessonMissionConfig,
+  LessonStepData,
+  ActivityType,
+  SortingItem,
+  SortingTray,
+  MatchingPairItem,
+  TensileSpecimen,
+  McqOption,
+} from '@/types/lessonEngine';
 import { ActivityRenderer } from '@/components/engine/ActivityRenderer';
 import { generateLessonFromPrompt, generateFallbackLessonConfig } from '@/lib/geminiService';
 import { sounds } from '@/lib/sounds';
@@ -26,6 +35,8 @@ import {
   Eye,
   Sliders,
   Settings2,
+  CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 
 export function TeacherStudio() {
@@ -33,39 +44,66 @@ export function TeacherStudio() {
 
   // Active Draft Mission State
   const [missionConfig, setMissionConfig] = useState<LessonMissionConfig>(() => {
-    return generateFallbackLessonConfig('sorting');
+    return generateFallbackLessonConfig('water cycle');
   });
 
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStep, setGenerationStep] = useState(1);
+  const [generationProgress, setGenerationProgress] = useState(0);
   const [copiedJson, setCopiedJson] = useState(false);
   const [previewCompleted, setPreviewCompleted] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
 
   const currentStep = missionConfig.steps[activeStepIndex] || missionConfig.steps[0];
 
-  // AI Level Generator Trigger
+  // AI Level Generator Trigger with Animated Real-Time Progress Visualization
   const handleAiGenerate = async (customPrompt?: string) => {
     const promptToUse = customPrompt || aiPrompt;
     if (!promptToUse.trim()) return;
 
     sounds.pop();
     setIsGenerating(true);
+    setGenerationStep(1);
+    setGenerationProgress(15);
     voiceAssistant.stop();
+
+    // Step 1: Concept & Grade Analysis
+    const timer1 = setTimeout(() => {
+      setGenerationStep(2);
+      setGenerationProgress(55);
+      sounds.bubble();
+    }, 400);
+
+    // Step 2: 2D Visual Synthesis
+    const timer2 = setTimeout(() => {
+      setGenerationStep(3);
+      setGenerationProgress(85);
+      sounds.sparkle();
+    }, 900);
 
     try {
       const generated = await generateLessonFromPrompt(promptToUse, missionConfig.targetGrade || 5);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      setGenerationStep(3);
+      setGenerationProgress(100);
       sounds.fanfare();
-      setMissionConfig(generated);
-      setActiveStepIndex(0);
-      setPreviewCompleted(false);
-      setPreviewKey((k) => k + 1);
+
+      setTimeout(() => {
+        setMissionConfig(generated);
+        setActiveStepIndex(0);
+        setPreviewCompleted(false);
+        setPreviewKey((k) => k + 1);
+        setIsGenerating(false);
+      }, 400);
     } catch (err) {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
       sounds.boing();
       console.error('AI generation error:', err);
-    } finally {
       setIsGenerating(false);
     }
   };
@@ -86,7 +124,7 @@ export function TeacherStudio() {
           backgroundTheme: 'sky_ocean',
           pipPrompt: 'Water on Earth travels in an endless circle! Tap each stage in the animated diagram or use the weather controls to see how it works.',
           learningObjective: 'Explore how solar heat evaporates water into vapor, condenses it into clouds, and falls as rain!',
-          summaryTakeaway: 'The water cycle has been recycling the exact same water molecules on Earth for over 4 billion years!',
+          summaryTakeaway: "The water cycle has been recycling the exact same water molecules on Earth for over 4 billion years!",
           hotspots: [
             {
               id: 'evap',
@@ -134,7 +172,7 @@ export function TeacherStudio() {
               title: '4. Collection & Reservoir Storage',
               explanation: 'Rainwater flows down mountains into rivers, streams, and oceans. The cycle is complete and ready to begin all over again!',
               animationType: 'flow_water',
-              funFact: '97% of Earth\'s water is stored in oceans, while only 1% is accessible fresh drinking water!',
+              funFact: "97% of Earth's water is stored in oceans, while only 1% is accessible fresh drinking water!",
             },
           ],
         };
@@ -303,7 +341,7 @@ export function TeacherStudio() {
               type="text"
               value={aiPrompt}
               onChange={(e) => setAiPrompt(e.target.value)}
-              placeholder="e.g. Create a Grade 5 sorting activity for Natural vs Synthetic Fibers with 4 items"
+              placeholder="e.g. i want an animated interactive water cycle diagram"
               onKeyDown={(e) => e.key === 'Enter' && handleAiGenerate()}
               className="flex-1 bg-white/10 border-2 border-white/20 focus:border-amber-400 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-indigo-300/70 outline-none transition-all"
             />
@@ -312,14 +350,48 @@ export function TeacherStudio() {
               disabled={isGenerating}
               className="px-6 py-2.5 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-lg cursor-pointer flex items-center gap-2 active:scale-95 transition-all disabled:opacity-50 shrink-0"
             >
-              <Sparkles className="w-4 h-4 fill-slate-950" />
-              <span>{isGenerating ? 'Generating Schema...' : 'Generate with AI'}</span>
+              {isGenerating ? (
+                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+              ) : (
+                <Sparkles className="w-4 h-4 fill-slate-950" />
+              )}
+              <span>{isGenerating ? `Generating (${generationProgress}%)...` : 'Generate with AI ✨'}</span>
             </button>
           </div>
 
+          {/* Real-time Visual Progress Stepper Banner */}
+          <AnimatePresence>
+            {isGenerating && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-white/15 backdrop-blur-md rounded-2xl p-3 border border-amber-300/40 flex flex-col gap-2 mt-1"
+              >
+                <div className="flex items-center justify-between text-xs font-black text-amber-200">
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+                    {generationStep === 1 && 'Step 1/3: Analyzing Science Concepts & Grade Calibration...'}
+                    {generationStep === 2 && 'Step 2/3: Synthesizing 2D Animated Vector Simulation & Physics...'}
+                    {generationStep === 3 && 'Step 3/3: Calibrating Hotspots & Voice Narration...'}
+                  </span>
+                  <span>{generationProgress}%</span>
+                </div>
+                {/* Progress Bar Track */}
+                <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full"
+                    animate={{ width: `${generationProgress}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Quick Idea Chips */}
           <div className="flex items-center gap-2 flex-wrap text-xs">
-            <span className="text-[11px] font-bold text-indigo-300">Try Prompts:</span>
+            <span className="text-[11px] font-bold text-indigo-300">Try Instant Prompts:</span>
             {[
               '🌊 Water Cycle with Animated Diagram ☀️🌧️',
               '🌿 Natural vs Synthetic 4-item Sorting',
@@ -345,7 +417,7 @@ export function TeacherStudio() {
       {/* ── Split-Screen Studio Workspace ── */}
       <div className="flex-1 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 sm:p-6 items-start">
         {/* ══════════════════════════════════════════════════════════════════════
-            LEFT COLUMN (7 Cols): Visual No-Code Configurator
+            LEFT COLUMN (6 Cols): Visual No-Code Configurator
         ══════════════════════════════════════════════════════════════════════ */}
         <div className="lg:col-span-6 flex flex-col gap-5">
           {/* Mission Metadata Box */}
@@ -386,7 +458,7 @@ export function TeacherStudio() {
               2. Choose Activity Paradigm
             </span>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {[
                 { type: 'interactive_diagram', label: '2D Science Sim', icon: '🌊' },
                 { type: 'sorting_tray', label: 'Sorting Trays', icon: '🌿' },
@@ -550,16 +622,25 @@ export function TeacherStudio() {
           </div>
 
           {/* Device Frame Stage */}
-          <div className="w-full flex justify-center bg-slate-900/5 p-4 rounded-3xl border-2 border-dashed border-slate-300 min-h-[520px] overflow-x-auto">
+          <div className="w-full flex justify-center bg-slate-900/5 p-3 sm:p-4 rounded-3xl border-2 border-dashed border-slate-300 min-h-[520px] overflow-x-auto">
             <div
               className={`transition-all duration-300 flex flex-col items-center justify-center ${
                 previewDevice === 'mobile'
-                  ? 'w-[360px] bg-slate-100 rounded-[36px] p-3 shadow-2xl border-4 border-slate-800'
+                  ? 'w-[375px] max-w-full bg-slate-50 rounded-[40px] p-3 sm:p-4 shadow-2xl border-6 border-slate-800 my-2'
                   : previewDevice === 'tablet'
-                  ? 'w-[680px] bg-slate-100 rounded-3xl p-4 shadow-2xl border-4 border-slate-800'
+                  ? 'w-[720px] max-w-full bg-slate-50 rounded-3xl p-4 shadow-2xl border-6 border-slate-800 my-2'
                   : 'w-full'
               }`}
             >
+              {/* Phone Notch Header in Mobile Preview */}
+              {previewDevice === 'mobile' && (
+                <div className="w-full flex items-center justify-center mb-3">
+                  <div className="w-24 h-4 bg-slate-800 rounded-full flex items-center justify-end px-2">
+                    <div className="w-1.5 h-1.5 bg-slate-600 rounded-full" />
+                  </div>
+                </div>
+              )}
+
               <div key={previewKey} className="w-full">
                 <ActivityRenderer
                   stepData={currentStep}

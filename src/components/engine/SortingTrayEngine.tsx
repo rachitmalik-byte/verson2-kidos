@@ -62,55 +62,55 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-6">
+    <div className="w-full flex flex-col items-center gap-4 sm:gap-6">
       {/* Classification Trays Dropzones */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="w-full max-w-4xl flex flex-col sm:flex-row gap-3 sm:gap-4">
         {data.trays.map((tray) => {
           const placed = trayItems[tray.id] || [];
           return (
             <div
               key={tray.id}
               onClick={() => handleTrayPlace(tray.id)}
-              className={`rounded-3xl p-5 border-3 transition-all cursor-pointer flex flex-col justify-between min-h-[220px] ${
+              className={`flex-1 rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-3 transition-all cursor-pointer flex flex-col justify-between min-h-[180px] sm:min-h-[220px] ${
                 tray.id === 'natural'
-                  ? 'bg-emerald-50/80 border-emerald-300 hover:border-emerald-500'
-                  : 'bg-sky-50/80 border-sky-300 hover:border-sky-500'
+                  ? 'bg-emerald-50/90 border-emerald-300 hover:border-emerald-500'
+                  : 'bg-sky-50/90 border-sky-300 hover:border-sky-500'
               } ${selectedItemId ? 'ring-4 ring-amber-300/60 shadow-lg' : 'shadow-md'}`}
             >
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">{tray.icon}</span>
-                    <h3 className="text-base font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    <span className="text-xl sm:text-2xl">{tray.icon}</span>
+                    <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
                       {tray.title}
                     </h3>
                   </div>
-                  <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-white border border-slate-200">
+                  <span className="text-[10px] sm:text-xs font-black px-2 py-0.5 rounded-full bg-white border border-slate-200 shrink-0">
                     {placed.length} Sorted
                   </span>
                 </div>
-                <p className="text-xs font-bold text-slate-600 mt-1">
+                <p className="text-[11px] sm:text-xs font-bold text-slate-600 mt-1">
                   {tray.description}
                 </p>
               </div>
 
               {/* Placed Item Chips */}
-              <div className="flex flex-wrap gap-2 mt-4 min-h-[60px] p-2 bg-white/70 rounded-2xl border border-slate-200">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 min-h-[50px] p-2 bg-white/80 rounded-xl sm:rounded-2xl border border-slate-200">
                 {placed.map((item) => (
                   <motion.div
                     key={item.id}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs font-black shadow-xs"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-[11px] font-black shadow-xs"
                   >
                     <span>{item.icon}</span>
-                    <span>{item.name}</span>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 fill-emerald-100" />
+                    <span className="truncate max-w-[100px]">{item.name}</span>
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600 fill-emerald-100 shrink-0" />
                   </motion.div>
                 ))}
                 {placed.length === 0 && (
-                  <span className="text-xs font-bold text-slate-400 italic m-auto">
-                    Tap a specimen below, then tap here to classify!
+                  <span className="text-[11px] font-bold text-slate-400 italic m-auto text-center">
+                    Tap a specimen below, then tap here to place!
                   </span>
                 )}
               </div>
@@ -132,9 +132,9 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
       )}
 
       {/* Specimen Source Tray (Items to classify) */}
-      <div className="w-full max-w-4xl bg-white/95 rounded-3xl p-5 border-3 border-slate-200 shadow-md">
+      <div className="w-full max-w-4xl bg-white/95 rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-3 border-slate-200 shadow-md">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-black uppercase tracking-wider text-slate-600">
+          <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-slate-600">
             Specimens to Classify ({unplacedItems.length} remaining):
           </span>
           <button
@@ -146,7 +146,7 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div className="flex flex-wrap gap-2.5 justify-center">
           {unplacedItems.map((item) => {
             const isSelected = item.id === selectedItemId;
             return (
@@ -155,14 +155,14 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleItemSelect(item)}
-                className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all ${
+                className={`p-2.5 sm:p-3 rounded-2xl border-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all min-w-[90px] sm:min-w-[110px] flex-1 max-w-[140px] ${
                   isSelected
                     ? 'bg-amber-300 border-amber-500 ring-4 ring-amber-200 shadow-lg scale-105 font-black text-slate-950'
                     : 'bg-slate-50 hover:bg-white border-slate-200 text-slate-800 font-bold'
                 }`}
               >
-                <span className="text-3xl filter drop-shadow-xs">{item.icon}</span>
-                <span className="text-xs text-center leading-tight truncate w-full">
+                <span className="text-2xl sm:text-3xl filter drop-shadow-xs">{item.icon}</span>
+                <span className="text-[10px] sm:text-xs text-center leading-tight font-extrabold line-clamp-2 w-full">
                   {item.name}
                 </span>
               </motion.button>
@@ -171,7 +171,7 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
         </div>
 
         {unplacedItems.length === 0 && (
-          <div className="text-center py-6 flex flex-col items-center gap-2">
+          <div className="text-center py-5 flex flex-col items-center gap-2">
             <Sparkles className="w-8 h-8 text-amber-500 animate-spin" />
             <h4 className="text-base font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
               All Specimens Classified Correctly! ⭐
