@@ -1,31 +1,25 @@
+# 🧪 POLYQUEST — Next-Gen Interactive Kids Science & AI Learning Platform
+
 <div align="center">
 
-# 🧪 POLYQUEST
-### The World of Synthetic Materials — Interactive Kids EdTech
+<img src="public/images/polyquest_hero_banner.jpg" alt="PolyQuest - Discover Science with Pip!" width="100%" style="border-radius: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.15);" />
 
-[![Vite](https://img.shields.io/badge/Vite-8.2+-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+<br /><br />
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-kidos--liard.vercel.app-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://kidos-liard.vercel.app/)
 [![React](https://img.shields.io/badge/React-19.2+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8.2+-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-13.0+-FF0055?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](LICENSE)
+[![Google Gemini AI](https://img.shields.io/badge/Google_Gemini-2.0_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
 
 <br />
 
-> **A playful, gamified, character-driven science learning experience designed for Grade 5–6 students.**  
-> Inspired by the design philosophies of *Duolingo*, *Toca Boca*, and *Nintendo Switch* interfaces.
+> **A playful, hands-on, character-driven STEM learning universe for young scientists (Ages 8–14).**  
+> *Combining the tactile physics of PhET, the gamified adventure of Duolingo, and the real-time curiosity of Google Gemini AI!*
 
-[Explore Live Demo](#-live-demo) • [Key Features](#-key-features) • [Curriculum](#-science-curriculum-covered) • [Quick Start](#-quick-start) • [Architecture](#-project-architecture)
-
-<br />
-
-```
- ____________________________________________________________________________
-|                                                                            |
-|   🧵 Raincoat Hydro-Test  •  💪 Super-Nylon Pull  •  🔥 Flame Safety Test   |
-|   ⚡ Wire Insulation      •  🫖 Kettle Handles    •  🌍 Plastic Problem    |
-|____________________________________________________________________________|
-```
+[✨ Experience Live Demo](https://kidos-liard.vercel.app/) • [🔬 Science Themes](#-science-curriculum--themes) • [🤖 AI Science Lab](#-gemini-powered-ai-science-companion) • [🎮 Interactive Studios](#-tactile-science-studios--simulators) • [🚀 Quick Start](#-quick-start)
 
 </div>
 
@@ -33,108 +27,120 @@
 
 ## 🌟 Why PolyQuest?
 
-Traditional science textbooks often present synthetic materials as dry lists of definitions and chemical reactions. **PolyQuest** transforms Chapter 2 & 3 science concepts into **interactive tactile experiments**, guided by **Pip**, an expressive animated AI science companion with natural human speech narration.
+Traditional science textbooks present facts as static paragraphs and memorized formulas. **PolyQuest** transforms CBSE & NCERT elementary science curricula into **tangible virtual physics sandboxes, macro-photography experiments, and voice-guided inquiry challenges**.
+
+Guided by **Pip**—an expressive, curious AI scientist companion—children explore real materials, manipulate variables, listen to natural neural speech, and solve real-world mysteries.
 
 ```
-       [ 🌿 Natural Materials ]             [ 🏭 Synthetic Materials ]
-         (Plants, Animals, Trees)               (Petroleum, Limestone, Chemicals)
-                    │                                      │
-                    └───► 🧱 MATERIAL  ──► ⚡ PROPERTY ──► 🎯 USE ◄───┘
-```
-
----
-
-## ✨ Key Features
-
-### 1. 🎮 Chunky 3D Gamified Interface
-- **Board Game Adventure Trail**: 13 progressive stepping-stone missions with unlocking criteria, star ratings, and celebratory rewards.
-- **Tactile 3D Controls**: Satisfying pressable buttons (`btn-3d-amber`, `btn-3d-emerald`), elevated cards, and bouncy animations.
-- **Zero Raw Emojis**: 100% custom scalable SVG vector illustrations for scientific accuracy and visual polish.
-
-### 2. 🎙️ Neural Human-Like Voice Assistant (Pip)
-- **Natural Cadence**: Friendly pacing (`0.92x`) and warm pitch (`1.06x`) with natural conversational pauses.
-- **Audio Equalizer Visualizer**: Real-time 5-bar animated soundwave display whenever Pip is talking.
-- **Universal Audio Navigation**: Dedicated SFX and Voice mute/unmute toggles in top navigation bars.
-
-### 3. 📖 Instant Text-Selection Science Dictionary
-- **Highlight or Double-Click ANY Word**: Double-click or drag-select any word across any page to instantly reveal a floating cartoon Science Dictionary card.
-- **Phonetic Pronunciation Guide**: Helps children pronounce complex terms (e.g., `[sin-THET-ik]`, `[by-oh-dih-GRAY-duh-bul]`).
-- **Instant Audio Narration**: Pip automatically reads the term, definition, and real-world example sentence aloud.
-
-### 4. 🔬 13 Interactive Hands-On Science Missions
-| # | Mission | Core Learning Experiment |
-|---|---|---|
-| **M1** | 🌧️ **The Raincoat Mystery** | Hydro-dropper water spray test (Cotton soaked vs. Polyester waterproof) |
-| **M2** | 🌿 **The Sorting Desk** | Nature Oasis vs. Invention Lab specimen classification trays |
-| **M3** | 💪 **The Strength Test** | Tensile machine: Cotton (10kg) vs Silk (20kg) vs Steel (40kg) vs **Nylon (55kg)** |
-| **M4** | ✨ **Fabric Lab** | Polyester, Rayon (semi-synthetic artificial silk), and Acrylic (synthetic wool) |
-| **M5** | 🔥 **Fire Safety Station** | Flame burn test (Cotton burns to ash vs Polyester melts into hot sticky beads) |
-| **M6** | ☀️ **Summer Comfort** | Perspiration breathability and sweat allergy prevention in 40°C heat |
-| **M7** | 🫙 **Plastic World** | 4 core advantages of plastics + thermo-moulding under heat & pressure |
-| **M8** | ⚡ **Pip's Electrical Wire** | Wire assembly: Copper conductor core + Plastic insulator sleeve |
-| **M9** | 🫖 **Save Pip's Hand!** | Boiling kettle experiment with heat-resistant Bakelite handle |
-| **M10**| 🌍 **The Plastic Problem** | Biodegradable vs. Non-biodegradable time tunnel & microplastics |
-| **M11**| 🛞 **Stretch Lab** | Natural tree latex vs. high-friction synthetic rubber tyres |
-| **M12**| 🧴 **The Repair Station** | Synthetic adhesives & high-pressure waterproof pipe leak sealing |
-| **M13**| 🏕️ **Pip's Science Camp** | Grand Master Quiz & Official Junior Scientist Certificate! |
-
-### 5. 🛡️ Parent Coaching & Progress Portal
-- **4-Digit PIN Security Gate**: Keeps parental dashboard secure.
-- **Mastery Analytics**: Track completed missions and discovered concepts.
-- **💡 5-Minute Real-World Home Activities**: Quick conversation starters for parents (e.g. *Spot the Nylon in your toothbrush*, *Compare cotton vs jersey shirts*).
-
-### 6. ⚙️ Developer Super-Hacks Drawer (`DEV` Badge)
-- Discreet floating badge that expands into a full QA testing suite:
-  - 🚀 **1-Click Fast Travel**: Jump to any page or mission directly.
-  - 🔓 **Progression Cheats**: *Unlock All Missions*, *Reset Progress*, *Unlock All Specimens*.
-  - 🎙️ **Audio & TTS Studio**: Test Web Audio sound synthesizers and speech engines.
-  - 📊 **Realtime State Inspector**: Live inspection of local storage cache.
-
----
-
-## 📚 Science Curriculum Covered
-
-```mermaid
-graph TD
-    A[Materials Science] --> B[Natural Materials]
-    A --> C[Synthetic Materials]
-    
-    B --> B1[Cotton: Plant Boll]
-    B --> B2[Wool: Sheep Fleece]
-    B --> B3[Silk: Silkworm Cocoon]
-    B --> B4[Wood: Forest Cellulose]
-    B --> B5[Natural Rubber: Tree Latex]
-    
-    C --> C1[Nylon: Coal + Limestone + Petroleum]
-    C --> C2[Polyester: Ethylene Petrochemicals]
-    C --> C3[Rayon: Regenerated Wood Pulp]
-    C --> C4[Acrylic: Synthetic Wool]
-    C --> C5[Plastics: Petroleum Polymers]
-    C --> C6[Synthetic Rubber & Adhesives]
+       [ 🌿 Observe Nature ]           [ 🔬 Hands-On Sandbox ]          [ 🎯 Socratic Discovery ]
+     Ant trails, Everest peaks,   ──►   Move sliders, apply heat,  ──►    Understand WHY it works
+      plastic decay & circuits          seal leaks & test forces          with zero plain emojis!
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 🔬 Science Curriculum & Themes
 
-- **Frontend Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite 8](https://vitejs.dev/) with [@tailwindcss/vite](https://tailwindcss.com/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with custom 3D game UI tokens
-- **Animations**: [Framer Motion](https://www.framer.com/motion/) + [DotLottie React](https://lottiefiles.com/)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) with persistent `localStorage` middleware
-- **Audio Engines**:
-  - Procedural Web Audio Synthesizer (Zero-latency SFX)
-  - Web Speech API with Neural Voice Selection (Natural TTS)
-- **Routing**: [React Router v7](https://reactrouter.com/) (Vercel SPA rewrite ready)
-- **Icons**: [Lucide React](https://lucide.dev/) + Custom Vector SVG Library
+<table width="100%">
+  <tr>
+    <td width="33%" align="center">
+      <h3>🐜 Theme 1: Super Senses</h3>
+      <p><b>Animal Biology & Sensory Physics</b></p>
+      <p align="left">
+        • <b>Ant Pheromone Trail</b>: Sugar scent paths & obstacles<br />
+        • <b>Eagle Telescopic Eyes</b>: 4x human visual acuity zoom<br />
+        • <b>Snake Infrared Vision</b>: Thermal pit-organ night hunt<br />
+        • <b>Dog Olfactory Navigation</b>: Moisture & scent particle grids
+      </p>
+    </td>
+    <td width="33%" align="center">
+      <h3>🏔️ Theme 2: Shelter & Earth</h3>
+      <p><b>Physics, Geography & Architecture</b></p>
+      <p align="left">
+        • <b>Mt. Everest Barometer</b>: Altitude vs. atmospheric pressure<br />
+        • <b>Pashmina vs. Hair</b>: 200x optical microscope fibers<br />
+        • <b>Golconda Fort Acoustics</b>: Persian water-wheels & bastions<br />
+        • <b>Seismic Shake Table</b>: Earthquake-resistant dampers
+      </p>
+    </td>
+    <td width="33%" align="center">
+      <h3>🧪 Theme 3: Synthetic Materials</h3>
+      <p><b>Polymers, Electricity & Chemistry</b></p>
+      <p align="left">
+        • <b>The Raincoat Mystery</b>: Hydrophobic polyester beads<br />
+        • <b>Super-Nylon Pull</b>: Tensile strength vs steel cords<br />
+        • <b>Flame Reaction Chamber</b>: Melting plastics vs cotton ash<br />
+        • <b>Live Circuit Sandbox</b>: PVC insulators & copper wires
+      </p>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🤖 Gemini-Powered AI Science Companion
+
+<div align="center">
+  <img src="public/images/pip_ai_sidecar_showcase.jpg" alt="Pip AI Science Sidecar" width="85%" style="border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);" />
+</div>
+
+<br />
+
+PolyQuest features an integrated suite of **Google Gemini-powered multimodal learning assistants**:
+
+1. 🎙️ **Live Pip Voice Sidecar**: Floating AI tutor that speaks with natural human voice synthesis (`en-US-AnaNeural`), provides real-time soundwave visualizations, and answers any science question on the fly.
+2. 📸 **Scan My World (Object Identifier)**: Uses device camera or uploads to scan real household objects (plastic spoons, wool socks, copper wires) and explains their material composition and atomic properties.
+3. 💡 **"What If?" Science Sandbox**: Children can ask hypothetical curiosity questions (*"What if Earth had zero gravity?"*, *"What if water didn't evaporate?"*) and watch generative visual explanations.
+4. 🧠 **Socratic AI Coach**: Encourages critical thinking by offering step-by-step Socratic hints rather than spoiling answers directly.
+
+---
+
+## 🎮 Tactile Science Studios & Simulators
+
+* **🚰 High-Pressure Pipe Leak Simulator (Mission 12)**:
+  * High-pressure plumbing rupture blasting water at **80 PSI**.
+  * Test natural tree resin (washes away) vs **2-part synthetic structural epoxy** (cures underwater to 0 PSI).
+* **🏎️ Formula 1 Tire Friction Bench (Mission 11)**:
+  * Interactive RPM slider (1,000–12,000 RPM) and friction thermal gauge (25°C–160°C).
+  * Natural latex sap melts vs **vulcanized rubber with sulfur cross-links** gripping the asphalt.
+* **👕 Fabric Wrinkle & Crumple Rig (Mission 4)**:
+  * Tangible press testing natural cotton (permanent creased folds) vs synthetic polyester (springs back 100% wrinkle-free).
+* **⏳ 500-Year Soil Time Chamber (Mission 10)**:
+  * Time-travel slider comparing biodegradable organic wood vs non-biodegradable synthetic polymers persisting over 450+ years.
+* **⚡ Live Circuit Conductor Sandbox (Mission 8)**:
+  * Place real specimens (copper wire, steel key, PVC cable, rubber) to complete electrical circuits and illuminate the lightbulb.
+
+---
+
+## 🕹️ Gamification, Arcade & Daily Quests
+
+* **🏆 Science Arcade**: 6 fast-paced mini-games testing reflex sorting, circuit troubleshooting, and material memory matching.
+* **🌟 Daily Curiosity Quests**: Daily challenges to build long-term learning habits and earn science coins.
+* **📖 Field Specimen Journal**: Interactive sticker album documenting all discovered natural and synthetic specimens.
+* **🎶 Dynamic Environmental Audio (`bgmEngine`)**: Custom ambient soundscapes for mountain peaks, rainforests, stormy campsites, and clean laboratories.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend Framework** | React 19 + TypeScript 6 |
+| **Build & Bundler** | Vite 8.2 (Lightning fast HMR) |
+| **Styling & Design** | Tailwind CSS v4.0 (3D tactile gamified design tokens) |
+| **Motion & Physics** | Framer Motion 13 (Spring physics, drag-and-drop, particle overlays) |
+| **Artificial Intelligence**| Google Gemini 2.0 Flash SDK (Multimodal vision + conversational tutor) |
+| **Speech & Audio** | Web Speech API (`en-US-AnaNeural`) + Web Audio API Synthesizers |
+| **State Management** | Zustand (Persistent local storage & progress caching) |
+| **Icons & Media** | Lucide React + High-Resolution Studio Macro Photography |
 
 ---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ (Node.js 20+ recommended)
-- npm, yarn, or pnpm
+- **Node.js**: `v18.0.0` or higher
+- **npm** or **pnpm**
 
 ### Installation
 
@@ -148,79 +154,37 @@ cd kidos
 # 3. Install dependencies
 npm install
 
-# 4. Start the local development server
+# 4. Start local development server
 npm run dev
 ```
 
-Visit `http://localhost:5173/` in your browser.
+Visit **`http://localhost:5173/`** in your browser to start exploring!
 
 ### Production Build
-
 ```bash
-# Build optimized bundle for production
 npm run build
-
-# Preview production build locally
 npm run preview
 ```
 
 ---
 
-## 📁 Project Architecture
+## 👨‍👩‍👧 Parent & Teacher Portal
 
-```
-polyquest-app/
-├── public/                 # Favicons and static SVG icons
-├── src/
-│   ├── components/
-│   │   ├── dev/            # Developer super-hacks drawer (DevDrawer.tsx)
-│   │   ├── dictionary/     # Text-selection smart dictionary (GlobalWordExplainer.tsx)
-│   │   ├── feedback/       # Celebration & mistake animations
-│   │   ├── illustrations/  # Custom scalable vector illustrations (MaterialIllustrations.tsx)
-│   │   ├── navigation/     # Dual audio & home navbar controls (AudioNavBarControls.tsx)
-│   │   ├── pip/            # Animated SVG mascot & speech bubble (Pip.tsx, PipSpeechBubble.tsx)
-│   │   └── ui/             # Reusable buttons, cards, and modal components
-│   ├── data/
-│   │   ├── materials.ts    # Comprehensive textbook material profiles & facts
-│   │   ├── missions.ts     # Metadata & step sequences for all 13 missions
-│   │   └── vocabulary.ts   # Science dictionary database with normalizer & fallback
-│   ├── features/
-│   │   ├── chapter-hub/    # Gamified board-game adventure map
-│   │   ├── chapter-intro/  # Opening scene with animated floating objects
-│   │   ├── discovery-book/ # Collectible specimen field journal
-│   │   ├── missions/       # Interactive mission workbenches & DynamicMissionEngine
-│   │   ├── parent/         # Parent onboarding setup, PIN gate & dashboard
-│   │   └── role-selection/ # Main entry page (Scientist vs Parent)
-│   ├── lib/
-│   │   ├── sounds.ts       # Procedural Web Audio synthesizer (pop, splash, fanfare)
-│   │   └── voiceAssistant.ts # Emotive Neural TTS speech engine
-│   ├── stores/             # Persistent Zustand stores (audio, progress, parent, discovery)
-│   ├── types.ts            # Global TypeScript definitions
-│   └── index.css           # 3D button tokens, elevation & font typography
-├── vercel.json             # Vercel SPA routing rewrite rules
-└── package.json
-```
+PolyQuest includes a dedicated **PIN-gated Parent & Educator Portal**:
+* **🔒 4-Digit Security PIN**: Prevents children from modifying settings.
+* **📊 Learning Analytics**: Track completed missions, mastered concepts, and quiz scores.
+* **💡 5-Minute Real-World Home Prompts**: Conversational prompts for dinner-table science discussions (e.g. *"Find 3 synthetic polymers in the kitchen!"*).
 
 ---
 
-## 🤝 Contributing
+## 📄 License & Attribution
 
-Contributions, bug reports, and pedagogical improvements are welcome!
+* **License**: MIT License.
+* **Curriculum Alignment**: CBSE Class 5–6 Science / NCERT / Next Generation Science Standards (NGSS).
+* **Mascot & Design**: Developed with ❤️ for young curious minds everywhere!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingScienceMission`)
-3. Commit your Changes (`git commit -m 'feat: Add new polymer tensile test'`)
-4. Push to the Branch (`git push origin feature/AmazingScienceMission`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-Distributed under the **MIT License**. See `LICENSE` for more information.
+<br />
 
 <div align="center">
-
-Made with 🧪 and 💜 for young scientists everywhere.
-
+  <b>⭐ Star this repository if you believe science education should be hands-on and magical! ⭐</b>
 </div>
