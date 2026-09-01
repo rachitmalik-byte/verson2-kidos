@@ -1,3 +1,28 @@
+
+import cottonZoomGif from '@/assets/videos/cotton_zoom_microstructure.gif';
+import nylonZoomGif from '@/assets/videos/nylon_zoom_microstructure.gif';
+import silkZoomGif from '@/assets/videos/silk_zoom_microstructure.gif';
+import plasticZoomGif from '@/assets/videos/plastic_zoom_microstructure.gif';
+import polyesterZoomGif from '@/assets/videos/polyester_zoom_weave.gif';
+import woolZoomGif from '@/assets/videos/wool_zoom_fibers.gif';
+import rubberZoomGif from '@/assets/videos/tire_rubber_crosslink.gif';
+
+const SPECIMEN_GIF_MAP: Record<string, string> = {
+  'ch-01': cottonZoomGif,
+  'ch-02': cottonZoomGif,
+  'ch-03': nylonZoomGif,
+  'ch-04': polyesterZoomGif,
+  'ch-05': plasticZoomGif,
+  'ch-06': woolZoomGif,
+  'ch-07': plasticZoomGif,
+  'ch-08': plasticZoomGif,
+  'ch-09': rubberZoomGif,
+  'ch-10': plasticZoomGif,
+  'ch-11': rubberZoomGif,
+  'ch-12': plasticZoomGif,
+  'ch-13': nylonZoomGif,
+};
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -158,14 +183,28 @@ export const DiscoveryBook: React.FC = () => {
 
           {/* Right Main Panel: Individual Chapter Field Journal */}
           <div className="lg:col-span-8 bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 border-amber-400 shadow-2xl flex flex-col gap-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
-              <div>
-                <span className="text-xs font-black uppercase text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full inline-block mb-1.5">
-                  {activeCourse.courseName} • Chapter {activeChapter.chapterNumber}
-                </span>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  {journal.journalTitle} {activeChapter.icon}
-                </h2>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b-2 border-slate-100 pb-4">
+              <div className="flex items-center gap-4">
+                {/* Animated Microscopic Specimen Scan */}
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-3 border-amber-400 shadow-lg shrink-0 bg-black relative ring-2 ring-amber-200">
+                  <img
+                    src={SPECIMEN_GIF_MAP[activeChapter.chapterId] || cottonZoomGif}
+                    alt={journal.journalTitle}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-0 inset-x-0 bg-black/70 py-0.5 text-center text-[8px] font-mono font-black text-amber-300">
+                    🔬 SCAN
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-xs font-black uppercase text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full inline-block mb-1.5">
+                    {activeCourse.courseName} • Chapter {activeChapter.chapterNumber}
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    {journal.journalTitle} {activeChapter.icon}
+                  </h2>
+                </div>
               </div>
 
               <button

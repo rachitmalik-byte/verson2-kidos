@@ -1,3 +1,5 @@
+import cottonZoomGif from '@/assets/videos/cotton_zoom_microstructure.gif';
+import polyesterZoomGif from '@/assets/videos/polyester_zoom_weave.gif';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';

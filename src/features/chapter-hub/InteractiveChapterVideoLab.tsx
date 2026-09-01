@@ -5,6 +5,7 @@ import silkZoomGif from '@/assets/videos/silk_zoom_microstructure.gif';
 import plasticZoomGif from '@/assets/videos/plastic_zoom_microstructure.gif';
 import woolZoomGif from '@/assets/videos/wool_zoom_fibers.gif';
 import rubberZoomGif from '@/assets/videos/tire_rubber_crosslink.gif';
+import polyesterZoomGif from '@/assets/videos/polyester_zoom_weave.gif';
 
 
 interface ZoomSpecimen {
@@ -185,7 +186,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Synthetic fibres are man-made polymer chains synthesized through chemical processes using petrochemicals, unlike natural fibres from cotton or sheep.',
         keyLaw: '🧱 Monomers link together into long repeating chains called Polymers!',
-        image: rawCottonBollImg,
+        image: cottonZoomGif,
         quickQuestion: {
           question: 'What is the primary raw source used to make synthetic fibers?',
           options: [
@@ -202,7 +203,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Rayon is made by chemically treating natural wood pulp cellulose. It is smooth, shiny, and absorbent like natural silk, but much more affordable!',
         keyLaw: '✨ Rayon is a semi-synthetic fiber made from chemically treated wood cellulose.',
-        image: silkwormCocoonImg,
+        image: silkZoomGif,
         quickQuestion: {
           question: 'Why is Rayon called "Artificial Silk"?',
           options: [
@@ -219,7 +220,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Nylon was the world’s first fully synthetic fiber. It is elastic, lightweight, lustrous, and stronger than a steel wire of equal thickness!',
         keyLaw: '🪢 Nylon has immense tensile strength — ideal for climbing ropes & toothbrushes!',
-        image: nylonCordImg,
+        image: nylonZoomGif,
         quickQuestion: {
           question: 'Why is nylon used for rock-climbing ropes and parachute cords?',
           options: [
@@ -236,7 +237,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Polyester is made of repeating ester units. It does not get wrinkled easily, remains crisp, sheds water droplets, and is very easy to wash.',
         keyLaw: '💧 Polyester fibers refuse water absorption, making raincoats light and dry!',
-        image: polyesterRaincoatImg,
+        image: polyesterZoomGif,
         quickQuestion: {
           question: 'What makes polyester the #1 choice for raincoats and dress materials?',
           options: [
@@ -253,7 +254,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Acrylic is made from polyacrylonitrile. It is a synthetic substitute for natural wool that is lightweight, warm, colorful, and immune to moth damage.',
         keyLaw: '🧶 Acrylic is an affordable artificial wool that traps insulating pockets of warm air.',
-        image: acrylicYarnImg,
+        image: woolZoomGif,
         quickQuestion: {
           question: 'What is a major advantage of Acrylic blankets over natural sheep wool?',
           options: [
@@ -415,7 +416,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Natural materials are often breathable and biodegradable. Synthetic materials are often waterproof, shatterproof, non-corrosive, and mechanically stronger.',
         keyLaw: '⚖️ Scientists select materials based on the exact job requirements!',
-        image: rawCottonBollImg,
+        image: nylonZoomGif,
         quickQuestion: {
           question: 'What is a superpower that synthetic materials often have over natural ones?',
           options: [
@@ -432,7 +433,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         summary:
           'Because synthetic plastics resist natural decay, responsible scientists follow the 3 R’s: Reduce unnecessary usage, Reuse containers, and Recycle plastics into new items.',
         keyLaw: '♻️ Reduce single-use plastics • Reuse durable containers • Recycle polymers!',
-        image: plasticDecayImg,
+        image: plasticZoomGif,
         quickQuestion: {
           question: 'Why is recycling synthetic plastic so crucial for our planet?',
           options: [
@@ -756,17 +757,25 @@ export const InteractiveChapterVideoLab: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex items-start gap-3">
-                <img
-                  src={activeTimestamp.image}
-                  alt={activeTimestamp.title}
-                  className="w-20 h-20 rounded-2xl object-cover border-2 border-sky-200 shadow-md shrink-0"
-                />
-                <div>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                {/* Animated Micro-Zoom Live Lens */}
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-3xl overflow-hidden border-4 border-indigo-400 shadow-xl shrink-0 bg-black ring-4 ring-indigo-200/60 group">
+                  <img
+                    src={activeTimestamp.image}
+                    alt={activeTimestamp.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute bottom-1 inset-x-1 bg-black/75 backdrop-blur-xs rounded-xl px-1.5 py-0.5 text-center text-[9px] font-black text-white uppercase tracking-wider flex items-center justify-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Micro-Zoom 🔬</span>
+                  </div>
+                </div>
+
+                <div className="flex-1 text-center sm:text-left">
                   <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug" style={{ fontFamily: 'Nunito, sans-serif' }}>
                     {activeTimestamp.title}
                   </h3>
-                  <p className="text-xs font-bold text-slate-600 mt-1 leading-relaxed">
+                  <p className="text-xs font-bold text-slate-600 mt-1.5 leading-relaxed">
                     {activeTimestamp.summary}
                   </p>
                 </div>

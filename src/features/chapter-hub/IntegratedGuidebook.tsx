@@ -1,3 +1,12 @@
+
+import cottonZoomGif from '@/assets/videos/cotton_zoom_microstructure.gif';
+import nylonZoomGif from '@/assets/videos/nylon_zoom_microstructure.gif';
+import silkZoomGif from '@/assets/videos/silk_zoom_microstructure.gif';
+import plasticZoomGif from '@/assets/videos/plastic_zoom_microstructure.gif';
+import polyesterZoomGif from '@/assets/videos/polyester_zoom_weave.gif';
+import woolZoomGif from '@/assets/videos/wool_zoom_fibers.gif';
+import rubberZoomGif from '@/assets/videos/tire_rubber_crosslink.gif';
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -43,10 +52,20 @@ export const GUIDE_STORIES: GuideStory[] = [
     badge: 'Lesson 1',
     color: 'from-amber-400 to-orange-500',
     illustration: (
-      <div className="flex items-center justify-center gap-4 py-3">
-        <RaincoatCottonIllustration className="w-20 h-20" />
-        <span className="font-black text-xl text-slate-400">VS</span>
-        <RaincoatSyntheticIllustration className="w-20 h-20" />
+      <div className="flex items-center justify-center gap-3 py-3 flex-wrap">
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-3 border-amber-400 shadow-md bg-black">
+            <img src={cottonZoomGif} alt="Cotton Zoom" className="w-full h-full object-cover" />
+          </div>
+          <span className="text-[10px] font-black text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full">🌿 Natural Cotton</span>
+        </div>
+        <span className="font-black text-lg text-slate-400">VS</span>
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-3 border-sky-400 shadow-md bg-black">
+            <img src={polyesterZoomGif} alt="Polyester Zoom" className="w-full h-full object-cover" />
+          </div>
+          <span className="text-[10px] font-black text-sky-900 bg-sky-100 px-2 py-0.5 rounded-full">🧥 Waterproof Poly</span>
+        </div>
       </div>
     ),
     content: [
@@ -66,7 +85,12 @@ export const GUIDE_STORIES: GuideStory[] = [
     color: 'from-sky-400 to-blue-600',
     illustration: (
       <div className="flex items-center justify-center py-3">
-        <NylonIllustration className="w-24 h-24" />
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-28 h-28 rounded-2xl overflow-hidden border-3 border-sky-400 shadow-md bg-black">
+            <img src={nylonZoomGif} alt="Nylon Zoom" className="w-full h-full object-cover" />
+          </div>
+          <span className="text-[10px] font-black text-sky-900 bg-sky-100 px-2 py-0.5 rounded-full">🧵 High-Tensile Nylon</span>
+        </div>
       </div>
     ),
     content: [
@@ -85,9 +109,20 @@ export const GUIDE_STORIES: GuideStory[] = [
     badge: 'Lesson 3',
     color: 'from-rose-400 to-red-600',
     illustration: (
-      <div className="flex items-center justify-center gap-4 py-3">
-        <CottonIllustration className="w-20 h-20" />
-        <PlasticIllustration className="w-20 h-20" />
+      <div className="flex items-center justify-center gap-3 py-3 flex-wrap">
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-3 border-emerald-400 shadow-md bg-black">
+            <img src={cottonZoomGif} alt="Cotton Ash" className="w-full h-full object-cover" />
+          </div>
+          <span className="text-[10px] font-black text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded-full">🌿 Burns to Ash</span>
+        </div>
+        <span className="font-black text-lg text-slate-400">VS</span>
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-3 border-rose-400 shadow-md bg-black">
+            <img src={plasticZoomGif} alt="Plastic Melts" className="w-full h-full object-cover" />
+          </div>
+          <span className="text-[10px] font-black text-rose-900 bg-rose-100 px-2 py-0.5 rounded-full">🔥 Melts into Bead</span>
+        </div>
       </div>
     ),
     content: [
