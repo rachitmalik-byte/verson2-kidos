@@ -104,15 +104,40 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
   const [isChallengePassed, setIsChallengePassed] = useState(false);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
 
-  const intro = chapterData.chapterIntro;
-  const journal = chapterData.fieldJournal;
+  const intro = chapterData?.chapterIntro || {} as any;
+  const journal = chapterData?.fieldJournal || {} as any;
+
+  const conceptSteps = intro.conceptSteps || [];
+  const checklist: string[] = intro.learningChecklist || intro.learningRoadmap || [
+    'Explore foundational scientific principles and real-world mechanisms.',
+    'Observe microscopic specimens and material properties.',
+    'Conduct hands-on experiments in the laboratory simulator.',
+  ];
+
+  const challenge = intro.thinkFastChallenge || intro.pipThinkFastChallenge || {
+    question: 'What is the key science principle discovered in this chapter?',
+    options: [
+      { text: 'The material structure determines its properties and uses', isCorrect: true },
+      { text: 'Materials behave completely randomly', isCorrect: false },
+    ],
+    explanation: 'Every material has a unique microscopic structure that gives it specific properties!',
+  };
+
+  const reflectionPrompt = reflectionPrompt || journal.journalBadgeQuestion || 'What was your most exciting discovery in this chapter?';
+  const facts = journal.specimenFacts || [];
+  const handsOn = journal.handsOnExperiment || {
+    title: 'Hands-on Science Activity',
+    materialsNeeded: ['Household items', 'Notebook'],
+    procedure: 'Observe everyday materials around your home.',
+    expectedObservation: 'Materials exhibit unique physical and chemical properties.',
+  };
 
   const handleSelectOption = (idx: number, isCorrect: boolean) => {
     setSelectedOption(idx);
     if (isCorrect) {
       sounds.fanfare();
       setIsChallengePassed(true);
-      voiceAssistant.speak(`Brilliant discovery, Young Scientist! ${intro.thinkFastChallenge.explanation}`);
+      voiceAssistant.speak(`Brilliant discovery, Young Scientist! ${challenge.explanation}`);
     } else {
       sounds.boing();
       voiceAssistant.speak('Look closely at the scientific concepts above and try again!');
@@ -177,7 +202,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         </span>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {intro.conceptSteps.map((step, sIdx) => {
+          {conceptSteps.map((step, sIdx) => {
             const imgSrc = IMAGE_MAP[step.imageAsset] || rawCottonImg;
             return (
               <div
@@ -247,7 +272,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
             📋 What You Will Master
           </span>
           <div className="flex flex-col gap-2">
-            {intro.learningChecklist.map((item, cIdx) => (
+            {checklist.map((item, cIdx) => (
               <div key={cIdx} className="flex items-start gap-2 text-xs font-bold text-slate-700">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span>{item}</span>
@@ -273,11 +298,11 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         </div>
 
         <h3 className="text-sm sm:text-base font-black text-slate-900 leading-snug">
-          {intro.thinkFastChallenge.question}
+          {challenge.question}
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {intro.thinkFastChallenge.options.map((opt, oIdx) => {
+          {challenge.options.map((opt, oIdx) => {
             const isSelected = selectedOption === oIdx;
             return (
               <motion.button
@@ -353,7 +378,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
 
               {/* Specimen Facts */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {journal.specimenFacts.map((fact, fIdx) => (
+                {facts.map((fact, fIdx) => (
                   <div key={fIdx} className="p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1">
                     <span className="text-2xl">{fact.icon}</span>
                     <span className="text-xs font-black text-amber-950">{fact.title}</span>
@@ -366,25 +391,25 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
               <div className="p-4 bg-indigo-50 rounded-2xl border-2 border-indigo-200 flex flex-col gap-2">
                 <span className="text-xs font-black uppercase text-indigo-900 flex items-center gap-1.5">
                   <FlaskConical className="w-4 h-4 text-indigo-600" />
-                  <span>{journal.handsOnExperiment.title}</span>
+                  <span>{handsOn.title}</span>
                 </span>
                 <p className="text-xs font-bold text-slate-700">
                   <span className="text-indigo-950">Materials: </span>
-                  {journal.handsOnExperiment.materialsNeeded.join(', ')}
+                  {handsOn.materialsNeeded.join(', ')}
                 </p>
                 <p className="text-xs font-bold text-slate-700">
                   <span className="text-indigo-950">Procedure: </span>
-                  {journal.handsOnExperiment.procedure}
+                  {handsOn.procedure}
                 </p>
                 <div className="p-2.5 bg-emerald-100/70 rounded-xl text-xs font-black text-emerald-950 mt-1">
-                  Expected Result: {journal.handsOnExperiment.expectedObservation}
+                  Expected Result: {handsOn.expectedObservation}
                 </div>
               </div>
 
               {/* Reflection Badge Prompt */}
               <div className="p-3.5 bg-slate-100 rounded-2xl border border-slate-300 text-xs font-bold text-slate-700 flex flex-col gap-1">
                 <span className="font-black text-slate-900">Explorer Reflection Prompt:</span>
-                <p>{journal.journalReflectionBadgePrompt}</p>
+                <p>{reflectionPrompt}</p>
               </div>
 
               <button

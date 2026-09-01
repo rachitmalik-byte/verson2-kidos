@@ -15,9 +15,15 @@ export interface ChapterIntro {
   hookScene: string;
   bigGuidingQuestion: string;
   conceptSteps: VisualConceptStep[];
-  learningChecklist: string[];
+  learningChecklist?: string[];
+  learningRoadmap?: string[];
   goldenLaw: string;
-  thinkFastChallenge: {
+  thinkFastChallenge?: {
+    question: string;
+    options: { text: string; isCorrect: boolean }[];
+    explanation: string;
+  };
+  pipThinkFastChallenge?: {
     question: string;
     options: { text: string; isCorrect: boolean }[];
     explanation: string;
@@ -35,7 +41,8 @@ export interface FieldJournal {
     procedure: string;
     expectedObservation: string;
   };
-  journalReflectionBadgePrompt: string;
+  journalReflectionBadgePrompt?: string;
+  journalBadgeQuestion?: string;
 }
 
 export interface CourseChapter {
