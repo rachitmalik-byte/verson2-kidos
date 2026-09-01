@@ -1,11 +1,10 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
-import { materials } from '@/data/materials';
 import {
   ALL_COURSES_CATALOG,
   CourseChapter,
@@ -25,11 +24,11 @@ import {
   Mountain,
   Zap,
   Tag,
-  Search,
-  Filter,
+  Compass,
+  Check,
 } from 'lucide-react';
 
-// Animated Micro-Zoom GIFs
+// ── Strictly Relevant Animated Micro-Zoom GIFs ──
 import cottonZoomGif from '@/assets/videos/cotton_zoom_microstructure.gif';
 import nylonZoomGif from '@/assets/videos/nylon_zoom_microstructure.gif';
 import silkZoomGif from '@/assets/videos/silk_zoom_microstructure.gif';
@@ -39,88 +38,145 @@ import woolZoomGif from '@/assets/videos/wool_zoom_fibers.gif';
 import rubberZoomGif from '@/assets/videos/tire_rubber_crosslink.gif';
 import treeLatexZoomGif from '@/assets/videos/tree_latex_zoom_polymers.gif';
 
-const MATERIAL_GIF_MAP: Record<string, string> = {
-  cotton: cottonZoomGif,
-  wool: woolZoomGif,
-  silk: silkZoomGif,
-  nylon: nylonZoomGif,
-  polyester: polyesterZoomGif,
-  plastic: plasticZoomGif,
-  acrylic: woolZoomGif,
-  'natural-rubber': treeLatexZoomGif,
-  'synthetic-rubber': rubberZoomGif,
-  rubber: rubberZoomGif,
-};
+// ── Strictly Relevant Macro Specimen Photography ──
+import antsSugarImg from '@/assets/images/theme1/ants_trail_sugar.jpg';
+import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
+import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
+import fourSnakesImg from '@/assets/images/specimens/four_venomous_snakes.jpg';
+import tonguePapillaeImg from '@/assets/images/specimens/tongue_taste_papillae.jpg';
+import drBeaumontImg from '@/assets/images/specimens/dr_beaumont_stomach.jpg';
+import dandelionSeedImg from '@/assets/images/specimens/dandelion_seed_dispersal.jpg';
+import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
 
-const CHAPTER_GIF_MAP: Record<string, string> = {
-  'ch-01': cottonZoomGif,
-  'ch-02': cottonZoomGif,
-  'ch-03': nylonZoomGif,
-  'ch-04': polyesterZoomGif,
-  'ch-05': plasticZoomGif,
-  'ch-06': woolZoomGif,
-  'ch-07': plasticZoomGif,
-  'ch-08': plasticZoomGif,
-  'ch-09': rubberZoomGif,
-  'ch-10': plasticZoomGif,
-  'ch-11': rubberZoomGif,
-  'ch-12': plasticZoomGif,
-  'ch-13': nylonZoomGif,
+import solarEvapImg from '@/assets/images/specimens/solar_evaporation_ocean.jpg';
+import cloudsRainImg from '@/assets/images/specimens/clouds_condensation_rain.jpg';
+import ghadisarLakeImg from '@/assets/images/specimens/jaisalmer_ghadisar_lake.jpg';
+import stepwellBawriImg from '@/assets/images/specimens/stepwell_bawri_rajasthan.jpg';
+import cargoShipImg from '@/assets/images/specimens/cargo_ship_buoyancy.jpg';
+import deadSeaSaltImg from '@/assets/images/specimens/dead_sea_salt_floating.jpg';
+import mosquitoLarvaImg from '@/assets/images/specimens/mosquito_larva_microscope.jpg';
+import oilFilmImg from '@/assets/images/specimens/oil_film_mosquito_prevention.jpg';
+
+import pashminaMicroImg from '@/assets/images/theme-shelter/pashmina_microscope_macro.jpg';
+import reboTentImg from '@/assets/images/specimens/rebo_yak_tent.jpg';
+import everestClimberImg from '@/assets/images/theme-shelter/everest_summit_mountaineer.jpg';
+import cramponsImg from '@/assets/images/specimens/mountaineer_crampons.jpg';
+import golcondaFortImg from '@/assets/images/theme-shelter/golconda_fort_bastions.jpg';
+import persianWheelImg from '@/assets/images/theme-shelter/golconda_persian_wheel.jpg';
+import earthquakeFaultImg from '@/assets/images/specimens/earthquake_fault_seismograph.jpg';
+import bhungaHouseImg from '@/assets/images/specimens/kutch_bhunga_house.jpg';
+
+import rawCottonImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
+import polyesterRaincoatImg from '@/assets/images/raincoat/polyester_raincoat_waterproof.jpg';
+import nylonThreadImg from '@/assets/images/specimens/nylon_thread_spool.jpg';
+import silkwormCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
+import syntheticAcrylicImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
+import bakeliteImg from '@/assets/images/experiments/bakelite_pan_handle.jpg';
+import pvcCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
+import copperWireImg from '@/assets/images/wire/copper_wire_macro.jpg';
+import soilPlasticImg from '@/assets/images/decay/soil_plastic_450yrs.jpg';
+import parachuteImg from '@/assets/images/experiments/parachute_canopy_jump.jpg';
+import plasticPelletsImg from '@/assets/images/specimens/plastic_pet_pellets.jpg';
+
+// ── 100% Strictly Relevant Practical Asset Map per Chapter ──
+interface ChapterAsset {
+  type: 'gif' | 'image';
+  src: string;
+  badge: string;
+  scaleNote: string;
+}
+
+const CHAPTER_PRACTICAL_ASSET_MAP: Record<string, ChapterAsset> = {
+  // Course 1: Materials Science (mat-ch1 to mat-ch13)
+  'mat-ch1': { type: 'gif', src: cottonZoomGif, badge: '🔬 100x Cotton Capillary Pores', scaleNote: 'Continuous zoom into hollow natural cellulose pores' },
+  'mat-ch2': { type: 'gif', src: polyesterZoomGif, badge: '🔬 Synthetic Polymer Weave', scaleNote: 'Smooth non-porous extruded polyester fibers' },
+  'mat-ch3': { type: 'gif', src: nylonZoomGif, badge: '🔬 High-Tensile Nylon Filaments', scaleNote: 'Aligned polyamide chains with extreme tensile hold' },
+  'mat-ch4': { type: 'gif', src: silkZoomGif, badge: '🔬 Natural Triangular Silk Fibroin', scaleNote: 'Prismatic protein fibers spun by silkworm caterpillars' },
+  'mat-ch5': { type: 'gif', src: polyesterZoomGif, badge: '🔬 Wrinkle-Resistant Ester Weave', scaleNote: 'Synthetic polymer spring memory loops' },
+  'mat-ch6': { type: 'gif', src: woolZoomGif, badge: '🔬 Crimped Acrylic / Wool Fibers', scaleNote: 'Insulating air pockets trapping ambient warmth' },
+  'mat-ch7': { type: 'gif', src: plasticZoomGif, badge: '🔬 Thermoplastic Molecular Matrix', scaleNote: 'Linear polymer chains softening under thermal heat' },
+  'mat-ch8': { type: 'image', src: copperWireImg, badge: '⚡ Copper Electron Matrix & PVC', scaleNote: 'Conductive metallic core insulated with bound PVC jacket' },
+  'mat-ch9': { type: 'image', src: bakeliteImg, badge: '🫖 3D Thermoset Bakelite Structure', scaleNote: 'Crosslinked polymer networks that never melt on stoves' },
+  'mat-ch10': { type: 'image', src: soilPlasticImg, badge: '⏳ 450-Year Non-Biodegradable Petrochemical', scaleNote: 'Synthetic polymers immune to biological soil bacteria' },
+  'mat-ch11': { type: 'gif', src: rubberZoomGif, badge: '🔬 Crosslinked Vulcanized Rubber', scaleNote: 'Sulfur bridge polymers providing tire friction & elasticity' },
+  'mat-ch12': { type: 'image', src: plasticPelletsImg, badge: '♻️ Recycled PET Plastic Flakes', scaleNote: 'Thermoplastic pellets remolded into sustainable goods' },
+  'mat-ch13': { type: 'image', src: parachuteImg, badge: '🪂 Ripstop High-Tensile Nylon Canopy', scaleNote: 'Ultra-lightweight synthetic canopy supporting paratroopers' },
+
+  // Course 2: Super Senses (Theme 1, Chapters 1-4)
+  'sense-ch1': { type: 'image', src: antsSugarImg, badge: '🐜 Pheromone Chemical Scent Highway', scaleNote: 'Invisible trail markers guiding foraging ant colonies' },
+  'sense-ch2': { type: 'image', src: snakeVibrationImg, badge: '🐍 Seismic Lower-Jaw Ground Hearing', scaleNote: 'Soil compression waves transmitted to cranial auditory bones' },
+  'sense-ch3': { type: 'image', src: tonguePapillaeImg, badge: '👅 Fungiform Taste Papillae & Acid Stomach', scaleNote: 'Hundreds of taste bud receptors & gastric digestive acids' },
+  'sense-ch4': { type: 'image', src: burdockVelcroImg, badge: '🌱 Burdock Elastic Micro-Hooks (Velcro)', scaleNote: 'Natural curved hooks catching looped fabric fibers' },
+
+  // Course 3: Water Experiments (Theme 2/4, Chapters 1-4)
+  'water-ch1': { type: 'image', src: solarEvapImg, badge: '☀️ Solar Thermal Evaporation & Rain', scaleNote: 'Ocean water kinetic vapor rising into cold cumulus clouds' },
+  'water-ch2': { type: 'image', src: ghadisarLakeImg, badge: '🏰 Jaisalmer Ghadisar & Bawri Stepwells', scaleNote: '650-year-old 9-lake rainwater harvesting engineering' },
+  'water-ch3': { type: 'image', src: deadSeaSaltImg, badge: '🧂 300 g/L High-Density Dead Sea Salinity', scaleNote: 'Packed mineral mass creating effortless human buoyancy' },
+  'water-ch4': { type: 'image', src: mosquitoLarvaImg, badge: '🦟 Microscopic Snorkel Siphon & Oil Barrier', scaleNote: 'Larval breathing siphon blocked by thin surface-tension oil' },
+
+  // Course 4: Shelter & Earth (Theme 3/5, Chapters 1-5)
+  'shelter-ch1': { type: 'image', src: reboTentImg, badge: '⛺ Changpa Rebo Yak-Hair Nomadic Tent', scaleNote: 'Woven yak hair protecting nomadic families from -40°C blizzard winds' },
+  'shelter-ch2': { type: 'gif', src: woolZoomGif, badge: '🐐 12 µm Pashmina Mountain Underfleece', scaleNote: '6x finer than human hair with microscopic thermal air chambers' },
+  'shelter-ch3': { type: 'image', src: everestClimberImg, badge: '🏔️ 8,848m Mt. Everest Summit Expedition', scaleNote: 'High-altitude hypoxia gear, ice axes & steel crampon spikes' },
+  'shelter-ch4': { type: 'image', src: golcondaFortImg, badge: '🏰 Golconda Fateh Darwaza & Bastions', scaleNote: 'Curved stone bastions & acoustic clapping domes for siege defense' },
+  'shelter-ch5': { type: 'image', src: bhungaHouseImg, badge: '🛖 Earthquake-Resistant Circular Bhunga', scaleNote: 'Conical thatched roofs & round clay walls dispersing seismic tremors' },
 };
 
 export const DiscoveryBook: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 
-  // Top Mode: 'materials' vs 'chapters'
-  const [journalMode, setJournalMode] = useState<'materials' | 'chapters'>('materials');
+  // URL query params support: ?course=senses&chapter=1
+  const courseParam = searchParams.get('course');
+  const chapterParam = searchParams.get('chapter');
 
-  // Materials View State
-  const [selectedMaterialFilter, setSelectedMaterialFilter] = useState<'all' | 'natural' | 'synthetic'>('all');
-  const [selectedMaterialId, setSelectedMaterialId] = useState<string>('cotton');
+  // Active Course Index
+  const initialCourseIdx = useMemo(() => {
+    if (!courseParam) return 0;
+    const idx = ALL_COURSES_CATALOG.findIndex((c) =>
+      c.courseId.toLowerCase().includes(courseParam.toLowerCase()) ||
+      c.courseName.toLowerCase().includes(courseParam.toLowerCase())
+    );
+    return idx !== -1 ? idx : 0;
+  }, [courseParam]);
 
-  // Chapters View State
-  const [selectedCourseIdx, setSelectedCourseIdx] = useState<number>(0);
-  const [selectedChapterIdx, setSelectedChapterIdx] = useState<number>(0);
+  const [selectedCourseIdx, setSelectedCourseIdx] = useState<number>(initialCourseIdx);
 
-  // Materials Filtered
-  const filteredMaterials = useMemo(() => {
-    if (selectedMaterialFilter === 'all') return materials;
-    return materials.filter((m) => m.type === selectedMaterialFilter);
-  }, [selectedMaterialFilter]);
+  // Active Chapter Index
+  const initialChapterIdx = useMemo(() => {
+    if (!chapterParam) return 0;
+    const chNum = parseInt(chapterParam, 10);
+    if (!isNaN(chNum)) {
+      const course = ALL_COURSES_CATALOG[initialCourseIdx] || ALL_COURSES_CATALOG[0];
+      const cIdx = course.chapters.findIndex((ch) => ch.chapterNumber === chNum);
+      return cIdx !== -1 ? cIdx : 0;
+    }
+    return 0;
+  }, [chapterParam, initialCourseIdx]);
 
-  const selectedMaterial = useMemo(() => {
-    return materials.find((m) => m.id === selectedMaterialId) || materials[0];
-  }, [selectedMaterialId]);
+  const [selectedChapterIdx, setSelectedChapterIdx] = useState<number>(initialChapterIdx);
 
-  // Active Chapter
   const activeCourse = ALL_COURSES_CATALOG[selectedCourseIdx] || ALL_COURSES_CATALOG[0];
   const chapters: CourseChapter[] = activeCourse.chapters;
   const activeChapter: CourseChapter = chapters[selectedChapterIdx] || chapters[0];
   const journal = activeChapter.fieldJournal;
 
-  const handleSelectMaterial = (id: string) => {
-    sounds.pop();
-    setSelectedMaterialId(id);
-    const mat = materials.find((m) => m.id === id);
-    if (mat) {
-      voiceAssistant.speak(`${mat.name}, a ${mat.type} material. ${mat.funFact || ''}`);
-    }
-  };
-
-  const handlePronounceMaterial = () => {
-    sounds.pop();
-    voiceAssistant.speak(`${selectedMaterial.name}. Category: ${selectedMaterial.type} ${selectedMaterial.category}. ${selectedMaterial.funFact || ''}`);
+  const currentAsset: ChapterAsset = CHAPTER_PRACTICAL_ASSET_MAP[activeChapter.chapterId] || {
+    type: 'gif',
+    src: cottonZoomGif,
+    badge: '🔬 Microscopic Specimen Scan',
+    scaleNote: 'High-resolution calibrated specimen structure',
   };
 
   const handlePronounceChapter = () => {
     sounds.pop();
-    voiceAssistant.speak(`${activeChapter.chapterTitle}. ${journal.fieldBrief}`);
+    voiceAssistant.speak(`${activeChapter.chapterTitle}. ${journal.fieldBrief}. Key Law: ${activeChapter.chapterIntro.goldenLaw}`);
   };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-indigo-200 via-sky-100 to-amber-100 p-3 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden select-none">
-      {/* ── Top Header (Spacious, Single-Line, Zero-Wrapping) ── */}
+      {/* ── Top Header (Clean, Spacious, Single-Line) ── */}
       <header className="w-full max-w-7xl bg-white/95 backdrop-blur-md rounded-3xl border-4 border-slate-200/80 px-4 sm:px-6 py-3.5 shadow-xl flex items-center justify-between gap-4 mb-6 z-20">
         {/* Left: Navigation Buttons */}
         <div className="flex items-center gap-2 shrink-0">
@@ -147,7 +203,7 @@ export const DiscoveryBook: React.FC = () => {
           </button>
         </div>
 
-        {/* Center: Title & Subtitle (Clean Single-Line with Truncation Protection) */}
+        {/* Center: Title & Subtitle */}
         <div className="text-center min-w-0 flex-1 px-2 hidden sm:block">
           <div className="flex items-center justify-center gap-2">
             <BookOpen className="w-5 h-5 text-indigo-600 shrink-0" />
@@ -156,7 +212,7 @@ export const DiscoveryBook: React.FC = () => {
             </h1>
           </div>
           <p className="text-[10px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap truncate">
-            CBSE Class 5 EVS • Material Specimens, Animated Micro-Zooms & DIY Labs
+            CBSE Class 5 EVS • Dedicated Chapter Field Logs, Practical Micro-Scans & DIY Labs
           </p>
         </div>
 
@@ -164,399 +220,220 @@ export const DiscoveryBook: React.FC = () => {
         <div className="flex items-center gap-2 shrink-0">
           <div className="hidden xl:flex items-center gap-1 px-3 py-1.5 bg-indigo-50 border-2 border-indigo-200 rounded-2xl text-indigo-900 font-black text-xs shadow-xs whitespace-nowrap">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400 shrink-0" />
-            <span>{discoveries.length} / {materials.length} Discovered</span>
+            <span>{discoveries.length} Discovered</span>
           </div>
           <AudioNavBarControls showProfile={false} />
         </div>
       </header>
 
-      {/* ── Mode Switcher: Materials vs Chapters ── */}
-      <div className="w-full max-w-6xl flex justify-center mb-6 z-20">
-        <div className="bg-white/95 p-1.5 rounded-2xl border-3 border-indigo-300 shadow-md flex items-center gap-1.5">
-          <button
-            onClick={() => {
-              sounds.pop();
-              setJournalMode('materials');
-            }}
-            className={`px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all ${
-              journalMode === 'materials'
-                ? 'bg-gradient-to-r from-indigo-600 to-sky-600 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-amber-300" />
-            <span>🔬 Material Specimens & Micro-Zooms ({materials.length})</span>
-          </button>
-
-          <button
-            onClick={() => {
-              sounds.pop();
-              setJournalMode('chapters');
-            }}
-            className={`px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all ${
-              journalMode === 'chapters'
-                ? 'bg-gradient-to-r from-indigo-600 to-sky-600 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <BookOpen className="w-4 h-4 text-indigo-300" />
-            <span>📖 Chapter Logs & DIY Experiments</span>
-          </button>
-        </div>
+      {/* ── 4 Course Selector Tabs ── */}
+      <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 z-10">
+        {ALL_COURSES_CATALOG.map((course, idx) => {
+          const isSelected = idx === selectedCourseIdx;
+          return (
+            <button
+              key={course.courseId}
+              onClick={() => {
+                sounds.pop();
+                setSelectedCourseIdx(idx);
+                setSelectedChapterIdx(0);
+              }}
+              className={`p-3.5 rounded-2xl border-3 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                isSelected
+                  ? 'bg-white border-indigo-600 shadow-lg scale-102 ring-2 ring-indigo-300'
+                  : 'bg-white/80 border-slate-200 hover:bg-white text-slate-700'
+              }`}
+            >
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-tr ${course.themeGradient} flex items-center justify-center text-white shadow-xs shrink-0`}>
+                {course.courseId === 'theme-senses' && <Leaf className="w-5 h-5" />}
+                {course.courseId === 'theme-materials' && <Layers className="w-5 h-5" />}
+                {course.courseId === 'theme-water' && <Droplets className="w-5 h-5" />}
+                {course.courseId === 'theme-shelter' && <Mountain className="w-5 h-5" />}
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] font-black text-indigo-600 block uppercase">Course {idx + 1}</span>
+                <span className="text-xs font-black text-slate-900 truncate block leading-tight">{course.courseName}</span>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════
-          MODE 1: MATERIAL SPECIMENS & ANIMATED MICRO-ZOOM GALLERY
-      ════════════════════════════════════════════════════════════════ */}
-      {journalMode === 'materials' && (
-        <main className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-12 gap-6 z-20 mb-12">
-          {/* Left Panel: Material Specimen Shelf (5 cols) */}
-          <div className="md:col-span-5 bg-white/95 backdrop-blur-md p-5 rounded-3xl border-4 border-slate-200 shadow-xl flex flex-col h-[620px]">
-            {/* Filter Pills */}
-            <div className="flex bg-slate-100 p-1.5 rounded-2xl mb-4 text-xs font-black gap-1 border border-slate-200">
-              {(['all', 'natural', 'synthetic'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => {
-                    sounds.pop();
-                    setSelectedMaterialFilter(tab);
-                  }}
-                  className={`flex-1 py-2 rounded-xl capitalize transition-all cursor-pointer ${
-                    selectedMaterialFilter === tab
-                      ? 'bg-indigo-600 text-white shadow-md'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  {tab === 'all' ? 'All Materials' : tab}
-                </button>
-              ))}
-            </div>
-
-            {/* List of Specimens */}
-            <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
-              {filteredMaterials.map((mat) => {
-                const unlocked = discoveries.some((d) => d.materialId === mat.id);
-                const isSelected = selectedMaterialId === mat.id;
-                const gif = MATERIAL_GIF_MAP[mat.id] || cottonZoomGif;
-
-                return (
-                  <motion.button
-                    key={mat.id}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleSelectMaterial(mat.id)}
-                    className={`w-full p-3 rounded-2xl border-3 text-left flex items-center gap-3 transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-sky-100 border-sky-500 shadow-md ring-4 ring-sky-200'
-                        : unlocked
-                        ? 'bg-white border-emerald-200 hover:bg-emerald-50/40'
-                        : 'bg-white border-slate-200 hover:bg-slate-50'
-                    }`}
-                  >
-                    {/* Animated Micro-Thumbnail */}
-                    <div className="w-14 h-14 rounded-2xl bg-black overflow-hidden border-2 border-slate-300 flex-shrink-0 shadow-inner relative">
-                      <img src={gif} alt={mat.name} className="w-full h-full object-cover" />
-                      <div className="absolute bottom-0 inset-x-0 bg-black/75 text-[8px] font-mono text-center text-white">
-                        {mat.image}
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="font-black text-sm text-slate-800 truncate">{mat.name}</h3>
-                        {unlocked && <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />}
-                      </div>
-                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
-                        {mat.type} • {mat.category}
-                      </span>
-                    </div>
-                  </motion.button>
-                );
-              })}
-            </div>
+      {/* ── Dedicated Chapter Field Journal Workspace ── */}
+      <main className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 mb-12">
+        {/* Left Column: Chapter Navigator (4 cols) */}
+        <div className="lg:col-span-4 bg-white/95 backdrop-blur-md p-4 rounded-3xl border-3 border-slate-200 shadow-md flex flex-col gap-2 h-fit">
+          <div className="flex items-center justify-between px-2 py-1">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-500">
+              {activeCourse.courseName}:
+            </span>
+            <span className="text-[11px] font-bold text-indigo-600 font-mono">
+              {chapters.length} Chapters
+            </span>
           </div>
 
-          {/* Right Panel: Specimen Showcase Card (7 cols) */}
-          <div className="md:col-span-7 bg-white p-6 md:p-8 rounded-3xl border-4 border-indigo-300 shadow-2xl flex flex-col justify-between h-[620px] overflow-y-auto">
-            <div>
-              {/* Header with live animated microscope ocular lens */}
-              {/* ── PROMINENT FULL-HERO LIVE ANIMATED MICRO-ZOOM SHOWCASE ── */}
-              <div className="w-full mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full ${
-                          selectedMaterial.type === 'natural'
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                            : 'bg-sky-100 text-sky-800 border border-sky-300'
-                        }`}
-                      >
-                        {selectedMaterial.type} Material
-                      </span>
-                      <span className="text-xs font-bold text-slate-500 capitalize">
-                        ({selectedMaterial.category})
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <h2
-                        className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
-                        style={{ fontFamily: 'Nunito, sans-serif' }}
-                      >
-                        {selectedMaterial.name} {selectedMaterial.image}
-                      </h2>
-                      <button
-                        onClick={handlePronounceMaterial}
-                        className="p-1.5 rounded-full bg-slate-100 hover:bg-sky-100 text-sky-600 transition-colors cursor-pointer"
-                        title="Hear Pip read material properties"
-                      >
-                        <Volume2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+          <div className="flex flex-col gap-1.5 max-h-[560px] overflow-y-auto pr-1">
+            {chapters.map((ch, cIdx) => {
+              const isSelected = cIdx === selectedChapterIdx;
+              const chAsset = CHAPTER_PRACTICAL_ASSET_MAP[ch.chapterId];
 
-                {/* Massive Animated Microscope Screen (High-Definition Zoom) */}
-                <div className="relative w-full h-72 sm:h-80 rounded-3xl bg-slate-950 border-4 border-indigo-400 overflow-hidden shadow-2xl ring-4 ring-indigo-200/60 group flex items-center justify-center">
-                  <img
-                    src={MATERIAL_GIF_MAP[selectedMaterial.id] || cottonZoomGif}
-                    alt={selectedMaterial.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  
-                  {/* Optical Reticle Overlay */}
-                  <div className="absolute inset-0 pointer-events-none border border-sky-400/20 flex items-center justify-center">
-                    <div className="w-full h-[1px] bg-sky-400/20 absolute" />
-                    <div className="h-full w-[1px] bg-sky-400/20 absolute" />
-                    <div className="w-40 h-40 rounded-full border border-sky-400/30 absolute" />
-                  </div>
-
-                  {/* Top-Right Practical Scale Bar */}
-                  <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-xl border border-sky-400/40 text-[11px] font-mono font-black text-sky-300">
-                    🔬 Continuous Optical Zoom (1x ➔ 1,500x)
-                  </div>
-
-                  {/* Bottom HUD Tag */}
-                  <div className="absolute bottom-3 inset-x-3 bg-black/85 backdrop-blur-md rounded-2xl py-1.5 px-3 text-center text-xs font-mono font-black text-white flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-emerald-400">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>LIVE MICROSCOPIC LOOP</span>
-                    </div>
-                    <span className="text-amber-300 text-[11px]">Continuous Smooth Magnification 🎬</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Superpower Properties Grid */}
-              <div className="mb-6">
-                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5" />
-                  <span>Scientific Superpower Properties</span>
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {selectedMaterial.properties.map((prop, i) => (
-                    <div
-                      key={i}
-                      className="p-3.5 bg-slate-50 rounded-2xl border-2 border-slate-200/80 flex items-start gap-3 shadow-xs"
-                    >
-                      <span className="text-2xl flex-shrink-0">{prop.icon}</span>
-                      <div>
-                        <h4 className="text-xs font-black text-slate-800">{prop.name}</h4>
-                        <p className="text-[11px] font-bold text-slate-500 leading-snug mt-0.5">
-                          {prop.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Everyday Real-World Uses */}
-              <div className="mb-4">
-                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2.5">
-                  Everyday Real-World Applications
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedMaterial.uses.map((use, i) => (
-                    <span
-                      key={i}
-                      className="px-3.5 py-1.5 bg-amber-100 border border-amber-300 text-amber-950 text-xs font-black rounded-xl shadow-xs"
-                    >
-                      {use}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Science Fun Fact Footer */}
-            {selectedMaterial.funFact && (
-              <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300 flex items-center gap-3 mt-4 shadow-sm">
-                <span className="text-3xl">💡</span>
-                <p className="text-xs font-bold text-emerald-900 leading-relaxed">
-                  <span className="font-black">Science Fun Fact:</span> {selectedMaterial.funFact}
-                </p>
-              </div>
-            )}
-          </div>
-        </main>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════
-          MODE 2: CHAPTER LOGS & DIY HANDS-ON EXPERIMENTS
-      ════════════════════════════════════════════════════════════════ */}
-      {journalMode === 'chapters' && (
-        <div className="w-full max-w-6xl flex flex-col gap-6 relative z-10">
-          {/* 4 Course Selector Tabs */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {ALL_COURSES_CATALOG.map((course, idx) => {
-              const isSelected = idx === selectedCourseIdx;
               return (
                 <button
-                  key={course.courseId}
+                  key={ch.chapterId}
                   onClick={() => {
                     sounds.pop();
-                    setSelectedCourseIdx(idx);
-                    setSelectedChapterIdx(0);
+                    setSelectedChapterIdx(cIdx);
                   }}
-                  className={`p-3.5 rounded-2xl border-3 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                  className={`p-3 rounded-2xl border-2 text-left font-black text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${
                     isSelected
-                      ? 'bg-white border-indigo-600 shadow-lg scale-102 ring-2 ring-indigo-300'
-                      : 'bg-white/80 border-slate-200 hover:bg-white text-slate-700'
+                      ? 'bg-indigo-50 border-indigo-600 text-indigo-950 shadow-xs ring-2 ring-indigo-200'
+                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-tr ${course.themeGradient} flex items-center justify-center text-white shadow-xs shrink-0`}>
-                    {course.courseId === 'theme-senses' && <Leaf className="w-5 h-5" />}
-                    {course.courseId === 'theme-materials' && <Layers className="w-5 h-5" />}
-                    {course.courseId === 'theme-water' && <Droplets className="w-5 h-5" />}
-                    {course.courseId === 'theme-shelter' && <Mountain className="w-5 h-5" />}
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-xl shrink-0">{ch.icon}</span>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-slate-400 block font-mono">Chapter {ch.chapterNumber}</span>
+                      <span className="truncate block font-bold text-slate-800 text-xs">{ch.chapterTitle}</span>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-black text-indigo-600 block uppercase">Course {idx + 1}</span>
-                    <span className="text-xs font-black text-slate-900 truncate block leading-tight">{course.courseName}</span>
-                  </div>
+                  {chAsset && (
+                    <span className="text-[9px] font-black uppercase text-indigo-700 bg-white px-2 py-0.5 rounded-full border border-indigo-200 shrink-0">
+                      {chAsset.type === 'gif' ? '🎬 Live Zoom' : '📷 Macro'}
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
+        </div>
 
-          {/* Chapter Grid & Journal Entry */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Sidebar: Chapter List (4 cols) */}
-            <div className="lg:col-span-4 bg-white/95 backdrop-blur-md p-4 rounded-3xl border-3 border-slate-200 shadow-md flex flex-col gap-2 h-fit">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-400 px-2 py-1">
-                Chapters in this Course:
+        {/* Right Column: Dedicated Chapter Field Journal (8 cols) */}
+        <div className="lg:col-span-8 bg-white/98 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 border-amber-400 shadow-2xl flex flex-col gap-6">
+          {/* Chapter Header */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b-2 border-slate-100 pb-4">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl sm:text-4xl p-2.5 rounded-2xl bg-amber-100 border border-amber-300 shadow-xs shrink-0">
+                {activeChapter.icon}
               </span>
-              <div className="flex flex-col gap-1.5 max-h-[500px] overflow-y-auto">
-                {chapters.map((ch, cIdx) => {
-                  const isSelected = cIdx === selectedChapterIdx;
-                  return (
-                    <button
-                      key={ch.chapterId}
-                      onClick={() => {
-                        sounds.pop();
-                        setSelectedChapterIdx(cIdx);
-                      }}
-                      className={`p-3 rounded-2xl border-2 text-left font-black text-xs transition-all cursor-pointer flex items-center justify-between ${
-                        isSelected
-                          ? 'bg-indigo-50 border-indigo-600 text-indigo-950 shadow-xs'
-                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-base">{ch.icon}</span>
-                        <span className="line-clamp-1">{ch.chapterTitle}</span>
-                      </div>
-                      <span className="text-[10px] font-mono opacity-80 shrink-0">Ch {ch.chapterNumber}</span>
-                    </button>
-                  );
-                })}
+              <div>
+                <span className="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full inline-block mb-1">
+                  {activeCourse.courseName} • Chapter {activeChapter.chapterNumber}
+                </span>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  {journal.journalTitle}
+                </h2>
               </div>
             </div>
 
-            {/* Right Main Panel: Individual Chapter Field Journal (8 cols) */}
-            <div className="lg:col-span-8 bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 border-amber-400 shadow-2xl flex flex-col gap-6">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b-2 border-slate-100 pb-4">
-                <div className="flex items-center gap-4">
-                  {/* Animated Microscopic Specimen Scan */}
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-3 border-amber-400 shadow-lg shrink-0 bg-black relative ring-2 ring-amber-200">
-                    <img
-                      src={CHAPTER_GIF_MAP[activeChapter.chapterId] || cottonZoomGif}
-                      alt={journal.journalTitle}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-0 inset-x-0 bg-black/70 py-0.5 text-center text-[8px] font-mono font-black text-amber-300">
-                      🔬 SCAN
-                    </div>
-                  </div>
+            <button
+              onClick={handlePronounceChapter}
+              className="p-2.5 bg-slate-100 hover:bg-slate-200 rounded-2xl text-slate-700 cursor-pointer self-start sm:self-center transition-all active:scale-95 shadow-xs"
+              title="Hear Pip read this chapter's field journal aloud"
+            >
+              <Volume2 className="w-5 h-5 text-indigo-600" />
+            </button>
+          </div>
 
-                  <div>
-                    <span className="text-xs font-black uppercase text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full inline-block mb-1.5">
-                      {activeCourse.courseName} • Chapter {activeChapter.chapterNumber}
-                    </span>
-                    <h2 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                      {journal.journalTitle} {activeChapter.icon}
-                    </h2>
-                  </div>
-                </div>
+          {/* ── STRICTLY RELEVANT PRACTICAL SPECIMEN VIEWPORT (Large Hero) ── */}
+          <div className="w-full relative rounded-3xl bg-slate-950 border-4 border-indigo-400 overflow-hidden shadow-xl ring-4 ring-indigo-200/50 flex flex-col items-center justify-center">
+            <div className="w-full h-64 sm:h-72 md:h-80 relative overflow-hidden flex items-center justify-center">
+              <img
+                src={currentAsset.src}
+                alt={journal.journalTitle}
+                className="w-full h-full object-cover"
+              />
 
-                <button
-                  onClick={handlePronounceChapter}
-                  className="p-2 bg-slate-100 hover:bg-slate-200 rounded-2xl text-slate-700 cursor-pointer self-start sm:self-center transition-all active:scale-95"
-                  title="Read Journal Brief Aloud"
-                >
-                  <Volume2 className="w-5 h-5 text-indigo-600" />
-                </button>
+              {/* Optical Reticle */}
+              <div className="absolute inset-0 pointer-events-none border border-sky-400/25 flex items-center justify-center">
+                <div className="w-full h-[1px] bg-sky-400/20 absolute" />
+                <div className="h-full w-[1px] bg-sky-400/20 absolute" />
+                <div className="w-36 h-36 rounded-full border border-sky-400/30 absolute" />
               </div>
 
-              <p className="text-xs sm:text-sm font-bold text-slate-600 leading-relaxed">
-                {journal.fieldBrief}
-              </p>
+              {/* Top Badge */}
+              <div className="absolute top-3 right-3 bg-black/85 backdrop-blur-md px-3.5 py-1 rounded-xl border border-sky-400/50 text-[11px] font-mono font-black text-sky-300 shadow-md">
+                {currentAsset.badge}
+              </div>
 
-              {/* Specimen Fact Matrix (3 Cards) */}
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
-                  <span>Core Specimen Discoveries</span>
+              {/* Bottom HUD */}
+              <div className="absolute bottom-3 inset-x-3 bg-black/85 backdrop-blur-md rounded-2xl py-1.5 px-3.5 text-center text-xs font-mono font-black text-white flex items-center justify-between shadow-md">
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>CALIBRATED PRACTICAL SPECIMEN</span>
+                </div>
+                <span className="text-amber-300 text-[11px] hidden sm:inline">{currentAsset.scaleNote}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Field Brief */}
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block mb-1">
+              Field Investigation Brief:
+            </span>
+            <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed">
+              {journal.fieldBrief}
+            </p>
+          </div>
+
+          {/* Golden Science Law */}
+          {activeChapter.chapterIntro?.goldenLaw && (
+            <div className="p-4 bg-amber-50 rounded-2xl border-2 border-amber-300 flex items-start gap-3 shadow-xs">
+              <Zap className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <span className="text-[11px] font-black uppercase text-amber-800 tracking-wider block">
+                  Core Science Law:
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {journal.specimenFacts.map((f, fIdx) => (
-                    <div key={fIdx} className="p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1.5 shadow-2xs">
-                      <span className="text-2xl">{f.icon}</span>
-                      <span className="text-xs font-black text-amber-950">{f.title}</span>
-                      <p className="text-[11px] font-bold text-slate-600 leading-snug">{f.detail}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs sm:text-sm font-black text-amber-950 leading-snug mt-0.5">
+                  {activeChapter.chapterIntro.goldenLaw}
+                </p>
               </div>
+            </div>
+          )}
 
-              {/* Hands-On DIY Science Experiment */}
-              <div className="p-5 bg-indigo-50 rounded-3xl border-3 border-indigo-200 flex flex-col gap-3 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
-                    <FlaskConical className="w-4 h-4 text-indigo-600" />
-                    <span>Hands-On Mini Experiment: {journal.handsOnExperiment.title}</span>
-                  </span>
+          {/* Core Specimen Discoveries (3-Card Matrix) */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Chapter Specimen Discoveries ({journal.specimenFacts.length} Observations)</span>
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {journal.specimenFacts.map((f, fIdx) => (
+                <div key={fIdx} className="p-4 bg-gradient-to-tr from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1 shadow-xs">
+                  <span className="text-2xl">{f.icon}</span>
+                  <span className="text-xs font-black text-amber-950">{f.title}</span>
+                  <p className="text-[11px] font-bold text-slate-600 leading-snug mt-0.5">{f.detail}</p>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                <div className="text-xs font-bold text-slate-700 flex flex-col gap-1.5">
-                  <p>
-                    <span className="text-indigo-950 font-black">🧪 Materials Needed: </span>
-                    {journal.handsOnExperiment.materialsNeeded.join(', ')}
-                  </p>
-                  <p>
-                    <span className="text-indigo-950 font-black">📋 Step-by-Step Procedure: </span>
-                    {journal.handsOnExperiment.procedure}
-                  </p>
-                  <div className="p-3 bg-emerald-100 rounded-2xl text-xs font-black text-emerald-950 border border-emerald-300 mt-1">
-                    Expected Result: {journal.handsOnExperiment.expectedObservation}
-                  </div>
-                </div>
+          {/* Hands-On DIY Science Experiment */}
+          <div className="p-5 bg-indigo-50/90 rounded-3xl border-3 border-indigo-200 flex flex-col gap-3 shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
+                <FlaskConical className="w-4 h-4 text-indigo-600" />
+                <span>Hands-On Mini Experiment: {journal.handsOnExperiment.title}</span>
+              </span>
+            </div>
+
+            <div className="text-xs font-bold text-slate-700 flex flex-col gap-2">
+              <p>
+                <span className="text-indigo-950 font-black">🧪 Materials Needed: </span>
+                {journal.handsOnExperiment.materialsNeeded.join(', ')}
+              </p>
+              <p>
+                <span className="text-indigo-950 font-black">📋 Step-by-Step Procedure: </span>
+                {journal.handsOnExperiment.procedure}
+              </p>
+              <div className="p-3 bg-emerald-100 rounded-2xl text-xs font-black text-emerald-950 border border-emerald-300">
+                ✅ Expected Observation: {journal.handsOnExperiment.expectedObservation}
               </div>
             </div>
           </div>
         </div>
-      )}
+      </main>
     </div>
   );
 };
