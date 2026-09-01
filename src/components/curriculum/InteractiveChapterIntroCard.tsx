@@ -90,7 +90,7 @@ const IMAGE_MAP: Record<string, string> = {
 };
 
 interface Props {
-  chapterData: CourseChapter;
+  chapterData?: CourseChapter;
   onStartLab: () => void;
   accentBorderColor?: string;
 }
@@ -104,17 +104,17 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
   const [isChallengePassed, setIsChallengePassed] = useState(false);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
 
-  const intro = chapterData?.chapterIntro || {} as any;
-  const journal = chapterData?.fieldJournal || {} as any;
+  const intro = chapterData?.chapterIntro || ({} as any);
+  const journal = chapterData?.fieldJournal || ({} as any);
 
-  const conceptSteps = intro.conceptSteps || [];
-  const checklist: string[] = intro.learningChecklist || intro.learningRoadmap || [
+  const conceptSteps = intro?.conceptSteps || [];
+  const checklist: string[] = intro?.learningChecklist || intro?.learningRoadmap || [
     'Explore foundational scientific principles and real-world mechanisms.',
     'Observe microscopic specimens and material properties.',
     'Conduct hands-on experiments in the laboratory simulator.',
   ];
 
-  const challenge = intro.thinkFastChallenge || intro.pipThinkFastChallenge || {
+  const challenge = intro?.thinkFastChallenge || intro?.pipThinkFastChallenge || {
     question: 'What is the key science principle discovered in this chapter?',
     options: [
       { text: 'The material structure determines its properties and uses', isCorrect: true },
@@ -123,9 +123,17 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
     explanation: 'Every material has a unique microscopic structure that gives it specific properties!',
   };
 
-  const reflectionPrompt = reflectionPrompt || journal.journalBadgeQuestion || 'What was your most exciting discovery in this chapter?';
-  const facts = journal.specimenFacts || [];
-  const handsOn = journal.handsOnExperiment || {
+  const challengeOptions = challenge?.options || [
+    { text: 'The material structure determines its properties and uses', isCorrect: true },
+    { text: 'Materials behave completely randomly', isCorrect: false },
+  ];
+
+  const reflectionPrompt =
+    journal?.journalReflectionBadgePrompt ||
+    journal?.journalBadgeQuestion ||
+    'What was your most exciting discovery in this chapter?';
+  const facts = journal?.specimenFacts || [];
+  const handsOn = journal?.handsOnExperiment || {
     title: 'Hands-on Science Activity',
     materialsNeeded: ['Household items', 'Notebook'],
     procedure: 'Observe everyday materials around your home.',
@@ -137,7 +145,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
     if (isCorrect) {
       sounds.fanfare();
       setIsChallengePassed(true);
-      voiceAssistant.speak(`Brilliant discovery, Young Scientist! ${challenge.explanation}`);
+      voiceAssistant.speak(`Brilliant discovery, Young Scientist! ${challenge?.explanation || ''}`);
     } else {
       sounds.boing();
       voiceAssistant.speak('Look closely at the scientific concepts above and try again!');
@@ -158,10 +166,10 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
             <span className="px-3.5 py-1 rounded-full bg-indigo-100 text-indigo-950 font-black text-xs">
-              {chapterData.syllabusRef} • Chapter {chapterData.chapterNumber}
+              {chapterData?.syllabusRef || 'CBSE Class 5 EVS'} • Chapter {chapterData?.chapterNumber || 1}
             </span>
             <button
-              onClick={() => handleReadAloud(`${intro.title}. ${intro.hookScene} ${intro.bigGuidingQuestion}`)}
+              onClick={() => handleReadAloud(`${intro?.title || ''}. ${intro?.hookScene || ''} ${intro?.bigGuidingQuestion || ''}`)}
               className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer transition-all active:scale-95 shadow-xs"
               title="Listen to Pip Read Intro Aloud"
             >
@@ -180,85 +188,85 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            {intro.title} {chapterData.icon}
+            {intro?.title || chapterData?.chapterTitle || 'Chapter Science Foundation'} {chapterData?.icon || '🔬'}
           </h1>
 
           <p className="text-xs sm:text-sm font-bold text-slate-600 mt-2 leading-relaxed">
-            {intro.hookScene}
+            {intro?.hookScene || 'Explore the fundamental scientific concepts behind everyday materials and environments.'}
           </p>
 
           <div className="mt-3 p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-300 text-xs sm:text-sm font-black text-amber-950 flex items-start gap-2.5 shadow-2xs">
             <Zap className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <span>Big Question: {intro.bigGuidingQuestion}</span>
+            <span>Big Question: {intro?.bigGuidingQuestion || 'Why do materials behave differently?'}</span>
           </div>
         </div>
       </div>
 
       {/* ── Multi-Step Visual Concept Cards Taught by Pip ── */}
-      <div className="w-full flex flex-col gap-4">
-        <span className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5 ml-2">
-          <Sparkles className="w-4 h-4 text-amber-500" />
-          <span>Foundational Science Lessons (Taught by Pip)</span>
-        </span>
+      {conceptSteps.length > 0 && (
+        <div className="w-full flex flex-col gap-4">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5 ml-2">
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <span>Foundational Science Lessons (Taught by Pip)</span>
+          </span>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {conceptSteps.map((step, sIdx) => {
-            const imgSrc = IMAGE_MAP[step.imageAsset] || rawCottonImg;
-            return (
-              <div
-                key={sIdx}
-                className="p-5 rounded-3xl bg-white/95 backdrop-blur-md border-3 border-slate-200 shadow-md flex flex-col justify-between gap-3 hover:border-indigo-300 transition-all"
-              >
-                <div>
-                  <div className="w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-200 shadow-inner bg-slate-950 mb-3 relative group">
-                    <img
-                      src={imgSrc}
-                      alt={step.conceptTitle}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <span className="absolute bottom-2 left-2 px-2.5 py-0.5 bg-slate-950/80 text-white rounded-lg text-[10px] font-mono font-bold backdrop-blur-xs">
-                      100x Micrograph / Specimen
-                    </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {conceptSteps.map((step, sIdx) => {
+              const localImg = step.imageAsset ? IMAGE_MAP[step.imageAsset] : null;
+              return (
+                <div
+                  key={sIdx}
+                  className="p-5 rounded-3xl bg-white/95 backdrop-blur-md border-3 border-slate-200 shadow-md flex flex-col justify-between gap-4"
+                >
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black uppercase tracking-wider text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full">
+                        Step {step.stepNumber}: {step.conceptTitle}
+                      </span>
+                      <button
+                        onClick={() => handleReadAloud(`${step.conceptTitle}. ${step.pipDialogue}`)}
+                        className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 cursor-pointer"
+                        title="Listen"
+                      >
+                        <Volume2 className="w-3.5 h-3.5 text-indigo-600" />
+                      </button>
+                    </div>
+
+                    {localImg && (
+                      <div className="w-full h-44 rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-950 relative shadow-inner">
+                        <img
+                          src={localImg}
+                          alt={step.conceptTitle}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+
+                    <p className="text-xs font-bold text-slate-600 leading-relaxed">
+                      {step.pipDialogue}
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <h3 className="text-sm sm:text-base font-black text-slate-900">
-                      Step {step.stepNumber}: {step.conceptTitle}
-                    </h3>
-                    <button
-                      onClick={() => handleReadAloud(`${step.conceptTitle}. ${step.pipDialogue}`)}
-                      className="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer"
-                      title="Read Lesson Step"
-                    >
-                      <Volume2 className="w-3.5 h-3.5 text-indigo-600" />
-                    </button>
+                  <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-300 text-[11px] font-black text-emerald-950 flex items-start gap-1.5 shadow-2xs">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span>{step.keyTakeaway}</span>
                   </div>
-
-                  <p className="text-xs font-bold text-slate-600 leading-relaxed">
-                    {step.pipDialogue}
-                  </p>
                 </div>
-
-                <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-300 text-[11px] font-black text-emerald-950 flex items-start gap-1.5 shadow-2xs">
-                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>{step.keyTakeaway}</span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── Golden Science Law & Learning Checklist ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Golden Law Card */}
         <div className="md:col-span-1 p-5 rounded-3xl bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 text-slate-950 border-3 border-amber-300 shadow-lg flex flex-col justify-between">
           <div>
             <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950/20 px-2.5 py-1 rounded-full text-slate-950 inline-block mb-2">
               ⭐ Golden Science Law
             </span>
             <h4 className="text-sm font-black leading-snug">
-              {intro.goldenLaw}
+              {intro?.goldenLaw || 'The Material structure determines its properties and practical uses!'}
             </h4>
           </div>
           <span className="text-[10px] font-bold opacity-80 mt-3 block">
@@ -266,7 +274,6 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
           </span>
         </div>
 
-        {/* Learning Roadmap Checklist */}
         <div className="md:col-span-2 p-5 rounded-3xl bg-white/95 backdrop-blur-md border-3 border-slate-200 shadow-md flex flex-col justify-between">
           <span className="text-xs font-black uppercase tracking-wider text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full w-fit mb-2">
             📋 What You Will Master
@@ -298,11 +305,11 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         </div>
 
         <h3 className="text-sm sm:text-base font-black text-slate-900 leading-snug">
-          {challenge.question}
+          {challenge?.question || 'Why do materials behave differently under force and weather?'}
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {challenge.options.map((opt, oIdx) => {
+          {challengeOptions.map((opt, oIdx) => {
             const isSelected = selectedOption === oIdx;
             return (
               <motion.button
@@ -327,21 +334,23 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
           })}
         </div>
 
-        {/* Launch Hands-On Simulator / Lab Button */}
-        <div className="flex justify-center mt-3">
+        {/* Enter Simulator Button */}
+        <div className="pt-3 border-t-2 border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span className="text-xs font-bold text-slate-500 text-center sm:text-left">
+            {isChallengePassed
+              ? '✨ Challenge unlocked! Launch the interactive laboratory below:'
+              : '💡 Answer Pip’s challenge or jump straight into the live interactive lab!'}
+          </span>
+
           <button
             onClick={() => {
-              sounds.pop();
+              sounds.fanfare();
               voiceAssistant.stop();
               onStartLab();
             }}
-            className={`px-10 py-4 rounded-2xl font-black text-sm sm:text-base shadow-xl cursor-pointer transition-all flex items-center gap-2.5 ${
-              isChallengePassed
-                ? 'bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 text-slate-950 active:scale-95 animate-pulse'
-                : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'
-            }`}
+            className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-slate-950 font-black text-sm rounded-2xl shadow-lg cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2 shrink-0"
           >
-            <span>🚀 Enter Hands-on Lab & Simulators ➔</span>
+            <span>Enter Interactive Lab 🔬</span>
             <ArrowRight className="w-5 h-5 stroke-[2.5]" />
           </button>
         </div>
@@ -361,7 +370,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-6 h-6 text-amber-600" />
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    {journal.journalTitle}
+                    {journal?.journalTitle || 'Chapter Field Journal'}
                   </h2>
                 </div>
                 <button
@@ -373,37 +382,42 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
               </div>
 
               <p className="text-xs sm:text-sm font-bold text-slate-600 leading-relaxed">
-                {journal.fieldBrief}
+                {journal?.fieldBrief || 'Record your scientific observations and field data.'}
               </p>
 
-              {/* Specimen Facts */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {facts.map((fact, fIdx) => (
-                  <div key={fIdx} className="p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1">
-                    <span className="text-2xl">{fact.icon}</span>
-                    <span className="text-xs font-black text-amber-950">{fact.title}</span>
-                    <p className="text-[11px] font-bold text-slate-600 leading-snug">{fact.detail}</p>
-                  </div>
-                ))}
-              </div>
+              {facts.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {facts.map((fact: any, fIdx: number) => (
+                    <div key={fIdx} className="p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1">
+                      <span className="text-2xl">{fact.icon || '🔬'}</span>
+                      <span className="text-xs font-black text-amber-950">{fact.title}</span>
+                      <p className="text-[11px] font-bold text-slate-600 leading-snug">{fact.detail || fact.fact}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Hands-on DIY Activity */}
               <div className="p-4 bg-indigo-50 rounded-2xl border-2 border-indigo-200 flex flex-col gap-2">
                 <span className="text-xs font-black uppercase text-indigo-900 flex items-center gap-1.5">
                   <FlaskConical className="w-4 h-4 text-indigo-600" />
-                  <span>{handsOn.title}</span>
+                  <span>{handsOn.title || 'Hands-on Science Activity'}</span>
                 </span>
-                <p className="text-xs font-bold text-slate-700">
-                  <span className="text-indigo-950">Materials: </span>
-                  {handsOn.materialsNeeded.join(', ')}
-                </p>
+                {handsOn.materialsNeeded && (
+                  <p className="text-xs font-bold text-slate-700">
+                    <span className="text-indigo-950">Materials: </span>
+                    {Array.isArray(handsOn.materialsNeeded) ? handsOn.materialsNeeded.join(', ') : handsOn.materialsNeeded}
+                  </p>
+                )}
                 <p className="text-xs font-bold text-slate-700">
                   <span className="text-indigo-950">Procedure: </span>
-                  {handsOn.procedure}
+                  {handsOn.procedure || handsOn.instructions || 'Perform the experiment in your home lab.'}
                 </p>
-                <div className="p-2.5 bg-emerald-100/70 rounded-xl text-xs font-black text-emerald-950 mt-1">
-                  Expected Result: {handsOn.expectedObservation}
-                </div>
+                {handsOn.expectedObservation && (
+                  <div className="p-2.5 bg-emerald-100/70 rounded-xl text-xs font-black text-emerald-950 mt-1">
+                    Expected Result: {handsOn.expectedObservation}
+                  </div>
+                )}
               </div>
 
               {/* Reflection Badge Prompt */}
