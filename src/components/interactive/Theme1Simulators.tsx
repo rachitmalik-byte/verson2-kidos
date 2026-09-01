@@ -1,3 +1,4 @@
+import { ThreeVelcroLab } from '@/components/three-lab/ThreeVelcroLab';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
@@ -656,7 +657,7 @@ export const SeedDispersalVelcroSim: React.FC<{ onCompleted?: () => void }> = ({
           <span className="text-xs font-black uppercase text-lime-400 bg-lime-950 px-3 py-1 rounded-full border border-lime-500/50">
             Microscope Lab: The Invention of Velcro (1948 by George de Mestral)
           </span>
-          <VectorVelcroMicroscopeGraphic />
+          <ThreeVelcroLab />
           <p className="text-xs text-slate-300 font-bold leading-relaxed text-center max-w-lg mt-1">
             Burdock seeds have hundreds of microscopic tiny hooks that grab onto fabric loops. George de Mestral manufactured nylon hook-and-loop tape, creating Velcro!
           </p>

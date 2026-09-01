@@ -1,3 +1,4 @@
+import { ThreeMoleculeLab } from '@/components/three-lab/ThreeMoleculeLab';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { MicroscopicZoomData, MicroscopicZoomTier } from '@/types/lessonEngine';

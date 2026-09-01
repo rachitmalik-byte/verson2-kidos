@@ -1,3 +1,4 @@
+import { ThreeAquariumSim } from '@/components/three-lab/ThreeAquariumSim';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
@@ -120,95 +121,10 @@ export const GhadisarStepwellWaterSim: React.FC<{ onCompleted?: () => void }> = 
 };
 
 /* ============================================================================
-   2. 🧪 DEAD SEA DENSITY & BUOYANCY SIMULATOR (WATER CHAPTER 3)
+   2. 🧪 DEAD SEA DENSITY & BUOYANCY SIMULATOR (WATER CHAPTER 3) — 3D THREE.JS LAB
    ============================================================================ */
 export const DensityBuoyancyDeadSeaSim: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
-  const [saltSpoons, setSaltSpoons] = useState<number>(0);
-
-  const handleAddSalt = () => {
-    sounds.pop();
-    const newCount = Math.min(6, saltSpoons + 1);
-    setSaltSpoons(newCount);
-
-    if (newCount >= 4) {
-      sounds.fanfare();
-      voiceAssistant.speak(
-        'Density Law Discovered! Adding salt makes water denser than the egg. In the Dead Sea with 300 grams of salt per liter, even humans float effortlessly without swimming!'
-      );
-      if (onCompleted) onCompleted();
-    }
-  };
-
-  const handleReset = () => {
-    sounds.pop();
-    setSaltSpoons(0);
-  };
-
-  const eggY = saltSpoons >= 4 ? -60 : saltSpoons * -12;
-  const waterDensity = (1.0 + saltSpoons * 0.05).toFixed(2);
-
-  return (
-    <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-teal-400 shadow-xl flex flex-col items-center">
-      <h3 className="text-xl font-black text-slate-900 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-        Dead Sea Salt Density & Floating Egg Physics Lab
-      </h3>
-      <p className="text-xs sm:text-sm text-slate-600 font-bold mb-4 text-center max-w-md">
-        Why does a fresh egg sink in tap water, but float when salt is added? Test density and buoyancy!
-      </p>
-
-      <div className="relative w-64 h-72 rounded-b-3xl border-4 border-t-0 border-teal-400 bg-gradient-to-b from-sky-100 to-teal-200 shadow-2xl flex flex-col justify-end items-center p-4 overflow-hidden">
-        {saltSpoons > 0 && (
-          <div className="absolute inset-0 pointer-events-none opacity-40">
-            {[...Array(saltSpoons * 8)].map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  left: `${(i * 13) % 90}%`,
-                  top: `${(i * 17) % 80 + 10}%`,
-                }}
-                className="absolute w-1.5 h-1.5 bg-white rounded-full shadow-xs"
-              />
-            ))}
-          </div>
-        )}
-
-        <motion.div
-          animate={{ y: eggY }}
-          transition={{ type: 'spring', stiffness: 80, damping: 12 }}
-          className="relative z-10 flex flex-col items-center"
-        >
-          <span className="text-5xl filter drop-shadow-md">🥚</span>
-          <span className="text-[10px] font-black bg-white/90 text-teal-950 px-2 py-0.5 rounded-full mt-1 shadow-xs">
-            {saltSpoons >= 4 ? 'Floating at Top!' : saltSpoons > 0 ? 'Rising...' : 'Sunken at Bottom'}
-          </span>
-        </motion.div>
-
-        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-xl border border-teal-300 text-[10px] font-black text-teal-900">
-          Water Density: {waterDensity} g/cm³
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
-        <button
-          onClick={handleAddSalt}
-          disabled={saltSpoons >= 6}
-          className="px-7 py-3.5 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs sm:text-sm shadow-md cursor-pointer transition-all active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
-        >
-          <span>🧂 Add Spoon of Salt ({saltSpoons}/6)</span>
-        </button>
-
-        {saltSpoons > 0 && (
-          <button
-            onClick={handleReset}
-            className="px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs border border-slate-300 cursor-pointer flex items-center gap-1"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset Fresh Water</span>
-          </button>
-        )}
-      </div>
-    </div>
-  );
+  return <ThreeAquariumSim onCompleted={onCompleted} />;
 };
 
 /* ============================================================================
