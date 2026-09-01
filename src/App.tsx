@@ -61,6 +61,8 @@ export function App() {
           <Route path="/chapter-hub" element={<ChapterHub />} />
           <Route path="/video-lab" element={<VideoLabPage />} />
           <Route path="/teacher-studio" element={<TeacherStudio />} />
+          <Route path="/teacher/studio" element={<TeacherStudio />} />
+          <Route path="/teacher" element={<TeacherStudio />} />
           <Route path="/discovery-book" element={<DiscoveryBook />} />
           <Route path="/guidebook" element={<DigitalGuidebook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />

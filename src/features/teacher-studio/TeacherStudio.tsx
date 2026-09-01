@@ -5,11 +5,6 @@ import type {
   LessonMissionConfig,
   LessonStepData,
   ActivityType,
-  SortingItem,
-  SortingTray,
-  MatchingPairItem,
-  TensileSpecimen,
-  McqOption,
 } from '@/types/lessonEngine';
 import { ActivityRenderer } from '@/components/engine/ActivityRenderer';
 import { generateLessonFromPrompt, generateFallbackLessonConfig } from '@/lib/geminiService';
@@ -18,14 +13,12 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import {
   Sparkles,
   ArrowLeft,
-  Play,
   RotateCcw,
   Plus,
   Trash2,
   Copy,
   Check,
   Smartphone,
-  Tablet,
   Monitor,
   Wand2,
   BookOpen,
@@ -38,322 +31,273 @@ import {
   Scale,
   FileCode,
   Lightbulb,
+  Home,
+  ChevronRight,
+  PlusCircle,
+  Play,
 } from 'lucide-react';
 
-const ACTIVITY_TYPES: { type: ActivityType; label: string; icon: string; description: string }[] = [
-  { type: 'water_absorption_lab', label: 'Water Absorption Lab', icon: '💧', description: 'Spray water droplets to compare absorbent vs waterproof materials' },
-  { type: 'microscopic_zoom_viewer', label: 'Microscope Studio', icon: '🔬', description: 'Interactive progressive magnifications (1x, 40x, 400x, 1500x) with scale bars' },
-  { type: 'sorting_tray', label: 'Classification Sorting Trays', icon: '🗂️', description: 'Drag or tap specimens into classification trays (Natural, Synthetic, etc.)' },
-  { type: 'tensile_strength_rig', label: 'Tensile Strength Rig', icon: '⚖️', description: 'Add weight loads to test material tensile strength and snapping points' },
-  { type: 'matching_pairs', label: 'Matching Pairs Game', icon: '🔗', description: 'Connect everyday objects to their physical properties and uses' },
-  { type: 'mcq_assessment', label: 'Challenge MCQ Quiz', icon: '❓', description: 'Formative questions with instant feedback and science explanations' },
-  { type: 'scenario_sim', label: 'Scenario Simulation', icon: '🌤️', description: 'Evaluate material performance under rain, heat, or fire conditions' },
-  { type: 'interactive_diagram', label: 'Interactive Diagram', icon: '🗺️', description: 'Clickable hotspot diagram to explore structural components' },
-  { type: 'read_aloud_coach', label: 'Speech Fluency Coach', icon: '🗣️', description: 'Voice coaching for correct scientific terminology pronunciation' },
-  { type: 'concept_summary', label: 'Golden Law Synthesis', icon: '⚡', description: '3-Pillar summary: Material ➔ Property ➔ Real-World Use' },
+const ACTIVITY_CATALOG: { type: ActivityType; label: string; icon: string; desc: string }[] = [
+  { type: 'water_absorption_lab', label: 'Water Absorption Lab', icon: '💧', desc: 'Spray test to compare absorbent vs waterproof materials' },
+  { type: 'microscopic_zoom_viewer', label: 'Microscope Studio', icon: '🔬', desc: 'Interactive magnifications (1x, 100x, 500x) with real scale bars' },
+  { type: 'sorting_tray', label: 'Classification Sorting Trays', icon: '🗂️', desc: 'Drag or tap specimens into classification groups' },
+  { type: 'tensile_strength_rig', label: 'Tensile Strength Rig', icon: '⚖️', desc: 'Add weight loads to test tensile limits and snapping points' },
+  { type: 'matching_pairs', label: 'Matching Pairs Game', icon: '🔗', desc: 'Connect everyday objects to their scientific superpowers' },
+  { type: 'mcq_assessment', label: 'Inquiry Challenge Quiz', icon: '❓', desc: 'Formative questions with instant feedback and explanations' },
+  { type: 'scenario_sim', label: 'Interactive Scenario Lab', icon: '🌤️', desc: 'Evaluate material performance under simulated conditions' },
+  { type: 'interactive_diagram', label: 'Interactive Diagram', icon: '🗺️', desc: 'Clickable diagram stages with hotspots' },
+  { type: 'read_aloud_coach', label: 'Speech Fluency Coach', icon: '🗣️', desc: 'Voice coaching for scientific vocabulary' },
+  { type: 'concept_summary', label: 'Golden Law Synthesis', icon: '⚡', desc: '3-Pillar summary: Material ➔ Property ➔ Use' },
 ];
 
-const PRESET_TEMPLATES = [
-  { label: '💧 Water Cycle & Evaporation', query: 'water cycle evaporation and condensation' },
-  { label: '🌿 Natural vs Synthetic Polymers', query: 'natural vs synthetic materials cotton nylon polyester' },
-  { label: '🐾 Super Senses & Living World', query: 'animal senses ant pheromones eagle eyesight snake vibrations' },
-  { label: '⛰️ Shelter, Mountains & Pashmina', query: 'pashmina wool changpa tribe mountain insulation' },
-  { label: '⚡ Electricity & Circuit Conductors', query: 'electrical conductors insulators copper wire pvc' },
-];
+function createBlankStep(type: ActivityType, index: number): LessonStepData {
+  switch (type) {
+    case 'water_absorption_lab':
+      return {
+        id: `step-${Date.now()}`,
+        type: 'water_absorption_lab',
+        title: 'Water Absorption Testing Lab',
+        subtitle: 'Observe how natural vs synthetic materials react to moisture',
+        pipPrompt: 'Spray water droplets onto each fabric to see if it absorbs moisture or beads off!',
+        specimens: [
+          { id: 'mat-1', name: 'Cotton Swatch', materialType: 'cotton', category: 'Natural', dryImage: '', wetImage: '', isHydrophobic: false, absorptionRateSec: 2, description: 'Porous cellulose plant fibers absorb water rapidly', microscopicNote: 'Hollow ribbon fibers soak up moisture' },
+          { id: 'mat-2', name: 'Polyester Swatch', materialType: 'polyester', category: 'Synthetic', dryImage: '', wetImage: '', isHydrophobic: true, absorptionRateSec: 999, description: 'Smooth synthetic polymer repels water', microscopicNote: 'Tight extruded filament weave causes water to bead up' },
+        ],
+      };
+    case 'sorting_tray':
+      return {
+        id: `step-${Date.now()}`,
+        type: 'sorting_tray',
+        title: 'Material Classification Desk',
+        subtitle: 'Sort specimens into the correct scientific category',
+        pipPrompt: 'Help me classify each specimen into Natural or Synthetic!',
+        trays: [
+          { id: 'natural', title: 'From Nature', subtitle: 'Plants, animals, and earth', icon: '🌿', color: 'border-emerald-400 bg-emerald-50' },
+          { id: 'synthetic', title: 'Made in Labs', subtitle: 'Chemical polymers', icon: '🏭', color: 'border-sky-400 bg-sky-50' },
+        ],
+        items: [
+          { id: 'item-1', name: 'Cotton Boll', emoji: '🌿', correctTrayId: 'natural', feedback: 'Cotton grows naturally on plant bushes!' },
+          { id: 'item-2', name: 'Nylon Thread', emoji: '🧵', correctTrayId: 'synthetic', feedback: 'Nylon is synthesized from petroleum in factories!' },
+          { id: 'item-3', name: 'Sheep Wool', emoji: '🐑', correctTrayId: 'natural', feedback: 'Wool comes directly from sheep fleece!' },
+          { id: 'item-4', name: 'Plastic Bottle', emoji: '🫙', correctTrayId: 'synthetic', feedback: 'PET plastic is a synthetic polymer!' },
+        ],
+      };
+    case 'matching_pairs':
+      return {
+        id: `step-${Date.now()}`,
+        type: 'matching_pairs',
+        title: 'Match Superpowers to Uses',
+        subtitle: 'Connect each object to its primary scientific property',
+        instruction: 'Tap an object on the left, then tap its matching superpower on the right!',
+        pairs: [
+          { id: 'p-1', leftItem: 'Raincoat', leftIcon: '🧥', rightProperty: 'Waterproof & Lightweight', explanation: 'Polyester repels rainwater easily!' },
+          { id: 'p-2', leftItem: 'Climbing Rope', leftIcon: '🪢', rightProperty: 'High Tensile Strength', explanation: 'Nylon holds climbers safely!' },
+          { id: 'p-3', leftItem: 'Kettle Handle', leftIcon: '🫖', rightProperty: 'Heat-Resistant Thermoset', explanation: 'Bakelite plastic stays cool on stoves!' },
+        ],
+      };
+    case 'mcq_assessment':
+      return {
+        id: `step-${Date.now()}`,
+        type: 'mcq_assessment',
+        title: 'Science Discovery Checkpoint',
+        question: 'Why does synthetic polyester make a superior raincoat compared to 100% natural cotton?',
+        conceptBadge: 'Material Physics',
+        explanation: 'Synthetic polyester fibers are tightly extruded without hollow capillary pores, causing rainwater to bead up and roll off.',
+        options: [
+          { id: 'opt-1', text: 'Polyester has non-porous synthetic fibers that repel liquid water droplets', isCorrect: true, feedback: 'Correct! Water beads up and rolls off smooth polyester fibers.' },
+          { id: 'opt-2', text: 'Cotton is completely waterproof and never gets heavy in rain', isCorrect: false, feedback: 'Not quite! Cotton absorbs water until it gets soaked and heavy.' },
+        ],
+      };
+    case 'concept_summary':
+      return {
+        id: `step-${Date.now()}`,
+        type: 'concept_summary',
+        title: 'The Golden Science Law',
+        subtitle: 'Core Scientific Principle',
+        pipPrompt: 'Remember our golden law: What something is MADE FROM decides what it CAN DO!',
+        principles: [
+          { icon: '🧱', title: '1. Made From', description: 'Natural plants/animals or synthetic factory polymers' },
+          { icon: '⚡', title: '2. Superpower', description: 'Tensile strength, water repellency, heat resistance' },
+          { icon: '🎯', title: '3. Used For', description: 'Everyday applications matched to physical traits' },
+        ],
+      };
+    default:
+      return {
+        id: `step-${Date.now()}`,
+        type: 'microscopic_zoom_viewer',
+        title: 'Microscopic Zoom Studio',
+        subtitle: 'Examine specimen microstructure at multiple magnifications',
+        specimenName: 'Natural Plant Cellulose',
+        specimenCategory: 'Natural Specimen',
+        pipPrompt: 'Use the zoom reticle to inspect the fiber alignment under high optical magnification!',
+        tiers: [
+          { magnification: '1x Macro', label: 'Specimen Surface', image: '', scaleBarText: '10 mm', structuralFeatures: ['Visible texture', 'Surface fibers'], scientificExplanation: 'Macroscopic inspection shows woven natural filaments.' },
+          { magnification: '400x Optical', label: 'Microstructure', image: '', scaleBarText: '50 µm', structuralFeatures: ['Hollow capillary pores', 'Cellulose wall'], scientificExplanation: 'High-power light microscopy reveals fine cellular pores.' },
+        ],
+      };
+  }
+}
+
+const DEFAULT_CLEAN_LESSON: LessonMissionConfig = {
+  id: 'custom-lesson-1',
+  themeId: 'materials',
+  title: 'Natural vs Synthetic Materials Lab',
+  subtitle: 'Grade 5 Hands-On Science Discovery',
+  targetGrade: 5,
+  badgeReward: 'Polymer Pioneer ⭐',
+  steps: [
+    createBlankStep('water_absorption_lab', 0),
+    createBlankStep('sorting_tray', 1),
+    createBlankStep('mcq_assessment', 2),
+  ],
+};
 
 export function TeacherStudio() {
   const navigate = useNavigate();
 
-  // Active Draft Mission
-  const [missionConfig, setMissionConfig] = useState<LessonMissionConfig>(() => {
-    return generateFallbackLessonConfig('water cycle');
-  });
-
+  const [missionConfig, setMissionConfig] = useState<LessonMissionConfig>(DEFAULT_CLEAN_LESSON);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [copiedJson, setCopiedJson] = useState(false);
-  const [previewCompleted, setPreviewCompleted] = useState(false);
+  const [showAddDrawer, setShowAddDrawer] = useState(false);
+  const [activeTab, setActiveTab] = useState<'preview' | 'edit'>('preview');
+  const [copied, setCopied] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
-  const [editorMode, setEditorMode] = useState<'visual' | 'json'>('visual');
 
-  const currentStep = missionConfig.steps[activeStepIndex] || missionConfig.steps[0];
+  const steps = missionConfig?.steps || [];
+  const currentStep: LessonStepData = steps[activeStepIndex] || steps[0] || createBlankStep('water_absorption_lab', 0);
 
   // AI Generator
-  const handleAiGenerate = async (customPrompt?: string) => {
-    const promptToUse = customPrompt || aiPrompt;
-    if (!promptToUse.trim()) return;
-
+  const handleAiGenerate = async () => {
+    if (!aiPrompt.trim()) return;
     sounds.pop();
     setIsGenerating(true);
     voiceAssistant.stop();
 
     try {
-      const generated = await generateLessonFromPrompt(promptToUse, missionConfig.targetGrade || 5);
+      const generated = await generateLessonFromPrompt(aiPrompt, missionConfig.targetGrade || 5);
       sounds.fanfare();
       setMissionConfig(generated);
       setActiveStepIndex(0);
-      setPreviewCompleted(false);
       setPreviewKey((k) => k + 1);
-    } catch (err) {
+    } catch {
       sounds.boing();
+      const fallback = generateFallbackLessonConfig(aiPrompt);
+      setMissionConfig(fallback);
+      setActiveStepIndex(0);
     } finally {
       setIsGenerating(false);
     }
   };
 
-  // Add Step
   const handleAddStep = (type: ActivityType) => {
     sounds.pop();
-    const newStepId = `step-${Date.now()}`;
-    let newStep: LessonStepData;
-
-    switch (type) {
-      case 'water_absorption_lab':
-        newStep = {
-          id: newStepId,
-          type: 'water_absorption_lab',
-          title: 'Water Absorption Test',
-          subtitle: 'Hydrophobic vs Hydrophilic Surfaces',
-          pipPrompt: 'Spray water droplets to test which fabric absorbs moisture fastest!',
-          pipMood: 'curious',
-          learningGoal: 'Discover which materials create waterproof barriers',
-          specimens: [
-            {
-              id: 'cotton',
-              name: 'Cotton Swatch',
-              materialType: 'cotton',
-              category: 'Natural',
-              dryImage: 'cotton_swatch_clean.jpg',
-              wetImage: 'cotton_coat_soaked.jpg',
-              isHydrophobic: false,
-              absorptionRateSec: 2,
-              description: 'Natural porous cellulose fibers absorb water rapidly',
-              microscopicNote: 'Porous twisted ribbon fibers soak up moisture',
-            },
-            {
-              id: 'polyester',
-              name: 'Polyester Swatch',
-              materialType: 'polyester',
-              category: 'Synthetic',
-              dryImage: 'polyester_swatch_clean.jpg',
-              wetImage: 'polyester_raincoat_dry.jpg',
-              isHydrophobic: true,
-              absorptionRateSec: 999,
-              description: 'Synthetic non-porous polymer causes water to bead up',
-              microscopicNote: 'Smooth extruded synthetic filaments form a waterproof seal',
-            },
-          ],
-        };
-        break;
-
-      case 'microscopic_zoom_viewer':
-        newStep = {
-          id: newStepId,
-          type: 'microscopic_zoom_viewer',
-          title: 'Microscope Specimen Studio',
-          subtitle: 'Multi-Tier Optical Magnification',
-          pipPrompt: 'Adjust optical focus to examine microscopic structures!',
-          pipMood: 'explaining',
-          specimenName: 'Natural Cotton Boll',
-          specimenCategory: 'Natural',
-          tiers: [
-            {
-              magnification: '1x',
-              label: '1x Macro Specimen',
-              image: 'raw_cotton_boll.jpg',
-              scaleBarText: '10 mm',
-              structuralFeatures: ['Fluffy cotton boll', 'Protective seed coating'],
-              scientificExplanation: 'Natural cellulose hair growing on seed pods.',
-            },
-            {
-              magnification: '100x',
-              label: '400x High-Power Optical',
-              image: 'cotton_micrograph_100x.jpg',
-              scaleBarText: '50 µm',
-              structuralFeatures: ['Twisted hollow lumen', 'Flat ribbon shape'],
-              scientificExplanation: 'Cellulose fibers are flat ribbons with central air channels.',
-            },
-          ],
-        };
-        break;
-
-      case 'sorting_tray':
-        newStep = {
-          id: newStepId,
-          type: 'sorting_tray',
-          title: 'Classification Sorting Trays',
-          subtitle: 'Natural vs Synthetic Classification',
-          pipPrompt: 'Tap a specimen, then tap its matching tray!',
-          pipMood: 'curious',
-          trays: [
-            {
-              id: 'natural',
-              title: '🌿 From Nature',
-              icon: '🌿',
-              themeColor: 'sage',
-              allowedCategories: ['natural'],
-              description: 'Harvested from plants, animals, or soil',
-            },
-            {
-              id: 'synthetic',
-              title: '🏭 Human-Made',
-              icon: '🏭',
-              themeColor: 'sky',
-              allowedCategories: ['synthetic'],
-              description: 'Synthesized from petrochemicals in factories',
-            },
-          ],
-          items: [
-            { id: 'item-1', name: 'Cotton Boll', icon: '🌿', category: 'natural', hint: 'Harvested from cotton plants!', originDetails: 'Plant cellulose' },
-            { id: 'item-2', name: 'Nylon Rope', icon: '🧵', category: 'synthetic', hint: 'Synthesized in a chemical plant!', originDetails: 'Petrochemical polymer' },
-            { id: 'item-3', name: 'Sheep Wool', icon: '🐑', category: 'natural', hint: 'Sheared from sheep fleece!', originDetails: 'Animal keratin' },
-            { id: 'item-4', name: 'Plastic Bottle', icon: '🧴', category: 'synthetic', hint: 'Molded from PET polymers!', originDetails: 'Synthetic polymer' },
-          ],
-        };
-        break;
-
-      case 'tensile_strength_rig':
-        newStep = {
-          id: newStepId,
-          type: 'tensile_strength_rig',
-          title: 'Tensile Strength Testing Rig',
-          subtitle: 'Load-Bearing Suspension Test',
-          pipPrompt: 'Hang heavier weights on each cord to test when it snaps!',
-          pipMood: 'thinking',
-          specimens: [
-            { id: 'cotton', name: 'Cotton Thread', materialType: 'cotton', maxWeightGrams: 50, breakBehavior: 'snaps', description: 'Breaks at 50g load' },
-            { id: 'nylon', name: 'Nylon Cord', materialType: 'nylon', maxWeightGrams: 500, breakBehavior: 'holds', description: 'Holds 500g load easily' },
-          ],
-        };
-        break;
-
-      case 'mcq_assessment':
-        newStep = {
-          id: newStepId,
-          type: 'mcq_assessment',
-          title: 'Concept Challenge Checkpoint',
-          subtitle: 'Formative Assessment',
-          pipPrompt: 'What key scientific law did we discover today?',
-          pipMood: 'celebrating',
-          question: 'Why does cotton absorb water while polyester repels water?',
-          options: [
-            { text: 'Cotton has porous cellulose fibers that draw in water', isCorrect: true, feedback: 'Correct! Porous cellulose fibers soak up moisture easily.' },
-            { text: 'Polyester has tiny sponge holes inside', isCorrect: false, feedback: 'Incorrect! Polyester is a synthetic non-porous polymer.' },
-          ],
-          explanation: 'Molecular structure and porosity determine whether a material absorbs or repels liquids.',
-        };
-        break;
-
-      default:
-        newStep = {
-          id: newStepId,
-          type: 'concept_summary',
-          title: 'The Golden Science Law',
-          subtitle: 'Core Concept Synthesis',
-          pipPrompt: 'Remember our Golden Science Triangle!',
-          pipMood: 'celebrating',
-          conceptName: 'Material-Property-Use Relationship',
-          principles: [
-            { icon: '🧱', title: 'What it is Made From', description: 'Molecular structure determines physical traits.' },
-            { icon: '⚡', title: 'What it Can Do', description: 'Properties like strength, waterproofing, and heat resistance.' },
-            { icon: '🎯', title: 'What it is Used For', description: 'Practical everyday applications based on its properties.' },
-          ],
-        };
-    }
-
+    const newStep = createBlankStep(type, steps.length);
     setMissionConfig((prev) => ({
       ...prev,
       steps: [...prev.steps, newStep],
     }));
-    setActiveStepIndex(missionConfig.steps.length);
-  };
-
-  const handleDeleteStep = (idx: number) => {
-    if (missionConfig.steps.length <= 1) return;
-    sounds.pop();
-    setMissionConfig((prev) => ({
-      ...prev,
-      steps: prev.steps.filter((_, i) => i !== idx),
-    }));
-    setActiveStepIndex(Math.max(0, idx - 1));
-  };
-
-  const handleUpdateCurrentStep = (updates: Partial<LessonStepData>) => {
-    setMissionConfig((prev) => {
-      const nextSteps = [...prev.steps];
-      nextSteps[activeStepIndex] = {
-        ...nextSteps[activeStepIndex],
-        ...updates,
-      } as LessonStepData;
-      return { ...prev, steps: nextSteps };
-    });
+    setActiveStepIndex(steps.length);
+    setShowAddDrawer(false);
     setPreviewKey((k) => k + 1);
   };
 
-  const handleCopyJson = () => {
+  const handleDeleteStep = (index: number) => {
+    if (steps.length <= 1) {
+      alert('A lesson must have at least 1 activity step.');
+      return;
+    }
     sounds.pop();
+    const updated = steps.filter((_, i) => i !== index);
+    setMissionConfig((prev) => ({ ...prev, steps: updated }));
+    setActiveStepIndex(Math.max(0, index - 1));
+    setPreviewKey((k) => k + 1);
+  };
+
+  const handleUpdateStepTitle = (title: string) => {
+    setMissionConfig((prev) => {
+      const updated = [...prev.steps];
+      if (updated[activeStepIndex]) {
+        updated[activeStepIndex] = { ...updated[activeStepIndex], title };
+      }
+      return { ...prev, steps: updated };
+    });
+  };
+
+  const handleCopyJson = () => {
+    sounds.sparkle();
     navigator.clipboard.writeText(JSON.stringify(missionConfig, null, 2));
-    setCopiedJson(true);
-    setTimeout(() => setCopiedJson(false), 2000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans select-none overflow-x-hidden">
-      {/* ── 1. Minimal Top Navigation Bar ── */}
-      <header className="w-full bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3 flex items-center justify-between gap-3 sticky top-0 z-40">
+    <div className="min-h-screen w-full bg-slate-50 text-slate-900 font-sans flex flex-col select-none">
+      {/* ── Top Bar (Minimal, Apple-Clean) ── */}
+      <header className="w-full bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between gap-4 z-30 shadow-xs">
+        {/* Left: Navigation & Studio Title */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              sounds.pop();
-              navigate('/chapter-hub');
-            }}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 text-xs font-bold"
-            title="Exit to Chapter Hub"
+            onClick={() => navigate('/subjects')}
+            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer transition-all"
+            title="Return to Subjects"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Chapter Hub</span>
+            <Home className="w-4 h-4" />
           </button>
 
           <div>
             <div className="flex items-center gap-2">
-              <FlaskConical className="w-4 h-4 text-emerald-400" />
-              <h1 className="text-sm sm:text-base font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Teacher Activity Studio 🔬
-              </h1>
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-500/40">
-                Grade {missionConfig.targetGrade || 5}
+              <span className="text-sm font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                Teacher Activity Studio 🎓
+              </span>
+              <span className="text-[10px] font-black uppercase text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
+                CBSE Grade 5
               </span>
             </div>
+            <span className="text-[11px] font-bold text-slate-400 block -mt-0.5 truncate max-w-xs">
+              {missionConfig.title}
+            </span>
           </div>
         </div>
 
-        {/* Device Viewport Toggle & Actions */}
+        {/* Center: AI Quick-Prompt */}
+        <div className="hidden md:flex items-center gap-2 max-w-md w-full bg-slate-100 rounded-2xl px-3 py-1.5 border border-slate-200 focus-within:border-indigo-500 focus-within:bg-white transition-all">
+          <Wand2 className="w-4 h-4 text-indigo-600 shrink-0" />
+          <input
+            type="text"
+            value={aiPrompt}
+            onChange={(e) => setAiPrompt(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAiGenerate()}
+            placeholder="Type any topic (e.g. Friction, Digestion, Water Cycle)..."
+            className="w-full text-xs font-bold bg-transparent outline-none text-slate-800 placeholder:text-slate-400"
+          />
+          <button
+            onClick={handleAiGenerate}
+            disabled={isGenerating || !aiPrompt.trim()}
+            className="px-3 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white font-black text-xs cursor-pointer shrink-0 transition-all"
+          >
+            {isGenerating ? 'Building...' : 'Generate ✨'}
+          </button>
+        </div>
+
+        {/* Right: Actions */}
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+          {/* Device Switcher */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setPreviewDevice('desktop')}
-              className={`p-1.5 rounded-lg text-xs cursor-pointer transition-all ${
-                previewDevice === 'desktop' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                previewDevice === 'desktop' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
               title="Desktop View"
             >
               <Monitor className="w-3.5 h-3.5" />
             </button>
             <button
-              onClick={() => setPreviewDevice('tablet')}
-              className={`p-1.5 rounded-lg text-xs cursor-pointer transition-all ${
-                previewDevice === 'tablet' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
-              }`}
-              title="Tablet View"
-            >
-              <Tablet className="w-3.5 h-3.5" />
-            </button>
-            <button
               onClick={() => setPreviewDevice('mobile')}
-              className={`p-1.5 rounded-lg text-xs cursor-pointer transition-all ${
-                previewDevice === 'mobile' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                previewDevice === 'mobile' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
               title="Mobile View"
             >
@@ -363,234 +307,209 @@ export function TeacherStudio() {
 
           <button
             onClick={handleCopyJson}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 cursor-pointer border border-slate-700 transition-all active:scale-95"
-            title="Copy Lesson JSON"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs border border-slate-300 cursor-pointer"
           >
-            {copiedJson ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{copiedJson ? 'Copied!' : 'Export JSON'}</span>
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <FileCode className="w-3.5 h-3.5" />}
+            <span>{copied ? 'Copied!' : 'Export JSON'}</span>
           </button>
         </div>
       </header>
 
-      {/* ── 2. AI Quick-Lesson Generator Strip ── */}
-      <div className="w-full bg-slate-900 border-b border-slate-800 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex-1 min-w-[260px] flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-700 focus-within:border-indigo-500">
-          <Wand2 className="w-4 h-4 text-amber-400 shrink-0" />
-          <input
-            type="text"
-            value={aiPrompt}
-            onChange={(e) => setAiPrompt(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAiGenerate()}
-            placeholder="Type any science topic (e.g. 'Photosynthesis', 'States of Matter', 'Animal Senses')..."
-            className="w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-hidden font-bold"
-          />
-          <button
-            onClick={() => handleAiGenerate()}
-            disabled={isGenerating || !aiPrompt.trim()}
-            className="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-black text-xs cursor-pointer transition-all shrink-0"
-          >
-            {isGenerating ? 'Synthesizing...' : 'Generate AI Lesson ✨'}
-          </button>
-        </div>
-
-        {/* Quick Presets */}
-        <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Presets:</span>
-          {PRESET_TEMPLATES.map((tmpl, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setAiPrompt(tmpl.query);
-                handleAiGenerate(tmpl.query);
-              }}
-              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-bold shrink-0 cursor-pointer transition-all border border-slate-700"
-            >
-              {tmpl.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── 3. Main Workspace: Step Timeline + Editor + Live Interactive Preview ── */}
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
-        {/* Left Column: Step List & Visual Editor (5 cols) */}
-        <div className="lg:col-span-5 bg-slate-900 border-r border-slate-800 flex flex-col h-[calc(100vh-110px)] overflow-y-auto p-4 sm:p-5 gap-4">
-          {/* Step Sequence Timeline */}
+      {/* ── Main Workspace ── */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* ── Left Sidebar: Steps Timeline ── */}
+        <aside className="w-full md:w-72 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0 shadow-xs overflow-y-auto">
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5" />
-                <span>Lesson Activity Sequence ({missionConfig.steps.length} Steps)</span>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                Lesson Steps ({steps.length})
               </span>
+              <button
+                onClick={() => setShowAddDrawer(true)}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-black text-xs cursor-pointer transition-all"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add Step</span>
+              </button>
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-2">
-              {missionConfig.steps.map((st, sIdx) => {
-                const isSelected = sIdx === activeStepIndex;
-                const act = ACTIVITY_TYPES.find((a) => a.type === st.type);
+            {/* Step Pills */}
+            <div className="space-y-2">
+              {steps.map((step, idx) => {
+                const isSelected = idx === activeStepIndex;
+                const cat = ACTIVITY_CATALOG.find((c) => c.type === step.type);
+
                 return (
-                  <button
-                    key={st.id}
+                  <div
+                    key={step.id || idx}
                     onClick={() => {
                       sounds.pop();
-                      setActiveStepIndex(sIdx);
-                      setPreviewCompleted(false);
+                      setActiveStepIndex(idx);
                       setPreviewKey((k) => k + 1);
                     }}
-                    className={`px-3 py-2 rounded-xl border-2 text-left cursor-pointer transition-all shrink-0 flex items-center gap-2 ${
+                    className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between gap-2 ${
                       isSelected
-                        ? 'bg-indigo-600 border-indigo-400 text-white shadow-md scale-102 ring-2 ring-indigo-400/50'
-                        : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                        ? 'bg-indigo-50/80 border-indigo-600 text-indigo-950 shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    <span className="text-sm">{act?.icon || '🔬'}</span>
-                    <div className="min-w-0">
-                      <span className="text-[10px] opacity-75 font-mono block">Step {sIdx + 1}</span>
-                      <span className="text-xs font-black truncate block max-w-[110px]">{st.title}</span>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-lg shrink-0">{cat?.icon || '🔬'}</span>
+                      <div className="min-w-0">
+                        <span className="text-[10px] font-bold text-slate-400 block font-mono">Step {idx + 1}</span>
+                        <span className="text-xs font-black text-slate-800 truncate block">{step.title}</span>
+                      </div>
                     </div>
-                  </button>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteStep(idx);
+                      }}
+                      className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer transition-colors shrink-0"
+                      title="Delete step"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Add New Step Drawer Menu */}
-          <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
-            <span className="text-[11px] font-black uppercase tracking-wider text-indigo-300 block mb-2">
-              + Add Any Experiment or Activity:
+          {/* Quick Presets Footer */}
+          <div className="pt-4 border-t border-slate-200 mt-4">
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-2">
+              Quick CBSE Presets:
             </span>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-              {ACTIVITY_TYPES.map((act) => (
+            <div className="flex flex-col gap-1.5">
+              {[
+                { title: '🌿 Natural vs Synthetic', prompt: 'natural vs synthetic materials cotton nylon polyester' },
+                { title: '🦋 Super Senses & Living World', prompt: 'super senses ant pheromones eagle eyes snake hearing' },
+                { title: '🌊 Water Density & Buoyancy', prompt: 'water buoyancy floating sinking dead sea salt' },
+              ].map((p, i) => (
                 <button
-                  key={act.type}
-                  onClick={() => handleAddStep(act.type)}
-                  className="p-2 rounded-xl bg-slate-900 hover:bg-indigo-950/80 border border-slate-800 hover:border-indigo-500/60 text-left cursor-pointer transition-all flex items-center gap-2"
-                  title={act.description}
+                  key={i}
+                  onClick={() => {
+                    setAiPrompt(p.prompt);
+                    sounds.pop();
+                  }}
+                  className="text-left px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-[11px] font-bold text-slate-700 border border-slate-200 truncate cursor-pointer"
                 >
-                  <span className="text-lg">{act.icon}</span>
-                  <span className="text-[11px] font-bold text-slate-200 truncate">{act.label}</span>
+                  {p.title}
                 </button>
               ))}
             </div>
           </div>
+        </aside>
 
-          {/* Active Step Form Editor */}
-          <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3 flex-1">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <span className="text-xs font-black uppercase text-indigo-400">
-                Editing Step {activeStepIndex + 1}: {currentStep.type}
+        {/* ── Main Panel: Live Interactive Simulator & Editor ── */}
+        <main className="flex-1 bg-slate-100 p-4 sm:p-6 flex flex-col items-center justify-start overflow-y-auto">
+          {/* Editor Tabs & Step Header */}
+          <div className="w-full max-w-4xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 font-black text-xs font-mono">
+                Step {activeStepIndex + 1} of {steps.length}
               </span>
-              <button
-                onClick={() => handleDeleteStep(activeStepIndex)}
-                disabled={missionConfig.steps.length <= 1}
-                className="p-1 rounded-lg text-rose-400 hover:bg-rose-950 disabled:opacity-30 cursor-pointer transition-all"
-                title="Delete this step"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Title & Subtitle */}
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Activity Title</label>
               <input
                 type="text"
                 value={currentStep.title}
-                onChange={(e) => handleUpdateCurrentStep({ title: e.target.value })}
-                className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-hidden focus:border-indigo-500 font-bold"
+                onChange={(e) => handleUpdateStepTitle(e.target.value)}
+                className="text-sm font-black text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 outline-none px-1"
               />
             </div>
 
-            {/* Pip's Instructional Prompt */}
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Pip's Mascot Prompt (1-2 sentences)</label>
-              <textarea
-                rows={2}
-                value={currentStep.pipPrompt}
-                onChange={(e) => handleUpdateCurrentStep({ pipPrompt: e.target.value })}
-                className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-hidden focus:border-indigo-500 font-bold resize-none"
-              />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setPreviewKey((k) => k + 1);
+                }}
+                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset State</span>
+              </button>
             </div>
-
-            {/* Activity-Specific Controls */}
-            {currentStep.type === 'sorting_tray' && (
-              <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex flex-col gap-2">
-                <span className="text-[11px] font-black text-amber-300">🗂️ Sorting Trays Config:</span>
-                <p className="text-[10px] text-slate-400">
-                  Total Trays: <strong>{((currentStep as any).trays || []).length}</strong> | Total Items: <strong>{((currentStep as any).items || []).length}</strong>
-                </p>
-              </div>
-            )}
-
-            {currentStep.type === 'microscopic_zoom_viewer' && (
-              <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex flex-col gap-2">
-                <span className="text-[11px] font-black text-amber-300">🔬 Microscope Studio Config:</span>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-slate-400 font-bold">Specimen Name</label>
-                  <input
-                    type="text"
-                    value={(currentStep as any).specimenName || ''}
-                    onChange={(e) => handleUpdateCurrentStep({ specimenName: e.target.value } as any)}
-                    className="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
-                  />
-                </div>
-              </div>
-            )}
-
-            {currentStep.type === 'water_absorption_lab' && (
-              <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex flex-col gap-2">
-                <span className="text-[11px] font-black text-amber-300">💧 Water Absorption Lab:</span>
-                <p className="text-[10px] text-slate-400">
-                  Specimens configured: <strong>{((currentStep as any).specimens || []).length}</strong>
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Column: Interactive Live Simulator Preview (7 cols) */}
-        <div className="lg:col-span-7 bg-slate-950 flex flex-col h-[calc(100vh-110px)] overflow-y-auto p-4 sm:p-6 items-center justify-start">
-          <div className="w-full flex items-center justify-between mb-4 max-w-4xl">
-            <span className="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-              <Play className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Interactive Student Simulator (Live Preview)</span>
-            </span>
-
-            <button
-              onClick={() => {
-                sounds.pop();
-                setPreviewKey((k) => k + 1);
-                setPreviewCompleted(false);
-              }}
-              className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Restart Step</span>
-            </button>
           </div>
 
-          {/* Interactive Simulation Frame */}
+          {/* Device Viewport Canvas */}
           <div
-            className={`w-full transition-all duration-300 bg-slate-900/60 p-4 sm:p-6 rounded-[36px] border-3 border-slate-800 shadow-2xl flex flex-col items-center justify-center min-h-[500px] ${
+            className={`transition-all duration-300 flex flex-col items-center justify-center ${
               previewDevice === 'mobile'
-                ? 'max-w-sm'
-                : previewDevice === 'tablet'
-                ? 'max-w-2xl'
-                : 'max-w-4xl'
+                ? 'w-[380px] min-h-[640px] bg-slate-900 rounded-[44px] p-3 border-8 border-slate-800 shadow-2xl relative'
+                : 'w-full max-w-4xl bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 shadow-sm'
             }`}
           >
-            <ActivityRenderer
-              key={`${currentStep.id}-${previewKey}`}
-              stepData={currentStep}
-              onStepComplete={() => {
-                sounds.fanfare();
-                setPreviewCompleted(true);
-              }}
-              isCompleted={previewCompleted}
-            />
+            {previewDevice === 'mobile' ? (
+              <div className="w-full h-full bg-white rounded-[32px] overflow-y-auto p-4 flex flex-col items-center">
+                <ActivityRenderer
+                  key={`${currentStep.id}-${previewKey}`}
+                  stepData={currentStep}
+                  onComplete={() => sounds.fanfare()}
+                  onStepComplete={() => sounds.fanfare()}
+                />
+              </div>
+            ) : (
+              <div className="w-full flex flex-col items-center">
+                <ActivityRenderer
+                  key={`${currentStep.id}-${previewKey}`}
+                  stepData={currentStep}
+                  onComplete={() => sounds.fanfare()}
+                  onStepComplete={() => sounds.fanfare()}
+                />
+              </div>
+            )}
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
+
+      {/* ── Add Step Modal / Catalog Drawer ── */}
+      <AnimatePresence>
+        {showAddDrawer && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-2xl bg-white rounded-[32px] border-4 border-indigo-200 p-6 sm:p-8 shadow-2xl flex flex-col gap-4 max-h-[85vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    Choose Activity Engine Type 🔬
+                  </h3>
+                  <span className="text-xs font-bold text-slate-500">Pick any interactive experiment engine for this step</span>
+                </div>
+                <button
+                  onClick={() => setShowAddDrawer(false)}
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                {ACTIVITY_CATALOG.map((cat) => (
+                  <button
+                    key={cat.type}
+                    onClick={() => handleAddStep(cat.type)}
+                    className="p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 text-left transition-all cursor-pointer flex items-start gap-3 shadow-xs"
+                  >
+                    <span className="text-2xl p-2 bg-slate-50 rounded-xl border border-slate-200 shrink-0">
+                      {cat.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <h4 className="font-black text-xs sm:text-sm text-slate-900 mb-0.5">{cat.label}</h4>
+                      <p className="text-[11px] font-bold text-slate-500 leading-snug">{cat.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
