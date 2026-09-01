@@ -277,20 +277,9 @@ export const DiscoveryBook: React.FC = () => {
           <div className="md:col-span-7 bg-white p-6 md:p-8 rounded-3xl border-4 border-indigo-300 shadow-2xl flex flex-col justify-between h-[620px] overflow-y-auto">
             <div>
               {/* Header with live animated microscope ocular lens */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 pb-4 border-b-2 border-slate-100 mb-6">
-                <div className="flex items-center gap-4">
-                  {/* Live Animated Micro-Zoom Lens */}
-                  <div className="relative w-28 h-28 rounded-3xl bg-black border-4 border-indigo-500 overflow-hidden shadow-xl shrink-0 ring-4 ring-indigo-200">
-                    <img
-                      src={MATERIAL_GIF_MAP[selectedMaterial.id] || cottonZoomGif}
-                      alt={selectedMaterial.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-1 inset-x-1 bg-black/80 rounded-lg text-center text-[9px] font-mono font-black text-amber-300">
-                      🔬 LIVE ZOOM
-                    </div>
-                  </div>
-
+              {/* ── PROMINENT FULL-HERO LIVE ANIMATED MICRO-ZOOM SHOWCASE ── */}
+              <div className="w-full mb-6">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <div className="flex items-center gap-2">
                       <span
@@ -306,7 +295,7 @@ export const DiscoveryBook: React.FC = () => {
                         ({selectedMaterial.category})
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-1.5">
+                    <div className="flex items-center gap-2 mt-1">
                       <h2
                         className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
                         style={{ fontFamily: 'Nunito, sans-serif' }}
@@ -321,6 +310,36 @@ export const DiscoveryBook: React.FC = () => {
                         <Volume2 className="w-5 h-5" />
                       </button>
                     </div>
+                  </div>
+                </div>
+
+                {/* Massive Animated Microscope Screen (High-Definition Zoom) */}
+                <div className="relative w-full h-72 sm:h-80 rounded-3xl bg-slate-950 border-4 border-indigo-400 overflow-hidden shadow-2xl ring-4 ring-indigo-200/60 group flex items-center justify-center">
+                  <img
+                    src={MATERIAL_GIF_MAP[selectedMaterial.id] || cottonZoomGif}
+                    alt={selectedMaterial.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  
+                  {/* Optical Reticle Overlay */}
+                  <div className="absolute inset-0 pointer-events-none border border-sky-400/20 flex items-center justify-center">
+                    <div className="w-full h-[1px] bg-sky-400/20 absolute" />
+                    <div className="h-full w-[1px] bg-sky-400/20 absolute" />
+                    <div className="w-40 h-40 rounded-full border border-sky-400/30 absolute" />
+                  </div>
+
+                  {/* Top-Right Practical Scale Bar */}
+                  <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-xl border border-sky-400/40 text-[11px] font-mono font-black text-sky-300">
+                    🔬 Continuous Optical Zoom (1x ➔ 1,500x)
+                  </div>
+
+                  {/* Bottom HUD Tag */}
+                  <div className="absolute bottom-3 inset-x-3 bg-black/85 backdrop-blur-md rounded-2xl py-1.5 px-3 text-center text-xs font-mono font-black text-white flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>LIVE MICROSCOPIC LOOP</span>
+                    </div>
+                    <span className="text-amber-300 text-[11px]">Continuous Smooth Magnification 🎬</span>
                   </div>
                 </div>
               </div>

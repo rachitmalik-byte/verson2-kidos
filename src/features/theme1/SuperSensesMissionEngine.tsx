@@ -386,24 +386,31 @@ export function SuperSensesMissionEngine() {
                   </span>
 
                   <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                    {[100, 250, 500].map((z) => (
+                    {(num === 1
+                      ? [{ label: '1x Macro', val: 1 }, { label: '40x Stereo', val: 40 }, { label: '400x Optical', val: 400 }]
+                      : num === 2
+                      ? [{ label: '1x Macro', val: 1 }, { label: '30x Stereo', val: 30 }, { label: '350x SEM', val: 350 }]
+                      : num === 3
+                      ? [{ label: '1x Macro', val: 1 }, { label: '100x Optical', val: 100 }, { label: '600x Cell', val: 600 }]
+                      : [{ label: '1x Macro', val: 1 }, { label: '50x Stereo', val: 50 }, { label: '1,200x SEM', val: 1200 }]
+                    ).map((tier) => (
                       <button
-                        key={z}
+                        key={tier.val}
                         onClick={() => {
                           sounds.pop();
-                          setZoomLevel(z);
+                          setZoomLevel(tier.val);
                         }}
-                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                          zoomLevel === z ? 'bg-emerald-400 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          zoomLevel === tier.val ? 'bg-emerald-400 text-slate-950 shadow-md scale-105' : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        {z}x
+                        {tier.label}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-emerald-400/70">
+                <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full border-[10px] border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-emerald-400/80">
                   {num === 1 && <SpecimenAntAntennaSensilla zoom={zoomLevel} />}
                   {num === 2 && <SpecimenSnakeHollowFang zoom={zoomLevel} />}
                   {num === 3 && <SpecimenTonguePapillaeTasteBud zoom={zoomLevel} />}
