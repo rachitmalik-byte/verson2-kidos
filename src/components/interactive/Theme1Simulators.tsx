@@ -1,4 +1,5 @@
 import { ThreeVelcroLab } from '@/components/three-lab/ThreeVelcroLab';
+import { ThreeDigestionLab } from '@/components/three-lab/ThreeDigestionLab';
 import { ThreeDandelionSim } from '@/components/three-lab/ThreeDandelionSim';
 import { ThreeCoconutSim } from '@/components/three-lab/ThreeCoconutSim';
 import React, { useState } from 'react';
@@ -499,89 +500,21 @@ export const SnakeGroundVibrationSim: React.FC<{ onTested?: () => void }> = ({ o
 };
 
 /* ============================================================================
-   4. 👅 TONGUE TASTE MAP & DR. BEAUMONT DIGESTION LAB (CHAPTER 3)
+   4. 👅 TONGUE TASTE MAP & DR. BEAUMONT DIGESTION LAB (CHAPTER 3 - THREE.JS 3D)
    ============================================================================ */
 export const TongueTasteAndBeaumontSim: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
-  const [activeTaste, setActiveTaste] = useState<'sweet' | 'salty' | 'sour' | 'bitter'>('sweet');
-  const [chewCount, setChewCount] = useState(0);
-
-  const handleChew = () => {
-    sounds.pop();
-    const newCount = chewCount + 1;
-    setChewCount(newCount);
-
-    if (newCount >= 5) {
-      sounds.fanfare();
-      voiceAssistant.speak(
-        'Amazing! Chewing starch 30 times mixes saliva enzymes that break down starch into sweet maltose sugar!'
-      );
-      if (onCompleted) onCompleted();
-    }
-  };
-
   return (
-    <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-orange-400 shadow-xl flex flex-col items-center">
-      <h3 className="text-xl font-black text-slate-900 mb-2">Anatomical Tongue 4-Zone Taste Map</h3>
-      <p className="text-xs text-slate-600 font-bold mb-4 text-center max-w-md">
-        Tap each flavor zone to see where taste buds are most sensitive on the human tongue!
+    <div className="w-full bg-white p-5 sm:p-8 rounded-[36px] border-4 border-orange-400 shadow-xl flex flex-col items-center select-none font-sans">
+      <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-1 text-center" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        From Tasting to Digestion: 3D Physiology Lab 👅
+      </h3>
+      <p className="text-xs sm:text-sm text-slate-600 font-bold mb-5 text-center max-w-lg">
+        Explore the 4 primary taste receptor zones on the human tongue and simulate Dr. William Beaumont's 1822 discovery of 37°C gastric stomach acid digestion in full 3D!
       </p>
 
-      {/* Visual Tongue Graphic */}
-      <div className="my-2">
-        <VectorTongueTasteMapGraphic activeZone={activeTaste} />
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full my-4">
-        {[
-          { id: 'sweet', label: '1. Sweet (Tip)', food: '🍯 Honey / Sugar', color: 'bg-rose-100 text-rose-900 border-rose-400' },
-          { id: 'salty', label: '2. Salty (Front Sides)', food: '🥨 Salted Chips', color: 'bg-sky-100 text-sky-900 border-sky-400' },
-          { id: 'sour', label: '3. Sour (Back Sides)', food: '🍋 Lemon / Tamarind', color: 'bg-amber-100 text-amber-900 border-amber-400' },
-          { id: 'bitter', label: '4. Bitter (Deep Back)', food: '☕ Neem / Bitter Gourd', color: 'bg-emerald-100 text-emerald-900 border-emerald-400' },
-        ].map((t) => (
-          <button
-            key={t.id}
-            onClick={() => {
-              sounds.pop();
-              setActiveTaste(t.id as any);
-            }}
-            className={`p-3 rounded-2xl border-2 text-center cursor-pointer transition-all ${
-              activeTaste === t.id ? `${t.color} font-black shadow-md scale-102 ring-2 ring-orange-300` : 'bg-slate-50 border-slate-200 text-slate-700'
-            }`}
-          >
-            <span className="text-xs font-black block">{t.label}</span>
-            <span className="text-[10px] font-bold block mt-1">{t.food}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Saliva Enzyme Digestion Sandbox */}
-      <div className="w-full bg-orange-50 p-6 rounded-3xl border-2 border-orange-300 flex flex-col items-center text-center mt-2">
-        <span className="px-3 py-1 bg-orange-200 text-orange-950 rounded-full text-xs font-black uppercase mb-2">
-          🍞 Saliva Starch-to-Sugar Digestion Reaction
-        </span>
-        <h4 className="text-base font-black text-slate-800 mb-1">
-          Chew Plain Bread 30 Times!
-        </h4>
-        <p className="text-xs text-slate-600 font-bold mb-4">
-          Tap the chew button to mix salivary amylase enzyme with plain bread starch.
-        </p>
-
-        <button
-          onClick={handleChew}
-          className="px-8 py-3.5 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-black text-sm shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-2"
-        >
-          <span>👄 Chew Bread ({chewCount}/5)</span>
-        </button>
-
-        {chewCount >= 5 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-3 bg-emerald-100 border border-emerald-400 rounded-2xl text-xs font-black text-emerald-950 mt-4"
-          >
-            🎉 Taste Discovery: Saliva enzymes converted plain starch into sweet sugar in your mouth!
-          </motion.div>
-        )}
+      {/* 3D Three.js Interactive Digestion Simulator */}
+      <div className="w-full">
+        <ThreeDigestionLab onCompleted={onCompleted} />
       </div>
     </div>
   );
