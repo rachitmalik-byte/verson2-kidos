@@ -6,6 +6,7 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import type { CourseChapter } from '@/data/masterCurriculum';
 import {
   Sparkles,
+  FastForward,
   Volume2,
   ArrowRight,
   ArrowLeft,
@@ -114,10 +115,24 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         </div>
 
         <div className="flex-1 text-center md:text-left">
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
             <span className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-950 font-black text-xs">
               {chapterData?.syllabusRef || 'CBSE Class 5 EVS'} • Chapter {chapterData?.chapterNumber || 1}
             </span>
+
+            {/* Direct Quick Skip Button */}
+            <button
+              onClick={() => {
+                sounds.fanfare();
+                voiceAssistant.stop();
+                onStartLab();
+              }}
+              className="px-4 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all border border-amber-500"
+              title="Skip introduction and jump straight into the interactive lab"
+            >
+              <span>⚡ Skip Intro</span>
+              <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+            </button>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
@@ -248,6 +263,18 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                 ) : (
                   <div />
                 )}
+
+                <button
+                  onClick={() => {
+                    sounds.fanfare();
+                    voiceAssistant.stop();
+                    onStartLab();
+                  }}
+                  className="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer transition-all border border-slate-300"
+                >
+                  <FastForward className="w-4 h-4 text-amber-500" />
+                  <span>Skip to Lab</span>
+                </button>
 
                 {activeStepIndex < conceptSteps.length - 1 ? (
                   <button
