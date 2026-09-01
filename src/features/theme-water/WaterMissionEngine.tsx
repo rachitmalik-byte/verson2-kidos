@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -181,6 +182,7 @@ export function WaterMissionEngine() {
               exit={{ opacity: 0, scale: 0.98 }}
               className="w-full flex flex-col items-center gap-4"
             >
+              <ErrorBoundary>
               {/* Chapter 1: Mode Switcher between 2D Interactive Lab & 3D Voxel Diorama */}
               {num === 1 && (
                 <div className="w-full flex flex-col items-center gap-4">
@@ -269,6 +271,7 @@ export function WaterMissionEngine() {
                   </button>
                 </div>
               )}
+              </ErrorBoundary>
             </motion.div>
           )}
         </AnimatePresence>
