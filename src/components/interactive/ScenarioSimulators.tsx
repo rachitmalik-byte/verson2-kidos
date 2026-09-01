@@ -504,57 +504,248 @@ export const RaceCarTireFrictionSim: React.FC<{
 };
 
 /* ============================================================================
-   4. MOLECULAR VULCANIZATION SIMULATOR
+   4. ELASTIC RUBBER STRETCH & SNAP-BACK LAB (5th Grade Hands-on Discovery)
    ============================================================================ */
 export const MolecularVulcanizationSim: React.FC<{
   onComplete?: () => void;
-}> = ({ onComplete }) => {
-  const [hasSulfur, setHasSulfur] = useState(false);
+  onCompleted?: () => void;
+}> = ({ onComplete, onCompleted }) => {
+  const [rubberType, setRubberType] = useState<'raw' | 'vulcanized'>('raw');
+  const [stretchDistance, setStretchDistance] = useState<number>(0);
+  const [isLaunched, setIsLaunched] = useState<boolean>(false);
+  const [hasTestedBoth, setHasTestedBoth] = useState<boolean>(false);
 
-  const handleAddSulfur = () => {
-    sounds.sparkle();
-    setHasSulfur(true);
-    voiceAssistant.speak('Sulfur bridges formed! The straight polymer strands are now cross-linked into a super strong 3D matrix!');
+  const handleNotifyComplete = () => {
     if (onComplete) onComplete();
+    if (onCompleted) onCompleted();
+  };
+
+  const handleTypeChange = (type: 'raw' | 'vulcanized') => {
+    sounds.pop();
+    setRubberType(type);
+    setStretchDistance(0);
+    setIsLaunched(false);
+    if (type === 'vulcanized') {
+      setHasTestedBoth(true);
+      handleNotifyComplete();
+    }
+  };
+
+  const handleRelease = () => {
+    if (stretchDistance === 0) return;
+    setIsLaunched(true);
+    if (rubberType === 'vulcanized') {
+      sounds.success();
+      voiceAssistant.speak(
+        'SNAP! The cross-linked sulfur bridges act like a trampoline, pulling the rubber instantly back into shape!'
+      );
+      handleNotifyComplete();
+    } else {
+      sounds.bubble();
+      voiceAssistant.speak(
+        'Oh no! Raw tree rubber has no cross-links, so the molecules slide apart and stay permanently stretched and floppy!'
+      );
+    }
+  };
+
+  const handleReset = () => {
+    sounds.pop();
+    setStretchDistance(0);
+    setIsLaunched(false);
   };
 
   return (
-    <div className="w-full bg-slate-950 p-6 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center">
-      <div className="flex justify-between items-center w-full mb-4">
-        <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
-          Microscopic Polymer Cross-Linking
-        </span>
-        <span className={`text-xs font-black px-3 py-1 rounded-full ${hasSulfur ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-400'}`}>
-          {hasSulfur ? '✓ 3D Cross-Linked Mesh' : 'Linear Unlinked Strands'}
-        </span>
+    <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-[36px] border-4 border-amber-400 shadow-2xl flex flex-col items-center select-none font-sans text-slate-900">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-5 border-b-2 border-slate-100 pb-3">
+        <div className="text-center sm:text-left">
+          <span className="text-xs font-black uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-300 inline-block mb-1">
+            🛞 5th Grade Stretch & Elasticity Lab
+          </span>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            Why Do Tyres & Rubber Bands Snap Back?
+          </h3>
+        </div>
+
+        {/* Rubber Type Toggle */}
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shrink-0">
+          <button
+            onClick={() => handleTypeChange('raw')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              rubberType === 'raw'
+                ? 'bg-amber-400 text-slate-950 shadow-md scale-105'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            🌳 1. Raw Tree Sap
+          </button>
+          <button
+            onClick={() => handleTypeChange('vulcanized')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              rubberType === 'vulcanized'
+                ? 'bg-emerald-500 text-white shadow-md scale-105'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            🛞 2. Tough Tyre Rubber
+          </button>
+        </div>
       </div>
 
-      {/* Grid of polymers */}
-      <div className="relative w-full h-40 bg-slate-900 rounded-2xl border-2 border-slate-800 flex flex-col justify-around p-4 overflow-hidden mb-4">
-        {[1, 2, 3].map((strand) => (
-          <div key={strand} className="relative w-full h-3 bg-gradient-to-r from-cyan-500 via-sky-400 to-cyan-500 rounded-full flex items-center justify-around shadow-[0_0_10px_#06b6d4]">
-            {/* Cross-linking bridges */}
-            {hasSulfur && strand < 3 && (
-              <motion.div
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ duration: 0.5, delay: strand * 0.1 }}
-                className="absolute top-3 w-3 h-10 bg-gradient-to-b from-amber-400 to-yellow-300 rounded-full shadow-[0_0_10px_#f59e0b] origin-top z-10"
-                style={{ left: `${strand * 30}%` }}
-              />
-            )}
+      {/* Interactive Slingshot & Stretch Rig Container */}
+      <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-slate-900 to-slate-950 rounded-3xl border-3 border-slate-800 relative overflow-hidden flex flex-col justify-between p-5 shadow-inner mb-5">
+        {/* Top Info Bar */}
+        <div className="flex justify-between items-center z-10">
+          <span className="text-xs font-black text-slate-300 flex items-center gap-1.5">
+            <span>Material:</span>
+            <span className={rubberType === 'raw' ? 'text-amber-400' : 'text-emerald-400'}>
+              {rubberType === 'raw' ? 'Sticky Natural Latex (Unlinked)' : 'Vulcanized Buna Rubber (Cross-Linked)'}
+            </span>
+          </span>
+
+          <span className="text-xs font-black bg-slate-800 text-white px-3 py-1 rounded-full border border-slate-700">
+            Tension: {stretchDistance}%
+          </span>
+        </div>
+
+        {/* Slingshot / Rubber Band Visual Simulation */}
+        <div className="relative w-full flex-1 flex items-center justify-center my-2">
+          {/* Left Anchor Post */}
+          <div className="absolute left-6 w-5 h-28 bg-slate-700 rounded-full border-2 border-slate-500 shadow-lg z-10 flex flex-col justify-between items-center py-2">
+            <div className="w-3 h-3 rounded-full bg-slate-400" />
+            <div className="w-3 h-3 rounded-full bg-slate-400" />
           </div>
-        ))}
+
+          {/* Right Anchor / Pull Cart */}
+          <motion.div
+            style={{
+              x: !isLaunched ? stretchDistance * 1.8 : 0,
+            }}
+            transition={
+              isLaunched
+                ? rubberType === 'vulcanized'
+                  ? { type: 'spring', stiffness: 500, damping: 15 }
+                  : { duration: 0.8, ease: 'easeOut' }
+                : { duration: 0.1 }
+            }
+            className="absolute left-28 z-20 flex items-center"
+          >
+            {/* The Bouncy Ball / Cart being pulled */}
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-rose-600 border-2 border-white shadow-xl flex items-center justify-center text-xl">
+              {rubberType === 'raw' && isLaunched ? '🫠' : '🏀'}
+            </div>
+          </motion.div>
+
+          {/* Animated Rubber Band Ribbon */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            {/* Top strand */}
+            <line
+              x1="36"
+              y1="45"
+              x2={130 + (!isLaunched ? stretchDistance * 1.8 : rubberType === 'raw' ? stretchDistance * 1.8 : 0)}
+              y2="60"
+              stroke={rubberType === 'raw' ? '#f59e0b' : '#10b981'}
+              strokeWidth={rubberType === 'raw' ? (isLaunched ? 8 : 10) : 10 - stretchDistance * 0.04}
+              strokeLinecap="round"
+            />
+            {/* Bottom strand */}
+            <line
+              x1="36"
+              y1="95"
+              x2={130 + (!isLaunched ? stretchDistance * 1.8 : rubberType === 'raw' ? stretchDistance * 1.8 : 0)}
+              y2="80"
+              stroke={rubberType === 'raw' ? '#f59e0b' : '#10b981'}
+              strokeWidth={rubberType === 'raw' ? (isLaunched ? 8 : 10) : 10 - stretchDistance * 0.04}
+              strokeLinecap="round"
+            />
+
+            {/* Cross-Link Ladders (Only for Vulcanized) */}
+            {rubberType === 'vulcanized' && (
+              <>
+                {[0.2, 0.4, 0.6, 0.8].map((ratio, idx) => {
+                  const endX = 130 + (!isLaunched ? stretchDistance * 1.8 : 0);
+                  const curX = 36 + (endX - 36) * ratio;
+                  return (
+                    <line
+                      key={idx}
+                      x1={curX}
+                      y1={48}
+                      x2={curX}
+                      y2={92}
+                      stroke="#facc15"
+                      strokeWidth="3"
+                      strokeDasharray="2,2"
+                    />
+                  );
+                })}
+              </>
+            )}
+          </svg>
+
+          {/* Molecule State Badge */}
+          <div className="absolute bottom-1 bg-slate-900/90 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-700 text-[11px] font-bold text-slate-300">
+            {rubberType === 'raw'
+              ? isLaunched
+                ? '❌ Strands slid apart & stayed deformed!'
+                : '⛓️ Loose polymer chains (No sulfur safety net)'
+              : isLaunched
+              ? '⚡ BOING! Cross-links snapped it back instantly!'
+              : '🕸️ 3D Cross-Linked Mesh (Connected by sulfur bridges)'}
+          </div>
+        </div>
+
+        {/* Stretch Slider Control */}
+        <div className="w-full flex items-center gap-3 z-10 bg-slate-900/80 p-2.5 rounded-2xl border border-slate-800">
+          <span className="text-xs font-bold text-slate-300 shrink-0">Pull Handle:</span>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={stretchDistance}
+            disabled={isLaunched}
+            onChange={(e) => {
+              sounds.pop();
+              setStretchDistance(parseInt(e.target.value, 10));
+            }}
+            className="w-full accent-amber-400 h-2 bg-slate-700 rounded-lg cursor-pointer"
+          />
+        </div>
       </div>
 
-      <button
-        onClick={handleAddSulfur}
-        disabled={hasSulfur}
-        className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs md:text-sm shadow-lg cursor-pointer hover:brightness-110 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2"
-      >
-        <Sparkles className="w-4 h-4" />
-        <span>{hasSulfur ? 'Sulfur Bridges Active!' : 'Add Sulfur & Heat (Vulcanize!)'}</span>
-      </button>
+      {/* Action Buttons & Scientific Takeaway */}
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          {!isLaunched ? (
+            <button
+              onClick={handleRelease}
+              disabled={stretchDistance === 0}
+              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-sm shadow-md cursor-pointer disabled:opacity-40 active:scale-95 transition-all flex items-center gap-2"
+            >
+              <span>🚀 Release & Snap Back!</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleReset}
+              className="px-6 py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-black text-sm shadow-xs cursor-pointer active:scale-95 transition-all"
+            >
+              <span>🔄 Reset & Try Again</span>
+            </button>
+          )}
+        </div>
+
+        {/* 5th Grade Key Explanation */}
+        <div className="text-xs sm:text-sm font-bold text-slate-700 bg-amber-50 p-3 rounded-2xl border border-amber-200 max-w-sm text-center sm:text-right">
+          {rubberType === 'raw' ? (
+            <span>
+              <strong>Raw Rubber:</strong> Molecules are like loose slippery cooked spaghetti — they slide apart and stay stretched!
+            </span>
+          ) : (
+            <span>
+              <strong>Vulcanized Rubber:</strong> Adding sulfur links the chains like a <strong>trampoline net</strong>, so it always snaps back!
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
