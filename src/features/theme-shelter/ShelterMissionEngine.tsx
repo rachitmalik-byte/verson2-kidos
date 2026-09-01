@@ -1,3 +1,4 @@
+import { useNavigationProgressStore } from '@/stores/navigationProgressStore';
 // Real 3-Tier Progressive Zoom Images
 import pashmina1x from '@/assets/images/microscope/pashmina_1x.jpg';
 import pashmina100x from '@/assets/images/microscope/pashmina_100x.jpg';
@@ -250,6 +251,40 @@ export function ShelterMissionEngine() {
   const currentStepIndex = phaseOrder.indexOf(currentPhase);
   const totalSteps = phaseOrder.length;
   const quizList = SHELTER_QUIZZES[num] || SHELTER_QUIZZES[1];
+
+  const setExperimentProgress = useNavigationProgressStore((state) => state.setExperimentProgress);
+  const setExerciseProgress = useNavigationProgressStore((state) => state.setExerciseProgress);
+
+  useEffect(() => {
+    const stepIdx = currentStepIndex + 1;
+    const stepsDone = currentStepIndex;
+    const stepsLeft = totalSteps - stepIdx;
+
+    if (currentPhase === 'QUIZ_LAB') {
+      const answeredCount = Object.keys(quizAnswers).length;
+      setExerciseProgress({
+        exerciseName: `${chapter.title} Quiz Lab`,
+        currentIndex: Math.min(quizList.length, answeredCount + 1),
+        totalCount: quizList.length,
+        completedCount: answeredCount,
+      });
+    } else {
+      setExerciseProgress(null);
+      setExperimentProgress({
+        phaseName: currentPhase,
+        stepIndex: stepIdx,
+        totalSteps: totalSteps,
+        stepsDone: stepsDone,
+        stepsLeft: stepsLeft,
+      });
+    }
+
+    return () => {
+      setExperimentProgress(null);
+      setExerciseProgress(null);
+    };
+  }, [currentPhase, currentStepIndex, totalSteps, quizAnswers, chapter.title, quizList.length]);
+
 
   useEffect(() => {
     setCurrentPhase('HOOK');

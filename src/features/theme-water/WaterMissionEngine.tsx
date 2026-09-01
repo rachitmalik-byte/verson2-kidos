@@ -1,3 +1,4 @@
+import { useNavigationProgressStore } from '@/stores/navigationProgressStore';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
