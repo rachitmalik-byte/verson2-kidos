@@ -1,3 +1,4 @@
+import { ThreeTensileRigLab } from "@/components/three-lab/ThreeTensileRigLab";
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -285,174 +286,15 @@ export function NylonStrengthMission() {
           )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 2: 1v1 TENSILE TESTING RIG (Dropdown + Weight Slider)
+              PHASE 2: 1v1 3D TENSILE TESTING RIG (Three.js Physics Engine)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'TENSILE_TEST' && (
-            <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 sm:p-8 rounded-3xl border-4 border-slate-200 shadow-xl">
-              {/* Top Dropdown / Specimen Selector Tabs */}
-              <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
-                <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
-                    Tensile Testing Workbench
-                  </span>
-                  <h3 className="text-xl font-black text-slate-900 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    1v1 Rope Breaking Test
-                  </h3>
-                </div>
-
-                {/* Dropdown / Specimen Pill Selector */}
-                <div className="flex items-center gap-1.5 flex-wrap justify-center">
-                  {ROPES.map((rope) => {
-                    const isSelected = rope.id === selectedRopeId;
-                    const isDone = testedRopes[rope.id];
-                    return (
-                      <button
-                        key={rope.id}
-                        onClick={() => handleSelectRope(rope.id)}
-                        className={`px-3 py-2 rounded-xl font-black text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
-                          isSelected
-                            ? 'bg-amber-400 text-slate-950 shadow-md ring-2 ring-amber-300 scale-105'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                        }`}
-                      >
-                        <span>{rope.icon}</span>
-                        <span className="hidden sm:inline">{rope.name.split(' ')[1] || rope.name}</span>
-                        {isDone && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* 1v1 Rig Workbench Display */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-6">
-                {/* Left: Dedicated Macro Photography Stage with Dynamic Snapping */}
-                <div className="relative w-full h-64 sm:h-72 rounded-3xl overflow-hidden bg-slate-950 border-4 border-slate-300 shadow-xl flex items-center justify-center p-2">
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={`${currentRope.id}-${isSnapped ? 'snapped' : 'intact'}`}
-                      src={isSnapped ? currentRope.snappedImage : currentRope.intactImage}
-                      alt={currentRope.name}
-                      initial={{ opacity: 0.5, scale: 0.95 }}
-                      animate={{
-                        opacity: 1,
-                        scale: isSnapped ? [1, 1.05, 0.98, 1] : 1 + (appliedWeightKg / currentRope.breakingLimitKg) * 0.05,
-                      }}
-                      exit={{ opacity: 0.5 }}
-                      transition={{ duration: 0.3 }}
-                      className="w-full h-full object-cover rounded-2xl"
-                    />
-                  </AnimatePresence>
-
-                  {/* Status Overlay Badge */}
-                  <div className="absolute top-3 left-3">
-                    {isSnapped ? (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="bg-rose-600 text-white font-black text-xs px-3 py-1 rounded-full border border-white shadow-lg flex items-center gap-1 animate-bounce"
-                      >
-                        ⚡ SNAPPED AT {appliedWeightKg} KG!
-                      </motion.span>
-                    ) : appliedWeightKg > 0 ? (
-                      <span className="bg-emerald-500 text-white font-black text-xs px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                        ✓ Holding {appliedWeightKg} kg
-                      </span>
-                    ) : (
-                      <span className="bg-slate-800/80 text-slate-300 font-bold text-xs px-3 py-1 rounded-full">
-                        Ready for Test
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Right: Interactive Controls & 5th Grade Science Explanations */}
-                <div className="flex flex-col justify-between gap-4">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black uppercase text-slate-500">{currentRope.category} Material</span>
-                      <span className="text-xs font-black text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full">
-                        Snap Limit: {currentRope.breakingLimitKg} kg
-                      </span>
-                    </div>
-                    <h4 className="text-lg font-black text-slate-900 mt-1">{currentRope.name}</h4>
-                    <p className="text-xs font-bold text-slate-600 mt-1 leading-relaxed">
-                      {currentRope.simpleExplanation}
-                    </p>
-                  </div>
-
-                  {/* Weight Slider (0 to 50 kg) */}
-                  <div className="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200">
-                    <div className="flex items-center justify-between font-black text-xs sm:text-sm mb-2">
-                      <span className="text-slate-700 flex items-center gap-1">
-                        <Scale className="w-4 h-4 text-amber-500" /> Pulling Weight:
-                      </span>
-                      <span className={`text-base font-black ${isSnapped ? 'text-rose-600' : 'text-slate-900'}`}>
-                        {appliedWeightKg} kg 🏋️
-                      </span>
-                    </div>
-
-                    <input
-                      type="range"
-                      min="0"
-                      max="50"
-                      step="1"
-                      value={appliedWeightKg}
-                      onChange={handleSliderChange}
-                      className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500 mb-3"
-                    />
-
-                    {/* Quick Preset Buttons */}
-                    <div className="flex items-center gap-1.5 flex-wrap justify-between">
-                      {[2, 5, 15, 25, 50].map((kg) => (
-                        <button
-                          key={kg}
-                          onClick={() => handleApplyPreset(kg)}
-                          className={`px-2.5 py-1.5 rounded-lg font-black text-xs cursor-pointer transition-all ${
-                            appliedWeightKg === kg
-                              ? 'bg-amber-400 text-slate-950 font-black ring-2 ring-amber-300'
-                              : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                          }`}
-                        >
-                          {kg} kg
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Feedback Explanation */}
-                  {isSnapped ? (
-                    <div className="p-3 bg-rose-50 border-2 border-rose-300 rounded-xl text-xs font-bold text-rose-900">
-                      <span className="font-black block mb-0.5">⚡ Why It Snapped:</span>
-                      {currentRope.failureReason}
-                    </div>
-                  ) : appliedWeightKg > 0 ? (
-                    <div className="p-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl text-xs font-bold text-emerald-900">
-                      <span className="font-black block mb-0.5">💪 Holding Strong:</span>
-                      This rope can still carry more weight without breaking!
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Progress & Next Step Action */}
-              <div className="w-full flex items-center justify-between pt-4 border-t-2 border-slate-100 flex-wrap gap-3">
-                <span className="text-xs font-bold text-slate-500">
-                  Tested {Object.keys(testedRopes).length} of {ROPES.length} ropes
-                </span>
-
-                {Object.keys(testedRopes).length >= 2 && (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleNextPhase}
-                    className="py-3 px-6 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-sm rounded-2xl shadow-lg cursor-pointer flex items-center gap-2 animate-pulse"
-                  >
-                    <span>Examine Fibers Under 100x Microscope</span>
-                    <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-                  </motion.button>
-                )}
-              </div>
+            <div className="w-full max-w-4xl flex flex-col items-center">
+              <ThreeTensileRigLab
+                onTested={(ropeId) => {
+                  setTestedRopes((prev) => ({ ...prev, [ropeId]: true }));
+                }}
+              />
             </div>
           )}
 
