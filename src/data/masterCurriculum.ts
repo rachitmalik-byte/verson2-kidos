@@ -78,7 +78,7 @@ export const MATERIALS_COURSE_CHAPTERS: CourseChapter[] = [
     chapterIntro: {
       title: "The Raincoat Mystery & Moisture Mechanics",
 
-      hookScene: "A sudden monsoon thunderstorm drenching the schoolyard! You have two raincoats: a beige 100% natural cotton coat and a vibrant blue synthetic polyester jacket.",
+      hookScene: "You're walking home from school and heavy rain starts pouring! 🌧️ Which coat keeps you dry without soaking through?",
 
       bigGuidingQuestion: "Why does liquid water soak into cotton until it weighs 5 kg, while water droplets bead up and roll off synthetic polyester instantly?",
 
@@ -896,7 +896,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
     chapterIntro: {
       title: "Seeds and Seeds: Travel & Inventions (Velcro Biomimicry)",
 
-      hookScene: "After walking through an overgrown garden, you notice dozens of prickly round burdock burrs stuck stubbornly to your socks and shoes.",
+      hookScene: "You walk your dog through tall grass, and prickly green burrs stick all over your socks! 🐕 Why do they cling so tightly to fabric?",
 
       bigGuidingQuestion: "How did tiny sticky plant seeds inspire the invention of the world’s most popular fastener — Velcro?",
 
