@@ -397,88 +397,96 @@ export function ShelterMissionEngine() {
             )}
 
             {/* ════════════════════════════════════════════════════════════════
-                PHASE 3: PHYSICAL SCALE & APPARATUS STUDIO
+                PHASE 3: PROGRESSIVE 3-TIER MICROSCOPE STUDIO (1x -> 100x -> 500x)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'MICROSCOPE' && (
               <div className="w-full flex flex-col items-center gap-6">
-                {/* Chapter 1: Pashmina Cashmere vs Human Hair (<100µm) -> True Optical Microscope Studio */}
+                {/* Chapter 1: Pashmina Cashmere vs Human Hair */}
                 {num === 1 && (
-                  <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
-                    <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
-                      <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
-                        <ZoomIn className="w-4 h-4 text-indigo-400" />
-                        <span>Biological Optical Microscope ({zoomLevel}x)</span>
-                      </span>
-
-                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                        {[100, 250, 500].map((z) => (
-                          <button
-                            key={z}
-                            onClick={() => {
-                              sounds.pop();
-                              setZoomLevel(z);
-                            }}
-                            className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                              zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-                            }`}
-                          >
-                            {z}x
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
-                      <SpecimenPashminaVsHumanHair zoom={zoomLevel} />
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
-                      500x Optical Microscope reveals Pashmina cashmere fiber is only 12 microns wide (6x thinner than human hair), trapping millions of insulating warm air pockets!
-                    </p>
-                  </div>
+                  <MultiTierMicroscopeStudio
+                    config={{
+                      specimenId: 'pashmina-fiber',
+                      specimenName: 'Changthang Pashmina Underfleece',
+                      themeColor: 'bg-indigo-600',
+                      borderColor: 'border-indigo-400',
+                      tiers: {
+                        '1x': {
+                          zoomLevel: '1x',
+                          zoomMultiplier: 1,
+                          label: '1x Macro: Changthang Mountain Goat in Ladakh',
+                          tagline: 'NATURAL -40°C HABITAT',
+                          imageSrc: pashmina1x,
+                          observation: 'In the freezing high-altitude winds of Ladakh (-40°C), Changpa mountain goats grow an ultra-fine soft underwool beneath their thick outer coat.',
+                          keyDiscovery: 'Natural biological adaptation: Ultra-fine underwool grows exclusively during severe winter freeze!',
+                        },
+                        '100x': {
+                          zoomLevel: '100x',
+                          zoomMultiplier: 100,
+                          label: '100x Optical: Pashmina (12µm) vs Human Hair (75µm)',
+                          tagline: 'OPTICAL FIBER COMPARISON',
+                          imageSrc: pashmina100x,
+                          observation: 'At 100x optical magnification, Pashmina cashmere fiber measures only 12 to 15 microns in diameter — over 6 times thinner than a human hair (75 microns)!',
+                          keyDiscovery: '12µm thickness allows 6 Pashmina fibers to match the width of a single human hair!',
+                        },
+                        '500x': {
+                          zoomLevel: '500x',
+                          zoomMultiplier: 500,
+                          label: '500x Ultra-Micro: Insulating Air-Pocket Cuticle Scales',
+                          tagline: 'SEM ELECTRON MICROGRAPH',
+                          imageSrc: pashmina500x,
+                          observation: 'At 500x magnification, microscopic crimped cuticle scales create millions of tiny dead-air pockets that block radiant body heat loss.',
+                          keyDiscovery: 'Trapped microscopic air pockets provide the warmest natural weight-to-heat ratio on Earth.',
+                        },
+                      },
+                    }}
+                  />
                 )}
 
-                {/* Chapter 2: High Altitude Mountain Barometer Scale -> HighAltitudeBarometerStudio */}
+                {/* Chapter 2: High Altitude Mountain Barometer Scale */}
                 {num === 2 && <HighAltitudeBarometerStudio />}
 
-                {/* Chapter 3: Sunita in Space / Microgravity Surface Tension -> Zero Gravity Fluid Studio */}
+                {/* Chapter 3: Sunita Williams Microgravity Water Sphere */}
                 {num === 3 && (
-                  <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
-                    <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
-                      <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
-                        <ZoomIn className="w-4 h-4 text-indigo-400" />
-                        <span>Microgravity Fluid Cohesion Studio ({zoomLevel}x)</span>
-                      </span>
-
-                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                        {[100, 250, 500].map((z) => (
-                          <button
-                            key={z}
-                            onClick={() => {
-                              sounds.pop();
-                              setZoomLevel(z);
-                            }}
-                            className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                              zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-                            }`}
-                          >
-                            {z}x
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
-                      <SpecimenZeroGravityWaterSphere zoom={zoomLevel} />
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
-                      Microgravity optics reveals water molecules clustering tightly into minimum surface area spheres under cohesive hydrogen surface tension!
-                    </p>
-                  </div>
+                  <MultiTierMicroscopeStudio
+                    config={{
+                      specimenId: 'microgravity-water',
+                      specimenName: 'Zero-G Water Sphere & Surface Cohesion',
+                      themeColor: 'bg-sky-600',
+                      borderColor: 'border-sky-400',
+                      tiers: {
+                        '1x': {
+                          zoomLevel: '1x',
+                          zoomMultiplier: 1,
+                          label: '1x Macro: Free-Floating Water Blob in Space Station',
+                          tagline: '400km ORBITAL FREEFALL',
+                          imageSrc: water1x,
+                          observation: 'Inside the International Space Station in continuous freefall, gravity cannot pull water down into cups. Astronauts drink water floating as hovering liquid bubbles!',
+                          keyDiscovery: 'In microgravity, surface tension becomes the dominant physical force shaping liquid water.',
+                        },
+                        '100x': {
+                          zoomLevel: '100x',
+                          zoomMultiplier: 100,
+                          label: '100x Optical: Spherical Surface Tension Meniscus',
+                          tagline: 'MINIMUM SURFACE MENISCUS',
+                          imageSrc: water100x,
+                          observation: 'At 100x optical magnification, the outer boundary of the water bubble forms a seamless curved elastic skin pulling inward in all directions with equal force.',
+                          keyDiscovery: 'Geometric physics: A sphere is the exact mathematical shape that has the minimum surface area for any volume!',
+                        },
+                        '500x': {
+                          zoomLevel: '500x',
+                          zoomMultiplier: 500,
+                          label: '500x Ultra-Micro: Cohesive Hydrogen Bond Lattice (H₂O)',
+                          tagline: 'MOLECULAR COHESION LATTICE',
+                          imageSrc: water500x,
+                          observation: 'At 500x magnification, trillions of polar water molecules (H₂O) form powerful cohesive hydrogen bonds, pulling the entire liquid mass inward into a tight droplet.',
+                          keyDiscovery: 'Hydrogen bonds between oxygen and hydrogen atoms pull all molecules toward the center of mass.',
+                        },
+                      },
+                    }}
+                  />
                 )}
 
-                {/* Chapter 4: Golconda Fort Stepwells & Bastions -> Mechanical Cross-Section & Fort Architect Studios */}
+                {/* Chapter 4: Golconda Fort Stepwells & Bastions */}
                 {num === 4 && (
                   <div className="w-full flex flex-col items-center gap-6">
                     <MechanicalCrossSectionStudio />
@@ -488,43 +496,46 @@ export function ShelterMissionEngine() {
 
                 {/* Chapter 5: Petroleum Porous Sandstone Geology Studio */}
                 {num === 5 && (
-                  <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white text-center">
-                    <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
-                      <span className="text-xs font-black uppercase tracking-widest text-indigo-400 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1.5">
-                        <ZoomIn className="w-4 h-4 text-indigo-400" />
-                        <span>Petroleum Sandstone Strata Geological Studio ({zoomLevel}x)</span>
-                      </span>
-
-                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                        {[100, 250, 500].map((z) => (
-                          <button
-                            key={z}
-                            onClick={() => {
-                              sounds.pop();
-                              setZoomLevel(z);
-                            }}
-                            className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                              zoomLevel === z ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'
-                            }`}
-                          >
-                            {z}x
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="relative w-64 h-64 rounded-full border-8 border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-indigo-400/70">
-                      <SpecimenPetroleumPorousSandstone zoom={zoomLevel} />
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
-                      Geological magnification of ancient porous sandstone rock pores trapping crude hydrocarbons deep beneath sedimentary layers!
-                    </p>
-                  </div>
+                  <MultiTierMicroscopeStudio
+                    config={{
+                      specimenId: 'petroleum-sandstone',
+                      specimenName: 'Porous Sandstone Hydrocarbon Trap',
+                      themeColor: 'bg-amber-600',
+                      borderColor: 'border-amber-400',
+                      tiers: {
+                        '1x': {
+                          zoomLevel: '1x',
+                          zoomMultiplier: 1,
+                          label: '1x Macro: Underground Sedimentary Cap Rock',
+                          tagline: 'DEEP CRUSTAL STRATA',
+                          imageSrc: petroleum1x,
+                          observation: 'Petroleum does not sit in open underground lakes; it is trapped inside microscopic sponge-like pores of ancient sandstone sealed by dense shale cap rock.',
+                          keyDiscovery: 'Sedimentary geology: Impermeable cap rocks prevent buoyant crude oil and gas from escaping to the surface.',
+                        },
+                        '100x': {
+                          zoomLevel: '100x',
+                          zoomMultiplier: 100,
+                          label: '100x Optical: Quartz Sand Grains & Interlocking Pores',
+                          tagline: 'POROUS SANDSTONE MATRIX',
+                          imageSrc: petroleum100x,
+                          observation: 'At 100x magnification, individual rounded quartz sand grains form an interconnected labyrinth of microscopic void channels where ancient hydrocarbons seep and pool.',
+                          keyDiscovery: 'Porosity & Permeability allow fluids to flow through microscopic rock pathways toward oil wells.',
+                        },
+                        '500x': {
+                          zoomLevel: '500x',
+                          zoomMultiplier: 500,
+                          label: '500x Ultra-Micro: Trapped Viscous Hydrocarbon Droplets',
+                          tagline: 'HYDROCARBON PORE FLUID',
+                          imageSrc: petroleum500x,
+                          observation: 'At 500x magnification, black viscous hydrocarbon molecules cling to quartz mineral surfaces under intense geological heat and pressure (3,000 meters deep).',
+                          keyDiscovery: 'Petroleum formed over 300 million years from ancient prehistoric ocean phytoplankton and algae!',
+                        },
+                      },
+                    }}
+                  />
                 )}
               </div>
             )}
-
             {/* ════════════════════════════════════════════════════════════════
                 PHASE 4: SCIENCE_LAW (The 3-Pillar Golden Science Law)
             ════════════════════════════════════════════════════════════════ */}
