@@ -188,7 +188,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
         </motion.button>
 
         {/* 2. Desktop Quick Nav Tools */}
-        <div className="hidden md:flex items-center gap-1.5">
+        <div className="hidden xl:flex items-center gap-1.5">
           {/* AI Science Superpowers Hub */}
           <motion.button
             whileHover={{ scale: 1.03, y: -1 }}

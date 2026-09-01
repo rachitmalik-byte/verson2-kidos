@@ -111,16 +111,7 @@ import steelWireSpecimenImg from '@/assets/images/experiments/steel_wire_specime
 import summerComfortEvaporationImg from '@/assets/images/experiments/summer_comfort_evaporation_test.jpg';
 
 
-export const DynamicMissionEngine: React.FC = () => {
-  const { missionNum } = useParams<{ missionNum: string }>();
-  const missionNumber = parseInt(missionNum || '4', 10);
-
-  if (missionNumber === 1) return <RaincoatMission />;
-  if (missionNumber === 2) return <SortingMission />;
-  if (missionNumber === 3) return <NylonStrengthMission />;
-  if (missionNumber === 5) return <FireSafetyMission />;
-  if (missionNumber === 8) return <WireMission />;
-
+const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ missionNumber }) => {
   const navigate = useNavigate();
   const completeMission = useProgressStore((state) => state.completeMission);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
@@ -2193,4 +2184,17 @@ export const DynamicMissionEngine: React.FC = () => {
       </AnimatePresence>
     </MissionLayout>
   );
+};
+
+export const DynamicMissionEngine: React.FC = () => {
+  const { missionNum } = useParams<{ missionNum: string }>();
+  const missionNumber = parseInt(missionNum || '4', 10);
+
+  if (missionNumber === 1) return <RaincoatMission />;
+  if (missionNumber === 2) return <SortingMission />;
+  if (missionNumber === 3) return <NylonStrengthMission />;
+  if (missionNumber === 5) return <FireSafetyMission />;
+  if (missionNumber === 8) return <WireMission />;
+
+  return <GenericDynamicMissionEngine missionNumber={missionNumber} />;
 };

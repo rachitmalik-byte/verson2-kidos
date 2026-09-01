@@ -96,7 +96,7 @@ export function ChapterHub() {
   return (
     <div className="min-h-screen w-full flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
       <MaterialsAnimatedLabBackground />
-      <div className="w-full max-w-6xl mx-auto flex flex-col gap-6">
+      <div className="w-full max-w-7xl mx-auto flex flex-col gap-6">
         {/* ── Top Game Navbar ── */}
         <div id="navbar-top-controls" className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
           <div className="flex items-center gap-2">
@@ -113,10 +113,10 @@ export function ChapterHub() {
               <span className="hidden sm:inline">Subjects</span>
             </button>
 
-            <div className="flex items-center gap-2 ml-1">
-              <FlaskConical className="w-5 h-5 text-amber-500" />
-              <span className="font-black text-sm text-slate-800 hidden md:inline">
-                CBSE Class 5 EVS • Things We Make & Do
+            <div className="flex items-center gap-2 ml-1 shrink-0">
+              <FlaskConical className="w-5 h-5 text-amber-500 shrink-0" />
+              <span className="font-black text-xs sm:text-sm text-slate-800 whitespace-nowrap">
+                Theme 6: Materials Science
               </span>
             </div>
 
