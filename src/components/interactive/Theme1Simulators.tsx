@@ -500,22 +500,307 @@ export const SnakeGroundVibrationSim: React.FC<{ onTested?: () => void }> = ({ o
 };
 
 /* ============================================================================
-   4. 👅 TONGUE TASTE MAP & DR. BEAUMONT DIGESTION LAB (CHAPTER 3 - THREE.JS 3D)
+   4. 👅 ANATOMICAL TONGUE TASTE MAP & DR. BEAUMONT DIGESTION LAB (CHAPTER 3)
    ============================================================================ */
 export const TongueTasteAndBeaumontSim: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
+  const [activeTab, setActiveTab] = useState<'tongue' | 'beaumont_3d'>('tongue');
+  const [activeTaste, setActiveTaste] = useState<'sweet' | 'salty' | 'sour' | 'bitter'>('sweet');
+  const [chewCount, setChewCount] = useState(0);
+
+  // Dr. Beaumont 3D State
+  const [digestionProgress, setDigestionProgress] = useState(0);
+  const [isDigestActive, setIsDigestActive] = useState(false);
+
+  const TASTE_ZONES = {
+    sweet: {
+      name: '1. Sweet Zone (Tip)',
+      food: '🍯 Honey, Sugar & Mango',
+      color: 'bg-rose-100 text-rose-900 border-rose-400',
+      badge: 'bg-rose-500 text-white',
+      desc: 'The tip of the tongue is packed with fungiform papillae that detect energy-rich simple carbohydrates and glucose!',
+    },
+    salty: {
+      name: '2. Salty Zone (Front Sides)',
+      food: '🥨 Salt Crystals & Chips',
+      color: 'bg-sky-100 text-sky-900 border-sky-400',
+      badge: 'bg-sky-500 text-white',
+      desc: 'Front lateral borders detect sodium ions (NaCl) and essential electrolytes required for nerve signal conduction!',
+    },
+    sour: {
+      name: '3. Sour Zone (Back Sides)',
+      food: '🍋 Fresh Lemon & Tamarind',
+      color: 'bg-amber-100 text-amber-900 border-amber-400',
+      badge: 'bg-amber-500 text-slate-950',
+      desc: 'Rear lateral edges detect acidity (hydrogen ions) to evaluate food freshness, natural fruit acids, and vitamin C!',
+    },
+    bitter: {
+      name: '4. Bitter Zone (Deep Back)',
+      food: '☕ Neem Leaves & Dark Cocoa',
+      color: 'bg-emerald-100 text-emerald-900 border-emerald-400',
+      badge: 'bg-emerald-500 text-white',
+      desc: 'Deep at the back, circumvallate papillae detect bitter plant alkaloids, serving as a vital natural poison alarm!',
+    },
+  };
+
+  const handleSelectTaste = (taste: 'sweet' | 'salty' | 'sour' | 'bitter') => {
+    sounds.pop();
+    setActiveTaste(taste);
+    const spec = TASTE_ZONES[taste];
+    voiceAssistant.speak(`${spec.name}: ${spec.food}. ${spec.desc}`);
+  };
+
+  const handleChew = () => {
+    sounds.pop();
+    const next = chewCount + 1;
+    setChewCount(next);
+
+    if (next >= 5) {
+      sounds.fanfare();
+      voiceAssistant.speak(
+        'Digestive Breakthrough! Chewing bread 30 times thoroughly mixes saliva amylase enzymes, converting complex starches into sweet glucose sugars!'
+      );
+      if (onCompleted) onCompleted();
+    }
+  };
+
+  const handleStartDigestion = () => {
+    sounds.bubble();
+    setIsDigestActive(true);
+    setDigestionProgress(0);
+
+    const interval = setInterval(() => {
+      setDigestionProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          sounds.fanfare();
+          voiceAssistant.speak(
+            'Dr. Beaumont Discovery (1822): Gastric juices at 37°C chemically liquefy solid food into chyme within 2 hours!'
+          );
+          if (onCompleted) onCompleted();
+          return 100;
+        }
+        return prev + 15;
+      });
+    }, 400);
+  };
+
   return (
     <div className="w-full bg-white p-5 sm:p-8 rounded-[36px] border-4 border-orange-400 shadow-xl flex flex-col items-center select-none font-sans">
-      <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-1 text-center" style={{ fontFamily: 'Nunito, sans-serif' }}>
-        From Tasting to Digestion: 3D Physiology Lab 👅
-      </h3>
-      <p className="text-xs sm:text-sm text-slate-600 font-bold mb-5 text-center max-w-lg">
-        Explore the 4 primary taste receptor zones on the human tongue and simulate Dr. William Beaumont's 1822 discovery of 37°C gastric stomach acid digestion in full 3D!
-      </p>
+      {/* Header & Mode Switchers */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-4 border-b-2 border-slate-100 pb-3">
+        <div>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 text-center sm:text-left" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            From Tasting to Digestion: Physiology Lab 👅
+          </h3>
+          <p className="text-xs text-slate-600 font-bold mt-0.5 text-center sm:text-left">
+            Explore taste bud papillae zones and Dr. William Beaumont's 1822 discovery of gastric digestion!
+          </p>
+        </div>
 
-      {/* 3D Three.js Interactive Digestion Simulator */}
-      <div className="w-full">
-        <ThreeDigestionLab onCompleted={onCompleted} />
+        <div className="flex gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shrink-0">
+          <button
+            onClick={() => {
+              sounds.pop();
+              setActiveTab('tongue');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              activeTab === 'tongue'
+                ? 'bg-orange-500 text-white shadow-md scale-105'
+                : 'text-slate-600 hover:text-slate-950'
+            }`}
+          >
+            👅 Tongue Taste Map
+          </button>
+          <button
+            onClick={() => {
+              sounds.pop();
+              setActiveTab('beaumont_3d');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              activeTab === 'beaumont_3d'
+                ? 'bg-emerald-600 text-white shadow-md scale-105'
+                : 'text-slate-600 hover:text-slate-950'
+            }`}
+          >
+            🧪 3D Dr. Beaumont Stomach
+          </button>
+        </div>
       </div>
+
+      {/* ── MODE 1: CRYSTAL-CLEAR ANATOMICAL TASTE MAP & MICROSCOPE DIAGRAM ── */}
+      {activeTab === 'tongue' && (
+        <div className="w-full flex flex-col gap-5">
+          {/* Side-by-Side: Vector Taste Map + Microscopic Papillae Specimen View */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full items-center">
+            {/* Left: Clean Crisp Vector Tongue Map */}
+            <div className="bg-gradient-to-b from-rose-50 via-pink-50 to-orange-50 p-6 rounded-3xl border-3 border-orange-300 shadow-inner flex flex-col items-center relative">
+              <span className="px-3 py-1 bg-white/90 text-orange-950 font-black text-xs rounded-full shadow-xs mb-3">
+                👅 4-Zone Taste Receptor Mapping
+              </span>
+
+              {/* Anatomical Vector Tongue Diagram */}
+              <div className="relative w-60 h-72 flex items-center justify-center">
+                <svg viewBox="0 0 200 240" className="w-full h-full filter drop-shadow-md">
+                  {/* Tongue Base Outline */}
+                  <path
+                    d="M 60 30 Q 100 15 140 30 C 175 60 175 160 150 200 C 130 230 100 235 100 235 C 100 235 70 230 50 200 C 25 160 25 60 60 30 Z"
+                    fill="#f472b6"
+                    stroke="#db2777"
+                    strokeWidth="4"
+                  />
+
+                  {/* Median Sulcus (Center Line) */}
+                  <path d="M 100 40 L 100 180" stroke="#be185d" strokeWidth="3" strokeDasharray="4,3" />
+
+                  {/* 4. Bitter Zone (Deep Back) */}
+                  <path
+                    d="M 65 40 Q 100 25 135 40 C 145 65 145 80 130 90 Q 100 80 70 90 C 55 80 55 65 65 40 Z"
+                    fill={activeTaste === 'bitter' ? '#10b981' : '#fbcfe8'}
+                    stroke="#059669"
+                    strokeWidth={activeTaste === 'bitter' ? '3' : '1'}
+                    className="transition-all cursor-pointer"
+                    onClick={() => handleSelectTaste('bitter')}
+                  />
+
+                  {/* 3. Sour Zones (Rear Sides) */}
+                  <path
+                    d="M 38 95 C 42 130 50 155 65 165 C 55 145 50 120 48 95 Z"
+                    fill={activeTaste === 'sour' ? '#eab308' : '#fbcfe8'}
+                    stroke="#ca8a04"
+                    strokeWidth={activeTaste === 'sour' ? '3' : '1'}
+                    className="transition-all cursor-pointer"
+                    onClick={() => handleSelectTaste('sour')}
+                  />
+                  <path
+                    d="M 162 95 C 158 130 150 155 135 165 C 145 145 150 120 152 95 Z"
+                    fill={activeTaste === 'sour' ? '#eab308' : '#fbcfe8'}
+                    stroke="#ca8a04"
+                    strokeWidth={activeTaste === 'sour' ? '3' : '1'}
+                    className="transition-all cursor-pointer"
+                    onClick={() => handleSelectTaste('sour')}
+                  />
+
+                  {/* 2. Salty Zones (Front Sides) */}
+                  <path
+                    d="M 52 165 C 65 185 80 205 90 215 C 80 195 70 175 65 165 Z"
+                    fill={activeTaste === 'salty' ? '#0284c7' : '#fbcfe8'}
+                    stroke="#0369a1"
+                    strokeWidth={activeTaste === 'salty' ? '3' : '1'}
+                    className="transition-all cursor-pointer"
+                    onClick={() => handleSelectTaste('salty')}
+                  />
+                  <path
+                    d="M 148 165 C 135 185 120 205 110 215 C 120 195 130 175 135 165 Z"
+                    fill={activeTaste === 'salty' ? '#0284c7' : '#fbcfe8'}
+                    stroke="#0369a1"
+                    strokeWidth={activeTaste === 'salty' ? '3' : '1'}
+                    className="transition-all cursor-pointer"
+                    onClick={() => handleSelectTaste('salty')}
+                  />
+
+                  {/* 1. Sweet Zone (Tip) */}
+                  <path
+                    d="M 85 210 Q 100 235 115 210 Q 100 200 85 210 Z"
+                    fill={activeTaste === 'sweet' ? '#f43f5e' : '#fbcfe8'}
+                    stroke="#e11d48"
+                    strokeWidth={activeTaste === 'sweet' ? '3' : '1'}
+                    className="transition-all cursor-pointer"
+                    onClick={() => handleSelectTaste('sweet')}
+                  />
+                </svg>
+
+                {/* Pulsing Active Zone Callout */}
+                <div className="absolute bottom-2 bg-slate-900/90 text-white px-3 py-1 rounded-full text-[11px] font-black border border-slate-700 shadow-md">
+                  Active: {TASTE_ZONES[activeTaste].name}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Microscopic Taste Buds & Scientific Explanation */}
+            <div className="flex flex-col justify-between h-full gap-4">
+              <div className="bg-slate-950 p-5 rounded-3xl border-3 border-slate-800 text-white shadow-xl flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950 px-2.5 py-0.5 rounded-full border border-amber-500/40">
+                    🔬 Microscopic Taste Papillae (10,000 Buds)
+                  </span>
+                </div>
+
+                <h4 className="text-base font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  {TASTE_ZONES[activeTaste].name}
+                </h4>
+
+                <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 text-xs font-bold text-slate-300 leading-relaxed">
+                  {TASTE_ZONES[activeTaste].desc}
+                </div>
+
+                <div className="p-2.5 bg-amber-950/40 rounded-xl border border-amber-500/30 text-xs font-black text-amber-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Key Foods: {TASTE_ZONES[activeTaste].food}</span>
+                </div>
+              </div>
+
+              {/* 4 Interactive Buttons */}
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(TASTE_ZONES) as (keyof typeof TASTE_ZONES)[]).map((key) => {
+                  const isSelected = activeTaste === key;
+                  const zone = TASTE_ZONES[key];
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => handleSelectTaste(key)}
+                      className={`p-3 rounded-2xl border-2 text-left cursor-pointer transition-all ${
+                        isSelected
+                          ? `${zone.color} shadow-md scale-102 ring-2 ring-orange-300 font-black`
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      <span className="text-xs font-black block">{zone.name}</span>
+                      <span className="text-[10px] font-bold block mt-0.5 opacity-80">{zone.food}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Saliva Enzyme Digestion Sandbox (Bread Chewing Test) */}
+          <div className="w-full bg-orange-50 p-6 rounded-3xl border-3 border-orange-300 flex flex-col items-center text-center shadow-inner">
+            <span className="px-3 py-1 bg-orange-200 text-orange-950 rounded-full text-xs font-black uppercase mb-2">
+              🍞 Saliva Amylase Enzyme Chemistry
+            </span>
+            <h4 className="text-base font-black text-slate-900 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              Chew Plain Bread 30 Times!
+            </h4>
+            <p className="text-xs text-slate-600 font-bold mb-4 max-w-md">
+              Tap the chew button to mix salivary amylase enzymes with plain bread starch and turn it into sweet sugar!
+            </p>
+
+            <button
+              onClick={handleChew}
+              className="px-8 py-3.5 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-black text-sm shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-2"
+            >
+              <span>👄 Chew Bread ({chewCount}/5)</span>
+            </button>
+
+            {chewCount >= 5 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-3 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-xs font-black text-emerald-950 mt-4 shadow-sm"
+              >
+                🎉 Taste Discovery: Saliva enzymes converted plain starch into sweet maltose sugar right in your mouth!
+              </motion.div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── MODE 2: 3D DR. WILLIAM BEAUMONT GASTRIC DIGESTION CHAMBER (1822) ── */}
+      {activeTab === 'beaumont_3d' && (
+        <div className="w-full">
+          <ThreeDigestionLab onCompleted={onCompleted} />
+        </div>
+      )}
     </div>
   );
 };
