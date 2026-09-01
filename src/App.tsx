@@ -1,3 +1,4 @@
+import { ThreeLabPage } from '@/features/three-lab/ThreeLabPage';
 import { VideoLabPage } from '@/features/video-lab/VideoLabPage';
 import { ThemeWaterHub } from '@/features/theme-water/ThemeWaterHub';
 import { WaterMissionEngine } from '@/features/theme-water/WaterMissionEngine';
@@ -61,6 +62,7 @@ export function App() {
           <Route path="/teacher/studio" element={<TeacherStudio />} />
           <Route path="/teacher" element={<TeacherStudio />} />
           <Route path="/discovery-book" element={<DiscoveryBook />} />
+          <Route path="/3d-lab" element={<ThreeLabPage />} />
           <Route path="/guidebook" element={<DigitalGuidebook />} />
           <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 

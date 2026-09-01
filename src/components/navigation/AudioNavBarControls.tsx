@@ -1,3 +1,5 @@
+import { ThreeHoloLabModal } from '@/components/three-lab/ThreeHoloLabModal';
+import { Box } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -139,6 +141,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const [showArcadeModal, setShowArcadeModal] = useState(false);
   const [showAiLabHubModal, setShowAiLabHubModal] = useState(false);
   const [showToolsDropdown, setShowToolsDropdown] = useState(false);
+  const [show3dLabModal, setShow3dLabModal] = useState(false);
 
   const { isSfxMuted, isBgmMuted, toggleSfx, toggleBgm } = useAudioStore();
   const credits = useProgressStore((state) => state.credits);
@@ -171,6 +174,21 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
           <Coins className="w-3.5 h-3.5 text-amber-500 animate-bounce" />
           <span className="font-mono">{credits}</span>
           <span className="text-[10px] text-amber-700">🪙</span>
+        </motion.button>
+
+        {/* 3D Holo-Lab Trigger */}
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => {
+            sounds.pop();
+            setShow3dLabModal(true);
+          }}
+          className="px-3 py-1.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-300 text-indigo-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0"
+          title="3D Three.js Holo-Lab"
+        >
+          <Box className="w-3.5 h-3.5 text-indigo-600" />
+          <span>3D Lab ⚛️</span>
         </motion.button>
 
         {/* 2. AI Science Lab Button */}
@@ -277,6 +295,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
       <PipClosetModal isOpen={showClosetModal} onClose={() => setShowClosetModal(false)} />
       <ScienceArcadeModal isOpen={showArcadeModal} onClose={() => setShowArcadeModal(false)} />
       <AiScienceLabModal isOpen={showAiLabHubModal} onClose={() => setShowAiLabHubModal(false)} />
+      <ThreeHoloLabModal isOpen={show3dLabModal} onClose={() => setShow3dLabModal(false)} />
     </>
   );
 };

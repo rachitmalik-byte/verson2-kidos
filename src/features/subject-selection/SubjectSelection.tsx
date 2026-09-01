@@ -1,3 +1,5 @@
+import { ThreeHoloLabModal } from '@/components/three-lab/ThreeHoloLabModal';
+import { Box } from 'lucide-react';
 import { PipWardrobeShopModal } from '@/components/wardrobe/PipWardrobeShopModal';
 import { Shirt } from 'lucide-react';
 import React, { useState } from 'react';
@@ -120,6 +122,7 @@ const SUBJECTS: Subject[] = [
 export const SubjectSelection: React.FC = () => {
   const navigate = useNavigate();
   const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
+  const [show3dModal, setShow3dModal] = useState(false);
   const [viewMode, setViewMode] = useState<'3d-voxel' | 'grid'>('grid');
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
@@ -298,6 +301,49 @@ export const SubjectSelection: React.FC = () => {
         </div>
         )}
       </div>
+              {/* ── 3D Interactive Three.js Science Holo-Lab Showcase Banner ── */}
+        <motion.div
+          whileHover={{ scale: 1.01 }}
+          onClick={() => {
+            sounds.fanfare();
+            setShow3dModal(true);
+          }}
+          className="w-full bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 border-4 border-indigo-400/80 rounded-[32px] p-6 sm:p-8 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 cursor-pointer relative overflow-hidden"
+        >
+          <div className="flex items-center gap-4 z-10">
+            <div className="p-4 bg-indigo-500/20 border-2 border-indigo-400/40 rounded-3xl text-3xl shadow-inner">
+              ⚛️
+            </div>
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-indigo-300 bg-indigo-500/20 border border-indigo-400/30 px-3 py-1 rounded-full inline-block mb-1.5">
+                New Three.js WebGL Feature
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                3D Interactive Science Holo-Lab 🔬
+              </h3>
+              <p className="text-xs sm:text-sm font-bold text-indigo-200 mt-1 max-w-xl">
+                Explore 3D Molecular Polymers, Archimedes Buoyancy Tanks, the 3D Science Discovery Planet, and Microscopic Velcro Hooks!
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 z-10 shrink-0">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                sounds.pop();
+                navigate('/3d-lab');
+              }}
+              className="px-5 py-3 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-white font-black text-xs sm:text-sm shadow-lg active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Box className="w-4 h-4" />
+              <span>Launch 3D Lab ➔</span>
+            </button>
+          </div>
+        </motion.div>
+
+        <ThreeHoloLabModal isOpen={show3dModal} onClose={() => setShow3dModal(false)} />
+
       <PipWardrobeShopModal isOpen={isWardrobeOpen} onClose={() => setIsWardrobeOpen(false)} />
     </div>
   );
