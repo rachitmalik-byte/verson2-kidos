@@ -90,6 +90,7 @@ export function WaterMissionEngine() {
   const masterChapter = WATER_COURSE_CHAPTERS[num - 1] || WATER_COURSE_CHAPTERS[0];
 
   const [currentPhase, setCurrentPhase] = useState<'INTRO' | 'SIMULATOR'>('INTRO');
+  const [labViewMode, setLabViewMode] = useState<'2d' | '3d'>('2d');
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showCelebration, setShowCelebration] = useState<boolean>(false);
 
@@ -180,20 +181,50 @@ export function WaterMissionEngine() {
               exit={{ opacity: 0, scale: 0.98 }}
               className="w-full flex flex-col items-center gap-4"
             >
-              {/* Chapter 1: 3D Voxel Diorama + 2D Interactive Water Cycle Simulation */}
+              {/* Chapter 1: Mode Switcher between 2D Interactive Lab & 3D Voxel Diorama */}
               {num === 1 && (
-                <div className="w-full flex flex-col items-center gap-6">
-                  {/* 3D Voxel Island Diorama */}
-                  <VoxelWaterCycleDiorama onComplete={handleComplete} />
-
-                  {/* 2D Step-by-Step Diagram Engine */}
-                  <div className="w-full">
-                    <InteractiveDiagramEngine
-                      data={WATER_CYCLE_DATA}
-                      onComplete={handleComplete}
-                      isCompleted={isCompleted}
-                    />
+                <div className="w-full flex flex-col items-center gap-4">
+                  {/* Tab Selector */}
+                  <div className="flex items-center gap-2 p-1.5 bg-white/90 backdrop-blur-md rounded-2xl border-2 border-sky-300 shadow-sm">
+                    <button
+                      onClick={() => {
+                        sounds.pop();
+                        setLabViewMode('2d');
+                      }}
+                      className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                        labViewMode === '2d'
+                          ? 'bg-sky-600 text-white shadow-md'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      <span>🌊 2D Interactive Diagram Lab</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        sounds.pop();
+                        setLabViewMode('3d');
+                      }}
+                      className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                        labViewMode === '3d'
+                          ? 'bg-sky-600 text-white shadow-md'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      <span>🏝️ 3D Voxel Island Diorama</span>
+                    </button>
                   </div>
+
+                  {labViewMode === '3d' ? (
+                    <VoxelWaterCycleDiorama onComplete={handleComplete} />
+                  ) : (
+                    <div className="w-full">
+                      <InteractiveDiagramEngine
+                        data={WATER_CYCLE_DATA}
+                        onComplete={handleComplete}
+                        isCompleted={isCompleted}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 

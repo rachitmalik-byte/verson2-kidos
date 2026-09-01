@@ -120,7 +120,7 @@ const SUBJECTS: Subject[] = [
 export const SubjectSelection: React.FC = () => {
   const navigate = useNavigate();
   const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'3d-voxel' | 'grid'>('3d-voxel');
+  const [viewMode, setViewMode] = useState<'3d-voxel' | 'grid'>('grid');
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 

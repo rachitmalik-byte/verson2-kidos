@@ -4,7 +4,7 @@ export interface VoxelBlock {
   x: number;
   y: number;
   z: number;
-  color: string | number;
+  color?: string | number;
   roughness?: number;
   transparent?: boolean;
   opacity?: number;
@@ -12,57 +12,69 @@ export interface VoxelBlock {
 
 export function createVoxelMesh(voxels: VoxelBlock[], blockSize: number = 1): THREE.Group {
   const group = new THREE.Group();
-  const materialGroups: Record<string, { color: number; transparent: boolean; opacity: number; instances: THREE.Matrix4[] }> = {};
+  if (!voxels || voxels.length === 0) return group;
 
-  const matrix = new THREE.Matrix4();
-  const position = new THREE.Vector3();
-  const rotation = new THREE.Euler();
-  const quaternion = new THREE.Quaternion();
-  const scale = new THREE.Vector3(blockSize * 0.96, blockSize * 0.96, blockSize * 0.96);
+  try {
+    const materialGroups: Record<string, { color: number; transparent: boolean; opacity: number; instances: THREE.Matrix4[] }> = {};
 
-  voxels.forEach((v) => {
-    const hexColor = typeof v.color === 'string' ? parseInt(v.color.replace('#', '0x'), 16) : v.color;
-    const isTrans = v.transparent || false;
-    const op = v.opacity ?? 1.0;
-    const key = `${hexColor}_${isTrans}_${op}`;
+    const matrix = new THREE.Matrix4();
+    const position = new THREE.Vector3();
+    const rotation = new THREE.Euler();
+    const quaternion = new THREE.Quaternion();
+    const scale = new THREE.Vector3(blockSize * 0.96, blockSize * 0.96, blockSize * 0.96);
 
-    if (!materialGroups[key]) {
-      materialGroups[key] = {
-        color: hexColor,
-        transparent: isTrans,
-        opacity: op,
-        instances: [],
-      };
-    }
+    voxels.forEach((v) => {
+      let hexColor = 0x888888;
+      if (typeof v.color === 'string') {
+        hexColor = parseInt(v.color.replace('#', '0x'), 16) || 0x888888;
+      } else if (typeof v.color === 'number') {
+        hexColor = v.color;
+      }
 
-    position.set(v.x * blockSize, v.y * blockSize, v.z * blockSize);
-    quaternion.setFromEuler(rotation);
-    matrix.compose(position, quaternion, scale);
-    materialGroups[key].instances.push(matrix.clone());
-  });
+      const isTrans = !!v.transparent;
+      const op = v.opacity ?? 1.0;
+      const key = `${hexColor}_${isTrans}_${op}`;
 
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
+      if (!materialGroups[key]) {
+        materialGroups[key] = {
+          color: hexColor,
+          transparent: isTrans,
+          opacity: op,
+          instances: [],
+        };
+      }
 
-  Object.values(materialGroups).forEach((mg) => {
-    const material = new THREE.MeshStandardMaterial({
-      color: mg.color,
-      roughness: 0.65,
-      metalness: 0.1,
-      transparent: mg.transparent,
-      opacity: mg.opacity,
+      position.set(v.x * blockSize, v.y * blockSize, v.z * blockSize);
+      quaternion.setFromEuler(rotation);
+      matrix.compose(position, quaternion, scale);
+      materialGroups[key].instances.push(matrix.clone());
     });
 
-    const instancedMesh = new THREE.InstancedMesh(geometry, material, mg.instances.length);
-    instancedMesh.castShadow = true;
-    instancedMesh.receiveShadow = true;
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-    mg.instances.forEach((mat, idx) => {
-      instancedMesh.setMatrixAt(idx, mat);
+    Object.values(materialGroups).forEach((mg) => {
+      const material = new THREE.MeshStandardMaterial({
+        color: mg.color,
+        roughness: 0.65,
+        metalness: 0.1,
+        transparent: mg.transparent,
+        opacity: mg.opacity,
+      });
+
+      const instancedMesh = new THREE.InstancedMesh(geometry, material, mg.instances.length);
+      instancedMesh.castShadow = true;
+      instancedMesh.receiveShadow = true;
+
+      mg.instances.forEach((mat, idx) => {
+        instancedMesh.setMatrixAt(idx, mat);
+      });
+
+      instancedMesh.instanceMatrix.needsUpdate = true;
+      group.add(instancedMesh);
     });
-
-    instancedMesh.instanceMatrix.needsUpdate = true;
-    group.add(instancedMesh);
-  });
+  } catch (e) {
+    console.error('Error creating voxel mesh:', e);
+  }
 
   return group;
 }
