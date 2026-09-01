@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { SortingTrayData, SortingItem } from '@/types/lessonEngine';
+import type { SortingTrayData, SortingItem, SortingTray } from '@/types/lessonEngine';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { CheckCircle2, RotateCcw, Sparkles, HelpCircle } from 'lucide-react';
@@ -11,11 +11,40 @@ interface Props {
   isCompleted?: boolean;
 }
 
+const DEFAULT_TRAYS: SortingTray[] = [
+  {
+    id: 'natural',
+    title: '🌿 From Nature (Natural)',
+    icon: '🌿',
+    themeColor: 'sage',
+    allowedCategories: ['natural'],
+    description: 'Derived directly from living plants, animals, or soil',
+  },
+  {
+    id: 'synthetic',
+    title: '🏭 Human-Made (Synthetic)',
+    icon: '🏭',
+    themeColor: 'sky',
+    allowedCategories: ['synthetic'],
+    description: 'Synthesized chemically in factories from petrochemicals',
+  },
+];
+
 export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
+  const trays: SortingTray[] = data?.trays && data.trays.length > 0 ? data.trays : DEFAULT_TRAYS;
+  const items: SortingItem[] = data?.items || [];
+
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [trayItems, setTrayItems] = useState<Record<string, SortingItem[]>>({});
-  const [unplacedItems, setUnplacedItems] = useState<SortingItem[]>(data.items);
+  const [unplacedItems, setUnplacedItems] = useState<SortingItem[]>(items);
   const [hintMessage, setHintMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedItemId(null);
+    setTrayItems({});
+    setUnplacedItems(data?.items || []);
+    setHintMessage(null);
+  }, [data]);
 
   const handleItemSelect = (item: SortingItem) => {
     sounds.pop();
@@ -62,7 +91,7 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-4 sm:gap-6">
+    <div className="w-full flex flex-col items-center gap-4 sm:gap-6 select-none font-sans">
       {/* Classification Trays Dropzones */}
       <div className="w-full max-w-4xl flex flex-col sm:flex-row gap-3 sm:gap-4">
         {trays.map((tray) => {
@@ -101,7 +130,7 @@ export const SortingTrayEngine: React.FC<Props> = ({ data, onComplete }) => {
                     key={item.id}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-[11px] font-black shadow-xs"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-[11px] font-black shadow-xs text-slate-800"
                   >
                     <span>{item.icon}</span>
                     <span className="truncate max-w-[100px]">{item.name}</span>
