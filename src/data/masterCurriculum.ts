@@ -731,7 +731,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Seismic Jawbone Acoustic Transmission",
 
-          imageAsset: "eagle_view_landscape.jpg",
+          imageAsset: "snake_jawbone_vibrations.jpg",
 
           pipDialogue: "Snakes have no eardrums or ear holes! Instead, their lower quadrate jawbone touches the ground continuously. Soundwaves and footsteps travel as seismic waves through the soil, vibrating the jawbone which conducts sound directly into their inner ear bones!",
 
@@ -742,7 +742,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "The 4 Venomous Indian Snakes & Antivenom Medicine",
 
-          imageAsset: "persian_wheel.jpg",
+          imageAsset: "four_venomous_snakes.jpg",
 
           pipDialogue: "Out of over 300 snake species in India, only 4 are dangerously venomous: the Spectacled Cobra, Common Krait, Russell’s Viper, and Saw-scaled Viper. All other snakes are non-venomous and protect our food by eating grain-destroying rats! Lifesaving antivenom medicine is made from snake venom itself!",
 
@@ -819,7 +819,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Salivary Amylase Enzyme Chemistry",
 
-          imageAsset: "soil_apple_day1.jpg",
+          imageAsset: "tongue_taste_papillae.jpg",
 
           pipDialogue: "Digestion starts in your mouth! Your saliva glands produce an enzyme called Amylase. Amylase acts like molecular scissors, cutting long, tasteless complex starch chains in roti and rice into tiny, sweet sugar molecules (maltose) right on your tongue!",
 
@@ -830,7 +830,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Dr. William Beaumont’s Stomach Window (1822)",
 
-          imageAsset: "boiling_tea_kettle_steam.jpg",
+          imageAsset: "dr_beaumont_stomach.jpg",
 
           pipDialogue: "In 1822, Dr. William Beaumont studied Alexis St. Martin, a patient whose stomach healed with an open window after a gunshot. Dr. Beaumont discovered that stomach acid (pH 1.5) and digestive juices chemically break down food at 37°C, and digestion slows down drastically when a person is stressed or sad!",
 
@@ -907,7 +907,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Botanical Seed Dispersal Vectors",
 
-          imageAsset: "synthetic_acrylic_yarn.jpg",
+          imageAsset: "dandelion_seed_dispersal.jpg",
 
           pipDialogue: "Plants cannot walk, but their seeds travel thousands of kilometers! Dandelions use feathery aerodynamic wind parachutes, coconuts float across oceans on waterproof buoyant husks, and pea pods burst open like spring-loaded catapults to fling seeds away from shade!",
 
@@ -918,7 +918,7 @@ export const SUPER_SENSES_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "George de Mestral & Velcro Biomimicry (1948)",
 
-          imageAsset: "nylon_thread_spool.jpg",
+          imageAsset: "burdock_velcro_macro.jpg",
 
           pipDialogue: "In 1948, Swiss engineer George de Mestral examined burdock burrs under a microscope. He discovered hundreds of tiny microscopic elastic hooks that grab onto fabric loops! He copied nature using nylon to invent Velcro (Velours + Crochet) — now used on sneakers, spacesuits, and backpacks!",
 
@@ -999,7 +999,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Solar Evaporation & Molecular Energy",
 
-          imageAsset: "boiling_tea_kettle_steam.jpg",
+          imageAsset: "solar_evaporation_ocean.jpg",
 
           pipDialogue: "When sunlight warms water molecules in oceans and puddles, they gain thermal kinetic energy! They speed up, break free from liquid bonds, and rise into the atmosphere as invisible water vapor gas!",
 
@@ -1010,7 +1010,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "High-Altitude Condensation & Cloud Formation",
 
-          imageAsset: "lightbulb_glowing_bright.jpg",
+          imageAsset: "clouds_condensation_rain.jpg",
 
           pipDialogue: "As warm vapor climbs kilometers into the cold upper sky, it cools down and clumps onto tiny dust particles, creating billions of microscopic droplets that we see as fluffy clouds! When droplets grow too heavy to float, gravity pulls them down as rain!",
 
@@ -1087,7 +1087,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Gravity-Fed 9-Tank Cascade Architecture",
 
-          imageAsset: "golconda_persian_wheel.jpg",
+          imageAsset: "jaisalmer_ghadisar_lake.jpg",
 
           pipDialogue: "In 1367 CE, King Ghadsi of Jaisalmer built 9 interconnected lakes at descending elevations. When Lake 1 filled with monsoon rain, water automatically overflowed through carved stone canals into Lake 2, and so on, filling all 9 lakes across miles without wasting a single drop!",
 
@@ -1098,7 +1098,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Subterranean Bawri Stepwell Thermal Physics",
 
-          imageAsset: "golconda_fort_bastions.jpg",
+          imageAsset: "stepwell_bawri_rajasthan.jpg",
 
           pipDialogue: "Surface desert lakes lose water quickly to sun evaporation! Stepwells (Bawris) are deep underground multi-story stone chambers with tiered stairs. The deep subterranean chambers keep harvested rainwater shaded, cool, and shielded from evaporation all summer!",
 
@@ -1175,7 +1175,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "The Physics of Displaced Volume & Density",
 
-          imageAsset: "polyester_raincoat_waterproof.jpg",
+          imageAsset: "cargo_ship_buoyancy.jpg",
 
           pipDialogue: "Density is how much mass is packed into a space. A solid iron nail is dense and sinks. But a ship is shaped like a giant bowl with massive pockets of empty air, making its average density lower than water so it floats easily!",
 
@@ -1186,7 +1186,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Salt Buoyancy in the Dead Sea (300 g/L)",
 
-          imageAsset: "bakelite_handle_clean.jpg",
+          imageAsset: "dead_sea_salt_floating.jpg",
 
           pipDialogue: "When you dissolve salt in water, salt molecules squeeze between water molecules, making the liquid much denser! In the Dead Sea, every liter contains 300 grams of salt! The water is so dense that human bodies float effortlessly on the surface without swimming!",
 
@@ -1263,7 +1263,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Larval Snorkel Breathing Siphons",
 
-          imageAsset: "plastic_100yrs.jpg",
+          imageAsset: "mosquito_larva_microscope.jpg",
 
           pipDialogue: "Mosquito larvae do not have fish gills! Instead, they hang upside down with a microscopic snorkel tube called a breathing siphon poking through the water surface into the air to breathe oxygen!",
 
@@ -1274,7 +1274,7 @@ export const WATER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Eco-Oil Surface Barrier Science & Ronald Ross",
 
-          imageAsset: "copper_wire_macro.jpg",
+          imageAsset: "oil_film_mosquito_prevention.jpg",
 
           pipDialogue: "When you pour a few drops of oil on stagnant water, oil spreads into a micro-thin layer. This oil film blocks the siphon tubes, suffocating the larvae safely! In 1897 in India, Dr. Ronald Ross discovered that female Anopheles mosquitoes spread malaria, winning the Nobel Prize in Medicine!",
 
@@ -1368,7 +1368,7 @@ export const SHELTER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Yak-Hair Rebo Tent Architecture",
 
-          imageAsset: "sheep_wool_fleece.jpg",
+          imageAsset: "rebo_yak_tent.jpg",
 
           pipDialogue: "The nomadic Changpa people weave strips of coarse yak hair to construct conical tents called Rebo. Yak hair fibers expand and swell during snowstorms to block freezing drafts, while a top smoke flap lets campfire smoke escape!",
 
@@ -1456,7 +1456,7 @@ export const SHELTER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Mountaineering Tool Physics (Crampons & Pitons)",
 
-          imageAsset: "steel_cable_holding.jpg",
+          imageAsset: "mountaineer_crampons.jpg",
 
           pipDialogue: "Glaciers are slick hard ice! Climbers strap spiky steel Crampons to their boots for traction, hammer steel Pitons into rock faces, and use lightweight nylon safety ropes that can support thousands of kilograms!",
 
@@ -1621,7 +1621,7 @@ export const SHELTER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Hydroelectric Potential Energy",
 
-          imageAsset: "natural_wood_timber.jpg",
+          imageAsset: "hydroelectric_dam.jpg",
 
           pipDialogue: "Hydro dams trap river water behind massive walls. When gates open, water rushes through turbines, turning mechanical energy into electricity! But large dams also submerge fertile farmlands and force families to relocate.",
 
@@ -1632,7 +1632,7 @@ export const SHELTER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "Sustainable Decentralized Eco-Architecture",
 
-          imageAsset: "lightbulb_glowing_bright.jpg",
+          imageAsset: "sustainable_solar_village.jpg",
 
           pipDialogue: "Modern ecological architects design sustainable village solutions: rooftop solar panels, rainwater harvesting tanks, and breathable mud-and-bamboo homes that generate power without destroying natural riverbeds!",
 
@@ -1709,7 +1709,7 @@ export const SHELTER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 1,
           conceptTitle: "Tectonic Plate Friction & Seismic Waves",
 
-          imageAsset: "wood_450yrs.jpg",
+          imageAsset: "earthquake_fault_seismograph.jpg",
 
           pipDialogue: "The crust of Earth is made of giant moving puzzle pieces called Tectonic Plates! When two plates grind against each other, friction locks them until they suddenly snap! The stored energy radiates outwards in violent ripples called Seismic Shockwaves!",
 
@@ -1720,7 +1720,7 @@ export const SHELTER_COURSE_CHAPTERS: CourseChapter[] = [
           stepNumber: 2,
           conceptTitle: "The Physics of Circular Bhunga Architecture",
 
-          imageAsset: "natural_wood_timber.jpg",
+          imageAsset: "kutch_bhunga_house.jpg",
 
           pipDialogue: "Square buildings have sharp 90-degree corners where earthquake stresses concentrate and crack. Traditional Kutch Bhungas are built completely circular with flexible bamboo and clay plaster, allowing shockwaves to flow smoothly around the structure!",
 

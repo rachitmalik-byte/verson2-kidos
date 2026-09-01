@@ -36,7 +36,6 @@ import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
 import silkwormCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
 import eagleLandscapeImg from '@/assets/images/theme1/eagle_view_landscape.jpg';
 import persianWheelImg from '@/assets/images/theme-shelter/golconda_persian_wheel.jpg';
-import soilAppleDay1Img from '@/assets/images/decay/soil_apple_day1.jpg';
 import boilingKettleImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
 import acrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
 import nylonThreadImg from '@/assets/images/specimens/nylon_thread_spool.jpg';
@@ -52,7 +51,30 @@ import fatehDarwazaImg from '@/assets/images/theme-shelter/golconda_fateh_darwaz
 import timberWoodImg from '@/assets/images/specimens/natural_wood_timber.jpg';
 import wood450yrsImg from '@/assets/images/decay/wood_450yrs.jpg';
 
+// NEW Clean, Topic-Relevant Educational Images
+import cargoShipImg from '@/assets/images/specimens/cargo_ship_buoyancy.jpg';
+import deadSeaSaltImg from '@/assets/images/specimens/dead_sea_salt_floating.jpg';
+import stepwellBawriImg from '@/assets/images/specimens/stepwell_bawri_rajasthan.jpg';
+import ghadisarLakeImg from '@/assets/images/specimens/jaisalmer_ghadisar_lake.jpg';
+import cloudsRainImg from '@/assets/images/specimens/clouds_condensation_rain.jpg';
+import solarEvapImg from '@/assets/images/specimens/solar_evaporation_ocean.jpg';
+import mosquitoLarvaImg from '@/assets/images/specimens/mosquito_larva_microscope.jpg';
+import oilFilmImg from '@/assets/images/specimens/oil_film_mosquito_prevention.jpg';
+import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
+import fourSnakesImg from '@/assets/images/specimens/four_venomous_snakes.jpg';
+import tonguePapillaeImg from '@/assets/images/specimens/tongue_taste_papillae.jpg';
+import drBeaumontImg from '@/assets/images/specimens/dr_beaumont_stomach.jpg';
+import dandelionSeedImg from '@/assets/images/specimens/dandelion_seed_dispersal.jpg';
+import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
+import reboTentImg from '@/assets/images/specimens/rebo_yak_tent.jpg';
+import cramponsImg from '@/assets/images/specimens/mountaineer_crampons.jpg';
+import hydroDamImg from '@/assets/images/specimens/hydroelectric_dam.jpg';
+import solarVillageImg from '@/assets/images/specimens/sustainable_solar_village.jpg';
+import earthquakeFaultImg from '@/assets/images/specimens/earthquake_fault_seismograph.jpg';
+import bhungaHouseImg from '@/assets/images/specimens/kutch_bhunga_house.jpg';
+
 const IMAGE_MAP: Record<string, string> = {
+  // Materials Science
   'raw_cotton_boll.jpg': rawCottonImg,
   'polyester_raincoat_waterproof.jpg': polyesterRaincoatImg,
   'polyester_swatch_clean.jpg': polyesterSwatchImg,
@@ -66,27 +88,41 @@ const IMAGE_MAP: Record<string, string> = {
   'pvc_insulated_cable.jpg': pvcCableImg,
   'soil_apple_rotted.jpg': soilAppleImg,
   'soil_plastic_450yrs.jpg': soilPlasticImg,
+  'natural_wood_timber.jpg': timberWoodImg,
+  'wood_450yrs.jpg': wood450yrsImg,
+
+  // Super Senses
   'ants_trail_sugar.jpg': antsSugarImg,
   'eagle_view_mouse.jpg': eagleMouseImg,
   'silkworm_silk_cocoon.jpg': silkwormCocoonImg,
-  'eagle_view_landscape.jpg': eagleLandscapeImg,
-  'persian_wheel.jpg': persianWheelImg,
-  'golconda_persian_wheel.jpg': persianWheelImg,
-  'soil_apple_day1.jpg': soilAppleDay1Img,
-  'boiling_tea_kettle_steam.jpg': boilingKettleImg,
-  'synthetic_acrylic_yarn.jpg': acrylicYarnImg,
-  'nylon_thread_spool.jpg': nylonThreadImg,
-  'lightbulb_glowing_bright.jpg': lightbulbImg,
-  'golconda_fort_bastions.jpg': golcondaFortImg,
-  'bakelite_handle_clean.jpg': bakeliteCleanImg,
-  'plastic_100yrs.jpg': plastic100yrsImg,
-  'copper_wire_macro.jpg': copperWireImg,
+  'snake_jawbone_vibrations.jpg': snakeVibrationImg,
+  'four_venomous_snakes.jpg': fourSnakesImg,
+  'tongue_taste_papillae.jpg': tonguePapillaeImg,
+  'dr_beaumont_stomach.jpg': drBeaumontImg,
+  'dandelion_seed_dispersal.jpg': dandelionSeedImg,
+  'burdock_velcro_macro.jpg': burdockVelcroImg,
+
+  // Water & Aquatic Experiments
+  'solar_evaporation_ocean.jpg': solarEvapImg,
+  'clouds_condensation_rain.jpg': cloudsRainImg,
+  'jaisalmer_ghadisar_lake.jpg': ghadisarLakeImg,
+  'stepwell_bawri_rajasthan.jpg': stepwellBawriImg,
+  'cargo_ship_buoyancy.jpg': cargoShipImg,
+  'dead_sea_salt_floating.jpg': deadSeaSaltImg,
+  'mosquito_larva_microscope.jpg': mosquitoLarvaImg,
+  'oil_film_mosquito_prevention.jpg': oilFilmImg,
+
+  // Shelter & Earth
   'pashmina_microscope_macro.jpg': pashminaMicroImg,
+  'rebo_yak_tent.jpg': reboTentImg,
   'everest_summit_mountaineer.jpg': everestClimberImg,
-  'steel_cable_holding.jpg': steelCableImg,
+  'mountaineer_crampons.jpg': cramponsImg,
   'golconda_fateh_darwaza.jpg': fatehDarwazaImg,
-  'natural_wood_timber.jpg': timberWoodImg,
-  'wood_450yrs.jpg': wood450yrsImg,
+  'golconda_persian_wheel.jpg': persianWheelImg,
+  'hydroelectric_dam.jpg': hydroDamImg,
+  'sustainable_solar_village.jpg': solarVillageImg,
+  'earthquake_fault_seismograph.jpg': earthquakeFaultImg,
+  'kutch_bhunga_house.jpg': bhungaHouseImg,
 };
 
 interface Props {
