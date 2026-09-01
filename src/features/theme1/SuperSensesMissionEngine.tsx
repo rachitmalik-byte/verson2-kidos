@@ -1,21 +1,21 @@
 import { useNavigationProgressStore } from '@/stores/navigationProgressStore';
 import { VoxelNatureBiome } from '@/components/voxel/VoxelNatureBiome';
 // Real 3-Tier Progressive Zoom Images
-import ant1x from '@/assets/images/microscope/ant_1x.jpg';
-import ant100x from '@/assets/images/microscope/ant_100x.jpg';
-import ant500x from '@/assets/images/microscope/ant_500x.jpg';
+import ant1x from '@/assets/images/microscope/ant_scope_1x.jpg';
+import ant10x from '@/assets/images/microscope/ant_scope_10x.jpg';
+import ant100x from '@/assets/images/microscope/ant_scope_100x.jpg';
 
-import snake1x from '@/assets/images/microscope/snake_1x.jpg';
-import snake100x from '@/assets/images/microscope/snake_100x.jpg';
-import snake500x from '@/assets/images/microscope/snake_500x.jpg';
+import snake1x from '@/assets/images/microscope/snake_scope_1x.jpg';
+import snake10x from '@/assets/images/microscope/snake_scope_10x.jpg';
+import snake100x from '@/assets/images/microscope/snake_scope_100x.jpg';
 
-import tongue1x from '@/assets/images/microscope/tongue_1x.jpg';
-import tongue100x from '@/assets/images/microscope/tongue_100x.jpg';
-import tongue500x from '@/assets/images/microscope/tongue_500x.jpg';
+import tongue1x from '@/assets/images/microscope/tongue_scope_1x.jpg';
+import tongue10x from '@/assets/images/microscope/tongue_scope_10x.jpg';
+import tongue100x from '@/assets/images/microscope/tongue_scope_100x.jpg';
 
-import burdock1x from '@/assets/images/microscope/burdock_1x.jpg';
-import burdock100x from '@/assets/images/microscope/burdock_100x.jpg';
-import burdock500x from '@/assets/images/microscope/burdock_500x.jpg';
+import burdock1x from '@/assets/images/microscope/burdock_scope_1x.jpg';
+import burdock10x from '@/assets/images/microscope/burdock_scope_10x.jpg';
+import burdock100x from '@/assets/images/microscope/burdock_scope_100x.jpg';
 import antsSugarImg from '@/assets/images/theme1/ants_trail_sugar.jpg';
 import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
 import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
@@ -220,7 +220,7 @@ export function SuperSensesMissionEngine() {
 
   const phaseOrder: Phase[] = ['HOOK', 'EXPERIMENT', 'MICROSCOPE', 'SCIENCE_LAW', 'SPEECH_COACH', 'QUIZ_LAB'];
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
-  const [zoomLevel, setZoomLevel] = useState<number>(250);
+  const [zoomLevel, setZoomLevel] = useState<number>(10);
   const [speechDone, setSpeechDone] = useState<boolean>(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
   const [showCelebration, setShowCelebration] = useState<boolean>(false);
@@ -231,7 +231,7 @@ export function SuperSensesMissionEngine() {
 
   useEffect(() => {
     setCurrentPhase('HOOK');
-    setZoomLevel(250);
+    setZoomLevel(10);
     setSpeechDone(false);
     setQuizAnswers({});
     setShowCelebration(false);
@@ -370,34 +370,34 @@ export function SuperSensesMissionEngine() {
               // Real photographic images by chapter & zoom level
               const specimenImages: Record<number, Record<number, { img: string; title: string; desc: string }>> = {
                 1: {
-                  1: { img: ant1x, title: '1x Macro View: Ant Worker on Sand Trail', desc: 'Real macroscopic specimen showing full ant body, jointed legs, and antennae scanning the ground.' },
-                  100: { img: ant100x, title: '100x Optical Zoom: Antenna Sensilla Hairs', desc: 'Under 100x magnification, thousands of microscopic sensilla hairs and chemical receptor pores become visible.' },
-                  500: { img: ant500x, title: '500x High-Power SEM: Olfactory Receptor Pores', desc: 'High-power electron micrograph reveals individual nanometer pores where scent molecules land.' },
+                  1: { img: ant1x, title: '1x Macro View: Ant Worker on Trail', desc: 'Real macroscopic specimen showing full ant body, jointed legs, and antennae scanning the ground.' },
+                  10: { img: ant10x, title: '10x Stereo Zoom: Antenna Base & Joint', desc: 'Under 10x magnification, the mobile scape joint and antennae chemoreceptors are revealed.' },
+                  100: { img: ant100x, title: '100x High-Power: Sensilla Scent Pores', desc: '100x optical micrograph shows individual microscopic sensilla hairs where pheromone molecules land.' },
                 },
                 2: {
-                  1: { img: snake1x, title: '1x Macro View: Indian Spectacled Cobra', desc: 'Real specimen showing the lower jaw resting directly against the ground substrate.' },
-                  100: { img: snake100x, title: '100x Optical Zoom: Quadrate Jawbone & Scales', desc: '100x optical view shows keeled keratin scales and the flexible quadrate bone that transmits ground vibrations.' },
-                  500: { img: snake500x, title: '500x High-Power SEM: Hollow Venom Needle Channel', desc: 'Microscopic cross-section of the hollow fang showing the internal hypodermic venom canal.' },
+                  1: { img: snake1x, title: '1x Macro View: Spectacled Cobra Jaw', desc: 'Real specimen showing the lower jaw resting directly against the ground substrate.' },
+                  10: { img: snake10x, title: '10x Stereo Zoom: Quadrate Jaw & Scales', desc: '10x view shows keeled keratin scales and the flexible quadrate bone that transmits ground vibrations.' },
+                  100: { img: snake100x, title: '100x High-Power: Hollow Venom Channel', desc: '100x microscopic cross-section showing the internal hypodermic venom canal of the hollow fang.' },
                 },
                 3: {
-                  1: { img: tongue1x, title: '1x Macro View: Human Tongue Dorsal Surface', desc: 'Real photographic specimen showing thousands of visible pink papillae bumps across the tongue.' },
-                  100: { img: tongue100x, title: '100x Optical Zoom: Fungiform Papillae & Taste Pores', desc: 'Real 100x biological micrograph showing mushroom-shaped fungiform papilla with active taste receptor pores.' },
-                  500: { img: tongue500x, title: '500x Cellular Zoom: Gustatory Receptor Cells', desc: 'High-power cellular micrograph showing taste receptor cells that transmit electrical signals to the brain.' },
+                  1: { img: tongue1x, title: '1x Macro View: Tongue Dorsal Surface', desc: 'Real photographic specimen showing thousands of visible pink papillae bumps across the human tongue.' },
+                  10: { img: tongue10x, title: '10x Stereo Zoom: Fungiform Papillae', desc: '10x biological stereo view showing mushroom-shaped fungiform papillae surrounded by filiform hairs.' },
+                  100: { img: tongue100x, title: '100x High-Power: Taste Bud Receptor Pore', desc: '100x optical micrograph revealing the microscopic taste pore where flavor chemicals enter to signal the brain.' },
                 },
                 4: {
-                  1: { img: burdock1x, title: '1x Macro View: Burdock Seed Burr on Dog Fur', desc: 'Real macro photo of brown burdock seed burrs latching securely into natural animal fur.' },
-                  100: { img: burdock100x, title: '100x Optical Zoom: Curved Elastic Micro-Hooks', desc: 'Microscopic photo showing the sharp, elastic curved spines that George de Mestral copied to invent Velcro.' },
-                  500: { img: burdock500x, title: '500x SEM: Micro-Hook Interlocking with Nylon Loop', desc: 'Scanning electron micrograph showing a natural burdock hook interlocked with a synthetic blue nylon loop.' },
+                  1: { img: burdock1x, title: '1x Macro View: Burdock Seed on Fur', desc: 'Real macro photo of brown burdock seed burrs latching securely into natural animal fur.' },
+                  10: { img: burdock10x, title: '10x Stereo Zoom: Curved Hook Array', desc: '10x view showing the hundreds of sharp, elastic curved spines that George de Mestral copied to invent Velcro.' },
+                  100: { img: burdock100x, title: '100x High-Power: Hook Interlocked in Loop', desc: '100x high-power micrograph showing a single natural burdock hook locked inside a synthetic nylon loop.' },
                 },
               };
 
               const tiers = [
                 { label: '1x Macro', val: 1 },
-                { label: '100x Optical', val: 100 },
-                { label: '500x High-Power', val: 500 },
+                { label: '10x Stereo', val: 10 },
+                { label: '100x High-Power', val: 100 },
               ];
 
-              const currentSpecimen = specimenImages[num]?.[zoomLevel] || specimenImages[num]?.[100] || specimenImages[1][100];
+              const currentSpecimen = specimenImages[num]?.[zoomLevel] || specimenImages[num]?.[10] || specimenImages[1][10];
 
               return (
                 <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-2xl flex flex-col items-center text-white text-center">
