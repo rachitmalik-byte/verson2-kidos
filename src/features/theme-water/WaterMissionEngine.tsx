@@ -8,6 +8,7 @@ import { WATER_CHAPTERS, WaterChapter } from '@/data/themeWaterMissions';
 import { WATER_COURSE_CHAPTERS } from '@/data/masterCurriculum';
 import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
 import { InteractiveDiagramEngine } from '@/components/engine/InteractiveDiagramEngine';
+import { VoxelWaterCycleDiorama } from '@/components/voxel/VoxelWaterCycleDiorama';
 import { WaterAnimatedOceanBackground } from '@/components/effects/WaterAnimatedOceanBackground';
 import {
   GhadisarStepwellWaterSim,
@@ -179,13 +180,21 @@ export function WaterMissionEngine() {
               exit={{ opacity: 0, scale: 0.98 }}
               className="w-full flex flex-col items-center gap-4"
             >
-              {/* Chapter 1: The Interactive 2D Water Cycle Simulation */}
+              {/* Chapter 1: 3D Voxel Diorama + 2D Interactive Water Cycle Simulation */}
               {num === 1 && (
-                <InteractiveDiagramEngine
-                  data={WATER_CYCLE_DATA}
-                  onComplete={handleComplete}
-                  isCompleted={isCompleted}
-                />
+                <div className="w-full flex flex-col items-center gap-6">
+                  {/* 3D Voxel Island Diorama */}
+                  <VoxelWaterCycleDiorama onComplete={handleComplete} />
+
+                  {/* 2D Step-by-Step Diagram Engine */}
+                  <div className="w-full">
+                    <InteractiveDiagramEngine
+                      data={WATER_CYCLE_DATA}
+                      onComplete={handleComplete}
+                      isCompleted={isCompleted}
+                    />
+                  </div>
+                </div>
               )}
 
               {/* Chapter 2: Rajasthan Bawris & 9-Tank Interconnection Sim */}

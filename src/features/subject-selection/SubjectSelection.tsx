@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Pip } from '@/components/pip/Pip';
+import { VoxelScienceWorldMap } from '@/components/voxel/VoxelScienceWorldMap';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
@@ -119,6 +120,7 @@ const SUBJECTS: Subject[] = [
 export const SubjectSelection: React.FC = () => {
   const navigate = useNavigate();
   const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'3d-voxel' | 'grid'>('3d-voxel');
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 
@@ -178,8 +180,50 @@ export const SubjectSelection: React.FC = () => {
           </div>
         </div>
 
-        {/* Subjects Grid */}
-        <div id="subject-grid-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* View Switcher: 3D Voxel World Map vs Grid */}
+        <div className="flex items-center justify-between flex-wrap gap-3 bg-white/90 backdrop-blur-md p-3 rounded-2xl border-2 border-slate-200 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black text-slate-800">Select View:</span>
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-300">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setViewMode('3d-voxel');
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === '3d-voxel'
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <span>🏝️ 3D Voxel World Map</span>
+              </button>
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setViewMode('grid');
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'grid'
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <span>🗂️ Subject Cards Grid</span>
+              </button>
+            </div>
+          </div>
+
+          <span className="text-[11px] font-bold text-slate-500 hidden sm:inline">
+            Drag in 3D to spin science islands in 360°
+          </span>
+        </div>
+
+        {/* 3D Voxel World Map or Grid View */}
+        {viewMode === '3d-voxel' ? (
+          <VoxelScienceWorldMap />
+        ) : (
+          <div id="subject-grid-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {SUBJECTS.map((sub) => (
             <motion.div
               key={sub.id}
@@ -248,6 +292,7 @@ export const SubjectSelection: React.FC = () => {
             </motion.div>
           ))}
         </div>
+        )}
       </div>
       <PipWardrobeShopModal isOpen={isWardrobeOpen} onClose={() => setIsWardrobeOpen(false)} />
     </div>
