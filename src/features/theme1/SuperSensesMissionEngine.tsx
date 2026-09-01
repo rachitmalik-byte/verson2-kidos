@@ -1,3 +1,4 @@
+import { VoxelNatureBiome } from '@/components/voxel/VoxelNatureBiome';
 // Real 3-Tier Progressive Zoom Images
 import ant1x from '@/assets/images/microscope/ant_1x.jpg';
 import ant100x from '@/assets/images/microscope/ant_100x.jpg';
