@@ -351,24 +351,13 @@ export function SuperSensesMissionEngine() {
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'EXPERIMENT' && (
               <div className="w-full flex flex-col items-center gap-6">
-                {num === 1 && (
-                  <>
-                    <AntTrailPheromoneSim />
-                    <EagleZoomVisionSim />
-                  </>
-                )}
-                {num === 2 && (
-                  <>
-                    <SnakeGroundVibrationSim />
-                    <SnakeInfraredThermalVisionLab />
-                  </>
-                )}
+                {num === 1 && <AntTrailPheromoneSim />}
+                {num === 2 && <SnakeGroundVibrationSim />}
                 {num === 3 && (
-                  <>
-                    <TongueTasteInteractiveTrayLab />
+                  <div className="w-full flex flex-col gap-6">
                     <TongueTasteAndBeaumontSim />
                     <BreadMoldEnvironmentalTimelapseLab />
-                  </>
+                  </div>
                 )}
                 {num === 4 && <SeedDispersalVelcroSim />}
               </div>
