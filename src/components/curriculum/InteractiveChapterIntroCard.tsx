@@ -8,122 +8,14 @@ import {
   Sparkles,
   Volume2,
   Zap,
-  HelpCircle,
-  CheckCircle2,
   ArrowRight,
   BookOpen,
-  Check,
-  FlaskConical,
-  X,
+  CheckCircle2,
+  HelpCircle,
+  Eye,
+  Star,
+  Award,
 } from 'lucide-react';
-
-// Specimen image asset map
-import rawCottonImg from '@/assets/images/specimens/raw_cotton_boll.jpg';
-import polyesterRaincoatImg from '@/assets/images/raincoat/polyester_raincoat_waterproof.jpg';
-import polyesterSwatchImg from '@/assets/images/experiments/polyester_swatch_clean.jpg';
-import sheepWoolImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
-import petBottleImg from '@/assets/images/experiments/pet_water_bottle_molding.jpg';
-import cottonAshImg from '@/assets/images/experiments/cotton_burning_ash.jpg';
-import polyMeltingImg from '@/assets/images/experiments/polyester_melting_bead.jpg';
-import nylonRopeImg from '@/assets/images/experiments/nylon_rope_heavy_weight.jpg';
-import parachuteImg from '@/assets/images/experiments/parachute_canopy_jump.jpg';
-import bakeliteImg from '@/assets/images/experiments/bakelite_pan_handle.jpg';
-import pvcCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
-import soilAppleImg from '@/assets/images/decay/soil_apple_rotted.jpg';
-import soilPlasticImg from '@/assets/images/decay/soil_plastic_450yrs.jpg';
-import antsSugarImg from '@/assets/images/theme1/ants_trail_sugar.jpg';
-import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
-import silkwormCocoonImg from '@/assets/images/specimens/silkworm_silk_cocoon.jpg';
-import eagleLandscapeImg from '@/assets/images/theme1/eagle_view_landscape.jpg';
-import persianWheelImg from '@/assets/images/theme-shelter/golconda_persian_wheel.jpg';
-import boilingKettleImg from '@/assets/images/experiments/boiling_tea_kettle_steam.jpg';
-import acrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
-import nylonThreadImg from '@/assets/images/specimens/nylon_thread_spool.jpg';
-import lightbulbImg from '@/assets/images/wire/lightbulb_glowing_bright.jpg';
-import golcondaFortImg from '@/assets/images/theme-shelter/golconda_fort_bastions.jpg';
-import bakeliteCleanImg from '@/assets/images/experiments/bakelite_handle_clean.jpg';
-import plastic100yrsImg from '@/assets/images/decay/plastic_100yrs.jpg';
-import copperWireImg from '@/assets/images/wire/copper_wire_macro.jpg';
-import pashminaMicroImg from '@/assets/images/theme-shelter/pashmina_microscope_macro.jpg';
-import everestClimberImg from '@/assets/images/theme-shelter/everest_summit_mountaineer.jpg';
-import steelCableImg from '@/assets/images/experiments/steel_cable_holding.jpg';
-import fatehDarwazaImg from '@/assets/images/theme-shelter/golconda_fateh_darwaza.jpg';
-import timberWoodImg from '@/assets/images/specimens/natural_wood_timber.jpg';
-import wood450yrsImg from '@/assets/images/decay/wood_450yrs.jpg';
-
-// NEW Clean, Topic-Relevant Educational Images
-import cargoShipImg from '@/assets/images/specimens/cargo_ship_buoyancy.jpg';
-import deadSeaSaltImg from '@/assets/images/specimens/dead_sea_salt_floating.jpg';
-import stepwellBawriImg from '@/assets/images/specimens/stepwell_bawri_rajasthan.jpg';
-import ghadisarLakeImg from '@/assets/images/specimens/jaisalmer_ghadisar_lake.jpg';
-import cloudsRainImg from '@/assets/images/specimens/clouds_condensation_rain.jpg';
-import solarEvapImg from '@/assets/images/specimens/solar_evaporation_ocean.jpg';
-import mosquitoLarvaImg from '@/assets/images/specimens/mosquito_larva_microscope.jpg';
-import oilFilmImg from '@/assets/images/specimens/oil_film_mosquito_prevention.jpg';
-import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
-import fourSnakesImg from '@/assets/images/specimens/four_venomous_snakes.jpg';
-import tonguePapillaeImg from '@/assets/images/specimens/tongue_taste_papillae.jpg';
-import drBeaumontImg from '@/assets/images/specimens/dr_beaumont_stomach.jpg';
-import dandelionSeedImg from '@/assets/images/specimens/dandelion_seed_dispersal.jpg';
-import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
-import reboTentImg from '@/assets/images/specimens/rebo_yak_tent.jpg';
-import cramponsImg from '@/assets/images/specimens/mountaineer_crampons.jpg';
-import hydroDamImg from '@/assets/images/specimens/hydroelectric_dam.jpg';
-import solarVillageImg from '@/assets/images/specimens/sustainable_solar_village.jpg';
-import earthquakeFaultImg from '@/assets/images/specimens/earthquake_fault_seismograph.jpg';
-import bhungaHouseImg from '@/assets/images/specimens/kutch_bhunga_house.jpg';
-
-const IMAGE_MAP: Record<string, string> = {
-  // Materials Science
-  'raw_cotton_boll.jpg': rawCottonImg,
-  'polyester_raincoat_waterproof.jpg': polyesterRaincoatImg,
-  'polyester_swatch_clean.jpg': polyesterSwatchImg,
-  'sheep_wool_fleece.jpg': sheepWoolImg,
-  'pet_water_bottle_molding.jpg': petBottleImg,
-  'cotton_burning_ash.jpg': cottonAshImg,
-  'polyester_melting_bead.jpg': polyMeltingImg,
-  'nylon_rope_heavy_weight.jpg': nylonRopeImg,
-  'parachute_canopy_jump.jpg': parachuteImg,
-  'bakelite_pan_handle.jpg': bakeliteImg,
-  'pvc_insulated_cable.jpg': pvcCableImg,
-  'soil_apple_rotted.jpg': soilAppleImg,
-  'soil_plastic_450yrs.jpg': soilPlasticImg,
-  'natural_wood_timber.jpg': timberWoodImg,
-  'wood_450yrs.jpg': wood450yrsImg,
-
-  // Super Senses
-  'ants_trail_sugar.jpg': antsSugarImg,
-  'eagle_view_mouse.jpg': eagleMouseImg,
-  'silkworm_silk_cocoon.jpg': silkwormCocoonImg,
-  'snake_jawbone_vibrations.jpg': snakeVibrationImg,
-  'four_venomous_snakes.jpg': fourSnakesImg,
-  'tongue_taste_papillae.jpg': tonguePapillaeImg,
-  'dr_beaumont_stomach.jpg': drBeaumontImg,
-  'dandelion_seed_dispersal.jpg': dandelionSeedImg,
-  'burdock_velcro_macro.jpg': burdockVelcroImg,
-
-  // Water & Aquatic Experiments
-  'solar_evaporation_ocean.jpg': solarEvapImg,
-  'clouds_condensation_rain.jpg': cloudsRainImg,
-  'jaisalmer_ghadisar_lake.jpg': ghadisarLakeImg,
-  'stepwell_bawri_rajasthan.jpg': stepwellBawriImg,
-  'cargo_ship_buoyancy.jpg': cargoShipImg,
-  'dead_sea_salt_floating.jpg': deadSeaSaltImg,
-  'mosquito_larva_microscope.jpg': mosquitoLarvaImg,
-  'oil_film_mosquito_prevention.jpg': oilFilmImg,
-
-  // Shelter & Earth
-  'pashmina_microscope_macro.jpg': pashminaMicroImg,
-  'rebo_yak_tent.jpg': reboTentImg,
-  'everest_summit_mountaineer.jpg': everestClimberImg,
-  'mountaineer_crampons.jpg': cramponsImg,
-  'golconda_fateh_darwaza.jpg': fatehDarwazaImg,
-  'golconda_persian_wheel.jpg': persianWheelImg,
-  'hydroelectric_dam.jpg': hydroDamImg,
-  'sustainable_solar_village.jpg': solarVillageImg,
-  'earthquake_fault_seismograph.jpg': earthquakeFaultImg,
-  'kutch_bhunga_house.jpg': bhungaHouseImg,
-};
 
 interface Props {
   chapterData?: CourseChapter;
@@ -131,347 +23,200 @@ interface Props {
   accentBorderColor?: string;
 }
 
+interface MysterySpecimen {
+  id: string;
+  emoji: string;
+  name: string;
+  superpowerFact: string;
+}
+
 export const InteractiveChapterIntroCard: React.FC<Props> = ({
   chapterData,
   onStartLab,
   accentBorderColor = 'border-sky-400',
 }) => {
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [isChallengePassed, setIsChallengePassed] = useState(false);
-  const [isJournalOpen, setIsJournalOpen] = useState(false);
+  const [discoveredItems, setDiscoveredItems] = useState<string[]>([]);
+  const [activeSpecimen, setActiveSpecimen] = useState<MysterySpecimen | null>(null);
 
   const intro = chapterData?.chapterIntro || ({} as any);
   const journal = chapterData?.fieldJournal || ({} as any);
-
-  const conceptSteps = intro?.conceptSteps || [];
-  const checklist: string[] = intro?.learningChecklist || intro?.learningRoadmap || [
-    'Explore foundational scientific principles and real-world mechanisms.',
-    'Observe microscopic specimens and material properties.',
-    'Conduct hands-on experiments in the laboratory simulator.',
-  ];
-
-  const challenge = intro?.thinkFastChallenge || intro?.pipThinkFastChallenge || {
-    question: 'What is the key science principle discovered in this chapter?',
-    options: [
-      { text: 'The material structure determines its properties and uses', isCorrect: true },
-      { text: 'Materials behave completely randomly', isCorrect: false },
-    ],
-    explanation: 'Every material has a unique microscopic structure that gives it specific properties!',
-  };
-
-  const challengeOptions = challenge?.options || [
-    { text: 'The material structure determines its properties and uses', isCorrect: true },
-    { text: 'Materials behave completely randomly', isCorrect: false },
-  ];
-
-  const reflectionPrompt =
-    journal?.journalReflectionBadgePrompt ||
-    journal?.journalBadgeQuestion ||
-    'What was your most exciting discovery in this chapter?';
   const facts = journal?.specimenFacts || [];
-  const handsOn = journal?.handsOnExperiment || {
-    title: 'Hands-on Science Activity',
-    materialsNeeded: ['Household items', 'Notebook'],
-    procedure: 'Observe everyday materials around your home.',
-    expectedObservation: 'Materials exhibit unique physical and chemical properties.',
-  };
 
-  const handleSelectOption = (idx: number, isCorrect: boolean) => {
-    setSelectedOption(idx);
-    if (isCorrect) {
-      sounds.fanfare();
-      setIsChallengePassed(true);
-      voiceAssistant.speak(`Brilliant discovery, Young Scientist! ${challenge?.explanation || ''}`);
-    } else {
-      sounds.boing();
-      voiceAssistant.speak('Look closely at the scientific concepts above and try again!');
+  // Generate 4 interactive discovery specimens based on chapter data
+  const specimens: MysterySpecimen[] = facts.length >= 3
+    ? facts.map((f: any, idx: number) => ({
+        id: `specimen-${idx}`,
+        emoji: f.icon || '🔬',
+        name: f.title || 'Specimen',
+        superpowerFact: f.detail || 'Discovered a unique microscopic property!',
+      }))
+    : [
+        { id: 'item-1', emoji: '🦋', name: 'Butterfly', superpowerFact: 'Butterflies can taste sweet nectar with receptors on their feet!' },
+        { id: 'item-2', emoji: '🐜', name: 'Scout Ant', superpowerFact: 'Ants leave chemical scent trails called pheromones to guide friends!' },
+        { id: 'item-3', emoji: '🐍', name: 'Snake', superpowerFact: 'Snakes feel sound waves as ground vibrations through their lower jawbone!' },
+        { id: 'item-4', emoji: '🦅', name: 'Eagle', superpowerFact: 'Eagles have 4x sharper telescopic eyesight and spot mice from 2 km away!' },
+      ];
+
+  const handleTapSpecimen = (specimen: MysterySpecimen) => {
+    sounds.sparkle();
+    setActiveSpecimen(specimen);
+    if (!discoveredItems.includes(specimen.id)) {
+      setDiscoveredItems((prev) => [...prev, specimen.id]);
     }
+    voiceAssistant.speak(`${specimen.name}: ${specimen.superpowerFact}`);
   };
 
-  const handleReadAloud = (text: string) => {
+  const handleReadPip = () => {
     sounds.pop();
-    voiceAssistant.speak(text);
+    const pipMsg = intro?.hookScene || 'Animals and plants have amazing senses. Some can see, hear, smell, or feel things humans cannot!';
+    voiceAssistant.speak(pipMsg);
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 select-none">
-      {/* ── Pip Teaching Hero Header Card ── */}
-      <div className={`w-full bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 ${accentBorderColor} shadow-2xl flex flex-col md:flex-row items-center gap-6`}>
-        <Pip mood="explaining" size="xl" />
+    <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 select-none font-sans">
+      {/* ── 1. Main Interactive Pip Greeting Card (Clean, Grade-5 Conversational) ── */}
+      <div className={`w-full bg-white/98 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 ${accentBorderColor} shadow-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden`}>
+        {/* Pip Mascot */}
+        <div className="shrink-0 flex flex-col items-center">
+          <Pip mood={discoveredItems.length > 0 ? 'celebrating' : 'curious'} size="lg" />
+          <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full mt-1">
+            Pip • Guide
+          </span>
+        </div>
 
+        {/* Conversational Bite-Sized Content */}
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
-            <span className="px-3.5 py-1 rounded-full bg-indigo-100 text-indigo-950 font-black text-xs">
+            <span className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-950 font-black text-xs">
               {chapterData?.syllabusRef || 'CBSE Class 5 EVS'} • Chapter {chapterData?.chapterNumber || 1}
             </span>
             <button
-              onClick={() => handleReadAloud(`${intro?.title || ''}. ${intro?.hookScene || ''} ${intro?.bigGuidingQuestion || ''}`)}
-              className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer transition-all active:scale-95 shadow-xs"
-              title="Listen to Pip Read Intro Aloud"
+              onClick={handleReadPip}
+              className="p-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer transition-all active:scale-95 shadow-xs"
+              title="Hear Pip read aloud"
             >
               <Volume2 className="w-4 h-4 text-indigo-600" />
             </button>
-            <button
-              onClick={() => {
-                sounds.pop();
-                setIsJournalOpen(true);
-              }}
-              className="px-3 py-1 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-amber-700" />
-              <span>Chapter Field Journal</span>
-            </button>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            {intro?.title || chapterData?.chapterTitle || 'Chapter Science Foundation'} {chapterData?.icon || '🔬'}
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            {intro?.title || chapterData?.chapterTitle || 'Chapter Science Quest'} {chapterData?.icon || '🔬'}
           </h1>
 
-          <p className="text-xs sm:text-sm font-bold text-slate-600 mt-2 leading-relaxed">
-            {intro?.hookScene || 'Explore the fundamental scientific concepts behind everyday materials and environments.'}
+          {/* 1-2 Exciting sentences max */}
+          <p className="text-sm sm:text-base font-bold text-slate-700 mt-2 leading-relaxed">
+            {intro?.hookScene || 'Animals and plants have amazing senses. Some can see, hear, smell, or feel things humans cannot!'}
           </p>
 
-          <div className="mt-3 p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-300 text-xs sm:text-sm font-black text-amber-950 flex items-start gap-2.5 shadow-2xs">
-            <Zap className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <span>Big Question: {intro?.bigGuidingQuestion || 'Why do materials behave differently?'}</span>
+          {/* Quick "Did you know?" Mini Card */}
+          <div className="mt-3 p-3 bg-amber-50 rounded-2xl border-2 border-amber-300 text-xs sm:text-sm font-black text-amber-950 flex items-start gap-2 shadow-2xs">
+            <span className="text-lg">🔎</span>
+            <div>
+              <span className="text-amber-800 uppercase tracking-wider text-[10px] block font-black">Did you know?</span>
+              <span className="font-bold">{intro?.bigGuidingQuestion || 'Animal senses help them hunt for food, spot danger, and travel miles across the wild.'}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Multi-Step Visual Concept Cards Taught by Pip ── */}
-      {conceptSteps.length > 0 && (
-        <div className="w-full flex flex-col gap-4">
-          <span className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5 ml-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>Foundational Science Lessons (Taught by Pip)</span>
-          </span>
+      {/* ── 2. INTERACTIVE MINI-GAME: Tap Specimens to Discover Superpowers ── */}
+      <div className="w-full bg-slate-950 p-6 sm:p-7 rounded-[36px] border-4 border-indigo-400 shadow-2xl text-white">
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl animate-bounce">👆</span>
+            <div>
+              <h3 className="text-sm sm:text-base font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                Tap Any Floating Specimen to Discover Its Superpower:
+              </h3>
+              <p className="text-[11px] text-slate-400 font-bold">
+                Unlock secret science facts to power up your lab experiments!
+              </p>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {conceptSteps.map((step, sIdx) => {
-              const localImg = step.imageAsset ? IMAGE_MAP[step.imageAsset] : null;
-              return (
-                <div
-                  key={sIdx}
-                  className="p-5 rounded-3xl bg-white/95 backdrop-blur-md border-3 border-slate-200 shadow-md flex flex-col justify-between gap-4"
-                >
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black uppercase tracking-wider text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full">
-                        Step {step.stepNumber}: {step.conceptTitle}
-                      </span>
-                      <button
-                        onClick={() => handleReadAloud(`${step.conceptTitle}. ${step.pipDialogue}`)}
-                        className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 cursor-pointer"
-                        title="Listen"
-                      >
-                        <Volume2 className="w-3.5 h-3.5 text-indigo-600" />
-                      </button>
-                    </div>
-
-                    {localImg && (
-                      <div className="w-full h-44 rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-950 relative shadow-inner">
-                        <img
-                          src={localImg}
-                          alt={step.conceptTitle}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-
-                    <p className="text-xs font-bold text-slate-600 leading-relaxed">
-                      {step.pipDialogue}
-                    </p>
-                  </div>
-
-                  <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-300 text-[11px] font-black text-emerald-950 flex items-start gap-1.5 shadow-2xs">
-                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>{step.keyTakeaway}</span>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Sparks Counter */}
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-900/80 rounded-2xl border border-indigo-400/50 text-xs font-mono font-black text-amber-300">
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            <span>{discoveredItems.length} / {specimens.length} Unlocked</span>
           </div>
         </div>
-      )}
 
-      {/* ── Golden Science Law & Learning Checklist ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-1 p-5 rounded-3xl bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 text-slate-950 border-3 border-amber-300 shadow-lg flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950/20 px-2.5 py-1 rounded-full text-slate-950 inline-block mb-2">
-              ⭐ Golden Science Law
-            </span>
-            <h4 className="text-sm font-black leading-snug">
-              {intro?.goldenLaw || 'The Material structure determines its properties and practical uses!'}
-            </h4>
-          </div>
-          <span className="text-[10px] font-bold opacity-80 mt-3 block">
-            Keep this principle in mind during the simulation!
-          </span>
-        </div>
+        {/* 4 Clickable Specimen Floating Bubbles */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {specimens.map((item) => {
+            const isUnlocked = discoveredItems.includes(item.id);
+            const isSelected = activeSpecimen?.id === item.id;
 
-        <div className="md:col-span-2 p-5 rounded-3xl bg-white/95 backdrop-blur-md border-3 border-slate-200 shadow-md flex flex-col justify-between">
-          <span className="text-xs font-black uppercase tracking-wider text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full w-fit mb-2">
-            📋 What You Will Master
-          </span>
-          <div className="flex flex-col gap-2">
-            {checklist.map((item, cIdx) => (
-              <div key={cIdx} className="flex items-start gap-2 text-xs font-bold text-slate-700">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Interactive Think-Fast Challenge & Lab Unlock ── */}
-      <div className="w-full bg-white/95 backdrop-blur-md p-6 sm:p-7 rounded-[32px] border-4 border-indigo-300 shadow-xl flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-black uppercase tracking-wider text-indigo-950 bg-indigo-100 px-3.5 py-1 rounded-full flex items-center gap-1.5">
-            <HelpCircle className="w-4 h-4 text-indigo-600" />
-            <span>Pip's Think-Fast Challenge</span>
-          </span>
-
-          {isChallengePassed && (
-            <span className="text-xs font-black text-emerald-600 flex items-center gap-1">
-              <Check className="w-4 h-4 stroke-[3]" /> Concept Mastered!
-            </span>
-          )}
-        </div>
-
-        <h3 className="text-sm sm:text-base font-black text-slate-900 leading-snug">
-          {challenge?.question || 'Why do materials behave differently under force and weather?'}
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {challengeOptions.map((opt, oIdx) => {
-            const isSelected = selectedOption === oIdx;
             return (
               <motion.button
-                key={oIdx}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleSelectOption(oIdx, opt.isCorrect)}
-                className={`p-4 rounded-2xl border-2 text-left text-xs font-bold transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
-                  isSelected && opt.isCorrect
-                    ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-black'
-                    : isSelected && !opt.isCorrect
-                    ? 'bg-rose-100 border-rose-400 text-rose-950'
-                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-indigo-50 hover:border-indigo-300'
+                key={item.id}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.94 }}
+                onClick={() => handleTapSpecimen(item)}
+                className={`p-3.5 rounded-2xl border-3 flex flex-col items-center text-center cursor-pointer transition-all ${
+                  isSelected
+                    ? 'bg-gradient-to-tr from-amber-400 to-amber-500 border-white text-slate-950 shadow-[0_0_20px_rgba(251,191,36,0.6)] scale-105'
+                    : isUnlocked
+                    ? 'bg-slate-900 border-emerald-400 text-white'
+                    : 'bg-slate-900/80 border-slate-700 text-slate-300 hover:border-sky-400'
                 }`}
               >
-                <span>{opt.text}</span>
-                {isSelected && opt.isCorrect && (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                )}
+                <span className="text-3xl sm:text-4xl mb-1 filter drop-shadow-md">{item.emoji}</span>
+                <span className="text-xs font-black truncate w-full">{item.name}</span>
+                <span className={`text-[9px] font-black uppercase mt-1 px-2 py-0.2 rounded-full ${
+                  isUnlocked ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-400'
+                }`}>
+                  {isUnlocked ? '✅ Unlocked' : 'Tap to scan'}
+                </span>
               </motion.button>
             );
           })}
         </div>
 
-        {/* Enter Simulator Button */}
-        <div className="pt-3 border-t-2 border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-xs font-bold text-slate-500 text-center sm:text-left">
-            {isChallengePassed
-              ? '✨ Challenge unlocked! Launch the interactive laboratory below:'
-              : '💡 Answer Pip’s challenge or jump straight into the live interactive lab!'}
-          </span>
-
-          <button
-            onClick={() => {
-              sounds.fanfare();
-              voiceAssistant.stop();
-              onStartLab();
-            }}
-            className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-slate-950 font-black text-sm rounded-2xl shadow-lg cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2 shrink-0"
-          >
-            <span>Enter Interactive Lab 🔬</span>
-            <ArrowRight className="w-5 h-5 stroke-[2.5]" />
-          </button>
-        </div>
+        {/* Active Superpower Reveal Pop-out */}
+        <AnimatePresence mode="wait">
+          {activeSpecimen && (
+            <motion.div
+              key={activeSpecimen.id}
+              initial={{ opacity: 0, y: 8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-indigo-900 to-purple-900 border-2 border-indigo-400 flex items-start gap-3 shadow-lg"
+            >
+              <span className="text-3xl">{activeSpecimen.emoji}</span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-black text-amber-300 uppercase tracking-wider">
+                    {activeSpecimen.name} Discovery:
+                  </h4>
+                  <span className="text-[10px] font-mono bg-indigo-800 px-2 py-0.2 rounded-full text-indigo-200">
+                    +1 Science Spark ✨
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm font-bold text-white mt-0.5 leading-snug">
+                  {activeSpecimen.superpowerFact}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* ── Unique Chapter Field Journal Modal ── */}
-      <AnimatePresence>
-        {isJournalOpen && (
-          <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-[36px] max-w-2xl w-full p-6 sm:p-8 border-4 border-amber-400 shadow-2xl flex flex-col gap-5 max-h-[90vh] overflow-y-auto"
-            >
-              <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-6 h-6 text-amber-600" />
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    {journal?.journalTitle || 'Chapter Field Journal'}
-                  </h2>
-                </div>
-                <button
-                  onClick={() => setIsJournalOpen(false)}
-                  className="p-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <p className="text-xs sm:text-sm font-bold text-slate-600 leading-relaxed">
-                {journal?.fieldBrief || 'Record your scientific observations and field data.'}
-              </p>
-
-              {facts.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {facts.map((fact: any, fIdx: number) => (
-                    <div key={fIdx} className="p-3.5 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1">
-                      <span className="text-2xl">{fact.icon || '🔬'}</span>
-                      <span className="text-xs font-black text-amber-950">{fact.title}</span>
-                      <p className="text-[11px] font-bold text-slate-600 leading-snug">{fact.detail || fact.fact}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Hands-on DIY Activity */}
-              <div className="p-4 bg-indigo-50 rounded-2xl border-2 border-indigo-200 flex flex-col gap-2">
-                <span className="text-xs font-black uppercase text-indigo-900 flex items-center gap-1.5">
-                  <FlaskConical className="w-4 h-4 text-indigo-600" />
-                  <span>{handsOn.title || 'Hands-on Science Activity'}</span>
-                </span>
-                {handsOn.materialsNeeded && (
-                  <p className="text-xs font-bold text-slate-700">
-                    <span className="text-indigo-950">Materials: </span>
-                    {Array.isArray(handsOn.materialsNeeded) ? handsOn.materialsNeeded.join(', ') : handsOn.materialsNeeded}
-                  </p>
-                )}
-                <p className="text-xs font-bold text-slate-700">
-                  <span className="text-indigo-950">Procedure: </span>
-                  {handsOn.procedure || handsOn.instructions || 'Perform the experiment in your home lab.'}
-                </p>
-                {handsOn.expectedObservation && (
-                  <div className="p-2.5 bg-emerald-100/70 rounded-xl text-xs font-black text-emerald-950 mt-1">
-                    Expected Result: {handsOn.expectedObservation}
-                  </div>
-                )}
-              </div>
-
-              {/* Reflection Badge Prompt */}
-              <div className="p-3.5 bg-slate-100 rounded-2xl border border-slate-300 text-xs font-bold text-slate-700 flex flex-col gap-1">
-                <span className="font-black text-slate-900">Explorer Reflection Prompt:</span>
-                <p>{reflectionPrompt}</p>
-              </div>
-
-              <button
-                onClick={() => setIsJournalOpen(false)}
-                className="w-full py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer transition-all active:scale-95"
-              >
-                Close Field Journal
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* ── 3. Action Launch Button (Big, Friendly, Prominent) ── */}
+      <div className="flex justify-center mt-2">
+        <motion.button
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            sounds.fanfare();
+            onStartLab();
+          }}
+          className="px-8 sm:px-10 py-3.5 sm:py-4 rounded-3xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-slate-950 font-black text-sm sm:text-base shadow-[0_6px_0_#065F46] active:translate-y-1 cursor-pointer flex items-center gap-3 transition-all"
+        >
+          <span>🚀 LET'S START THE LAB EXPERIMENTS!</span>
+          <ArrowRight className="w-5 h-5" />
+        </motion.button>
+      </div>
     </div>
   );
 };

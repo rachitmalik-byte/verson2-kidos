@@ -247,9 +247,14 @@ export const UniversalMascotChapterIntro: React.FC = () => {
     }
   };
 
+  const [discoveredCount, setDiscoveredCount] = useState<number>(0);
+  const [activeSpecimenPopup, setActiveSpecimenPopup] = useState<FloatingSpecimen | null>(null);
+
   const handleSpecimenClick = (specimen: FloatingSpecimen) => {
-    sounds.pop();
-    voiceAssistant.speak(`${specimen.name}. ${specimen.subtitle}`);
+    sounds.sparkle();
+    setActiveSpecimenPopup(specimen);
+    setDiscoveredCount((prev) => prev + 1);
+    voiceAssistant.speak(`${specimen.name}. Superpower: ${specimen.subtitle}`);
   };
 
   return (
