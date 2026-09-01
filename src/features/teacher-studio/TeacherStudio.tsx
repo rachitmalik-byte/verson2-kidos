@@ -7,6 +7,7 @@ import type {
   ActivityType,
 } from '@/types/lessonEngine';
 import { ActivityRenderer } from '@/components/engine/ActivityRenderer';
+import { StepPropertyEditor } from './StepPropertyEditor';
 import { generateLessonFromPrompt, generateFallbackLessonConfig } from '@/lib/geminiService';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -32,8 +33,9 @@ import {
   FileCode,
   Lightbulb,
   Home,
-  ChevronRight,
-  PlusCircle,
+  ChevronUp,
+  ChevronDown,
+  Columns,
   Play,
 } from 'lucide-react';
 
@@ -54,11 +56,12 @@ function createBlankStep(type: ActivityType, index: number): LessonStepData {
   switch (type) {
     case 'water_absorption_lab':
       return {
-        id: `step-${Date.now()}`,
+        id: `step-${Date.now()}-${index}`,
         type: 'water_absorption_lab',
         title: 'Water Absorption Testing Lab',
         subtitle: 'Observe how natural vs synthetic materials react to moisture',
         pipPrompt: 'Spray water droplets onto each fabric to see if it absorbs moisture or beads off!',
+        learningGoal: 'Compare hydrophobic vs hydrophilic materials',
         specimens: [
           { id: 'mat-1', name: 'Cotton Swatch', materialType: 'cotton', category: 'Natural', dryImage: '', wetImage: '', isHydrophobic: false, absorptionRateSec: 2, description: 'Porous cellulose plant fibers absorb water rapidly', microscopicNote: 'Hollow ribbon fibers soak up moisture' },
           { id: 'mat-2', name: 'Polyester Swatch', materialType: 'polyester', category: 'Synthetic', dryImage: '', wetImage: '', isHydrophobic: true, absorptionRateSec: 999, description: 'Smooth synthetic polymer repels water', microscopicNote: 'Tight extruded filament weave causes water to bead up' },
@@ -66,29 +69,29 @@ function createBlankStep(type: ActivityType, index: number): LessonStepData {
       };
     case 'sorting_tray':
       return {
-        id: `step-${Date.now()}`,
+        id: `step-${Date.now()}-${index}`,
         type: 'sorting_tray',
         title: 'Material Classification Desk',
         subtitle: 'Sort specimens into the correct scientific category',
         pipPrompt: 'Help me classify each specimen into Natural or Synthetic!',
         trays: [
-          { id: 'natural', title: 'From Nature', subtitle: 'Plants, animals, and earth', icon: '🌿', color: 'border-emerald-400 bg-emerald-50' },
-          { id: 'synthetic', title: 'Made in Labs', subtitle: 'Chemical polymers', icon: '🏭', color: 'border-sky-400 bg-sky-50' },
+          { id: 'natural', title: 'From Nature', icon: '🌿', themeColor: 'sage', allowedCategories: ['natural'], description: 'Grown in nature' },
+          { id: 'synthetic', title: 'Made in Labs', icon: '🏭', themeColor: 'sky', allowedCategories: ['synthetic'], description: 'Synthesized in factories' },
         ],
         items: [
-          { id: 'item-1', name: 'Cotton Boll', emoji: '🌿', correctTrayId: 'natural', feedback: 'Cotton grows naturally on plant bushes!' },
-          { id: 'item-2', name: 'Nylon Thread', emoji: '🧵', correctTrayId: 'synthetic', feedback: 'Nylon is synthesized from petroleum in factories!' },
-          { id: 'item-3', name: 'Sheep Wool', emoji: '🐑', correctTrayId: 'natural', feedback: 'Wool comes directly from sheep fleece!' },
-          { id: 'item-4', name: 'Plastic Bottle', emoji: '🫙', correctTrayId: 'synthetic', feedback: 'PET plastic is a synthetic polymer!' },
+          { id: 'item-1', name: 'Cotton Boll', icon: '🌿', category: 'natural', hint: 'Grows on bushes', originDetails: 'Plant cellulose' },
+          { id: 'item-2', name: 'Nylon Thread', icon: '🧵', category: 'synthetic', hint: 'Petroleum polymer', originDetails: 'Factory synthesized' },
+          { id: 'item-3', name: 'Sheep Wool', icon: '🐑', category: 'natural', hint: 'Animal fleece', originDetails: 'Protein keratin' },
+          { id: 'item-4', name: 'Plastic Bottle', icon: '🫙', category: 'synthetic', hint: 'Molded polymer', originDetails: 'Synthetic resin' },
         ],
       };
     case 'matching_pairs':
       return {
-        id: `step-${Date.now()}`,
+        id: `step-${Date.now()}-${index}`,
         type: 'matching_pairs',
         title: 'Match Superpowers to Uses',
         subtitle: 'Connect each object to its primary scientific property',
-        instruction: 'Tap an object on the left, then tap its matching superpower on the right!',
+        pipPrompt: 'Tap an object on the left, then tap its matching superpower on the right!',
         pairs: [
           { id: 'p-1', leftItem: 'Raincoat', leftIcon: '🧥', rightProperty: 'Waterproof & Lightweight', explanation: 'Polyester repels rainwater easily!' },
           { id: 'p-2', leftItem: 'Climbing Rope', leftIcon: '🪢', rightProperty: 'High Tensile Strength', explanation: 'Nylon holds climbers safely!' },
@@ -97,9 +100,11 @@ function createBlankStep(type: ActivityType, index: number): LessonStepData {
       };
     case 'mcq_assessment':
       return {
-        id: `step-${Date.now()}`,
+        id: `step-${Date.now()}-${index}`,
         type: 'mcq_assessment',
         title: 'Science Discovery Checkpoint',
+        subtitle: 'Test your understanding',
+        pipPrompt: 'Think carefully about why scientists chose this material!',
         question: 'Why does synthetic polyester make a superior raincoat compared to 100% natural cotton?',
         conceptBadge: 'Material Physics',
         explanation: 'Synthetic polyester fibers are tightly extruded without hollow capillary pores, causing rainwater to bead up and roll off.',
@@ -110,7 +115,7 @@ function createBlankStep(type: ActivityType, index: number): LessonStepData {
       };
     case 'concept_summary':
       return {
-        id: `step-${Date.now()}`,
+        id: `step-${Date.now()}-${index}`,
         type: 'concept_summary',
         title: 'The Golden Science Law',
         subtitle: 'Core Scientific Principle',
@@ -123,16 +128,16 @@ function createBlankStep(type: ActivityType, index: number): LessonStepData {
       };
     default:
       return {
-        id: `step-${Date.now()}`,
+        id: `step-${Date.now()}-${index}`,
         type: 'microscopic_zoom_viewer',
         title: 'Microscopic Zoom Studio',
         subtitle: 'Examine specimen microstructure at multiple magnifications',
         specimenName: 'Natural Plant Cellulose',
-        specimenCategory: 'Natural Specimen',
+        specimenCategory: 'Natural',
         pipPrompt: 'Use the zoom reticle to inspect the fiber alignment under high optical magnification!',
         tiers: [
-          { magnification: '1x Macro', label: 'Specimen Surface', image: '', scaleBarText: '10 mm', structuralFeatures: ['Visible texture', 'Surface fibers'], scientificExplanation: 'Macroscopic inspection shows woven natural filaments.' },
-          { magnification: '400x Optical', label: 'Microstructure', image: '', scaleBarText: '50 µm', structuralFeatures: ['Hollow capillary pores', 'Cellulose wall'], scientificExplanation: 'High-power light microscopy reveals fine cellular pores.' },
+          { magnification: '1x', label: 'Specimen Surface', image: '', scaleBarText: '10 mm', structuralFeatures: ['Visible texture', 'Surface fibers'], scientificExplanation: 'Macroscopic inspection shows woven natural filaments.' },
+          { magnification: '100x', label: 'Microstructure', image: '', scaleBarText: '50 µm', structuralFeatures: ['Hollow capillary pores', 'Cellulose wall'], scientificExplanation: 'High-power light microscopy reveals fine cellular pores.' },
         ],
       };
   }
@@ -157,18 +162,17 @@ export function TeacherStudio() {
 
   const [missionConfig, setMissionConfig] = useState<LessonMissionConfig>(DEFAULT_CLEAN_LESSON);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [viewLayout, setViewLayout] = useState<'split' | 'edit_only' | 'preview_only'>('split');
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAddDrawer, setShowAddDrawer] = useState(false);
-  const [activeTab, setActiveTab] = useState<'preview' | 'edit'>('preview');
   const [copied, setCopied] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
 
   const steps = missionConfig?.steps || [];
   const currentStep: LessonStepData = steps[activeStepIndex] || steps[0] || createBlankStep('water_absorption_lab', 0);
 
-  // AI Generator
   const handleAiGenerate = async () => {
     if (!aiPrompt.trim()) return;
     sounds.pop();
@@ -215,14 +219,38 @@ export function TeacherStudio() {
     setPreviewKey((k) => k + 1);
   };
 
-  const handleUpdateStepTitle = (title: string) => {
+  const handleMoveStep = (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === steps.length - 1) return;
+    sounds.pop();
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    const updated = [...steps];
+    const temp = updated[index];
+    updated[index] = updated[targetIndex];
+    updated[targetIndex] = temp;
+    setMissionConfig((prev) => ({ ...prev, steps: updated }));
+    setActiveStepIndex(targetIndex);
+    setPreviewKey((k) => k + 1);
+  };
+
+  const handleDuplicateStep = (index: number) => {
+    sounds.pop();
+    const stepToCopy = JSON.parse(JSON.stringify(steps[index]));
+    stepToCopy.id = `step-${Date.now()}`;
+    stepToCopy.title = `${stepToCopy.title} (Copy)`;
+    const updated = [...steps.slice(0, index + 1), stepToCopy, ...steps.slice(index + 1)];
+    setMissionConfig((prev) => ({ ...prev, steps: updated }));
+    setActiveStepIndex(index + 1);
+    setPreviewKey((k) => k + 1);
+  };
+
+  const handleUpdateCurrentStep = (updatedStep: LessonStepData) => {
     setMissionConfig((prev) => {
       const updated = [...prev.steps];
-      if (updated[activeStepIndex]) {
-        updated[activeStepIndex] = { ...updated[activeStepIndex], title };
-      }
+      updated[activeStepIndex] = updatedStep;
       return { ...prev, steps: updated };
     });
+    setPreviewKey((k) => k + 1);
   };
 
   const handleCopyJson = () => {
@@ -236,7 +264,7 @@ export function TeacherStudio() {
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 font-sans flex flex-col select-none">
       {/* ── Top Bar (Minimal, Apple-Clean) ── */}
       <header className="w-full bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between gap-4 z-30 shadow-xs">
-        {/* Left: Navigation & Studio Title */}
+        {/* Left: Return & Studio Title */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/subjects')}
@@ -249,7 +277,7 @@ export function TeacherStudio() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Teacher Activity Studio 🎓
+                Teacher Studio 🎓
               </span>
               <span className="text-[10px] font-black uppercase text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
                 CBSE Grade 5
@@ -281,27 +309,36 @@ export function TeacherStudio() {
           </button>
         </div>
 
-        {/* Right: Actions */}
+        {/* Right: Layout Switcher & Actions */}
         <div className="flex items-center gap-2">
-          {/* Device Switcher */}
+          {/* View Mode Toggle */}
           <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
-              onClick={() => setPreviewDevice('desktop')}
-              className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                previewDevice === 'desktop' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              onClick={() => setViewLayout('split')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
+                viewLayout === 'split' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
-              title="Desktop View"
             >
-              <Monitor className="w-3.5 h-3.5" />
+              <Columns className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Split</span>
             </button>
             <button
-              onClick={() => setPreviewDevice('mobile')}
-              className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                previewDevice === 'mobile' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              onClick={() => setViewLayout('edit_only')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
+                viewLayout === 'edit_only' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
-              title="Mobile View"
             >
-              <Smartphone className="w-3.5 h-3.5" />
+              <Sliders className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Editor</span>
+            </button>
+            <button
+              onClick={() => setViewLayout('preview_only')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
+                viewLayout === 'preview_only' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Preview</span>
             </button>
           </div>
 
@@ -317,7 +354,7 @@ export function TeacherStudio() {
 
       {/* ── Main Workspace ── */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* ── Left Sidebar: Steps Timeline ── */}
+        {/* ── Left Sidebar: Steps Timeline & Sequence ── */}
         <aside className="w-full md:w-72 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0 shadow-xs overflow-y-auto">
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -347,30 +384,69 @@ export function TeacherStudio() {
                       setActiveStepIndex(idx);
                       setPreviewKey((k) => k + 1);
                     }}
-                    className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                    className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-2 ${
                       isSelected
                         ? 'bg-indigo-50/80 border-indigo-600 text-indigo-950 shadow-xs'
                         : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="text-lg shrink-0">{cat?.icon || '🔬'}</span>
-                      <div className="min-w-0">
-                        <span className="text-[10px] font-bold text-slate-400 block font-mono">Step {idx + 1}</span>
-                        <span className="text-xs font-black text-slate-800 truncate block">{step.title}</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-base shrink-0">{cat?.icon || '🔬'}</span>
+                        <div className="min-w-0">
+                          <span className="text-[10px] font-bold text-slate-400 block font-mono">Step {idx + 1}</span>
+                          <span className="text-xs font-black text-slate-800 truncate block">{step.title}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteStep(idx);
-                      }}
-                      className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer transition-colors shrink-0"
-                      title="Delete step"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {/* Step Action Buttons (Up/Down/Copy/Delete) */}
+                    {isSelected && (
+                      <div className="flex items-center justify-end gap-1 pt-1.5 border-t border-indigo-100">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveStep(idx, 'up');
+                          }}
+                          disabled={idx === 0}
+                          className="p-1 text-slate-500 hover:text-indigo-700 disabled:opacity-30 rounded hover:bg-white cursor-pointer"
+                          title="Move step up"
+                        >
+                          <ChevronUp className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveStep(idx, 'down');
+                          }}
+                          disabled={idx === steps.length - 1}
+                          className="p-1 text-slate-500 hover:text-indigo-700 disabled:opacity-30 rounded hover:bg-white cursor-pointer"
+                          title="Move step down"
+                        >
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDuplicateStep(idx);
+                          }}
+                          className="p-1 text-slate-500 hover:text-indigo-700 rounded hover:bg-white cursor-pointer"
+                          title="Duplicate step"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteStep(idx);
+                          }}
+                          className="p-1 text-slate-400 hover:text-rose-600 rounded hover:bg-white cursor-pointer"
+                          title="Delete step"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -403,64 +479,58 @@ export function TeacherStudio() {
           </div>
         </aside>
 
-        {/* ── Main Panel: Live Interactive Simulator & Editor ── */}
-        <main className="flex-1 bg-slate-100 p-4 sm:p-6 flex flex-col items-center justify-start overflow-y-auto">
-          {/* Editor Tabs & Step Header */}
-          <div className="w-full max-w-4xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 font-black text-xs font-mono">
-                Step {activeStepIndex + 1} of {steps.length}
-              </span>
-              <input
-                type="text"
-                value={currentStep.title}
-                onChange={(e) => handleUpdateStepTitle(e.target.value)}
-                className="text-sm font-black text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 outline-none px-1"
+        {/* ── Center / Right Area: Reactive Editor & Live Device Simulator ── */}
+        <main className="flex-1 bg-slate-100 p-4 sm:p-6 flex flex-col md:flex-row gap-6 items-start justify-center overflow-y-auto">
+          {/* 1. Step Property Manual Editor */}
+          {(viewLayout === 'split' || viewLayout === 'edit_only') && (
+            <div className={`${viewLayout === 'split' ? 'w-full md:w-1/2' : 'w-full max-w-2xl mx-auto'} flex flex-col gap-3`}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-slate-700 uppercase tracking-wider font-mono">
+                  ⚙️ Step Inspector (Step {activeStepIndex + 1})
+                </span>
+                <span className="text-[11px] font-bold text-slate-400">
+                  Instant Reactive State Sync
+                </span>
+              </div>
+              <StepPropertyEditor
+                step={currentStep}
+                onChange={handleUpdateCurrentStep}
               />
             </div>
+          )}
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => {
-                  sounds.pop();
-                  setPreviewKey((k) => k + 1);
-                }}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset State</span>
-              </button>
+          {/* 2. Device Simulator Preview */}
+          {(viewLayout === 'split' || viewLayout === 'preview_only') && (
+            <div className={`${viewLayout === 'split' ? 'w-full md:w-1/2' : 'w-full max-w-3xl mx-auto'} flex flex-col items-center gap-3`}>
+              <div className="w-full flex items-center justify-between">
+                <span className="text-xs font-black text-slate-700 uppercase tracking-wider font-mono">
+                  🎨 Live Simulator Preview
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      setPreviewKey((k) => k + 1);
+                    }}
+                    className="px-2.5 py-1 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs border border-slate-200 flex items-center gap-1 cursor-pointer"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Viewport Canvas */}
+              <div className="w-full bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 shadow-sm flex flex-col items-center min-h-[500px]">
+                <ActivityRenderer
+                  key={`${currentStep.id}-${previewKey}`}
+                  stepData={currentStep}
+                  onComplete={() => sounds.fanfare()}
+                  onStepComplete={() => sounds.fanfare()}
+                />
+              </div>
             </div>
-          </div>
-
-          {/* Device Viewport Canvas */}
-          <div
-            className={`transition-all duration-300 flex flex-col items-center justify-center ${
-              previewDevice === 'mobile'
-                ? 'w-[380px] min-h-[640px] bg-slate-900 rounded-[44px] p-3 border-8 border-slate-800 shadow-2xl relative'
-                : 'w-full max-w-4xl bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 shadow-sm'
-            }`}
-          >
-            {previewDevice === 'mobile' ? (
-              <div className="w-full h-full bg-white rounded-[32px] overflow-y-auto p-4 flex flex-col items-center">
-                <ActivityRenderer
-                  key={`${currentStep.id}-${previewKey}`}
-                  stepData={currentStep}
-                  onComplete={() => sounds.fanfare()}
-                  onStepComplete={() => sounds.fanfare()}
-                />
-              </div>
-            ) : (
-              <div className="w-full flex flex-col items-center">
-                <ActivityRenderer
-                  key={`${currentStep.id}-${previewKey}`}
-                  stepData={currentStep}
-                  onComplete={() => sounds.fanfare()}
-                  onStepComplete={() => sounds.fanfare()}
-                />
-              </div>
-            )}
-          </div>
+          )}
         </main>
       </div>
 
