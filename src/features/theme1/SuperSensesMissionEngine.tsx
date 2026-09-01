@@ -363,63 +363,100 @@ export function SuperSensesMissionEngine() {
               </div>
             )}
 
-            {/* ════════════════════════════════════════════════════════════════
-                PHASE 3: MICROSCOPE (Optical Zoom Studio)
+                        {/* ════════════════════════════════════════════════════════════════
+                PHASE 3: MICROSCOPE (Real Scientific Specimen Photography Studio)
             ════════════════════════════════════════════════════════════════ */}
-            {currentPhase === 'MICROSCOPE' && (
-              <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-2xl flex flex-col items-center text-white text-center">
-                <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
-                  <span className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-500/50 flex items-center gap-1.5">
-                    <ZoomIn className="w-4 h-4 text-emerald-400" />
-                    <span>Biological Microscope Studio ({zoomLevel}x)</span>
-                  </span>
+            {currentPhase === 'MICROSCOPE' && (() => {
+              // Real photographic images by chapter & zoom level
+              const specimenImages: Record<number, Record<number, { img: string; title: string; desc: string }>> = {
+                1: {
+                  1: { img: ant1x, title: '1x Macro View: Ant Worker on Sand Trail', desc: 'Real macroscopic specimen showing full ant body, jointed legs, and antennae scanning the ground.' },
+                  100: { img: ant100x, title: '100x Optical Zoom: Antenna Sensilla Hairs', desc: 'Under 100x magnification, thousands of microscopic sensilla hairs and chemical receptor pores become visible.' },
+                  500: { img: ant500x, title: '500x High-Power SEM: Olfactory Receptor Pores', desc: 'High-power electron micrograph reveals individual nanometer pores where scent molecules land.' },
+                },
+                2: {
+                  1: { img: snake1x, title: '1x Macro View: Indian Spectacled Cobra', desc: 'Real specimen showing the lower jaw resting directly against the ground substrate.' },
+                  100: { img: snake100x, title: '100x Optical Zoom: Quadrate Jawbone & Scales', desc: '100x optical view shows keeled keratin scales and the flexible quadrate bone that transmits ground vibrations.' },
+                  500: { img: snake500x, title: '500x High-Power SEM: Hollow Venom Needle Channel', desc: 'Microscopic cross-section of the hollow fang showing the internal hypodermic venom canal.' },
+                },
+                3: {
+                  1: { img: tongue1x, title: '1x Macro View: Human Tongue Dorsal Surface', desc: 'Real photographic specimen showing thousands of visible pink papillae bumps across the tongue.' },
+                  100: { img: tongue100x, title: '100x Optical Zoom: Fungiform Papillae & Taste Pores', desc: 'Real 100x biological micrograph showing mushroom-shaped fungiform papilla with active taste receptor pores.' },
+                  500: { img: tongue500x, title: '500x Cellular Zoom: Gustatory Receptor Cells', desc: 'High-power cellular micrograph showing taste receptor cells that transmit electrical signals to the brain.' },
+                },
+                4: {
+                  1: { img: burdock1x, title: '1x Macro View: Burdock Seed Burr on Dog Fur', desc: 'Real macro photo of brown burdock seed burrs latching securely into natural animal fur.' },
+                  100: { img: burdock100x, title: '100x Optical Zoom: Curved Elastic Micro-Hooks', desc: 'Microscopic photo showing the sharp, elastic curved spines that George de Mestral copied to invent Velcro.' },
+                  500: { img: burdock500x, title: '500x SEM: Micro-Hook Interlocking with Nylon Loop', desc: 'Scanning electron micrograph showing a natural burdock hook interlocked with a synthetic blue nylon loop.' },
+                },
+              };
 
-                  <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                    {(num === 1
-                      ? [{ label: '1x Macro', val: 1 }, { label: '40x Stereo', val: 40 }, { label: '400x Optical', val: 400 }]
-                      : num === 2
-                      ? [{ label: '1x Macro', val: 1 }, { label: '30x Stereo', val: 30 }, { label: '350x SEM', val: 350 }]
-                      : num === 3
-                      ? [{ label: '1x Macro', val: 1 }, { label: '100x Optical', val: 100 }, { label: '600x Cell', val: 600 }]
-                      : [{ label: '1x Macro', val: 1 }, { label: '50x Stereo', val: 50 }, { label: '1,200x SEM', val: 1200 }]
-                    ).map((tier) => (
-                      <button
-                        key={tier.val}
-                        onClick={() => {
-                          sounds.pop();
-                          setZoomLevel(tier.val);
-                        }}
-                        className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                          zoomLevel === tier.val ? 'bg-emerald-400 text-slate-950 shadow-md scale-105' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {tier.label}
-                      </button>
-                    ))}
+              const tiers = [
+                { label: '1x Macro', val: 1 },
+                { label: '100x Optical', val: 100 },
+                { label: '500x High-Power', val: 500 },
+              ];
+
+              const currentSpecimen = specimenImages[num]?.[zoomLevel] || specimenImages[num]?.[100] || specimenImages[1][100];
+
+              return (
+                <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-2xl flex flex-col items-center text-white text-center">
+                  <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
+                    <span className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-950 px-3.5 py-1 rounded-full border border-emerald-500/50 flex items-center gap-1.5 shadow-sm">
+                      <ZoomIn className="w-4 h-4 text-emerald-400" />
+                      <span>Real Biological Microscope Studio ({zoomLevel}x)</span>
+                    </span>
+
+                    <div className="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-700">
+                      {tiers.map((tier) => (
+                        <button
+                          key={tier.val}
+                          onClick={() => {
+                            sounds.pop();
+                            setZoomLevel(tier.val);
+                          }}
+                          className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                            zoomLevel === tier.val ? 'bg-emerald-400 text-slate-950 shadow-md scale-105 font-black' : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {tier.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full border-[10px] border-slate-800 shadow-2xl bg-slate-900 flex items-center justify-center my-4 overflow-hidden ring-4 ring-emerald-400/80">
-                  {num === 1 && <SpecimenAntAntennaSensilla zoom={zoomLevel} />}
-                  {num === 2 && <SpecimenSnakeHollowFang zoom={zoomLevel} />}
-                  {num === 3 && <SpecimenTonguePapillaeTasteBud zoom={zoomLevel} />}
-                  {num === 4 && <SpecimenBurdockVelcroHooks zoom={zoomLevel} />}
+                  {/* Real Photographic Specimen Viewport */}
+                  <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full border-[10px] border-slate-800 shadow-2xl bg-black flex items-center justify-center my-4 overflow-hidden ring-4 ring-emerald-400/80">
+                    <motion.img
+                      key={`${num}-${zoomLevel}`}
+                      initial={{ scale: 0.9, opacity: 0.5 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.35, ease: 'easeOut' }}
+                      src={currentSpecimen.img}
+                      alt={currentSpecimen.title}
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                    />
 
-                  <div className="absolute inset-0 pointer-events-none border border-emerald-400/30 rounded-full flex items-center justify-center">
-                    <div className="w-full h-[1px] bg-emerald-400/30 absolute" />
-                    <div className="h-full w-[1px] bg-emerald-400/30 absolute" />
-                    <div className="w-24 h-24 rounded-full border border-emerald-400/40 absolute" />
+                    {/* Microscope Glass Reticle & Crosshair Overlay */}
+                    <div className="absolute inset-0 pointer-events-none border-2 border-emerald-400/40 rounded-full flex items-center justify-center">
+                      <div className="w-full h-[1px] bg-emerald-400/30 absolute" />
+                      <div className="h-full w-[1px] bg-emerald-400/30 absolute" />
+                      <div className="w-32 h-32 rounded-full border border-emerald-400/40 absolute" />
+                      <div className="w-16 h-16 rounded-full border border-emerald-400/20 absolute" />
+                    </div>
+
+                    {/* Specimen Badge */}
+                    <div className="absolute bottom-3 bg-slate-950/90 backdrop-blur-md px-3.5 py-1 rounded-full border border-emerald-400 text-[10px] font-black text-emerald-300 shadow-md">
+                      {currentSpecimen.title}
+                    </div>
                   </div>
-                </div>
 
-                <p className="text-xs sm:text-sm text-slate-300 font-bold max-w-lg mt-2">
-                  {num === 1 && 'Microscopic view shows thousands of chemical scent receptors on the ant antennae and silkworm feather branches!'}
-                  {num === 2 && 'Microscope shows hollow hypodermic needle venom channels inside the cobra fangs!'}
-                  {num === 3 && 'Microscope reveals mushroom-shaped fungiform papillae housing hundreds of microscopic taste buds on the tongue!'}
-                  {num === 4 && 'Microscope shows hundreds of tiny curved elastic hooks on burdock burrs latching into woven fabric loops!'}
-                </p>
-              </div>
-            )}
+                  <p className="text-xs sm:text-sm text-slate-200 font-bold max-w-lg mt-2 leading-relaxed">
+                    {currentSpecimen.desc}
+                  </p>
+                </div>
+              );
+            })()}
 
             {/* ════════════════════════════════════════════════════════════════
                 PHASE 4: SCIENCE_LAW (The 3-Pillar Golden Science Law)
