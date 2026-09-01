@@ -15,6 +15,8 @@ import {
   Lightbulb,
   ChevronRight,
   Layers,
+  ZoomIn,
+  X,
 } from 'lucide-react';
 
 const imageModules = import.meta.glob('@/assets/images/**/*.{jpg,png,gif,svg}', {
@@ -46,6 +48,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [userPrediction, setUserPrediction] = useState<number | null>(null);
   const [predictionSubmitted, setPredictionSubmitted] = useState(false);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   const intro = chapterData?.chapterIntro || ({} as any);
   const conceptSteps = intro?.conceptSteps || [];
@@ -172,16 +175,20 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
 
           {/* Main Card Content */}
           <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Real Photo / Specimen View */}
+            {/* Real Photo / Specimen View (Click to Zoom Preview Modal) */}
             <div
-              onClick={handleNextCard}
-              className="relative w-full md:w-80 h-56 sm:h-64 rounded-3xl overflow-hidden bg-slate-900 shadow-inner border-4 border-slate-100 shrink-0 flex items-center justify-center cursor-pointer group"
+              onClick={() => {
+                sounds.pop();
+                setIsImageZoomed(true);
+              }}
+              className="relative w-full md:w-80 h-56 sm:h-64 rounded-3xl overflow-hidden bg-slate-900 shadow-inner border-4 border-slate-100 shrink-0 flex items-center justify-center cursor-zoom-in group"
+              title="Click to view full-size expanded specimen"
             >
               {stepImageSrc ? (
                 <img
                   src={stepImageSrc}
                   alt={activeStep.conceptTitle}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
                 />
               ) : (
                 <div className="text-center p-4">
@@ -194,12 +201,11 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                 Card {activeStepIndex + 1} of {conceptSteps.length}
               </div>
 
-              {activeStepIndex < conceptSteps.length - 1 && (
-                <div className="absolute bottom-3 right-3 bg-indigo-600/90 text-white text-[10px] font-black px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1 group-hover:scale-105 transition-all">
-                  <span>Tap for Next</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </div>
-              )}
+              {/* Zoom Inspect Badge */}
+              <div className="absolute bottom-3 right-3 bg-slate-950/85 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 border border-slate-700 group-hover:bg-indigo-600 group-hover:border-indigo-400 transition-all">
+                <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
+                <span>Zoom Photo</span>
+              </div>
             </div>
 
             {/* Pip's Dialogue & Science Observation */}
@@ -265,7 +271,72 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         </div>
       )}
 
-      {/* ── 3. Prediction Step: Think Fast Before Entering the Lab! ── */}
+      {/* ── 3. High-Resolution Zoomed Specimen Modal (Lightbox) ── */}
+      <AnimatePresence>
+        {isImageZoomed && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsImageZoomed(false)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-slate-950/85 backdrop-blur-md cursor-pointer"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-4xl max-h-[90vh] bg-slate-900 rounded-[32px] border-4 border-indigo-500/80 shadow-2xl p-4 sm:p-6 flex flex-col items-center gap-4 cursor-default overflow-hidden"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setIsImageZoomed(false);
+                }}
+                className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-slate-950/80 hover:bg-slate-800 text-white cursor-pointer transition-all border border-slate-700 shadow-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Full-Size Specimen Image */}
+              <div className="w-full max-h-[65vh] rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border-2 border-slate-800">
+                {stepImageSrc && (
+                  <img
+                    src={stepImageSrc}
+                    alt={activeStep?.conceptTitle}
+                    className="w-full h-full max-h-[65vh] object-contain rounded-2xl"
+                  />
+                )}
+              </div>
+
+              {/* Zoom Modal Caption */}
+              <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-white">
+                <div>
+                  <h4 className="text-base sm:text-lg font-black text-amber-400">
+                    🔬 {activeStep?.conceptTitle}
+                  </h4>
+                  <p className="text-xs text-slate-300 font-bold max-w-xl mt-0.5">
+                    {activeStep?.keyTakeaway}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    sounds.pop();
+                    setIsImageZoomed(false);
+                  }}
+                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl cursor-pointer shadow-md shrink-0"
+                >
+                  Done Inspecting
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── 4. Prediction Step: Think Fast Before Entering the Lab! ── */}
       <div id="chapter-prediction-challenge" className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 p-6 sm:p-7 rounded-[36px] shadow-2xl text-white flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm text-2xl">
@@ -315,7 +386,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         )}
       </div>
 
-      {/* ── 4. Main CTA: Enter Interactive Lab ── */}
+      {/* ── 5. Main CTA: Enter Interactive Lab ── */}
       <div className="flex justify-center pt-2">
         <button
           onClick={() => {
