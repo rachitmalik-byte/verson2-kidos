@@ -1,3 +1,4 @@
+import { ThreePipeLeakLab } from "@/components/three-lab/ThreePipeLeakLab";
 import { ThreeRubberStretchLab } from "@/components/three-lab/ThreeRubberStretchLab";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,136 +7,12 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import { Gauge, Sparkles, AlertTriangle, CheckCircle2, Flame, Droplet, Zap, RotateCcw, Wrench } from 'lucide-react';
 
 /* ============================================================================
-   1. HIGH-PRESSURE PIPE BURST & EPOXY SEAL SIMULATOR (MISSION 12)
+   1. 3D HIGH-PRESSURE PIPE BURST & EPOXY SEAL LAB (Three.js Hydrodynamic Engine)
    ============================================================================ */
 export const HighPressurePipeLeakSim: React.FC<{
   onSealed?: () => void;
 }> = ({ onSealed }) => {
-  const [adhesiveType, setAdhesiveType] = useState<'none' | 'pine' | 'epoxy'>('none');
-  const [isApplying, setIsApplying] = useState(false);
-
-  const handleApply = (type: 'pine' | 'epoxy') => {
-    setIsApplying(true);
-    if (type === 'pine') {
-      sounds.boing();
-      voiceAssistant.speak('Oh no! Natural pine resin is water soluble and blows right off under 80 PSI water pressure!');
-      setTimeout(() => {
-        setAdhesiveType('pine');
-        setIsApplying(false);
-      }, 600);
-    } else {
-      sounds.success();
-      voiceAssistant.speak('Success! 2-part synthetic epoxy polymerizes underwater and forms an impermeable seal that withstands 80 PSI!');
-      setTimeout(() => {
-        setAdhesiveType('epoxy');
-        setIsApplying(false);
-        if (onSealed) onSealed();
-      }, 700);
-    }
-  };
-
-  const isSealed = adhesiveType === 'epoxy';
-
-  return (
-    <div className="w-full bg-slate-950 p-6 rounded-3xl border-4 border-cyan-400 shadow-2xl flex flex-col items-center relative overflow-hidden">
-      {/* HUD Header */}
-      <div className="flex justify-between items-center w-full mb-4 z-10 flex-wrap gap-2">
-        <div className="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-700">
-          <Gauge className={`w-4 h-4 ${isSealed ? 'text-emerald-400' : 'text-rose-500 animate-pulse'}`} />
-          <span className="text-xs font-black uppercase text-white">
-            Pipe Pressure: {isSealed ? '0 PSI (Stabilized)' : '80 PSI (BURSTING!)'}
-          </span>
-        </div>
-        <span className={`text-xs font-black px-3 py-1 rounded-full uppercase ${isSealed ? 'bg-emerald-500 text-slate-950' : 'bg-rose-500 text-white animate-bounce'}`}>
-          {isSealed ? '✓ LEAK REPAIRED' : '⚠️ HIGH PRESSURE LEAK'}
-        </span>
-      </div>
-
-      {/* Interactive Pipe Graphic Stage */}
-      <div className="relative w-full h-48 bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border-2 border-slate-800 flex items-center justify-center overflow-hidden mb-6">
-        {/* Metal Pipe */}
-        <div className="w-full h-14 bg-gradient-to-b from-slate-400 via-slate-200 to-slate-500 relative flex items-center shadow-inner">
-          <div className="absolute left-1/2 -translate-x-1/2 w-8 h-16 bg-slate-600 rounded-sm border-2 border-slate-300 flex items-center justify-center">
-            {/* Crack in pipe */}
-            <div className="w-1 h-10 bg-slate-900 rounded-full relative">
-              {/* Epoxy Seal Layer */}
-              {isSealed && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -inset-2 bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full shadow-[0_0_15px_#34d399] z-20 flex items-center justify-center"
-                >
-                  <Sparkles className="w-4 h-4 text-emerald-950 animate-spin" />
-                </motion.div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Water Spray Particles */}
-        {!isSealed && (
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-1/2 z-10 pointer-events-none flex flex-col items-center">
-            <motion.div
-              animate={{ scaleY: [1, 1.25, 1], opacity: [0.8, 1, 0.8] }}
-              transition={{ repeat: Infinity, duration: 0.15 }}
-              className="w-8 h-28 bg-gradient-to-t from-cyan-400 via-sky-300 to-transparent blur-[1px] origin-bottom rounded-t-full shadow-[0_0_20px_#38bdf8]"
-            />
-            <div className="absolute -top-4 w-32 h-12 flex justify-around">
-              {[1, 2, 3, 4, 5].map((_, i) => (
-                <motion.span
-                  key={i}
-                  animate={{ y: [-10, -40, -10], x: [0, (i - 2) * 15, 0], opacity: [1, 0, 1] }}
-                  transition={{ repeat: Infinity, duration: 0.3 + i * 0.05 }}
-                  className="text-cyan-300 text-lg"
-                >
-                  💧
-                </motion.span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Pine Resin Blown Off Graphic */}
-        {adhesiveType === 'pine' && !isSealed && (
-          <motion.div
-            initial={{ scale: 1, x: 0, opacity: 1 }}
-            animate={{ scale: 0.5, x: 100, y: -50, opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="absolute left-1/2 top-1/2 bg-amber-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full z-30"
-          >
-            💨 Blown Away by Water!
-          </motion.div>
-        )}
-      </div>
-
-      {/* Interactive Tool Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-        <button
-          onClick={() => handleApply('pine')}
-          disabled={isApplying}
-          className="p-4 rounded-2xl bg-slate-900 border-2 border-amber-500/50 hover:border-amber-400 text-white font-black text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-slate-800 active:scale-95 disabled:opacity-50"
-        >
-          <span className="text-2xl">🌲</span>
-          <div className="text-left">
-            <span className="block text-amber-300">Apply Natural Pine Resin</span>
-            <span className="text-[10px] text-slate-400 font-bold">Water-soluble plant sap</span>
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleApply('epoxy')}
-          disabled={isApplying}
-          className="p-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-lg active:scale-95 disabled:opacity-50"
-        >
-          <span className="text-2xl">🧪</span>
-          <div className="text-left">
-            <span className="block text-white">Apply 2-Part Synthetic Epoxy</span>
-            <span className="text-[10px] text-teal-100 font-bold">Cross-linked waterproof polymer</span>
-          </div>
-        </button>
-      </div>
-    </div>
-  );
+  return <ThreePipeLeakLab onSealed={onSealed} />;
 };
 
 /* ============================================================================
