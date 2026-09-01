@@ -363,31 +363,30 @@ export function SuperSensesMissionEngine() {
               </div>
             )}
 
-                        {/* ════════════════════════════════════════════════════════════════
-                PHASE 3: MICROSCOPE (Real Scientific Specimen Photography Studio)
+                                    {/* ════════════════════════════════════════════════════════════════
+                PHASE 3: SCIENTIFIC SPECIMEN & MICROSCOPE STUDIO (Clean Light Theme)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'MICROSCOPE' && (() => {
-              // Real photographic images by chapter & zoom level
               const specimenImages: Record<number, Record<number, { img: string; title: string; desc: string }>> = {
                 1: {
-                  1: { img: ant1x, title: '1x Macro View: Ant Worker on Trail', desc: 'Real macroscopic specimen showing full ant body, jointed legs, and antennae scanning the ground.' },
-                  10: { img: ant10x, title: '10x Stereo Zoom: Antenna Base & Joint', desc: 'Under 10x magnification, the mobile scape joint and antennae chemoreceptors are revealed.' },
-                  100: { img: ant100x, title: '100x High-Power: Sensilla Scent Pores', desc: '100x optical micrograph shows individual microscopic sensilla hairs where pheromone molecules land.' },
+                  1: { img: ant1x, title: '1x Macro View: Ant Worker on Trail', desc: 'Macroscopic anatomical view showing whole ant body, jointed legs, and antennae.' },
+                  10: { img: ant10x, title: '10x Stereo Zoom: Antenna Base & Joint', desc: '10x magnification showing the mobile scape joint and antennae chemoreceptors.' },
+                  100: { img: ant100x, title: '100x High-Power: Sensilla Scent Pores', desc: '100x optical micrograph of individual microscopic sensilla hairs and chemical pores.' },
                 },
                 2: {
-                  1: { img: snake1x, title: '1x Macro View: Spectacled Cobra Jaw', desc: 'Real specimen showing the lower jaw resting directly against the ground substrate.' },
-                  10: { img: snake10x, title: '10x Stereo Zoom: Quadrate Jaw & Scales', desc: '10x view shows keeled keratin scales and the flexible quadrate bone that transmits ground vibrations.' },
-                  100: { img: snake100x, title: '100x High-Power: Hollow Venom Channel', desc: '100x microscopic cross-section showing the internal hypodermic venom canal of the hollow fang.' },
+                  1: { img: snake1x, title: '1x Macro View: Spectacled Cobra Jaw', desc: 'Specimen showing the lower jaw resting directly against the ground substrate.' },
+                  10: { img: snake10x, title: '10x Stereo Zoom: Quadrate Jaw & Scales', desc: '10x view showing keeled keratin scales and flexible quadrate bone for ground acoustics.' },
+                  100: { img: snake100x, title: '100x High-Power: Hollow Venom Channel', desc: '100x cross-section showing internal hypodermic needle venom canal of hollow fang.' },
                 },
                 3: {
-                  1: { img: tongue1x, title: '1x Macro View: Tongue Dorsal Surface', desc: 'Real photographic specimen showing thousands of visible pink papillae bumps across the human tongue.' },
-                  10: { img: tongue10x, title: '10x Stereo Zoom: Fungiform Papillae', desc: '10x biological stereo view showing mushroom-shaped fungiform papillae surrounded by filiform hairs.' },
-                  100: { img: tongue100x, title: '100x High-Power: Taste Bud Receptor Pore', desc: '100x optical micrograph revealing the microscopic taste pore where flavor chemicals enter to signal the brain.' },
+                  1: { img: tongue1x, title: '1x Macro View: Tongue & Papillae Regions', desc: 'Full anatomical diagram showing the distribution of Circumvallate, Foliate, Fungiform, and Filiform papillae.' },
+                  10: { img: tongue10x, title: '10x Stereo Zoom: Fungiform & Foliate Papilla', desc: 'Enlarged cross-section showing embedded taste buds, stratified squamous epithelium, and connective core.' },
+                  100: { img: tongue100x, title: '100x High-Power: Cellular Taste Bud Cross-Section', desc: 'Cellular anatomy showing taste pore, microvilli, gustatory receptor cells, and sensory nerve fiber.' },
                 },
                 4: {
-                  1: { img: burdock1x, title: '1x Macro View: Burdock Seed on Fur', desc: 'Real macro photo of brown burdock seed burrs latching securely into natural animal fur.' },
-                  10: { img: burdock10x, title: '10x Stereo Zoom: Curved Hook Array', desc: '10x view showing the hundreds of sharp, elastic curved spines that George de Mestral copied to invent Velcro.' },
-                  100: { img: burdock100x, title: '100x High-Power: Hook Interlocked in Loop', desc: '100x high-power micrograph showing a single natural burdock hook locked inside a synthetic nylon loop.' },
+                  1: { img: burdock1x, title: '1x Macro View: Burdock Seed on Fur', desc: 'Macro photograph of brown burdock seed burrs latching securely into natural animal fur.' },
+                  10: { img: burdock10x, title: '10x Stereo Zoom: Curved Hook Array', desc: '10x view showing hundreds of sharp, elastic curved spines that George de Mestral copied.' },
+                  100: { img: burdock100x, title: '100x High-Power: Hook Interlocked in Loop', desc: '100x micrograph showing a natural burdock hook locked inside a synthetic nylon loop.' },
                 },
               };
 
@@ -400,14 +399,19 @@ export function SuperSensesMissionEngine() {
               const currentSpecimen = specimenImages[num]?.[zoomLevel] || specimenImages[num]?.[10] || specimenImages[1][10];
 
               return (
-                <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-2xl flex flex-col items-center text-white text-center">
-                  <div className="flex items-center justify-between w-full mb-4 flex-wrap gap-2">
-                    <span className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-950 px-3.5 py-1 rounded-full border border-emerald-500/50 flex items-center gap-1.5 shadow-sm">
-                      <ZoomIn className="w-4 h-4 text-emerald-400" />
-                      <span>Real Biological Microscope Studio ({zoomLevel}x)</span>
-                    </span>
+                <div className="w-full bg-white p-5 sm:p-8 rounded-[36px] border-4 border-emerald-400 shadow-xl flex flex-col items-center select-none font-sans">
+                  {/* Header Bar */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-4 border-b-2 border-slate-100 pb-3">
+                    <div>
+                      <span className="text-xs font-black uppercase text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 inline-block mb-1">
+                        🔬 High-Resolution Scientific Microscope Studio
+                      </span>
+                      <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                        {currentSpecimen.title}
+                      </h3>
+                    </div>
 
-                    <div className="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-700">
+                    <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
                       {tiers.map((tier) => (
                         <button
                           key={tier.val}
@@ -416,7 +420,9 @@ export function SuperSensesMissionEngine() {
                             setZoomLevel(tier.val);
                           }}
                           className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                            zoomLevel === tier.val ? 'bg-emerald-400 text-slate-950 shadow-md scale-105 font-black' : 'text-slate-400 hover:text-white'
+                            zoomLevel === tier.val
+                              ? 'bg-emerald-500 text-white shadow-md scale-105 font-black'
+                              : 'text-slate-600 hover:text-slate-950'
                           }`}
                         >
                           {tier.label}
@@ -425,35 +431,28 @@ export function SuperSensesMissionEngine() {
                     </div>
                   </div>
 
-                  {/* Real Photographic Specimen Viewport */}
-                  <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full border-[10px] border-slate-800 shadow-2xl bg-black flex items-center justify-center my-4 overflow-hidden ring-4 ring-emerald-400/80">
+                  {/* Clean Square Image Display Container (No circular cropping, pure white bg) */}
+                  <div className="w-full max-w-2xl h-[340px] sm:h-[420px] bg-slate-50 border-3 border-slate-200 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center p-3 sm:p-4 my-2 relative">
                     <motion.img
                       key={`${num}-${zoomLevel}`}
-                      initial={{ scale: 0.9, opacity: 0.5 }}
+                      initial={{ scale: 0.95, opacity: 0.6 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.35, ease: 'easeOut' }}
+                      transition={{ duration: 0.25, ease: 'easeOut' }}
                       src={currentSpecimen.img}
                       alt={currentSpecimen.title}
-                      className="w-full h-full object-cover select-none pointer-events-none"
+                      className="w-full h-full object-contain select-none"
                     />
 
-                    {/* Microscope Glass Reticle & Crosshair Overlay */}
-                    <div className="absolute inset-0 pointer-events-none border-2 border-emerald-400/40 rounded-full flex items-center justify-center">
-                      <div className="w-full h-[1px] bg-emerald-400/30 absolute" />
-                      <div className="h-full w-[1px] bg-emerald-400/30 absolute" />
-                      <div className="w-32 h-32 rounded-full border border-emerald-400/40 absolute" />
-                      <div className="w-16 h-16 rounded-full border border-emerald-400/20 absolute" />
-                    </div>
-
-                    {/* Specimen Badge */}
-                    <div className="absolute bottom-3 bg-slate-950/90 backdrop-blur-md px-3.5 py-1 rounded-full border border-emerald-400 text-[10px] font-black text-emerald-300 shadow-md">
-                      {currentSpecimen.title}
+                    {/* Clean Magnification Tag */}
+                    <div className="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black text-emerald-300 border border-slate-700 shadow-sm">
+                      {zoomLevel}x Magnification
                     </div>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-200 font-bold max-w-lg mt-2 leading-relaxed">
+                  {/* Scientific Description Caption */}
+                  <div className="w-full max-w-2xl bg-emerald-50/80 p-4 rounded-2xl border-2 border-emerald-200 text-xs sm:text-sm text-slate-800 font-bold text-center mt-3 shadow-xs">
                     {currentSpecimen.desc}
-                  </p>
+                  </div>
                 </div>
               );
             })()}
