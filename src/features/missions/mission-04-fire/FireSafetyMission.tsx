@@ -1,3 +1,4 @@
+import { ThreeFlameBurnLab } from "@/components/three-lab/ThreeFlameBurnLab";
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ import { Flame, ArrowRight, ZoomIn } from 'lucide-react';
 type Phase = 'HOOK' | 'BURN_TEST' | 'MICROSCOPE' | 'APPLY';
 
 export function FireSafetyMission() {
-  const [currentPhase, setCurrentPhase] = useState<Phase>('EXPERIMENT');
+  const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [burnedCotton, setBurnedCotton] = useState(false);
   const [burnedPolyester, setBurnedPolyester] = useState(false);
   const [isIgnitingCotton, setIsIgnitingCotton] = useState(false);

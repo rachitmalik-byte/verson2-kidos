@@ -110,7 +110,7 @@ const ROPES: RopeSpecimen[] = [
 ];
 
 export function NylonStrengthMission() {
-  const [currentPhase, setCurrentPhase] = useState<Phase>('EXPERIMENT');
+  const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
   const [selectedRopeId, setSelectedRopeId] = useState<string>('cotton');
   const [appliedWeightKg, setAppliedWeightKg] = useState<number>(0);
   const [testedRopes, setTestedRopes] = useState<Record<string, boolean>>({});
