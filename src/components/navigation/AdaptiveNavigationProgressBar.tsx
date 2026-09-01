@@ -35,7 +35,6 @@ export const AdaptiveNavigationProgressBar: React.FC = () => {
   const location = useLocation();
   const path = location.pathname;
 
-  const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Global store states
@@ -88,10 +87,10 @@ export const AdaptiveNavigationProgressBar: React.FC = () => {
     if (path === '/subjects' || path === '/') {
       const totalSubjects = 4;
       let completedSubjects = 0;
-      if (completedMissions.some((m) => m.startsWith('mission-'))) completedSubjects += 1; // Materials
-      if (discoveries.some((d) => d.materialId.startsWith('ant') || d.materialId.startsWith('snake'))) completedSubjects += 1; // Super Senses
-      if (discoveries.some((d) => d.materialId.startsWith('water') || d.materialId.startsWith('ghadisar'))) completedSubjects += 1; // Water
-      if (discoveries.some((d) => d.materialId.startsWith('pashmina') || d.materialId.startsWith('shelter'))) completedSubjects += 1; // Shelter
+      if (completedMissions.some((m) => m.startsWith('mission-'))) completedSubjects += 1;
+      if (discoveries.some((d) => d.materialId.startsWith('ant') || d.materialId.startsWith('snake'))) completedSubjects += 1;
+      if (discoveries.some((d) => d.materialId.startsWith('water') || d.materialId.startsWith('ghadisar'))) completedSubjects += 1;
+      if (discoveries.some((d) => d.materialId.startsWith('pashmina') || d.materialId.startsWith('shelter'))) completedSubjects += 1;
 
       const pct = Math.min(100, Math.round((completedSubjects / totalSubjects) * 100));
       const left = totalSubjects - completedSubjects;
@@ -112,8 +111,8 @@ export const AdaptiveNavigationProgressBar: React.FC = () => {
       };
     }
 
-    // 4. Course / Chapters Hub Routes (/theme/:themeId/hub or /chapter-hub)
-    if (path.includes('/hub') || path === '/chapter-hub') {
+    // 4. Course / Chapters Hub Routes
+    if (path.includes('/hub') || path === '/chapter-hub' || path.includes('/discovery-book')) {
       let courseName = 'Materials Science';
       let totalChapters = 13;
       let completedChapters = completedMissions.length;
@@ -171,15 +170,15 @@ export const AdaptiveNavigationProgressBar: React.FC = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none select-none">
-      {/* ── 1. Sleek Full-Width Top Progress Line ── */}
-      <div className="w-full h-1.5 sm:h-2 bg-slate-900/10 backdrop-blur-xs relative overflow-hidden">
+      {/* ── 1. Sleek Full-Width Top Progress Line (Clean 3.5px) ── */}
+      <div className="w-full h-1 sm:h-1.5 bg-slate-900/10 backdrop-blur-xs relative overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${contextData.percentage}%` }}
           transition={{ type: 'spring', damping: 25, stiffness: 120 }}
           className={`h-full bg-gradient-to-r ${contextData.accentGradient} relative`}
           style={{
-            boxShadow: `0 0 14px ${contextData.glowColor}, 0 0 4px ${contextData.glowColor}`,
+            boxShadow: `0 0 12px ${contextData.glowColor}, 0 0 3px ${contextData.glowColor}`,
           }}
         >
           {/* Glowing leading spark */}
@@ -187,43 +186,39 @@ export const AdaptiveNavigationProgressBar: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* ── 2. Floating Top-Center Progress Pill Badge ── */}
-      <div
-        className="pointer-events-auto flex justify-center mt-1 sm:mt-1.5"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      {/* ── 2. Top-Right Attached Mini-Progress Badge (No Collision with Header) ── */}
+      <div className="pointer-events-auto flex justify-end pr-4 sm:pr-8 pt-1">
         <motion.button
-          whileHover={{ scale: 1.05, y: 1 }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => {
             sounds.pop();
             setIsExpanded(!isExpanded);
           }}
-          className="px-3.5 py-1 rounded-full bg-white/90 hover:bg-white backdrop-blur-md border border-slate-200/80 hover:border-indigo-300 shadow-md text-slate-800 text-[11px] font-black flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
-          title="Click to view detailed breakdown"
+          className="px-2.5 py-0.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-md border border-slate-200/90 shadow-sm text-slate-800 text-[10px] font-black flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+          title="Click to view detailed progress"
         >
           {contextData.icon}
           <span className="font-bold">{contextData.label}</span>
-          <span className="px-1.5 py-0.2 rounded-md bg-slate-100 text-[10px] font-mono font-black text-indigo-600">
+          <span className="px-1.5 py-0.2 rounded-md bg-indigo-50 text-[9px] font-mono font-black text-indigo-700">
             {contextData.percentage}%
           </span>
           <div className="text-slate-400">
-            {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            {isExpanded ? <ChevronUp className="w-2.5 h-2.5" /> : <ChevronDown className="w-2.5 h-2.5" />}
           </div>
         </motion.button>
       </div>
 
-      {/* ── 3. Expandable Detailed Breakdown Dropdown ── */}
+      {/* ── 3. Expandable Dropdown Breakdown ── */}
       <AnimatePresence>
         {isExpanded && (
-          <div className="pointer-events-auto flex justify-center mt-2 px-4">
+          <div className="pointer-events-auto flex justify-end pr-4 sm:pr-8 mt-1.5">
             <motion.div
-              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              initial={{ opacity: 0, y: -6, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              exit={{ opacity: 0, y: -6, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="w-72 sm:w-80 bg-white/95 backdrop-blur-xl border-3 border-indigo-200 shadow-2xl rounded-3xl p-4 text-slate-800"
+              className="w-72 bg-white/98 backdrop-blur-xl border-3 border-indigo-200 shadow-2xl rounded-3xl p-4 text-slate-800"
             >
               <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                 <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700">
@@ -245,8 +240,7 @@ export const AdaptiveNavigationProgressBar: React.FC = () => {
                 </div>
               </div>
 
-              {/* Detail Progress Bar */}
-              <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 relative mb-2">
+              <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 relative mb-2">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${contextData.percentage}%` }}

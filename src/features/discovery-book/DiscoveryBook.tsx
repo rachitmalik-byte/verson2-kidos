@@ -120,15 +120,16 @@ export const DiscoveryBook: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-indigo-200 via-sky-100 to-amber-100 p-3 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden select-none">
-      {/* ── Top Header ── */}
-      <header className="w-full max-w-6xl bg-white/95 backdrop-blur-md rounded-3xl border-4 border-slate-200/80 p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 z-20">
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+      {/* ── Top Header (Spacious, Single-Line, Zero-Wrapping) ── */}
+      <header className="w-full max-w-7xl bg-white/95 backdrop-blur-md rounded-3xl border-4 border-slate-200/80 px-4 sm:px-6 py-3.5 shadow-xl flex items-center justify-between gap-4 mb-6 z-20">
+        {/* Left: Navigation Buttons */}
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => {
               sounds.pop();
               navigate('/subjects');
             }}
-            className="p-2.5 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
+            className="p-2 sm:p-2.5 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
             title="Return to Subjects"
           >
             <Home className="w-4 h-4" />
@@ -139,28 +140,30 @@ export const DiscoveryBook: React.FC = () => {
               sounds.pop();
               navigate(-1);
             }}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-400 border-2 border-amber-600 shadow-[0_4px_0_#D97706] active:translate-y-1 text-slate-950 font-black text-xs sm:text-sm cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-amber-400 border-2 border-amber-600 shadow-[0_3px_0_#D97706] active:translate-y-0.5 text-slate-950 font-black text-xs sm:text-sm cursor-pointer whitespace-nowrap"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 shrink-0" />
             <span>Go Back</span>
           </button>
         </div>
 
-        <div className="text-center">
+        {/* Center: Title & Subtitle (Clean Single-Line with Truncation Protection) */}
+        <div className="text-center min-w-0 flex-1 px-2 hidden sm:block">
           <div className="flex items-center justify-center gap-2">
-            <BookOpen className="w-6 h-6 text-indigo-600" />
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <BookOpen className="w-5 h-5 text-indigo-600 shrink-0" />
+            <h1 className="text-base sm:text-lg md:text-xl font-black text-slate-900 whitespace-nowrap truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
               Master Science Field Journal 📖
             </h1>
           </div>
-          <p className="text-[11px] sm:text-xs font-bold text-slate-500">
+          <p className="text-[10px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap truncate">
             CBSE Class 5 EVS • Material Specimens, Animated Micro-Zooms & DIY Labs
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-50 border-2 border-indigo-200 rounded-2xl text-indigo-900 font-black text-xs shadow-xs">
-            <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
+        {/* Right: Status & Compact Audio Controls */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden xl:flex items-center gap-1 px-3 py-1.5 bg-indigo-50 border-2 border-indigo-200 rounded-2xl text-indigo-900 font-black text-xs shadow-xs whitespace-nowrap">
+            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400 shrink-0" />
             <span>{discoveries.length} / {materials.length} Discovered</span>
           </div>
           <AudioNavBarControls showProfile={false} />
