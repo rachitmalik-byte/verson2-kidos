@@ -1,6 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { InteractiveChapterVideoLab } from './InteractiveChapterVideoLab';
 import { MaterialsAnimatedLabBackground } from '@/components/effects/MaterialsAnimatedLabBackground';
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useParentStore } from '@/stores/parentStore';

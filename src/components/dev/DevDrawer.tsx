@@ -14,31 +14,7 @@ import { missions } from '@/data/missions';
 import { materials } from '@/data/materials';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import {
-  Code,
-  X,
-  Play,
-  Unlock,
-  RotateCcw,
-  Sparkles,
-  Volume2,
-  VolumeX,
-  Coins,
-  Shirt,
-  Compass,
-  User,
-  Shield,
-  Layers,
-  CheckCircle2,
-  ExternalLink,
-  PlusCircle,
-  Gem,
-  Droplets,
-  Home,
-  Leaf,
-  FlaskConical,
-  Wand2,
-} from 'lucide-react';
+import { CheckCircle2, Code, Coins, Compass, Droplets, ExternalLink, FlaskConical, Gem, Home, Layers, Leaf, Play, PlusCircle, RotateCcw, Shield, Shirt, Sparkles, Unlock, User, UserCheck, Volume2, VolumeX, Wand2, X } from 'lucide-react';
 
 export const DevDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
