@@ -1,5 +1,7 @@
 import { ThreeVelcroLab } from '@/components/three-lab/ThreeVelcroLab';
 import { ThreeDigestionLab } from '@/components/three-lab/ThreeDigestionLab';
+import { ThreeAntPheromoneLab } from '@/components/three-lab/ThreeAntPheromoneLab';
+import { ThreeSnakeAcousticLab } from '@/components/three-lab/ThreeSnakeAcousticLab';
 import { ThreeDandelionSim } from '@/components/three-lab/ThreeDandelionSim';
 import { ThreeCoconutSim } from '@/components/three-lab/ThreeCoconutSim';
 import React, { useState } from 'react';
