@@ -6,9 +6,52 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
 import { THEME_1_CHAPTERS } from '@/data/theme1Missions';
-import { ArrowLeft, Sparkles, BookOpen, ArrowRight, Leaf, Eye, Apple, Wind } from 'lucide-react';
+import { ArrowLeft, BookOpen, ArrowRight, Leaf, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';
+
+// 3D Voxel & Clean Specimen Artwork Assets
+import voxelForestImg from '@/assets/images/nature/kaykit_forest_biome_sample.png';
+import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
+import tonguePapillaeImg from '@/assets/images/specimens/tongue_taste_papillae.jpg';
+import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
+
+const CHAPTER_ARTWORK: Record<number, {
+  imageSrc: string;
+  tagline: string;
+  badgeGradient: string;
+  borderAccent: string;
+  themeColor: string;
+}> = {
+  1: {
+    imageSrc: voxelForestImg,
+    tagline: '3D Voxel Forest Biome & Pheromones',
+    badgeGradient: 'from-emerald-600 to-teal-700',
+    borderAccent: 'border-emerald-300 hover:border-emerald-500 hover:shadow-emerald-200/80',
+    themeColor: 'text-emerald-700',
+  },
+  2: {
+    imageSrc: snakeVibrationImg,
+    tagline: 'Seismic Jawbone Acoustics & Antivenom',
+    badgeGradient: 'from-amber-600 to-emerald-700',
+    borderAccent: 'border-amber-300 hover:border-amber-500 hover:shadow-amber-200/80',
+    themeColor: 'text-amber-700',
+  },
+  3: {
+    imageSrc: tonguePapillaeImg,
+    tagline: 'Saliva Amylase Enzymes & Taste Buds',
+    badgeGradient: 'from-rose-600 to-amber-700',
+    borderAccent: 'border-rose-300 hover:border-rose-500 hover:shadow-rose-200/80',
+    themeColor: 'text-rose-700',
+  },
+  4: {
+    imageSrc: burdockVelcroImg,
+    tagline: 'Seed Dispersal & Velcro Biomimicry',
+    badgeGradient: 'from-teal-600 to-emerald-700',
+    borderAccent: 'border-teal-300 hover:border-teal-500 hover:shadow-teal-200/80',
+    themeColor: 'text-teal-700',
+  },
+};
 
 export function Theme1Hub() {
   const navigate = useNavigate();
@@ -19,57 +62,6 @@ export function Theme1Hub() {
     voiceAssistant.stop();
     navigate(`/theme/1/chapter/${chapterNum}`);
   };
-
-  const theme1Illustrations = [
-    {
-      bgGradient: 'from-emerald-500/20 via-teal-400/10 to-amber-400/20',
-      badgeColor: 'bg-emerald-600 text-white',
-      accentBorder: 'border-emerald-400 hover:border-emerald-500 hover:shadow-emerald-200/80',
-      icon: '🐾',
-      vectorArt: (
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-3xl shadow-md border-2 border-white/80 shrink-0">
-          🦅🐜
-        </div>
-      ),
-      highlight: 'Eagle 100m Zoom & Ant Pheromones',
-    },
-    {
-      bgGradient: 'from-amber-500/20 via-orange-400/10 to-emerald-400/20',
-      badgeColor: 'bg-amber-600 text-white',
-      accentBorder: 'border-amber-400 hover:border-amber-500 hover:shadow-amber-200/80',
-      icon: '🐍',
-      vectorArt: (
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-600 flex items-center justify-center text-3xl shadow-md border-2 border-white/80 shrink-0">
-          🐍🎶
-        </div>
-      ),
-      highlight: 'Ground Vibration Acoustics & Fangs',
-    },
-    {
-      bgGradient: 'from-rose-500/20 via-pink-400/10 to-emerald-400/20',
-      badgeColor: 'bg-rose-600 text-white',
-      accentBorder: 'border-rose-400 hover:border-rose-500 hover:shadow-rose-200/80',
-      icon: '👅',
-      vectorArt: (
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-3xl shadow-md border-2 border-white/80 shrink-0">
-          👅🍎
-        </div>
-      ),
-      highlight: 'Taste Bud Mapping & Saliva Enzyme Lab',
-    },
-    {
-      bgGradient: 'from-teal-500/20 via-sky-400/10 to-emerald-400/20',
-      badgeColor: 'bg-teal-600 text-white',
-      accentBorder: 'border-teal-400 hover:border-teal-500 hover:shadow-teal-200/80',
-      icon: '🌱',
-      vectorArt: (
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 flex items-center justify-center text-3xl shadow-md border-2 border-white/80 shrink-0">
-          🌱🌬️
-        </div>
-      ),
-      highlight: 'Burdock Velcro Hooks & Wind Gliders',
-    },
-  ];
 
   return (
     <div className="min-h-screen w-full relative flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans overflow-x-hidden">
@@ -103,10 +95,6 @@ export function Theme1Hub() {
 
         {/* ── Hero Banner ── */}
         <div className="w-full bg-white/90 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 border-emerald-400 shadow-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
-          <div className="absolute -right-8 -bottom-8 opacity-10 text-emerald-600 pointer-events-none">
-            <Leaf className="w-48 h-48" />
-          </div>
-
           <div className="relative shrink-0">
             <Pip mood="idle" size="lg" />
           </div>
@@ -118,13 +106,13 @@ export function Theme1Hub() {
             </span>
 
             <h1
-              className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight mt-2.5"
+              className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight mt-2"
               style={{ fontFamily: 'Nunito, sans-serif' }}
             >
-              Super Senses & Living Creatures 🐾🌿
+              Super Senses & Living World 🐾🦅🐜🌱
             </h1>
             <p className="text-xs md:text-sm font-bold text-slate-600 mt-1.5 max-w-xl leading-relaxed">
-              Explore animal sense superpowers, snake ground vibration acoustics, digestive saliva enzymes, and plant seed dispersal inventions!
+              Explore 3D Voxel biomes, ant scent communication, snake vibration hearing, digestive saliva chemistry, and botanical Velcro inventions!
             </p>
 
             <div className="flex flex-wrap gap-2.5 mt-4 justify-center md:justify-start">
@@ -142,70 +130,83 @@ export function Theme1Hub() {
           </div>
         </div>
 
-        {/* ── 4 Illustrated Chapter Cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
-          {THEME_1_CHAPTERS.map((ch, idx) => {
-            const ill = theme1Illustrations[idx] || theme1Illustrations[0];
+        {/* ── 4 Re-Engineered 3D Specimen Chapter Cards ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          {THEME_1_CHAPTERS.map((ch) => {
+            const art = CHAPTER_ARTWORK[ch.chapterNumber] || CHAPTER_ARTWORK[1];
             return (
               <motion.button
                 key={ch.id}
-                whileHover={{ scale: 1.025, y: -4 }}
+                whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleChapterClick(ch.chapterNumber)}
-                className={`p-6 rounded-[32px] bg-white/95 backdrop-blur-md border-4 ${ill.accentBorder} shadow-xl text-left cursor-pointer transition-all flex flex-col justify-between relative overflow-hidden group`}
+                className={`rounded-[32px] bg-white border-4 ${art.borderAccent} shadow-xl text-left cursor-pointer transition-all flex flex-col overflow-hidden group select-none`}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${ill.bgGradient} opacity-30 pointer-events-none group-hover:opacity-60 transition-opacity`} />
+                {/* ── Top 3D Voxel / Specimen Banner ── */}
+                <div className="w-full h-44 sm:h-48 relative overflow-hidden bg-slate-900">
+                  <img
+                    src={art.imageSrc}
+                    alt={ch.title}
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
 
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-3.5">
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 ${ill.badgeColor} text-xs font-black rounded-full uppercase shadow-xs`}>
-                        Chapter {ch.chapterNumber}
-                      </span>
-                      <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
-                        {ch.curriculumCode}
-                      </span>
-                    </div>
-
-                    <span className="text-2xl filter drop-shadow-sm group-hover:scale-125 transition-transform">{ch.icon}</span>
+                  {/* Top Floating Badge */}
+                  <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                    <span className={`px-3 py-1 bg-gradient-to-r ${art.badgeGradient} text-white text-xs font-black rounded-full uppercase tracking-wider shadow-md`}>
+                      Chapter {ch.chapterNumber}
+                    </span>
+                    <span className="px-2.5 py-0.5 bg-black/60 backdrop-blur-md text-white/90 text-[10px] font-mono font-black rounded-full border border-white/20">
+                      {ch.curriculumCode}
+                    </span>
                   </div>
 
-                  <div className="flex items-start gap-4 my-2">
-                    {ill.vectorArt}
-                    <div className="flex-1 min-w-0">
-                      <h3
-                        className="text-lg sm:text-xl font-black text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors"
-                        style={{ fontFamily: 'Nunito, sans-serif' }}
-                      >
-                        {ch.title}
-                      </h3>
-                      <p className="text-xs font-bold text-slate-600 mt-1 line-clamp-2 leading-relaxed">
-                        {ch.subtitle}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {ch.concepts.map((concept) => (
-                      <span
-                        key={concept}
-                        className="px-2.5 py-0.5 bg-white/90 border border-slate-200 text-slate-700 text-[10px] font-black rounded-lg shadow-2xs"
-                      >
-                        #{concept}
-                      </span>
-                    ))}
+                  {/* Bottom Image Tagline */}
+                  <div className="absolute bottom-2.5 left-3.5 right-3.5 flex items-center justify-between text-white">
+                    <span className="text-[11px] font-bold text-emerald-300 drop-shadow-md">
+                      {art.tagline}
+                    </span>
+                    <span className="text-xl filter drop-shadow-md">{ch.icon}</span>
                   </div>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between relative z-10">
-                  <span className="text-xs font-black text-emerald-600 flex items-center gap-1 group-hover:text-emerald-700">
-                    <span>Enter Interactive Lab</span>
-                    <ArrowRight className="w-3.5 h-3.5 stroke-[3] group-hover:translate-x-1 transition-transform" />
-                  </span>
+                {/* ── Card Content Body ── */}
+                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white">
+                  <div>
+                    <h3
+                      className="text-lg sm:text-xl font-black text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors"
+                      style={{ fontFamily: 'Nunito, sans-serif' }}
+                    >
+                      {ch.title}
+                    </h3>
+                    <p className="text-xs font-bold text-slate-600 mt-1 line-clamp-2 leading-relaxed">
+                      {ch.subtitle}
+                    </p>
 
-                  <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-                    {ill.highlight}
-                  </span>
+                    {/* Concept Tags */}
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {ch.concepts.map((concept) => (
+                        <span
+                          key={concept}
+                          className="px-2.5 py-1 bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-black rounded-xl shadow-2xs"
+                        >
+                          #{concept}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Launch Bar */}
+                  <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-xs font-black text-emerald-600 flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                      <span>Launch Interactive Mission</span>
+                      <ArrowRight className="w-4 h-4 stroke-[3]" />
+                    </span>
+
+                    <span className="text-[11px] font-black px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
+                      5 Lab Stages 🔬
+                    </span>
+                  </div>
                 </div>
               </motion.button>
             );
