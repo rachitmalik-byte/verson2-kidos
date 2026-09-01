@@ -1,3 +1,12 @@
+import antsSugarImg from '@/assets/images/theme1/ants_trail_sugar.jpg';
+import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
+import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
+import fourSnakesImg from '@/assets/images/specimens/four_venomous_snakes.jpg';
+import tonguePapillaeImg from '@/assets/images/specimens/tongue_taste_papillae.jpg';
+import drBeaumontImg from '@/assets/images/specimens/dr_beaumont_stomach.jpg';
+import dandelionSeedImg from '@/assets/images/specimens/dandelion_seed_dispersal.jpg';
+import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
+import { MultiTierMicroscopeStudio } from '@/components/microscope/MultiTierMicroscopeStudio';
 import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
 import { SUPER_SENSES_COURSE_CHAPTERS } from '@/data/masterCurriculum';
 import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';

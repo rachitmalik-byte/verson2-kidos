@@ -1,3 +1,10 @@
+import sheepWoolImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
+import pashminaMicroImg from '@/assets/images/theme-shelter/pashmina_microscope_macro.jpg';
+import solarEvapImg from '@/assets/images/specimens/solar_evaporation_ocean.jpg';
+import deadSeaSaltImg from '@/assets/images/specimens/dead_sea_salt_floating.jpg';
+import earthquakeFaultImg from '@/assets/images/specimens/earthquake_fault_seismograph.jpg';
+import timberWoodImg from '@/assets/images/specimens/natural_wood_timber.jpg';
+import { MultiTierMicroscopeStudio } from '@/components/microscope/MultiTierMicroscopeStudio';
 import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
 import { SHELTER_COURSE_CHAPTERS } from '@/data/masterCurriculum';
 import { ShelterAnimatedMountainBackground } from '@/components/effects/ShelterAnimatedMountainBackground';
