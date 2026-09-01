@@ -1,3 +1,15 @@
+// Real 3-Tier Progressive Zoom Images
+import pashmina1x from '@/assets/images/microscope/pashmina_1x.jpg';
+import pashmina100x from '@/assets/images/microscope/pashmina_100x.jpg';
+import pashmina500x from '@/assets/images/microscope/pashmina_500x.jpg';
+
+import water1x from '@/assets/images/microscope/microgravity_water_1x.jpg';
+import water100x from '@/assets/images/microscope/microgravity_water_100x.jpg';
+import water500x from '@/assets/images/microscope/microgravity_water_500x.jpg';
+
+import petroleum1x from '@/assets/images/microscope/petroleum_1x.jpg';
+import petroleum100x from '@/assets/images/microscope/petroleum_100x.jpg';
+import petroleum500x from '@/assets/images/microscope/petroleum_500x.jpg';
 import sheepWoolImg from '@/assets/images/specimens/sheep_wool_fleece.jpg';
 import pashminaMicroImg from '@/assets/images/theme-shelter/pashmina_microscope_macro.jpg';
 import solarEvapImg from '@/assets/images/specimens/solar_evaporation_ocean.jpg';

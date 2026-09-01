@@ -1,3 +1,19 @@
+// Real 3-Tier Progressive Zoom Images
+import ant1x from '@/assets/images/microscope/ant_1x.jpg';
+import ant100x from '@/assets/images/microscope/ant_100x.jpg';
+import ant500x from '@/assets/images/microscope/ant_500x.jpg';
+
+import snake1x from '@/assets/images/microscope/snake_1x.jpg';
+import snake100x from '@/assets/images/microscope/snake_100x.jpg';
+import snake500x from '@/assets/images/microscope/snake_500x.jpg';
+
+import tongue1x from '@/assets/images/microscope/tongue_1x.jpg';
+import tongue100x from '@/assets/images/microscope/tongue_100x.jpg';
+import tongue500x from '@/assets/images/microscope/tongue_500x.jpg';
+
+import burdock1x from '@/assets/images/microscope/burdock_1x.jpg';
+import burdock100x from '@/assets/images/microscope/burdock_100x.jpg';
+import burdock500x from '@/assets/images/microscope/burdock_500x.jpg';
 import antsSugarImg from '@/assets/images/theme1/ants_trail_sugar.jpg';
 import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
 import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
