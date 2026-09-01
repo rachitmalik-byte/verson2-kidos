@@ -1,3 +1,4 @@
+import { AdaptiveNavigationProgressBar } from '@/components/navigation/AdaptiveNavigationProgressBar';
 import { VideoLabPage } from '@/features/video-lab/VideoLabPage';
 import { ThemeWaterHub } from '@/features/theme-water/ThemeWaterHub';
 import { WaterMissionEngine } from '@/features/theme-water/WaterMissionEngine';
@@ -32,6 +33,8 @@ export function App() {
     <ErrorBoundary>
     <BrowserRouter>
       <div className="min-h-screen relative selection:bg-amber-300 selection:text-slate-950">
+        {/* Global Top-of-Page Adaptive Colorful Progress Line */}
+        <AdaptiveNavigationProgressBar />
         <Routes>
           {/* Entry */}
           <Route path="/" element={<RoleSelection />} />

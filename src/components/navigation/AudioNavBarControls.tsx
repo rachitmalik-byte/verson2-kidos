@@ -1,4 +1,3 @@
-import { AdaptiveNavigationProgressBar } from './AdaptiveNavigationProgressBar';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -52,7 +51,7 @@ export const MissionAudioControls: React.FC = () => {
   return (
     <>
       <div className="flex items-center gap-1.5 shrink-0 select-none">
-        <AdaptiveNavigationProgressBar />
+        
         {/* Quick AI Science Lab Trigger */}
         <motion.button
           whileHover={{ scale: 1.03 }}
@@ -167,10 +166,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   return (
     <>
       <div className={`flex items-center gap-1.5 sm:gap-2 select-none ${className}`}>
-        {/* 0. Adaptive Navigation Progress Bar */}
-        <AdaptiveNavigationProgressBar />
-
-        {/* 1. PolyCredits Balance Badge */}
+                {/* 1. PolyCredits Balance Badge */}
         <motion.button
           whileHover={{ scale: 1.03, y: -1 }}
           whileTap={{ scale: 0.96 }}
