@@ -42,6 +42,7 @@ interface AIAnalyticsReport {
 export const ParentDashboard = () => {
   const navigate = useNavigate();
   const child = useParentStore((state) => state.child);
+  const childExplanations = useParentStore((state) => state.childExplanations) || [];
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 
@@ -397,6 +398,62 @@ export const ParentDashboard = () => {
             <div className="text-center py-10 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300">
               <p className="text-base font-bold text-slate-500">
                 No concepts discovered yet. Have <span className="text-slate-900 font-black">{child?.name || 'your child'}</span> complete Mission 1 on the Adventure Map!
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* ── 🎙️ SECTION: IN [CHILD]'S OWN WORDS (Authentic Explain-Why Evidence) ── */}
+        <div className="w-full bg-white rounded-3xl border-4 border-indigo-200 shadow-xl p-8 md:p-10 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <span className="p-3 bg-indigo-50 rounded-2xl border-2 border-indigo-200 text-2xl">🎙️</span>
+              <div>
+                <h3 className="text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  In {child?.name || 'Your Child'}'s Own Words
+                </h3>
+                <p className="text-xs sm:text-sm font-bold text-slate-500 mt-0.5">
+                  Direct voice recordings & scientific reasoning notes captured after experiments
+                </p>
+              </div>
+            </div>
+
+            <span className="text-xs font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full">
+              {childExplanations.length} Authentic Recordings
+            </span>
+          </div>
+
+          {childExplanations.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {childExplanations.map((item, idx) => (
+                <div key={idx} className="p-5 rounded-3xl bg-indigo-50/50 border-2 border-indigo-100 flex flex-col justify-between gap-3 shadow-xs">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-black uppercase text-indigo-800 bg-indigo-100 px-2.5 py-0.5 rounded-full">
+                      {item.missionTitle}
+                    </span>
+                    <button
+                      onClick={() => voiceAssistant.speak(item.quote)}
+                      className="p-1.5 rounded-xl bg-white hover:bg-indigo-100 text-indigo-700 cursor-pointer shadow-xs"
+                      title="Play Audio"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <blockquote className="text-xs sm:text-sm font-bold text-slate-800 italic leading-relaxed bg-white p-3.5 rounded-2xl border border-indigo-100">
+                    "{item.quote}"
+                  </blockquote>
+
+                  <span className="text-[10px] font-bold text-slate-400 self-end">
+                    Recorded {new Date(item.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+              <p className="text-xs sm:text-sm font-bold text-slate-600">
+                No voice notes recorded yet. After your child completes their next experiment, they can explain what happened in their own words!
               </p>
             </div>
           )}

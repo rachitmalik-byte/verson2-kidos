@@ -1,13 +1,15 @@
-import { MaterialsAnimatedLabBackground } from '@/components/effects/MaterialsAnimatedLabBackground';
-import React, { ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { ArrowLeft, ArrowRight, RotateCcw, Home, Sparkles, Map } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Home, Map, Sparkles } from 'lucide-react';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { missions } from '@/data/missions';
 import { MissionAudioControls } from '@/components/navigation/AudioNavBarControls';
+import { AskPipAssistant } from '@/components/pip/AskPipAssistant';
+import { ExplainItBackModal } from '@/components/reflection/ExplainItBackModal';
+import { NaturalStoppingPointModal } from '@/components/wellness/NaturalStoppingPointModal';
 import { motion } from 'framer-motion';
 
 interface MissionLayoutProps {
@@ -39,11 +41,12 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 }) => {
   const navigate = useNavigate();
   const completedMissions = useProgressStore((state) => state.completedMissions);
-  const discoveries = useDiscoveryStore((state) => state.discoveries);
-
   const currentMission = missions.find((m) => m.id === missionId || m.number === missionNumber);
   const derivedNumber = missionNumber ?? currentMission?.number ?? 1;
   const derivedTitle = missionTitle || currentMission?.title || 'Science Mission';
+
+  const [showExplainModal, setShowExplainModal] = useState(false);
+  const [showStoppingPointModal, setShowStoppingPointModal] = useState(false);
 
   const stepProgressPercent = Math.round((currentStep / Math.max(totalSteps, 1)) * 100);
 
@@ -59,9 +62,29 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
     navigate('/');
   };
 
+  const handleNextClick = () => {
+    if (currentStep >= totalSteps) {
+      sounds.fanfare();
+      // Trigger "Explain It Back" reflection moment
+      setShowExplainModal(true);
+    } else {
+      sounds.pop();
+      onNext();
+    }
+  };
+
+  const handleExplainClose = () => {
+    setShowExplainModal(false);
+    onNext();
+    // If completed >= 2 missions, offer a natural stopping pause
+    if (completedMissions.length >= 2) {
+      setShowStoppingPointModal(true);
+    }
+  };
+
   return (
     <div
-      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-3 sm:pt-5 pb-24 sm:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden`}
+      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-3 sm:pt-5 pb-24 sm:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none`}
     >
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
         {/* ── Persistent Top Level Mission Header & Progress Indicator ── */}
@@ -105,7 +128,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
               </div>
             </div>
 
-            {/* Right: Audio & Dedicated Single AI Lab Trigger */}
+            {/* Right: Audio & Reading Level Controls */}
             <div className="flex items-center gap-1.5 shrink-0">
               <MissionAudioControls />
             </div>
@@ -127,6 +150,26 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
           {children}
         </main>
       </div>
+
+      {/* ── Always-Visible "Stuck / Ask Pip" Confused Self-Advocacy Button ── */}
+      <AskPipAssistant
+        currentGoal={`In this step of "${derivedTitle}", we are investigating how physical properties decide everyday uses.`}
+        stepHint="Look closely at the materials on screen. Tap each specimen or drop weights to see how they respond under testing!"
+        conceptBreakdown="Natural materials come from organic plants and animals with porous fibers. Synthetic materials are made in factories from continuous polymer chains with specialized superpowers!"
+      />
+
+      {/* ── "Explain It Back In Your Own Words" Modal ── */}
+      <ExplainItBackModal
+        isOpen={showExplainModal}
+        missionTitle={derivedTitle}
+        onClose={handleExplainClose}
+      />
+
+      {/* ── Natural Stopping Point Modal ── */}
+      <NaturalStoppingPointModal
+        isOpen={showStoppingPointModal}
+        onContinue={() => setShowStoppingPointModal(false)}
+      />
 
       {/* ── Persistent Bottom Step Navigation Action Bar ── */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t-2 border-slate-200/90 py-2.5 px-4 sm:px-8 shadow-2xl">
@@ -153,10 +196,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 
           {/* Next Step / Complete Button */}
           <button
-            onClick={() => {
-              sounds.pop();
-              onNext();
-            }}
+            onClick={handleNextClick}
             disabled={!isStepComplete}
             className={`px-5 py-2.5 sm:px-7 sm:py-3 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all active:scale-95 ${
               isStepComplete
@@ -164,7 +204,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
                 : 'bg-slate-200 text-slate-400 border border-slate-300 opacity-60 cursor-not-allowed'
             }`}
           >
-            <span>{currentStep >= totalSteps ? 'Complete Mission ⭐' : 'Next Step ➔'}</span>
+            <span>{currentStep >= totalSteps ? 'Complete & Explain ⭐' : 'Next Step ➔'}</span>
             <ArrowRight className="w-4 h-4 stroke-[3]" />
           </button>
         </div>

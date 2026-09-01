@@ -34,6 +34,7 @@ import { ScienceArcadeModal } from '@/features/arcade/ScienceArcadeModal';
 import { ScanMyWorldModal } from '@/components/ai/ScanMyWorldModal';
 import { WhatIfScienceSandboxModal } from '@/components/ai/WhatIfScienceSandboxModal';
 import { AiScienceLabModal } from '@/components/ai/AiScienceLabModal';
+import { ReadingLevelToggle } from '@/components/accessibility/ReadingLevelToggle';
 
 interface AudioNavBarControlsProps {
   className?: string;
@@ -49,6 +50,9 @@ export const MissionAudioControls: React.FC = () => {
   return (
     <>
       <div className="flex items-center gap-1.5 shrink-0 select-none">
+        {/* Reading Level Accessibility Switcher */}
+        <ReadingLevelToggle />
+
         {/* Quick AI Science Lab Trigger */}
         <motion.button
           whileHover={{ scale: 1.03 }}
@@ -147,6 +151,11 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   return (
     <>
       <div className={`flex items-center gap-2 shrink-0 select-none ${className}`}>
+        {/* Reading Level Accessibility Switcher */}
+        <div className="hidden sm:block">
+          <ReadingLevelToggle />
+        </div>
+
         {/* 1. PolyCredits Balance Badge */}
         <motion.button
           whileHover={{ scale: 1.03 }}

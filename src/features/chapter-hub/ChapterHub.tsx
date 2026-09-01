@@ -52,6 +52,8 @@ import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy
 
 import { IntegratedGuidebook } from './IntegratedGuidebook';
 import { DailyCuriosityQuest } from '@/components/gamification/DailyCuriosityQuest';
+import { SpacedRecallModal } from '@/components/recall/SpacedRecallModal';
+import { useSpacedRecallStore } from '@/stores/spacedRecallStore';
 
 const missionThumbnails: Record<string, string> = {
   'mission-01': raincoatWaterproofImg,
@@ -78,6 +80,15 @@ export function ChapterHub() {
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
   const [activeTab, setActiveTab] = useState<'missions' | 'video' | 'guidebook'>('missions');
   const [viewMode, setViewMode] = useState<'map' | 'grid'>('grid');
+  const [showRecallModal, setShowRecallModal] = useState(false);
+  const shouldPromptRecall = useSpacedRecallStore((s) => s.shouldPromptRecall);
+
+  useEffect(() => {
+    if (completedMissions.length > 0 && shouldPromptRecall()) {
+      const timer = setTimeout(() => setShowRecallModal(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [completedMissions.length]);
 
   const totalStars = completedMissions.length * 3 + discoveries.length * 2;
   const isAllComplete = completedMissions.length === missions.length;
