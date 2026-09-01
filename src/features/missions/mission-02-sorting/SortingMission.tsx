@@ -119,7 +119,7 @@ const SORTING_ITEMS: MaterialItem[] = [
 ];
 
 export function SortingMission() {
-  const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
+  const [currentPhase, setCurrentPhase] = useState<Phase>('SORTING');
   const [sortedItems, setSortedItems] = useState<Record<string, 'natural' | 'synthetic'>>({});
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [inspectItem, setInspectItem] = useState<MaterialItem | null>(null);

@@ -23,7 +23,7 @@ import { Flame, ArrowRight, ZoomIn } from 'lucide-react';
 type Phase = 'HOOK' | 'BURN_TEST' | 'MICROSCOPE' | 'APPLY';
 
 export function FireSafetyMission() {
-  const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
+  const [currentPhase, setCurrentPhase] = useState<Phase>('EXPERIMENT');
   const [burnedCotton, setBurnedCotton] = useState(false);
   const [burnedPolyester, setBurnedPolyester] = useState(false);
   const [isIgnitingCotton, setIsIgnitingCotton] = useState(false);
