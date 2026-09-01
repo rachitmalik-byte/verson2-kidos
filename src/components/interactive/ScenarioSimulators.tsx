@@ -1,3 +1,4 @@
+import { ThreeEpoxyChemistryLab } from "@/components/three-lab/ThreeEpoxyChemistryLab";
 import { ThreePipeLeakLab } from "@/components/three-lab/ThreePipeLeakLab";
 import { ThreeRubberStretchLab } from "@/components/three-lab/ThreeRubberStretchLab";
 import React, { useState } from 'react';
@@ -392,71 +393,10 @@ export const MolecularVulcanizationSim: React.FC<{
 };
 
 /* ============================================================================
-   5. EPOXY SYRINGE MIXER SIMULATOR
+   5. 3D DUAL-CHAMBER EPOXY CHEMISTRY LAB (Three.js Polymerization & Pull Test)
    ============================================================================ */
 export const EpoxySyringeMixerSim: React.FC<{
   onMixed?: () => void;
 }> = ({ onMixed }) => {
-  const [partA, setPartA] = useState(0);
-  const [partB, setPartB] = useState(0);
-
-  const isFullyMixed = partA >= 50 && partB >= 50;
-
-  const handlePush = () => {
-    sounds.pop();
-    setPartA((prev) => Math.min(50, prev + 15));
-    setPartB((prev) => Math.min(50, prev + 15));
-
-    if (partA + 15 >= 50 && partB + 15 >= 50) {
-      sounds.success();
-      voiceAssistant.speak('Resin and Hardener mixed! Chemical polymerization begins, turning the liquid into an unbreakable solid rock!');
-      if (onMixed) onMixed();
-    }
-  };
-
-  return (
-    <div className="w-full bg-slate-950 p-6 rounded-3xl border-4 border-emerald-400 shadow-2xl flex flex-col items-center">
-      <div className="flex justify-between items-center w-full mb-4">
-        <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">
-          Dual-Chamber Epoxy Syringe
-        </span>
-        <span className={`text-xs font-black px-3 py-1 rounded-full ${isFullyMixed ? 'bg-emerald-400 text-slate-950' : 'bg-slate-800 text-slate-400'}`}>
-          {isFullyMixed ? '✓ Polymerized Solid' : 'Unmixed Liquids'}
-        </span>
-      </div>
-
-      <div className="flex gap-4 w-full justify-center mb-6">
-        {/* Syringe Chamber A */}
-        <div className="w-20 h-40 bg-slate-900 rounded-t-2xl border-2 border-slate-700 relative flex flex-col justify-end p-1">
-          <motion.div
-            style={{ height: `${100 - partA * 2}%` }}
-            className="w-full bg-gradient-to-t from-cyan-500 to-sky-400 rounded-lg shadow-[0_0_10px_#06b6d4]"
-          />
-          <span className="absolute top-2 left-0 right-0 text-[10px] font-black text-center text-cyan-300">
-            Resin (A)
-          </span>
-        </div>
-
-        {/* Syringe Chamber B */}
-        <div className="w-20 h-40 bg-slate-900 rounded-t-2xl border-2 border-slate-700 relative flex flex-col justify-end p-1">
-          <motion.div
-            style={{ height: `${100 - partB * 2}%` }}
-            className="w-full bg-gradient-to-t from-amber-500 to-yellow-400 rounded-lg shadow-[0_0_10px_#f59e0b]"
-          />
-          <span className="absolute top-2 left-0 right-0 text-[10px] font-black text-center text-amber-300">
-            Hardener (B)
-          </span>
-        </div>
-      </div>
-
-      <button
-        onClick={handlePush}
-        disabled={isFullyMixed}
-        className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-black text-xs md:text-sm shadow-lg cursor-pointer hover:brightness-110 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2"
-      >
-        <Wrench className="w-4 h-4" />
-        <span>{isFullyMixed ? 'Polymerization Complete!' : 'Press Dual Plunger (Mix 1:1)'}</span>
-      </button>
-    </div>
-  );
+  return <ThreeEpoxyChemistryLab onMixed={onMixed} />;
 };
