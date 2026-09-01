@@ -1,3 +1,4 @@
+import { ThreeTireFrictionLab } from "@/components/three-lab/ThreeTireFrictionLab";
 import { ThreeEpoxyChemistryLab } from "@/components/three-lab/ThreeEpoxyChemistryLab";
 import { ThreePipeLeakLab } from "@/components/three-lab/ThreePipeLeakLab";
 import { ThreeRubberStretchLab } from "@/components/three-lab/ThreeRubberStretchLab";
