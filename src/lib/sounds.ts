@@ -33,6 +33,21 @@ class SoundEngine {
     return this.ctx;
   }
 
+  // Water bubble sound effect
+  bubble() {
+    this.splash();
+  }
+
+  // Generic click sound effect
+  click() {
+    this.pop();
+  }
+
+  // Chime sound effect
+  chime() {
+    this.sparkle();
+  }
+
   // Crisp, delightful bubble pop
   pop() {
     if (this.isMuted()) return;
@@ -317,4 +332,21 @@ class SoundEngine {
   }
 }
 
-export const sounds = new SoundEngine();
+const rawSoundEngine = new SoundEngine();
+export const sounds: SoundEngine = new Proxy(rawSoundEngine, {
+  get(target, prop, receiver) {
+    if (prop in target) {
+      const val = (target as any)[prop];
+      if (typeof val === 'function') {
+        return val.bind(target);
+      }
+      return val;
+    }
+    // Fallback safely for any undefined sound name so it NEVER throws
+    return (...args: any[]) => {
+      try {
+        target.pop();
+      } catch {}
+    };
+  },
+});

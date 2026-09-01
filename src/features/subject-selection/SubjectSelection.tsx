@@ -275,9 +275,13 @@ export const SubjectSelection: React.FC = () => {
               <div className="pt-4 border-t-2 border-slate-100 flex items-center justify-between">
                 {sub.active ? (
                   <>
-                    <div className="flex items-center gap-2 text-xs font-black text-amber-900 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200">
-                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                      <span>{completedMissions.length} / 13 Missions Complete</span>
+                    <div className="flex items-center gap-2 text-xs font-black text-indigo-950 bg-indigo-50 px-2.5 py-1 rounded-xl border border-indigo-200">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      <span>
+                        {sub.id === 'things-we-make'
+                          ? `${completedMissions.length} / 13 Missions Complete`
+                          : `${sub.chapterCount} Interactive Chapters`}
+                      </span>
                     </div>
                     <div className="p-2 bg-amber-400 text-slate-950 rounded-xl font-black shadow-md">
                       <ArrowRight className="w-4 h-4 stroke-[3]" />
