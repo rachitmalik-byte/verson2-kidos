@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { Droplets, ArrowUp, ArrowDown, RotateCcw, Plus } from 'lucide-react';
+import { Droplets, ArrowUp, ArrowDown, RotateCcw, Plus, Sparkles } from 'lucide-react';
 
 interface Props {
   onCompleted?: () => void;
@@ -10,13 +10,13 @@ interface Props {
 
 export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [saltGrams, setSaltGrams] = useState<number>(0);
+  const [saltGrams, setSaltGrams] = useState<number>(0); // 0 to 300
   const [selectedItem, setSelectedItem] = useState<'egg' | 'wood' | 'nail' | 'plastic'>('egg');
 
   const density = 1.0 + (saltGrams / 300) * 0.25; // 1.00 g/cm3 to 1.25 g/cm3
 
   const ITEM_SPECS = {
-    egg: { name: 'Fresh Chicken Egg', density: 1.08, color: 0xffedd5, icon: '🥚' },
+    egg: { name: 'Fresh Chicken Egg', density: 1.08, color: 0xfffbeb, icon: '🥚' },
     wood: { name: 'Pine Wood Block', density: 0.55, color: 0xb45309, icon: '🪵' },
     plastic: { name: 'Polyester Bottle', density: 0.95, color: 0x38bdf8, icon: '🫙' },
     nail: { name: 'Solid Iron Nail', density: 7.85, color: 0x64748b, icon: '🔩' },
@@ -33,7 +33,7 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
     if (selectedItem === 'egg' && newGrams >= 150) {
       sounds.fanfare();
       voiceAssistant.speak(
-        'Density Law Discovered! Adding salt makes the water denser than the egg (1.08 g/cm3). The buoyant upward force lifts the egg right to the surface!'
+        'Density Law Discovered! Adding salt makes the water denser than the egg. The buoyant force lifts the egg right to the surface!'
       );
       if (onCompleted) onCompleted();
     }
@@ -50,142 +50,142 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
     const width = container.clientWidth;
     const height = container.clientHeight || 420;
 
-    // 1. Scene & Camera
+    // 1. Scene
     const scene = new THREE.Scene();
-    // Warm clean laboratory backdrop
-    scene.background = new THREE.Color(0x0a1628);
+    scene.background = new THREE.Color(0x020617); // Dark rich slate
 
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
-    camera.position.set(0, 1.2, 11);
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+    camera.position.set(0, 1.2, 10.5);
     camera.lookAt(0, -0.2, 0);
 
     // 2. Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     container.replaceChildren(renderer.domElement);
 
     // 3. Bright Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
     scene.add(ambientLight);
 
-    const topSun = new THREE.DirectionalLight(0xffffff, 2.5);
-    topSun.position.set(4, 12, 8);
-    scene.add(topSun);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    sunLight.position.set(5, 12, 8);
+    scene.add(sunLight);
 
-    // Underwater Aqua Spotlights
-    const aquaGlow1 = new THREE.PointLight(0x00d2ff, 4.0, 15);
-    aquaGlow1.position.set(0, -1, 4);
-    scene.add(aquaGlow1);
-
-    const aquaGlow2 = new THREE.PointLight(0x0ea5e9, 3.0, 12);
-    aquaGlow2.position.set(-3, -2, -2);
-    scene.add(aquaGlow2);
+    const aquaLight = new THREE.PointLight(0x38bdf8, 3.0, 10);
+    aquaLight.position.set(0, 0, 4);
+    scene.add(aquaLight);
 
     // 4. Tank Dimensions
-    const tankWidth = 6.8;
-    const tankHeight = 5.6;
-    const tankDepth = 4.2;
-    const waterHeight = 4.4;
+    const tankW = 6.4;
+    const tankH = 5.2;
+    const tankD = 3.8;
+    const waterH = 3.8;
 
-    // 5. VIBRANT GLOWING BLUE WATER VOLUME (100% Visible & Beautiful)
-    const waterGeo = new THREE.BoxGeometry(tankWidth - 0.15, waterHeight, tankDepth - 0.15);
-    
-    // Dynamic salinity shift from radiant cyan to deep saline ocean blue
-    const waterColor = new THREE.Color().lerpColors(
-      new THREE.Color(0x00b4d8), // Pure Cyan Water
-      new THREE.Color(0x0077b6), // Deep Saline Blue
-      saltGrams / 300
-    );
+    // 5. SOLID OPAQUE VIBRANT BLUE WATER (No transparency bugs!)
+    const waterGroup = new THREE.Group();
+    scene.add(waterGroup);
 
-    const waterMat = new THREE.MeshStandardMaterial({
-      color: waterColor,
-      emissive: waterColor,
-      emissiveIntensity: 0.35, // Internal light emission so water is vividly bright blue!
-      transparent: true,
-      opacity: 0.82,
-      roughness: 0.15,
-      metalness: 0.1,
-    });
-    const waterMesh = new THREE.Mesh(waterGeo, waterMat);
-    waterMesh.position.set(0, -tankHeight / 2 + waterHeight / 2 + 0.1, 0);
-    scene.add(waterMesh);
+    // Dynamic water color: Bright Cyan (Fresh) to Deep Saline Blue (Dead Sea)
+    const waterColorHex = saltGrams > 150 ? 0x0284c7 : 0x0ea5e9;
 
-    // Glowing Water Surface Plane with Waves
-    const surfaceGeo = new THREE.PlaneGeometry(tankWidth - 0.2, tankDepth - 0.2, 24, 24);
-    const surfaceMat = new THREE.MeshStandardMaterial({
-      color: 0x90e0ef,
-      emissive: 0x00b4d8,
-      emissiveIntensity: 0.5,
-      transparent: true,
-      opacity: 0.95,
+    // Solid Back Wall of Water
+    const waterBackGeo = new THREE.PlaneGeometry(tankW, waterH);
+    const waterBackMat = new THREE.MeshStandardMaterial({
+      color: waterColorHex,
       roughness: 0.1,
+      metalness: 0.1,
+      side: THREE.DoubleSide,
+    });
+    const waterBack = new THREE.Mesh(waterBackGeo, waterBackMat);
+    waterBack.position.set(0, -tankH / 2 + waterH / 2, -tankD / 2 + 0.05);
+    waterGroup.add(waterBack);
+
+    // Solid Left & Right Sides of Water
+    const waterSideGeo = new THREE.PlaneGeometry(tankD, waterH);
+    const waterSideMat = new THREE.MeshStandardMaterial({ color: 0x0369a1, side: THREE.DoubleSide });
+
+    const waterLeft = new THREE.Mesh(waterSideGeo, waterSideMat);
+    waterLeft.rotation.y = Math.PI / 2;
+    waterLeft.position.set(-tankW / 2 + 0.05, -tankH / 2 + waterH / 2, 0);
+    waterGroup.add(waterLeft);
+
+    const waterRight = new THREE.Mesh(waterSideGeo, waterSideMat);
+    waterRight.rotation.y = -Math.PI / 2;
+    waterRight.position.set(tankW / 2 - 0.05, -tankH / 2 + waterH / 2, 0);
+    waterGroup.add(waterRight);
+
+    // Golden Sand Tank Floor
+    const sandGeo = new THREE.PlaneGeometry(tankW, tankD);
+    const sandMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.8 });
+    const sand = new THREE.Mesh(sandGeo, sandMat);
+    sand.rotation.x = -Math.PI / 2;
+    sand.position.set(0, -tankH / 2 + 0.02, 0);
+    waterGroup.add(sand);
+
+    // Animated Solid Water Surface Waves (Top Plane)
+    const waveGeo = new THREE.PlaneGeometry(tankW, tankD, 16, 16);
+    const waveMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      emissive: 0x0284c7,
+      emissiveIntensity: 0.4,
+      roughness: 0.2,
       metalness: 0.3,
       side: THREE.DoubleSide,
     });
-    const surfaceMesh = new THREE.Mesh(surfaceGeo, surfaceMat);
-    surfaceMesh.rotation.x = -Math.PI / 2;
-    surfaceMesh.position.y = waterMesh.position.y + waterHeight / 2;
-    scene.add(surfaceMesh);
+    const waveMesh = new THREE.Mesh(waveGeo, waveMat);
+    waveMesh.rotation.x = -Math.PI / 2;
+    waveMesh.position.set(0, -tankH / 2 + waterH, 0);
+    waterGroup.add(waveMesh);
 
-    // Bright White Waterline Foam Border
-    const waterlineGeo = new THREE.BoxGeometry(tankWidth - 0.1, 0.12, tankDepth - 0.1);
-    const waterlineMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe });
-    const waterlineMesh = new THREE.Mesh(waterlineGeo, waterlineMat);
-    waterlineMesh.position.y = surfaceMesh.position.y;
-    scene.add(waterlineMesh);
+    // White Wave Foam Line at the Surface
+    const foamGeo = new THREE.BoxGeometry(tankW + 0.1, 0.15, 0.1);
+    const foamMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const foamMesh = new THREE.Mesh(foamGeo, foamMat);
+    foamMesh.position.set(0, waveMesh.position.y, tankD / 2);
+    waterGroup.add(foamMesh);
 
-    // 6. Glass Aquarium Tank Frame
-    const glassGeo = new THREE.BoxGeometry(tankWidth, tankHeight, tankDepth);
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
+    // Rich Blue Front Fluid Tint (Vibrant & fully visible)
+    const fluidFrontGeo = new THREE.PlaneGeometry(tankW, waterH);
+    const fluidFrontMat = new THREE.MeshBasicMaterial({
+      color: waterColorHex,
       transparent: true,
-      opacity: 0.2,
-      roughness: 0.05,
-      metalness: 0.1,
-      transmission: 0.95,
-      ior: 1.5,
-      clearcoat: 1.0,
+      opacity: 0.45,
+      side: THREE.DoubleSide,
     });
-    const tankMesh = new THREE.Mesh(glassGeo, glassMat);
-    scene.add(tankMesh);
+    const fluidFront = new THREE.Mesh(fluidFrontGeo, fluidFrontMat);
+    fluidFront.position.set(0, -tankH / 2 + waterH / 2, tankD / 2 - 0.02);
+    waterGroup.add(fluidFront);
 
-    // Top Rim & Sturdy Base
-    const rimMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3 });
-    const rimGeo = new THREE.BoxGeometry(tankWidth + 0.3, 0.25, tankDepth + 0.3);
+    // 6. Realistic Aquarium Outer Frame (Solid Black Borders)
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.2 });
 
-    const topRim = new THREE.Mesh(rimGeo, rimMat);
-    topRim.position.y = tankHeight / 2;
+    // Top Rim
+    const topRim = new THREE.Mesh(new THREE.BoxGeometry(tankW + 0.4, 0.25, tankD + 0.4), frameMat);
+    topRim.position.y = tankH / 2;
     scene.add(topRim);
 
-    const baseFrame = new THREE.Mesh(rimGeo, rimMat);
-    baseFrame.position.y = -tankHeight / 2;
+    // Bottom Base
+    const baseFrame = new THREE.Mesh(new THREE.BoxGeometry(tankW + 0.4, 0.3, tankD + 0.4), frameMat);
+    baseFrame.position.y = -tankH / 2;
     scene.add(baseFrame);
 
-    // 7. Measurement Markings on Glass (100ml to 500ml)
-    const marksGroup = new THREE.Group();
-    scene.add(marksGroup);
-
-    for (let i = 1; i <= 4; i++) {
-      const lineGeo = new THREE.BoxGeometry(0.8, 0.03, 0.02);
-      const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      const markMesh = new THREE.Mesh(lineGeo, lineMat);
-      markMesh.position.set(-tankWidth / 2 + 0.5, -tankHeight / 2 + i * 1.0, tankDepth / 2 + 0.01);
-      marksGroup.add(markMesh);
+    // 4 Corner Pillars
+    for (let x of [-tankW / 2, tankW / 2]) {
+      for (let z of [-tankD / 2, tankD / 2]) {
+        const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.2, tankH, 0.2), frameMat);
+        pillar.position.set(x, 0, z);
+        scene.add(pillar);
+      }
     }
 
-    // 8. 3D Specimen Mesh
+    // 7. Test Specimen
     let specimenMesh: THREE.Mesh;
     if (selectedItem === 'egg') {
       const eggGeo = new THREE.SphereGeometry(0.85, 32, 32);
       eggGeo.scale(0.85, 1.25, 0.85);
-      const eggMat = new THREE.MeshStandardMaterial({
-        color: 0xffedd5,
-        roughness: 0.3,
-        emissive: 0x332211,
-        emissiveIntensity: 0.1,
-      });
+      const eggMat = new THREE.MeshStandardMaterial({ color: 0xffedd5, roughness: 0.3 });
       specimenMesh = new THREE.Mesh(eggGeo, eggMat);
     } else if (selectedItem === 'wood') {
       const woodGeo = new THREE.BoxGeometry(1.8, 1.2, 1.4);
@@ -193,7 +193,7 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
       specimenMesh = new THREE.Mesh(woodGeo, woodMat);
     } else if (selectedItem === 'plastic') {
       const bottleGeo = new THREE.CylinderGeometry(0.6, 0.6, 2.0, 24);
-      const bottleMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85, roughness: 0.2 });
+      const bottleMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.2 });
       specimenMesh = new THREE.Mesh(bottleGeo, bottleMat);
     } else {
       const nailGeo = new THREE.CylinderGeometry(0.18, 0.18, 2.2, 16);
@@ -202,44 +202,37 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
     }
     scene.add(specimenMesh);
 
-    // Target Physics Level
+    // Target Physics Float / Sink
     let targetY = 0;
-    const waterSurfaceY = surfaceMesh.position.y;
-    const tankBottomY = -tankHeight / 2 + 0.7;
+    const waterSurfaceY = waveMesh.position.y;
+    const tankBottomY = -tankH / 2 + 0.8;
 
     if (doesFloat) {
       const submergedFraction = activeSpec.density / density;
-      targetY = waterSurfaceY - (submergedFraction - 0.45) * 1.3;
+      targetY = waterSurfaceY - (submergedFraction - 0.4) * 1.1;
     } else {
       targetY = tankBottomY;
     }
 
     specimenMesh.position.set(0, targetY, 0);
 
-    // 9. Rising Bubbles
-    const bubbleCount = 20;
-    const bubbleGeo = new THREE.SphereGeometry(0.09, 8, 8);
-    const bubbleMat = new THREE.MeshStandardMaterial({
-      color: 0xe0f2fe,
-      emissive: 0xbae6fd,
-      emissiveIntensity: 0.6,
-      transparent: true,
-      opacity: 0.8,
-    });
+    // 8. Rising Bubbles
+    const bubbleGeo = new THREE.SphereGeometry(0.1, 8, 8);
+    const bubbleMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const bubbles: { mesh: THREE.Mesh; speed: number }[] = [];
 
-    for (let i = 0; i < bubbleCount; i++) {
+    for (let i = 0; i < 15; i++) {
       const b = new THREE.Mesh(bubbleGeo, bubbleMat);
       b.position.set(
-        (Math.random() - 0.5) * (tankWidth - 1.2),
-        tankBottomY + Math.random() * waterHeight,
-        (Math.random() - 0.5) * (tankDepth - 1.2)
+        (Math.random() - 0.5) * (tankW - 1.2),
+        tankBottomY + Math.random() * waterH,
+        (Math.random() - 0.5) * (tankD - 1.2)
       );
       scene.add(b);
-      bubbles.push({ mesh: b, speed: 0.02 + Math.random() * 0.025 });
+      bubbles.push({ mesh: b, speed: 0.02 + Math.random() * 0.02 });
     }
 
-    // 10. Animation Loop
+    // 9. Animation Loop
     let animId: number;
     let clock = new THREE.Clock();
 
@@ -247,7 +240,7 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
       animId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
 
-      // Smooth Physics Float / Sink
+      // Smooth Physics Movement
       specimenMesh.position.y = THREE.MathUtils.lerp(specimenMesh.position.y, targetY, 0.08);
 
       if (doesFloat) {
@@ -258,14 +251,14 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
         specimenMesh.rotation.z = 0;
       }
 
-      // Water Surface Shimmer Oscillations
-      surfaceMesh.position.y = waterMesh.position.y + waterHeight / 2 + Math.sin(elapsed * 2.5) * 0.03;
-      waterlineMesh.position.y = surfaceMesh.position.y;
+      // Water surface wave motion
+      waveMesh.position.y = -tankH / 2 + waterH + Math.sin(elapsed * 2.5) * 0.04;
+      foamMesh.position.y = waveMesh.position.y;
 
-      // Ascending Air Bubbles
+      // Rising bubbles
       bubbles.forEach((b) => {
         b.mesh.position.y += b.speed;
-        if (b.mesh.position.y > surfaceMesh.position.y) {
+        if (b.mesh.position.y > waterSurfaceY) {
           b.mesh.position.y = tankBottomY;
         }
       });
@@ -300,7 +293,7 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
           </h3>
           <p className="text-xs font-bold text-slate-300">
             {doesFloat
-              ? '🎉 FLOATING: Water density exceeds object density! Strong upward buoyant force keeps it afloat.'
+              ? '🎉 FLOATING: Liquid density exceeds object density! Strong buoyant upward force keeps it afloat.'
               : '⚓ SUNK: Object is heavier than the liquid! Gravity pulls it to the bottom.'}
           </p>
         </div>
@@ -327,13 +320,13 @@ export const ThreeAquariumSim: React.FC<Props> = ({ onCompleted }) => {
         </div>
       </div>
 
-      {/* 3D WebGL Aquarium Canvas */}
+      {/* 3D WebGL Canvas */}
       <div
         ref={mountRef}
-        className="w-full h-[360px] sm:h-[420px] rounded-2xl overflow-hidden relative bg-radial from-slate-900 to-slate-950 border border-slate-800 shadow-inner"
+        className="w-full h-[360px] sm:h-[420px] rounded-2xl overflow-hidden relative bg-slate-950 border border-slate-800 shadow-inner"
       />
 
-      {/* Interactive Salt Controls & Physics Meter */}
+      {/* Interactive Controls & Physics Meter */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
         {/* Add Salt Button */}
         <div className="flex items-center justify-between gap-3 bg-slate-950/90 border border-slate-800 rounded-2xl p-3">
