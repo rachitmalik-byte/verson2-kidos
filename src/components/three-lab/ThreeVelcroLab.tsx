@@ -139,7 +139,7 @@ export const ThreeVelcroLab: React.FC<Props> = ({ onCompleted }) => {
     // Modern Textile Fastener Strap Body (Textured Blue Weave)
     const strapBodyGeo = new THREE.BoxGeometry(0.35, 4.2, 2.8);
     const strapBodyMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.5 });
-    const strapBody = new THREE.Mesh(strapBodyGeo, strapMat);
+    const strapBody = new THREE.Mesh(strapBodyGeo, strapBodyMat);
     strapGroup.add(strapBody);
 
     // Nylon Loop Bed (Facing the plant hooks)
