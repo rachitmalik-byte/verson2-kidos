@@ -196,6 +196,38 @@ export function RoleSelection() {
             </div>
           </motion.button>
         </div>
+
+        {/* ── Quick Test 1-Click Login Banner ── */}
+        <div className="mt-6 w-full flex flex-col sm:flex-row items-center justify-between gap-3 bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-3 border-emerald-400 shadow-xl">
+          <div className="flex items-center gap-2.5 text-left">
+            <span className="text-2xl">🧪</span>
+            <div>
+              <span className="text-xs font-black text-slate-900 block">Testing PolyQuest?</span>
+              <span className="text-[11px] font-bold text-slate-500">Sign in instantly with a sample Grade 5 student profile (0% progress)</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              sounds.success();
+              const pStore = useParentStore.getState();
+              pStore.setChild({
+                name: 'Aarav (Grade 5)',
+                grade: '5',
+                interests: ['science', 'space', 'robotics', 'inventions', 'water', 'animals'],
+                avatar: '🔬',
+              });
+              pStore.setPin('1234');
+              pStore.completeSetup();
+              voiceAssistant.stop();
+              navigate('/subjects');
+            }}
+            className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs rounded-2xl shadow-md cursor-pointer active:scale-95 transition-all shrink-0 flex items-center gap-1.5"
+          >
+            <UserCheck className="w-4 h-4" />
+            <span>Sign Up Sample Student (0% Progress) ➔</span>
+          </button>
+        </div>
       </motion.div>
 
       {/* ── First-Time Scientist "Call Your Parent" Guard Modal ── */}
@@ -239,25 +271,49 @@ export function RoleSelection() {
                 Hello young scientist! 🔬 Before we start experimenting, please ask your parent or guardian to create your scientist profile and unlock your laboratory ID!
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <div className="flex flex-col gap-2.5 w-full">
                 <button
                   onClick={() => {
-                    voiceAssistant.stop();
-                    navigate('/parent/setup');
-                  }}
-                  className="flex-1 py-3.5 px-6 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-sm rounded-2xl shadow-md cursor-pointer hover:scale-102 active:scale-95 transition-all"
-                >
-                  👨‍👩‍👧 Call Parent / Set Up ID
-                </button>
-                <button
-                  onClick={() => {
+                    sounds.success();
+                    const pStore = useParentStore.getState();
+                    pStore.setChild({
+                      name: 'Aarav (Grade 5)',
+                      grade: '5',
+                      interests: ['science', 'space', 'robotics', 'inventions', 'water'],
+                      avatar: '🔬',
+                    });
+                    pStore.setPin('1234');
+                    pStore.completeSetup();
                     voiceAssistant.stop();
                     setShowParentGuard(false);
+                    navigate('/subjects');
                   }}
-                  className="py-3.5 px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm rounded-2xl cursor-pointer"
+                  className="w-full py-3 px-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-md cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
                 >
-                  Got It!
+                  <UserCheck className="w-4 h-4" />
+                  <span>🧪 Test Mode: Sign in as Sample Student (0% Progress)</span>
                 </button>
+
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
+                  <button
+                    onClick={() => {
+                      voiceAssistant.stop();
+                      navigate('/parent/setup');
+                    }}
+                    className="flex-1 py-3 px-5 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs rounded-2xl shadow-md cursor-pointer hover:scale-102 active:scale-95 transition-all"
+                  >
+                    👨‍👩‍👧 Call Parent / Set Up Custom ID
+                  </button>
+                  <button
+                    onClick={() => {
+                      voiceAssistant.stop();
+                      setShowParentGuard(false);
+                    }}
+                    className="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs rounded-2xl cursor-pointer"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>

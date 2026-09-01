@@ -193,6 +193,59 @@ export const DevDrawer: React.FC = () => {
                 </div>
 
                 <div className="space-y-5 flex-1 text-xs font-bold">
+                  {/* ── 0. QUICK TEST PROFILE SIGNUP (0% FRESH PROGRESS) ── */}
+                  <div className="bg-gradient-to-br from-emerald-950 to-slate-900 p-4 rounded-2xl border-2 border-emerald-400 shadow-xl flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-300 font-black uppercase flex items-center gap-1.5 text-xs">
+                        <UserCheck className="w-4 h-4 text-emerald-400" />
+                        <span>Instant Profile Sign-Up</span>
+                      </span>
+                      <span className="px-2 py-0.5 bg-emerald-400/20 text-emerald-300 rounded-full text-[10px] font-black uppercase">
+                        For Testing
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={handleSignUpFreshStudent}
+                      className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm rounded-xl cursor-pointer flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                    >
+                      <span>🎓 Sign Up Sample Student (0% Fresh Progress)</span>
+                    </button>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => {
+                          handleUnlockAllCurriculum();
+                          handleUnlockAllSkins();
+                          setChild({
+                            name: 'Aarav (Master)',
+                            grade: '5',
+                            interests: ['science', 'space', 'robotics'],
+                            avatar: '👑',
+                          });
+                          setPin('1234');
+                          completeSetup();
+                          setIsOpen(false);
+                          navigate('/subjects');
+                        }}
+                        className="py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-xl font-black cursor-pointer text-center active:scale-95"
+                      >
+                        <span>👑 100% Complete</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          handleResetAll();
+                          setIsOpen(false);
+                          navigate('/');
+                        }}
+                        className="py-2 bg-rose-900/40 hover:bg-rose-900/60 text-rose-300 border border-rose-700/50 rounded-xl font-black cursor-pointer text-center active:scale-95"
+                      >
+                        <span>🔄 Reset All / Logout</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* ── 1. WALLET & COINS ── */}
                   <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40">
                     <div className="flex items-center justify-between mb-3">
