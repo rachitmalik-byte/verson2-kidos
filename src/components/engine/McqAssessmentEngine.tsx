@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { McqAssessmentData, McqOption } from '@/types/lessonEngine';
 import { sounds } from '@/lib/sounds';
@@ -11,11 +11,28 @@ interface Props {
   isCompleted?: boolean;
 }
 
+const DEFAULT_OPTIONS: McqOption[] = [
+  { id: 'opt-1', text: 'Structure determines physical properties and uses', isCorrect: true, feedback: 'Correct! Molecular arrangement decides material superpowers.' },
+  { id: 'opt-2', text: 'Materials behave randomly without scientific laws', isCorrect: false, feedback: 'Not quite! All materials follow predictable physics.' },
+];
+
 export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
+  const options: McqOption[] = (data?.options && data.options.length > 0 ? data.options : DEFAULT_OPTIONS).map((opt, i) => ({
+    id: opt.id || `opt-${i}`,
+    text: opt.text || 'Option',
+    isCorrect: Boolean(opt.isCorrect),
+    feedback: opt.feedback || (opt.isCorrect ? 'Correct scientific conclusion!' : 'Consider physical properties and try again!'),
+  }));
+
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  const selectedOption = data.options.find((o) => o.id === selectedOptionId);
+  useEffect(() => {
+    setSelectedOptionId(null);
+    setIsAnswered(false);
+  }, [data]);
+
+  const selectedOption = options.find((o) => o.id === selectedOptionId);
 
   const handleSelectOption = (opt: McqOption) => {
     if (isAnswered && selectedOption?.isCorrect) return;
@@ -25,7 +42,7 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
 
     if (opt.isCorrect) {
       sounds.fanfare();
-      voiceAssistant.speak(`Correct! ${data.explanation}`);
+      voiceAssistant.speak(`Correct! ${data?.explanation || opt.feedback}`);
       onComplete();
     } else {
       sounds.boing();
@@ -40,25 +57,25 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
   };
 
   return (
-    <div className="w-full max-w-2xl bg-white/95 rounded-3xl p-6 sm:p-8 border-3 border-slate-200 shadow-xl flex flex-col gap-5 mx-auto">
+    <div className="w-full max-w-2xl bg-white/95 rounded-3xl p-6 sm:p-8 border-3 border-slate-200 shadow-xl flex flex-col gap-5 mx-auto select-none font-sans">
       {/* Question Header */}
       <div>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-xs font-black uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
             Scientific Inquiry Challenge
           </span>
-          {data.conceptBadge && (
+          {data?.conceptBadge && (
             <span className="text-xs font-bold text-slate-500">#{data.conceptBadge}</span>
           )}
         </div>
         <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-snug" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          {data.question}
+          {data?.question || 'What is the key scientific concept?'}
         </h3>
       </div>
 
       {/* Options List */}
       <div className="space-y-3">
-        {data.options.map((opt) => {
+        {options.map((opt) => {
           const isSelected = opt.id === selectedOptionId;
           return (
             <motion.button
@@ -79,12 +96,11 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
               <span className="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed">
                 {opt.text}
               </span>
-
               {isSelected && (
                 opt.isCorrect ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 fill-emerald-100 shrink-0" />
                 ) : (
-                  <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                  <XCircle className="w-5 h-5 text-rose-600 fill-rose-100 shrink-0" />
                 )
               )}
             </motion.button>
@@ -92,52 +108,40 @@ export const McqAssessmentEngine: React.FC<Props> = ({ data, onComplete }) => {
         })}
       </div>
 
-      {/* Feedback Overlay */}
-      {isAnswered && selectedOption && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`p-4 rounded-2xl border-2 flex flex-col gap-3 ${
-            selectedOption.isCorrect
-              ? 'bg-emerald-100/80 border-emerald-300 text-emerald-950'
-              : 'bg-rose-100/80 border-rose-300 text-rose-950'
-          }`}
-        >
-          <div>
-            <div className="flex items-center gap-2 font-black text-sm mb-1">
-              {selectedOption.isCorrect ? <Sparkles className="w-4 h-4 text-emerald-600" /> : <HelpCircle className="w-4 h-4 text-rose-600" />}
-              <span>{selectedOption.isCorrect ? 'Outstanding Science Reasoning!' : 'Think Again:'}</span>
+      {/* Instant Feedback Drawer */}
+      <AnimatePresence>
+        {isAnswered && selectedOption && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            className={`p-4 rounded-2xl border-2 flex flex-col gap-2 ${
+              selectedOption.isCorrect
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                : 'bg-rose-50 border-rose-300 text-rose-950'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{selectedOption.isCorrect ? '🌟' : '🤔'}</span>
+              <h4 className="font-black text-sm">
+                {selectedOption.isCorrect ? 'Brilliant Discovery!' : 'Not Quite!'}
+              </h4>
             </div>
             <p className="text-xs sm:text-sm font-bold leading-relaxed">
-              {selectedOption.isCorrect ? data.explanation : selectedOption.feedback}
+              {selectedOption.isCorrect ? data?.explanation || selectedOption.feedback : selectedOption.feedback}
             </p>
-          </div>
-
-          {/* Action Button: Continue if Correct, Try Again if Incorrect */}
-          {selectedOption.isCorrect ? (
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                sounds.success();
-                onComplete();
-              }}
-              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg cursor-pointer animate-pulse"
-            >
-              <span>Continue to Next Step</span>
-              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
-            </motion.button>
-          ) : (
-            <button
-              onClick={handleTryAgain}
-              className="w-full py-2.5 px-4 rounded-xl bg-rose-200 hover:bg-rose-300 text-rose-950 font-black text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Try Again</span>
-            </button>
-          )}
-        </motion.div>
-      )}
+            {!selectedOption.isCorrect && (
+              <button
+                onClick={handleTryAgain}
+                className="mt-1 self-start px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-black text-xs flex items-center gap-1.5 cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Try Another Choice</span>
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
