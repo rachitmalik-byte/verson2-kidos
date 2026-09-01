@@ -1,3 +1,77 @@
+
+interface ZoomSpecimen {
+  id: string;
+  name: string;
+  category: 'Natural Fibre' | 'Synthetic Polymer' | 'Biomimicry' | 'Earth & Energy';
+  gifSrc: string;
+  videoSrc?: string;
+  description: string;
+  scienceTakeaway: string;
+  badgeColor: string;
+}
+
+const ANIMATED_ZOOM_SPECIMENS: ZoomSpecimen[] = [
+  {
+    id: 'cotton',
+    name: 'Cotton Plant to Microscopic Cellulose Weave',
+    category: 'Natural Fibre',
+    gifSrc: '/assets/videos/cotton_zoom_microstructure.gif',
+    videoSrc: '/assets/videos/cotton_microscopic_weave.mp4',
+    description: 'Watch the continuous smooth zoom from everyday soft cotton textile deep into the intertwined botanical cellulose fiber ribbons.',
+    scienceTakeaway: 'Cellulose fibers have natural hollow cores (lumens) that absorb moisture, keeping us cool in summer!',
+    badgeColor: 'bg-emerald-600 text-white',
+  },
+  {
+    id: 'nylon',
+    name: 'Nylon T-Shirt to Synthetic Polymer Grid',
+    category: 'Synthetic Polymer',
+    gifSrc: '/assets/videos/nylon_zoom_microstructure.gif',
+    videoSrc: '/assets/videos/nylon_microscopic_weave.mp4',
+    description: 'Seamless zoom showing smooth petrochemical nylon filaments extruded into an unbreakable high-tensile mesh.',
+    scienceTakeaway: 'Extruded polyamide chains lack surface pores, making nylon dry 5x faster than natural cotton!',
+    badgeColor: 'bg-sky-600 text-white',
+  },
+  {
+    id: 'silk',
+    name: 'Silkworm Cocoon to Crystalline Fibroin Protein',
+    category: 'Natural Fibre',
+    gifSrc: '/assets/videos/silk_zoom_microstructure.gif',
+    videoSrc: '/assets/videos/silk_microscopic_fibers.mp4',
+    description: 'Zooming from shimmering raw silk fabric into the triangular prism protein filaments produced by Bombyx mori silkworms.',
+    scienceTakeaway: 'Triangular protein cross-sections refract ambient light like tiny glass prisms, creating natural luster!',
+    badgeColor: 'bg-amber-600 text-white',
+  },
+  {
+    id: 'plastic',
+    name: 'Plastic Molded Surface to Polymer Chain Matrix',
+    category: 'Synthetic Polymer',
+    gifSrc: '/assets/videos/plastic_zoom_microstructure.gif',
+    description: 'Smooth magnification into the impermeable thermoplastic matrix of synthetic PET bottle containers.',
+    scienceTakeaway: 'Synthetic polymers resist biological decomposition enzymes, allowing them to remain intact for over 450 years.',
+    badgeColor: 'bg-indigo-600 text-white',
+  },
+  {
+    id: 'wool',
+    name: 'Sheep Fleece to Crimped Keratin Air Pockets',
+    category: 'Natural Fibre',
+    gifSrc: '/assets/videos/wool_zoom_fibers.gif',
+    videoSrc: '/assets/videos/wool_microscopic_fibers.mp4',
+    description: 'Watch the zoom into natural sheep wool fleece revealing wavy crimped keratin fibers trapping pockets of warm air.',
+    scienceTakeaway: 'Natural fiber crimp creates millions of microscopic dead-air insulating chambers resisting freezing arctic winds.',
+    badgeColor: 'bg-orange-600 text-white',
+  },
+  {
+    id: 'rubber',
+    name: 'Natural Tree Latex to Vulcanized Tire Tread',
+    category: 'Biomimicry',
+    gifSrc: '/assets/videos/tire_rubber_crosslink.gif',
+    videoSrc: '/assets/videos/tire_rubber_microscopic.mp4',
+    description: 'Microscopic look at how heating natural isoprene tree sap with sulfur creates resilient vulcanized rubber cross-links.',
+    scienceTakeaway: 'Sulfur bridges lock flexible polymer chains together, preventing tires from melting on hot summer asphalt!',
+    badgeColor: 'bg-purple-600 text-white',
+  },
+];
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
