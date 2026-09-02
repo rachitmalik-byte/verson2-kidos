@@ -2,20 +2,9 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Pip } from '@/components/pip/Pip';
-import { PipLiveSubtitleOverlay } from '@/components/pip/PipLiveSubtitleOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { ArrowRight, ArrowLeft, Sparkles, Home, Map } from 'lucide-react';
-
-interface FloatingSpecimen {
-  id: string;
-  name: string;
-  emoji: string;
-  subtitle: string;
-  x: string;
-  y: string;
-  delay: number;
-}
+import { ArrowRight, ArrowLeft, Home, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface CourseIntroConfig {
   id: string;
@@ -25,194 +14,150 @@ interface CourseIntroConfig {
   bgGradient: string;
   hubRoute: string;
   accentColor: string;
-  btnShadow: string;
-  specimens: FloatingSpecimen[];
   pipLessons: {
     dialogue: string;
     pipMood: 'explaining' | 'curious' | 'celebrating' | 'thinking' | 'encouraging';
-    keyConceptTitle: string;
-    keyConceptHighlight: string;
+    keyTitle: string;
+    keyFact: string;
   }[];
 }
 
 const COURSE_INTROS: Record<string, CourseIntroConfig> = {
   materials: {
     id: 'materials',
-    title: 'Things We Make & Do: Materials Science 🧪',
-    subtitle: 'Natural vs. Synthetic Polymers, Fibres & Biodegradability',
-    syllabusCode: 'CBSE Class 5 EVS • Theme 6',
-    bgGradient: 'from-amber-200 via-orange-100 to-sky-100',
+    title: 'Things We Make & Do 🧪',
+    subtitle: 'Materials & Inventions',
+    syllabusCode: 'Class 5 • Science',
+    bgGradient: 'from-amber-100 via-orange-50 to-sky-100',
     hubRoute: '/chapter-hub',
-    accentColor: 'bg-amber-400 border-amber-600 text-slate-950',
-    btnShadow: 'shadow-[0_6px_0_#D97706]',
-    specimens: [
-      { id: 'shirt', name: 'Polyester Shirt', emoji: '👕', subtitle: 'Waterproof synthetic polymer', x: '8%', y: '16%', delay: 0.1 },
-      { id: 'coat', name: 'Raincoat', emoji: '🧥', subtitle: 'Non-porous water barrier', x: '86%', y: '14%', delay: 0.2 },
-      { id: 'wood', name: 'Forest Wood', emoji: '🪵', subtitle: 'Natural cellulose grain', x: '10%', y: '60%', delay: 0.3 },
-      { id: 'rope', name: 'Nylon Rope', emoji: '🪢', subtitle: 'Super strong synthetic cord', x: '88%', y: '62%', delay: 0.4 },
-      { id: 'wool', name: 'Sheep Wool', emoji: '🐑', subtitle: 'Natural warm animal fleece', x: '12%', y: '82%', delay: 0.5 },
-      { id: 'kettle', name: 'Bakelite Handle', emoji: '🫖', subtitle: 'Heat-proof thermoset plastic', x: '50%', y: '8%', delay: 0.6 },
-    ],
+    accentColor: 'border-amber-400',
     pipLessons: [
       {
-        dialogue: "Look around you! Everything you touch is made from a material chosen for a special superpower.",
+        dialogue: "Look around you! Everything you touch is made of a special material — like soft cotton for clothes, or strong plastic for bottles.",
         pipMood: 'explaining',
-        keyConceptTitle: 'Everyday Materials',
-        keyConceptHighlight: 'Every object is crafted from a material that fits its physical job.',
+        keyTitle: 'Everyday Materials',
+        keyFact: 'Every object is made from a material chosen to do a special job.',
       },
       {
-        dialogue: "Natural materials come from plants and animals. Synthetic materials are invented by scientists in labs!",
+        dialogue: "Natural materials come from plants and animals (like wood and wool). Synthetic materials are made by scientists in labs (like nylon and plastic)!",
         pipMood: 'curious',
-        keyConceptTitle: 'Natural vs Synthetic',
-        keyConceptHighlight: 'Plant cellulose and animal fleece grow in nature; nylon and plastics are synthesized.',
+        keyTitle: 'Nature vs. Science Lab',
+        keyFact: 'Wood and wool grow in nature. Plastic and nylon are invented by people.',
       },
       {
-        dialogue: "Here is our Golden Science Law: What something is MADE FROM decides what it CAN DO!",
+        dialogue: "Here is our Big Science Rule: What something is MADE OF decides what it CAN DO!",
         pipMood: 'celebrating',
-        keyConceptTitle: 'The Golden Science Law',
-        keyConceptHighlight: '🧱 Material ➔ ⚡ Physical Property ➔ 🎯 Practical Real-World Use.',
+        keyTitle: 'The Big Science Rule',
+        keyFact: 'Material ➔ What it can do ➔ What we use it for!',
       },
     ],
   },
   senses: {
     id: 'senses',
-    title: 'Super Senses & Living Creatures 🦋',
-    subtitle: 'Animal Superpowers, Scent Trails & Seed Dispersal',
-    syllabusCode: 'CBSE Class 5 EVS • Theme 1',
-    bgGradient: 'from-emerald-200 via-teal-100 to-amber-100',
+    title: 'Super Senses & Animals 🦋',
+    subtitle: 'Animal Superpowers',
+    syllabusCode: 'Class 5 • Living World',
+    bgGradient: 'from-emerald-100 via-teal-50 to-amber-50',
     hubRoute: '/theme/1/hub',
-    accentColor: 'bg-emerald-400 border-emerald-600 text-slate-950',
-    btnShadow: 'shadow-[0_6px_0_#059669]',
-    specimens: [
-      { id: 'ant', name: 'Scout Ant', emoji: '🐜', subtitle: 'Follows invisible chemical scent trails', x: '8%', y: '16%', delay: 0.1 },
-      { id: 'eagle', name: 'Eagle Eye', emoji: '🦅', subtitle: '4x zoom eyesight spots mice from 2 km', x: '86%', y: '14%', delay: 0.2 },
-      { id: 'snake', name: 'Cobra', emoji: '🐍', subtitle: 'Feels ground vibrations through jawbone', x: '10%', y: '60%', delay: 0.3 },
-      { id: 'moth', name: 'Silkworm Moth', emoji: '🦋', subtitle: 'Feathery antennae detect distant scents', x: '88%', y: '62%', delay: 0.4 },
-      { id: 'seed', name: 'Burdock Seed', emoji: '🌱', subtitle: 'Microscopic hooks that inspired Velcro', x: '50%', y: '8%', delay: 0.5 },
-    ],
+    accentColor: 'border-emerald-400',
     pipLessons: [
       {
-        dialogue: "Animals and plants have super senses! Some can see, hear, smell, or feel things humans cannot.",
+        dialogue: "Animals have amazing super senses! Some can see, hear, or smell things that humans could never notice.",
         pipMood: 'explaining',
-        keyConceptTitle: 'Animal Super Senses',
-        keyConceptHighlight: 'Animal senses evolved to hunt food, communicate, and spot danger.',
+        keyTitle: 'Animal Super Senses',
+        keyFact: 'Animals use super senses to find food, talk to friends, and stay safe.',
       },
       {
-        dialogue: "Ants leave chemical scent pheromones so their colony walks in a line. Snakes feel footsteps through their jawbone!",
+        dialogue: "Ants leave an invisible smell trail so their friends can walk in a straight line. Snakes feel footsteps shaking the ground!",
         pipMood: 'curious',
-        keyConceptTitle: 'Scent Highways & Seismic Hearing',
-        keyConceptHighlight: 'Pheromones guide ant trails; bone conduction lets snakes hear ground steps.',
+        keyTitle: 'Scent Trails & Ground Shakes',
+        keyFact: 'Ants follow smell trails. Snakes feel footsteps through their jawbone.',
       },
       {
-        dialogue: "Let's explore the Living World and discover how animal superpowers inspire human inventions!",
+        dialogue: "Let's explore animal superpowers and see how they inspire cool human inventions like Velcro!",
         pipMood: 'celebrating',
-        keyConceptTitle: 'Nature to Inventions',
-        keyConceptHighlight: 'Nature inspires science — like burdock seed hooks inspiring modern Velcro fasteners!',
+        keyTitle: 'Nature to Inventions',
+        keyFact: 'Sticky burdock plant seeds inspired the invention of Velcro fasteners!',
       },
     ],
   },
   water: {
     id: 'water',
-    title: 'Water & Aquatic Experiments 🌊',
-    subtitle: 'Floating & Sinking, Water Cycle & Rain Preservation',
-    syllabusCode: 'CBSE Class 5 EVS • Theme 2 & 4',
-    bgGradient: 'from-sky-200 via-blue-100 to-indigo-100',
+    title: 'Water Wonders & Experiments 🌊',
+    subtitle: 'Floating, Sinking & Water Cycle',
+    syllabusCode: 'Class 5 • Water',
+    bgGradient: 'from-sky-100 via-blue-50 to-teal-50',
     hubRoute: '/theme/water/hub',
-    accentColor: 'bg-sky-400 border-sky-600 text-slate-950',
-    btnShadow: 'shadow-[0_6px_0_#0284C7]',
-    specimens: [
-      { id: 'drop', name: 'Water Drop', emoji: '💧', subtitle: 'Surface tension & evaporation', x: '8%', y: '16%', delay: 0.1 },
-      { id: 'ship', name: 'Cargo Ship', emoji: '🚢', subtitle: 'Heavy steel buoyant displacement', x: '86%', y: '14%', delay: 0.2 },
-      { id: 'salt', name: 'Dead Sea Salt', emoji: '🧂', subtitle: 'High saline liquid density (300 g/L)', x: '10%', y: '60%', delay: 0.3 },
-      { id: 'lake', name: 'Bawri Stepwell', emoji: '🏰', subtitle: 'Ancient 9-lake rainwater harvesting', x: '88%', y: '62%', delay: 0.4 },
-      { id: 'cloud', name: 'Rain Cloud', emoji: '🌧️', subtitle: 'Atmospheric condensation & precipitation', x: '50%', y: '8%', delay: 0.5 },
-    ],
+    accentColor: 'border-sky-400',
     pipLessons: [
       {
-        dialogue: "Water is our planet's most magical liquid! It changes into invisible vapor, floats heavy ships, and sustains all life.",
+        dialogue: "Water is our planet's most magical liquid! It turns into cold ice, flows as rivers, and floats up into the sky as fluffy clouds.",
         pipMood: 'explaining',
-        keyConceptTitle: 'The Magic of Water',
-        keyConceptHighlight: 'Water exists as solid ice, liquid water, and gaseous atmospheric vapor.',
+        keyTitle: 'Water Travels in Circles',
+        keyFact: 'Sun heat turns water into vapor clouds that fall back as rain!',
       },
       {
-        dialogue: "A heavy steel ship floats while a tiny iron nail sinks! It all comes down to buoyant upward force and liquid density.",
+        dialogue: "Why does a giant steel boat float, but a small iron nail sinks to the bottom? It is all about how water pushes upward!",
         pipMood: 'curious',
-        keyConceptTitle: 'Buoyancy & Archimedes Principle',
-        keyConceptHighlight: 'Displaced water weight pushes upward with buoyant force to keep ships afloat.',
+        keyTitle: 'Why Things Float',
+        keyFact: 'Water pushes up on wide shapes, helping heavy ships float!',
       },
       {
-        dialogue: "In the Dead Sea, water is so dense with minerals that you can float effortlessly without swimming!",
+        dialogue: "Mosquito babies live in stagnant water and breathe through a tail snorkel. A drop of oil on water stops them from biting us!",
         pipMood: 'celebrating',
-        keyConceptTitle: 'Density Discoveries',
-        keyConceptHighlight: 'High density liquids generate strong upward buoyant force.',
+        keyTitle: 'Water Ecology & Safety',
+        keyFact: 'Keeping water clean and covered protects us from malaria and dengue.',
       },
     ],
   },
   shelter: {
     id: 'shelter',
-    title: 'Shelter, Mountains & Earth 🏔️',
-    subtitle: 'Nomadic Rebo Tents, Pashmina Physics & Seismic Homes',
-    syllabusCode: 'CBSE Class 5 EVS • Theme 3 & 5',
-    bgGradient: 'from-indigo-200 via-purple-100 to-amber-100',
+    title: 'Cool Houses & Mountains 🏔️',
+    subtitle: 'Survival & Earthquake Architecture',
+    syllabusCode: 'Class 5 • Shelters',
+    bgGradient: 'from-indigo-100 via-sky-50 to-amber-50',
     hubRoute: '/theme/shelter/hub',
-    accentColor: 'bg-indigo-400 border-indigo-600 text-slate-950',
-    btnShadow: 'shadow-[0_6px_0_#4F46E5]',
-    specimens: [
-      { id: 'tent', name: 'Changpa Rebo Tent', emoji: '⛺', subtitle: 'Woven yak hair protects at -40°C', x: '8%', y: '16%', delay: 0.1 },
-      { id: 'goat', name: 'Pashmina Goat', emoji: '🐐', subtitle: '12 µm ultra-fine thermal underfleece', x: '86%', y: '14%', delay: 0.2 },
-      { id: 'peak', name: 'Mt. Everest', emoji: '🏔️', subtitle: '8,848m high-altitude oxygen hypoxia', x: '10%', y: '60%', delay: 0.3 },
-      { id: 'fort', name: 'Golconda Fort', emoji: '🏰', subtitle: 'Acoustic clapping domes & bastions', x: '88%', y: '62%', delay: 0.4 },
-      { id: 'bhunga', name: 'Kutch Bhunga', emoji: '🛖', subtitle: 'Circular earthquake-dispersal walls', x: '50%', y: '8%', delay: 0.5 },
-    ],
+    accentColor: 'border-indigo-400',
     pipLessons: [
       {
-        dialogue: "From the freezing plateaus of Ladakh to ancient stone forts, human shelters are masterpieces of engineering!",
+        dialogue: "From freezing snowy peaks to hot deserts, people build clever homes to stay safe, warm, and comfortable.",
         pipMood: 'explaining',
-        keyConceptTitle: 'Habitats & Adaptations',
-        keyConceptHighlight: 'Humans and animals build shelters tailored to extreme regional climates.',
+        keyTitle: 'Clever Shelters',
+        keyFact: 'Houses are built differently to match mountains, lakes, or deserts.',
       },
       {
-        dialogue: "Changpa nomads weave warm yak hair into tents called Rebo. Pashmina goat hair is six times finer than human hair!",
+        dialogue: "In cold mountains, Pashmina goats grow wool 6 times thinner than human hair. In desert Kutch, round mud houses survive huge earthquakes!",
         pipMood: 'curious',
-        keyConceptTitle: 'Pashmina & Nomadic Life',
-        keyConceptHighlight: 'Microscopic air pockets in Pashmina fleece trap heat during -40°C winter blizzards.',
+        keyTitle: 'Warm Wool & Round Houses',
+        keyFact: 'Round walls have no sharp corners to crack during earthquakes!',
       },
       {
-        dialogue: "In earthquake-prone Kutch, circular Bhunga clay houses disperse tremors so families stay completely safe!",
+        dialogue: "In outer space, water floats as round spheres with no gravity. Let's travel across India and orbit in space!",
         pipMood: 'celebrating',
-        keyConceptTitle: 'Seismic Architecture',
-        keyConceptHighlight: 'Circular architecture disperses seismic shockwaves without wall collapse.',
+        keyTitle: 'Ready for Adventure',
+        keyFact: 'Explore Mount Everest, Golconda Fort, and the Space Station!',
       },
     ],
   },
 };
-
-function resolveCourseConfig(key?: string): CourseIntroConfig {
-  if (!key) return COURSE_INTROS.materials;
-  const k = key.toLowerCase();
-  if (k.includes('sense') || k === 'living-world' || k === '1' || k === 'theme1') return COURSE_INTROS.senses;
-  if (k.includes('water') || k === '2' || k === '4') return COURSE_INTROS.water;
-  if (k.includes('shelter') || k === '3' || k === '5' || k.includes('mountain')) return COURSE_INTROS.shelter;
-  return COURSE_INTROS.materials;
-}
 
 export const UniversalMascotChapterIntro: React.FC = () => {
   const { courseKey, themeId } = useParams<{ courseKey?: string; themeId?: string }>();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Search query support: ?course=water
   const queryParam = new URLSearchParams(location.search).get('course') || new URLSearchParams(location.search).get('theme');
   const resolvedKey = queryParam || courseKey || themeId || (location.pathname.includes('water') ? 'water' : location.pathname.includes('shelter') ? 'shelter' : location.pathname.includes('1') || location.pathname.includes('senses') ? 'senses' : 'materials');
 
-  const config = resolveCourseConfig(resolvedKey);
+  const config = COURSE_INTROS[resolvedKey] || COURSE_INTROS.materials;
   const [lessonIndex, setLessonIndex] = useState(0);
 
   const activeLesson = config.pipLessons[lessonIndex] || config.pipLessons[0];
+  const isLastLesson = lessonIndex >= config.pipLessons.length - 1;
 
   const handleNext = () => {
     sounds.pop();
-    if (lessonIndex < config.pipLessons.length - 1) {
+    if (!isLastLesson) {
       setLessonIndex(lessonIndex + 1);
     } else {
       sounds.fanfare();
@@ -221,143 +166,100 @@ export const UniversalMascotChapterIntro: React.FC = () => {
     }
   };
 
+  const handleSkipDirectly = () => {
+    sounds.fanfare();
+    voiceAssistant.stop();
+    navigate(config.hubRoute);
+  };
+
   return (
     <div className={`min-h-screen w-full bg-gradient-to-b ${config.bgGradient} relative overflow-hidden flex flex-col items-center justify-between p-4 sm:p-6 font-sans select-none`}>
-      {/* ── Soft Ambient Blurred Specimen Background ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-25">
-        {config.specimens.map((item, idx) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0.2, 0.4, 0.2],
-              y: [0, -15, 0],
-            }}
-            transition={{
-              duration: 4 + (idx % 3),
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: item.delay,
-            }}
-            className="absolute blur-[1px] text-4xl sm:text-5xl"
-            style={{ left: item.x, top: item.y }}
-          >
-            {item.emoji}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* ── Sleek Top Navigation Bar with Direct Skip Button ── */}
-      <header className="w-full max-w-4xl flex items-center justify-between z-20">
+      {/* ── Top Header Bar ── */}
+      <header className="w-full max-w-2xl flex items-center justify-between z-20">
         <button
           onClick={() => {
             sounds.pop();
             voiceAssistant.stop();
             navigate('/subjects');
           }}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-white/90 hover:bg-white text-slate-700 font-black text-xs sm:text-sm border-2 border-slate-200 shadow-sm cursor-pointer active:scale-95 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 hover:bg-white text-slate-700 font-black text-xs border border-slate-200 shadow-xs cursor-pointer active:scale-95"
         >
-          <Home className="w-4 h-4" />
+          <ArrowLeft className="w-3.5 h-3.5" />
           <span>All Subjects</span>
         </button>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 bg-white/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-xs hidden sm:inline-block">
-            {config.syllabusCode}
-          </span>
-
-          {/* ⚡ DIRECT SKIP INTRO BUTTON */}
-          <button
-            onClick={() => {
-              sounds.fanfare();
-              voiceAssistant.stop();
-              navigate(config.hubRoute);
-            }}
-            className="px-4 py-2 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all border border-amber-500"
-            title="Skip Pip intro and go straight to chapter hub"
-          >
-            <span>⚡ Skip Intro</span>
-            <ArrowRight className="w-4 h-4 stroke-[3]" />
-          </button>
-        </div>
+        <button
+          onClick={handleSkipDirectly}
+          className="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1 cursor-pointer shadow-xs border border-amber-500 active:scale-95 transition-all"
+        >
+          <span>⚡ Skip Intro</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </header>
 
-      {/* ── ONE FOCUSED HERO STAGE CARD WITH ANIMATED SUBTITLE OVERLAY ── */}
-      <main className="w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-[36px] border-4 border-amber-400/90 shadow-2xl p-6 sm:p-8 flex flex-col items-center text-center gap-5 z-20 my-auto">
-        {/* Title Header */}
-        <div className="flex flex-col items-center">
-          <span className="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full inline-block mb-1 border border-indigo-200">
+      {/* ── Main Focused Lesson Card (Compact, Clear & Friendly) ── */}
+      <main className="w-full max-w-xl bg-white/95 backdrop-blur-md rounded-[32px] border-4 border-sky-400 shadow-2xl p-6 sm:p-8 flex flex-col items-center text-center gap-4 z-20 my-auto">
+        {/* Step Indicator */}
+        <div className="flex items-center justify-between w-full border-b border-slate-100 pb-3">
+          <span className="text-[11px] font-black uppercase text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
             {config.title}
           </span>
-          <p className="text-xs sm:text-sm font-bold text-slate-500">
-            {config.subtitle}
-          </p>
+          <span className="text-xs font-bold text-slate-400">
+            Step {lessonIndex + 1} of {config.pipLessons.length}
+          </span>
         </div>
 
-        {/* Mascot Center Stage */}
-        <div className="flex flex-col items-center justify-center my-1">
-          <Pip mood={activeLesson.pipMood} size={110} />
+        {/* Compact Companion Pip (Size 64px) & Bubble */}
+        <div className="w-full flex flex-col sm:flex-row items-center gap-4 bg-sky-50/70 p-4 rounded-2xl border border-sky-200">
+          <div className="shrink-0">
+            <Pip mood={activeLesson.pipMood} size={64} />
+          </div>
+
+          <div className="text-center sm:text-left flex-1">
+            <h4 className="text-sm font-black text-slate-900 mb-1">
+              💡 {activeLesson.keyTitle}
+            </h4>
+            <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed">
+              "{activeLesson.dialogue}"
+            </p>
+          </div>
         </div>
 
-        {/* ── LIVE SYNCHRONIZED ANIMATED SUBTITLE OVERLAY AROUND PIP ── */}
-        <PipLiveSubtitleOverlay
-          dialogue={activeLesson.dialogue}
-          pipMood={activeLesson.pipMood}
-        />
+        {/* Key Science Takeaway Badge */}
+        <div className="w-full p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
+          <span className="text-[11px] font-black text-emerald-900 block">
+            ⭐ Science Secret: {activeLesson.keyFact}
+          </span>
+        </div>
 
-        {/* Specimen Superpower Quick-Pills Tray */}
-        <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-1 border-t border-slate-100">
-          {config.specimens.slice(0, 4).map((item) => (
-            <div
-              key={item.id}
-              className="px-3 py-1.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-black flex items-center gap-1.5 shadow-xs"
-            >
-              <span>{item.emoji}</span>
-              <span>{item.name}</span>
-            </div>
+        {/* ── GIANT NEXT STEP BUTTON (CANNOT MISS WHAT TO CLICK NEXT) ── */}
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={handleNext}
+          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-110 text-white font-black text-base sm:text-lg shadow-lg cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-2 border-2 border-emerald-300 ring-4 ring-emerald-100"
+        >
+          <span>{isLastLesson ? '👉 ENTER SCIENCE LAB ➔' : '👉 NEXT STEP ➔'}</span>
+          <ArrowRight className="w-5 h-5 stroke-[3]" />
+        </motion.button>
+
+        {/* Clickable Step Dots */}
+        <div className="flex items-center gap-2 mt-1">
+          {config.pipLessons.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setLessonIndex(idx)}
+              className={`h-2.5 rounded-full transition-all cursor-pointer ${
+                idx === lessonIndex ? 'w-8 bg-sky-500 shadow-xs' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+              }`}
+            />
           ))}
-        </div>
-
-        {/* Action Buttons with Skip Shortcut */}
-        <div className="w-full flex flex-col sm:flex-row items-center gap-2.5">
-          <button
-            onClick={handleNext}
-            className={`flex-1 w-full py-3.5 px-6 rounded-2xl ${config.accentColor} font-black text-xs sm:text-sm cursor-pointer ${config.btnShadow} active:translate-y-1 transition-all flex items-center justify-center gap-2`}
-          >
-            <span>{lessonIndex < config.pipLessons.length - 1 ? 'Continue Lesson ➔' : "🚀 START CHAPTER EXPERIMENTS!"}</span>
-            <ArrowRight className="w-4 h-4 stroke-[3]" />
-          </button>
-
-          <button
-            onClick={() => {
-              sounds.fanfare();
-              voiceAssistant.stop();
-              navigate(config.hubRoute);
-            }}
-            className="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs border border-slate-300 cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
-          >
-            <span>⚡ Skip Directly to Hub</span>
-          </button>
         </div>
       </main>
 
-      {/* ── Bottom Step Indicator (Clickable to jump) ── */}
-      <footer className="w-full max-w-md flex items-center justify-center gap-2 z-20 pb-2">
-        {config.pipLessons.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => {
-              sounds.pop();
-              setLessonIndex(idx);
-            }}
-            className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-              idx === lessonIndex
-                ? 'w-8 bg-slate-900 shadow-md'
-                : 'w-2.5 bg-slate-400/60 hover:bg-slate-600'
-            }`}
-            title={`Jump to step ${idx + 1}`}
-          />
-        ))}
+      {/* ── Footer ── */}
+      <footer className="w-full max-w-2xl flex items-center justify-center text-xs font-bold text-slate-500 z-20">
+        <span>Tap the green button above to continue!</span>
       </footer>
     </div>
   );
