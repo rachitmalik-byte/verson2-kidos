@@ -156,7 +156,7 @@ export function FireSafetyMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <Pip mood="thinking" size="xl" />
+              <Pip mood="thinking" size="md" />
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 The Heat & Flame Safety Mystery! 🔥
               </h2>

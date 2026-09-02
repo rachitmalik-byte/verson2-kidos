@@ -222,7 +222,7 @@ export function WireMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <Pip mood="thinking" size="xl" />
+              <Pip mood="thinking" size="md" />
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 The Electrical Cable Anatomy Mystery! ⚡
               </h2>
@@ -541,7 +541,7 @@ export function WireMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
             <div className="w-full max-w-3xl flex flex-col items-center">
-              <Pip mood="explaining" size="xl" />
+              <Pip mood="explaining" size="md" />
               <h3 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2 text-center" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 Electrician Safety Challenge 🧰
               </h3>

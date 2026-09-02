@@ -34,8 +34,10 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [activeCharIndex, setActiveCharIndex] = useState<number>(-1);
   const [activeWordIndex, setActiveWordIndex] = useState<number>(-1);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isTtsMuted = useAudioStore((state) => state.isTtsMuted);
   const toggleTts = useAudioStore((state) => state.toggleTts);
+  const WORD_LIMIT = 22;
 
   // Parse message into synchronized interactive word tokens
   const wordTokens: WordToken[] = useMemo(() => {
@@ -175,36 +177,58 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
           </div>
 
           {/* Synchronized Karaoke Word-by-Word Caption Highlighting */}
-          <div className="text-slate-800 font-extrabold text-base md:text-lg leading-relaxed select-text">
-            {wordTokens.map((token, idx) => {
-              if (token.isSpace) {
-                return <span key={idx}>{token.text}</span>;
+          {(() => {
+            const realWordTokens = wordTokens.filter(t => !t.isSpace && t.cleanWord);
+            const totalWords = realWordTokens.length;
+            const isLong = totalWords > WORD_LIMIT;
+            // Find the cutoff token index (at WORD_LIMIT-th real word)
+            let realWordCount = 0;
+            let cutoffTokenIdx = wordTokens.length;
+            if (isLong && !isExpanded) {
+              for (let i = 0; i < wordTokens.length; i++) {
+                if (!wordTokens[i].isSpace && wordTokens[i].cleanWord) realWordCount++;
+                if (realWordCount >= WORD_LIMIT) { cutoffTokenIdx = i + 1; break; }
               }
+            }
+            const visibleTokens = isLong && !isExpanded ? wordTokens.slice(0, cutoffTokenIdx) : wordTokens;
 
-              // Check if token matches active character offset OR active word index
-              const isWordSpoken =
-                isSpeaking &&
-                ((activeCharIndex >= 0 &&
-                  token.cleanStart <= activeCharIndex &&
-                  activeCharIndex < token.cleanEnd) ||
-                  (activeWordIndex >= 0 && token.wordIndex === activeWordIndex));
-
-              return (
-                <span
-                  key={idx}
-                  onClick={(e) => handleWordClick(e, token)}
-                  className={`inline-block transition-all duration-100 cursor-pointer rounded-lg px-0.5 ${
-                    isWordSpoken
-                      ? 'bg-amber-300 text-slate-950 font-black scale-108 shadow-sm ring-2 ring-amber-400 z-10'
-                      : 'hover:bg-amber-100 hover:text-slate-950'
-                  }`}
-                  title="Click to hear word pronunciation"
-                >
-                  {token.text}
-                </span>
-              );
-            })}
-          </div>
+            return (
+              <div className="text-slate-800 font-extrabold text-base md:text-lg leading-relaxed select-text">
+                {visibleTokens.map((token, idx) => {
+                  if (token.isSpace) return <span key={idx}>{token.text}</span>;
+                  const isWordSpoken =
+                    isSpeaking &&
+                    ((activeCharIndex >= 0 &&
+                      token.cleanStart <= activeCharIndex &&
+                      activeCharIndex < token.cleanEnd) ||
+                      (activeWordIndex >= 0 && token.wordIndex === activeWordIndex));
+                  return (
+                    <span
+                      key={idx}
+                      onClick={(e) => handleWordClick(e, token)}
+                      className={`inline-block transition-all duration-100 cursor-pointer rounded-lg px-0.5 ${
+                        isWordSpoken
+                          ? 'bg-amber-300 text-slate-950 font-black scale-108 shadow-sm ring-2 ring-amber-400 z-10'
+                          : 'hover:bg-amber-100 hover:text-slate-950'
+                      }`}
+                      title="Click to hear word pronunciation"
+                    >
+                      {token.text}
+                    </span>
+                  );
+                })}
+                {isLong && !isExpanded && <span className="text-slate-400">… </span>}
+                {isLong && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}
+                    className="ml-1 text-[11px] font-black text-violet-600 hover:text-violet-800 underline underline-offset-2 cursor-pointer"
+                  >
+                    {isExpanded ? 'Show less ▲' : 'Read more ▼'}
+                  </button>
+                )}
+              </div>
+            );
+          })()}
         </motion.div>
       )}
     </AnimatePresence>

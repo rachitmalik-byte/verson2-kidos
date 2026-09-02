@@ -255,7 +255,7 @@ export function NylonStrengthMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <Pip mood="curious" size="xl" />
+              <Pip mood="curious" size="md" />
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 The Great Tensile Strength Rig! 🏋️
               </h2>

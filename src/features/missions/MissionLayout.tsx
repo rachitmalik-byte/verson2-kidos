@@ -10,7 +10,7 @@ import { MissionAudioControls } from '@/components/navigation/AudioNavBarControl
 import { AskPipAssistant } from '@/components/pip/AskPipAssistant';
 import { ExplainItBackModal } from '@/components/reflection/ExplainItBackModal';
 import { NaturalStoppingPointModal } from '@/components/wellness/NaturalStoppingPointModal';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MissionLayoutProps {
   missionId: string;
@@ -88,7 +88,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
     >
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
         {/* ── Persistent Top Level Mission Header & Progress Indicator ── */}
-        <header className="w-full bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 sm:border-3 border-slate-200 px-3 py-2.5 sm:px-5 sm:py-3.5 shadow-md flex flex-col gap-2.5">
+        <header className="w-full bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 sm:border-3 border-slate-200 px-3 py-2.5 sm:px-4 sm:py-3 shadow-md flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Left: Navigation Buttons & Mission Title */}
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -111,16 +111,11 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
               </div>
 
               <div className="min-w-0 truncate">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded shrink-0">
-                    CBSE Class 5 Science
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-sky-100 text-sky-900 px-2 py-0.5 rounded shrink-0">
-                    Mission {derivedNumber} of {missions.length}
-                  </span>
-                </div>
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">
+                  Mission {derivedNumber} / {missions.length}
+                </span>
                 <h1
-                  className="text-xs sm:text-base font-black text-slate-900 truncate mt-0.5"
+                  className="text-xs sm:text-sm font-black text-slate-900 truncate leading-tight"
                   style={{ fontFamily: 'Nunito, sans-serif' }}
                 >
                   {derivedTitle}
@@ -128,20 +123,25 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
               </div>
             </div>
 
-            {/* Right: Audio & Reading Level Controls */}
+            {/* Right: Audio Controls */}
             <div className="flex items-center gap-1.5 shrink-0">
               <MissionAudioControls />
             </div>
           </div>
 
-          {/* Linear Step Progress Bar */}
-          <div className="w-full bg-slate-100 rounded-full h-2 sm:h-2.5 p-0.5 border border-slate-200 flex items-center">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${stepProgressPercent}%` }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-500 h-full rounded-full"
-            />
+          {/* Step Progress Bar with Step Counter */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 bg-slate-100 rounded-full h-2 p-0.5 border border-slate-200">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${stepProgressPercent}%` }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-500 h-full rounded-full"
+              />
+            </div>
+            <span className="text-[10px] font-black text-slate-500 shrink-0">
+              {currentStep}/{totalSteps}
+            </span>
           </div>
         </header>
 
@@ -173,6 +173,24 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 
       {/* ── Persistent Bottom Step Navigation Action Bar ── */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t-2 border-slate-200/90 py-2.5 px-4 sm:px-8 shadow-2xl">
+        {/* Action Hint Strip — shown when step not yet complete */}
+        <AnimatePresence>
+          {!isStepComplete && (
+            <motion.div
+              key="hint-strip"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.25 }}
+              className="text-center mb-2"
+            >
+              <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1 animate-bounce">
+                👆 Tap or choose something above to continue
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           {/* Previous Step Button */}
           <button
@@ -209,6 +227,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
           </button>
         </div>
       </footer>
+
     </div>
   );
 };
