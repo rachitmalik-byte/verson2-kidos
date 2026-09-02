@@ -163,27 +163,15 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
               )}
             </div>
 
-            {/* Audio Action Buttons */}
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={handleReplay}
-                className="p-2 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200 transition-all active:scale-95 cursor-pointer"
-                title="Replay Voice Audio"
-              >
-                <Volume2 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleToggleMute}
-                className={`p-2 rounded-xl border transition-all active:scale-95 cursor-pointer ${
-                  isTtsMuted
-                    ? 'bg-rose-100 text-rose-700 border-rose-300'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
-                }`}
-                title={isTtsMuted ? 'Unmute Voice' : 'Mute Voice'}
-              >
-                {isTtsMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 opacity-70" />}
-              </button>
-            </div>
+            {/* Single Clean Audio Replay & Listen Button */}
+            <button
+              onClick={handleReplay}
+              className="px-2.5 py-1 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-800 border border-violet-300 transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
+              title="Listen to Pip read aloud"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-violet-700" />
+              <span className="text-[11px] font-black">Listen 🔊</span>
+            </button>
           </div>
 
           {/* Synchronized Karaoke Word-by-Word Caption Highlighting */}

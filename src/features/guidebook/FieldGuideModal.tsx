@@ -248,8 +248,8 @@ export const FieldGuideModal: React.FC = () => {
 
   const location = useLocation();
   const isChapterOrLessonOpen =
-    location.pathname.startsWith('/chapter/') ||
-    location.pathname.startsWith('/discovery-book');
+    (location.pathname.startsWith('/chapter/') || location.pathname.startsWith('/discovery-book')) &&
+    !location.pathname.includes('/mission/');
 
   if (!isChapterOrLessonOpen) return null;
 

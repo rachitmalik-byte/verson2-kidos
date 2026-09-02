@@ -527,60 +527,83 @@ export function RaincoatMission() {
         )}
 
           {/* ════════════════════════════════════════════════════════════════════════
-              PHASE 3: CHOOSE & REASON (Backed by Real Evidence)
+              PHASE 3: CHOOSE & REASON (Clean, Well-Formatted Layout)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'CHOOSE' && (
-            <div className="w-full max-w-3xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="thinking" size="lg" />
-                <PipSpeechBubble
-                  message="Now that you witnessed the real water spray test, which raincoat keeps you dry in heavy rain? And why?"
-                  isVisible={true}
-                />
+            <div className="w-full max-w-3xl flex flex-col items-center gap-4">
+              {/* Pip Speech Banner (Neat & Aligned) */}
+              <div className="flex items-center gap-3 w-full bg-white/90 p-3 rounded-2xl border-2 border-violet-200 shadow-sm">
+                <Pip mood="thinking" size="sm" />
+                <div className="flex-1">
+                  <span className="text-[11px] font-black uppercase text-violet-700 bg-violet-100 px-2.5 py-0.5 rounded-full">
+                    Pip's Science Question 💡
+                  </span>
+                  <p className="text-xs sm:text-sm font-extrabold text-slate-800 mt-1">
+                    Now that you tested both coats with water, which raincoat keeps you dry in heavy rain? And why?
+                  </p>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 w-full mb-6">
+              {/* 2 Clean Raincoat Selection Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                {/* Coat A: Cotton */}
                 <button
                   onClick={() => {
                     sounds.pop();
                     setFinalChoice('A');
                   }}
-                  className={`p-5 rounded-3xl border-3 font-black text-sm flex flex-col items-center gap-2 transition-all cursor-pointer ${
+                  className={`p-4 rounded-3xl border-3 transition-all cursor-pointer flex flex-col items-center text-center gap-2 ${
                     finalChoice === 'A'
-                      ? 'bg-amber-100 border-amber-500 shadow-lg scale-102 ring-4 ring-amber-300'
-                      : 'bg-white border-slate-200 text-slate-700'
+                      ? 'bg-amber-50 border-amber-500 shadow-lg scale-102 ring-4 ring-amber-300'
+                      : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'
                   }`}
                 >
-                  <img src={cottonCoatSoakedImg} alt="Cotton soaked" className="w-24 h-24 rounded-xl object-contain" />
-                  <span>Choose Cotton (Coat A)</span>
+                  <div className="w-full h-32 bg-slate-50 rounded-2xl flex items-center justify-center p-2 border border-slate-100 overflow-hidden">
+                    <img src={cottonCoatSoakedImg} alt="Cotton soaked" className="h-full object-contain" />
+                  </div>
+                  <div>
+                    <span className="font-black text-sm text-slate-900 block">🌿 Coat A: Natural Cotton</span>
+                    <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full inline-block mt-1">
+                      Soaks in Water 💦
+                    </span>
+                  </div>
                 </button>
 
+                {/* Coat B: Polyester */}
                 <button
                   onClick={() => {
                     sounds.pop();
                     setFinalChoice('B');
                   }}
-                  className={`p-5 rounded-3xl border-3 font-black text-sm flex flex-col items-center gap-2 transition-all cursor-pointer ${
+                  className={`p-4 rounded-3xl border-3 transition-all cursor-pointer flex flex-col items-center text-center gap-2 ${
                     finalChoice === 'B'
-                      ? 'bg-sky-100 border-sky-500 shadow-lg scale-102 ring-4 ring-sky-300'
-                      : 'bg-white border-slate-200 text-slate-700'
+                      ? 'bg-sky-50 border-sky-500 shadow-lg scale-102 ring-4 ring-sky-300'
+                      : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'
                   }`}
                 >
-                  <img src={polyesterRaincoatWaterproofImg} alt="Polyester waterproof" className="w-24 h-24 rounded-xl object-contain" />
-                  <span>Choose Polyester (Coat B)</span>
+                  <div className="w-full h-32 bg-slate-50 rounded-2xl flex items-center justify-center p-2 border border-slate-100 overflow-hidden">
+                    <img src={polyesterRaincoatWaterproofImg} alt="Polyester waterproof" className="h-full object-contain" />
+                  </div>
+                  <div>
+                    <span className="font-black text-sm text-slate-900 block">🧥 Coat B: Synthetic Polyester</span>
+                    <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full inline-block mt-1">
+                      100% Waterproof ✨
+                    </span>
+                  </div>
                 </button>
               </div>
 
+              {/* Reason Selector (Clean & Uncluttered) */}
               {finalChoice && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-md flex flex-col items-center"
+                  className="w-full bg-white p-4 sm:p-5 rounded-3xl border-2 border-slate-200 shadow-md flex flex-col items-center"
                 >
-                  <h4 className="text-sm font-black text-slate-800 mb-3">
-                    Why did you pick {finalChoice === 'A' ? 'Coat A' : 'Coat B'}? (Select all that apply):
+                  <h4 className="text-xs sm:text-sm font-black text-slate-800 mb-2.5 text-center">
+                    Why did you pick {finalChoice === 'A' ? 'Coat A' : 'Coat B'}? (Select all reasons):
                   </h4>
-                  <div className="flex flex-wrap gap-2 justify-center">
+                  <div className="flex flex-wrap gap-2 justify-center w-full">
                     {[
                       { id: 'waterproof', label: 'Raindrops bead up and roll off 💧', correctFor: 'B' },
                       { id: 'light', label: 'It is lightweight and easy to carry 🪶', correctFor: 'B' },
@@ -597,13 +620,14 @@ export function RaincoatMission() {
                               isSelected ? prev.filter((r) => r !== reason.id) : [...prev, reason.id]
                             );
                           }}
-                          className={`px-4 py-2 rounded-2xl font-black text-xs transition-all cursor-pointer ${
+                          className={`px-3.5 py-2 rounded-2xl font-black text-xs transition-all cursor-pointer flex items-center gap-1.5 ${
                             isSelected
-                              ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-300 shadow-xs'
-                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-500 shadow-xs scale-102'
+                              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                           }`}
                         >
-                          {reason.label}
+                          <span>{reason.label}</span>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />}
                         </button>
                       );
                     })}
