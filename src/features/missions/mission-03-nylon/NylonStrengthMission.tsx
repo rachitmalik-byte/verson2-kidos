@@ -78,7 +78,7 @@ const ROPES: RopeSpecimen[] = [
     icon: '🐛',
     breakingLimitKg: 5,
     simpleExplanation: 'Spun by silkworm caterpillars into smooth shiny threads.',
-    failureReason: 'Fine caterpillar protein strands snapped under heavy tensile load!',
+    failureReason: 'Fine caterpillar protein strands snapped under heavy pulling force!',
     intactImage: silkCordIntactImg,
     snappedImage: silkCordSnappedImg,
     color: 'purple',
@@ -179,7 +179,7 @@ export function NylonStrengthMission() {
       addDiscovery({
         materialId: 'nylon',
         discoveredAt: Date.now(),
-        properties: ['Super High Tensile Strength', 'Elastic & Lightweight', 'Stronger than plant fibers'],
+        properties: ['Super Strong Pulling Power', 'Elastic & Lightweight', 'Stronger than plant fibers'],
         uses: ['Climbing ropes', 'Parachutes', 'Fishing nets', 'Tents'],
         scienceWord: 'Tensile Strength',
       });

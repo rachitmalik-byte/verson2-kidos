@@ -413,7 +413,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 <span className="text-5xl mb-2">🔬✨</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Why Synthetics Resist Wrinkles</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 max-w-lg">
-                  Natural cotton is made of cellulose strands that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are long polymer chains engineered with elastic molecular memory — they spring back straight when released!
+                  Natural cotton is made of plant fiber strands that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are long polymer chains engineered with elastic molecular memory — they spring back straight when released!
                 </p>
                 <div className="p-5 bg-sky-50 rounded-2xl border-2 border-sky-200 w-full max-w-md mb-6">
                   <span className="text-xs font-black text-sky-900 block mb-1">💡 Key Science Takeaway:</span>
@@ -477,7 +477,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     label: 'Rayon (Artificial Silk from Wood Pulp)',
                     icon: '✨👗',
                     isCorrect: true,
-                    explanation: 'Rayon has a luxurious silk-like gloss and drape, made by chemically regenerating plant cellulose!',
+                    explanation: 'Rayon has a luxurious silk-like gloss and drape, made by chemically regenerating plant plant fiber!',
                     hint: 'Look for the regenerated fiber historically called "artificial silk"!',
                   },
                   {
@@ -569,7 +569,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                       />
                     </div>
                     <span className="text-[11px] font-bold text-rose-700 mt-2">
-                      {interactiveState.burnedPoly ? '⚠️ Sticky Molten Plastic Beads!' : 'Clean unburned polyester swatch'}
+                      {interactiveState.burnedPoly ? '⚠️ Sticky Melted Plastic Beads!' : 'Clean unburned polyester swatch'}
                     </span>
                     <button
                       onClick={() => {
@@ -599,7 +599,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-400 shadow-xl text-center flex flex-col items-center">
                 <span className="text-5xl mb-3 block">🔬🔥</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Molecular Reaction: Why Synthetics Melt</h3>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Fire Test: Why Plastics Melt into Beads</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
                   Synthetic fibres are long chemical polymer chains made from petroleum. When exposed to heat, the polymer chains collapse into a hot liquid plastic puddle that clings to skin.
                 </p>
@@ -633,7 +633,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     label: '100% Thick Cotton Canvas Apron',
                     icon: '🌿👨‍🍳',
                     isCorrect: true,
-                    explanation: 'Cotton canvas does not melt when exposed to sparks, preventing severe molten plastic burns!',
+                    explanation: 'Cotton canvas does not melt when exposed to sparks, preventing severe melted plastic burns!',
                     hint: 'Choose the natural fibre that chars into ash rather than melting into sticky liquid!',
                   },
                   {
@@ -1361,11 +1361,11 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
               </div>
             )}
 
-            {/* Step 2: Molecular Heat Conduction */}
+            {/* Step 2: Heat Test: How Heat Moves Through Materials */}
             {currentStepIndex === 2 && (
               <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-300 shadow-xl text-center flex flex-col items-center">
                 <span className="text-5xl mb-3 block">🌡️🥘</span>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Molecular Heat Conduction</h3>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Heat Test: How Heat Moves Through Materials</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
                   Metals conduct heat because free electrons vibrate rapidly across their crystal lattice. But Bakelite's densely cross-linked polymer network traps heat vibrations in place!
                 </p>
@@ -1532,7 +1532,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
 
                   let naturalImg = soilCottonDay1Img;
                   let naturalTitle = '100% Natural Cotton Swatch';
-                  let naturalState = 'Freshly buried clean plant cellulose fibers in dark potting soil.';
+                  let naturalState = 'Freshly buried clean plant plant fiber fibers in dark potting soil.';
                   let naturalBadge = '🌱 Fresh Organic Matter';
 
                   let syntheticImg = soilPlasticDay1Img;
@@ -1580,11 +1580,11 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     naturalTitle = 'Natural Fallen Wood Timber';
                     naturalState =
                       step === 0
-                        ? 'Day 1: Solid natural tree cellulose block.'
+                        ? 'Day 1: Solid natural tree plant fiber block.'
                         : step === 1
                         ? '2 Weeks: Fungi and microbes soften wood fibers.'
                         : '100+ Years: Fully decomposed into fertile soil compost! ✓';
-                    naturalBadge = step >= 2 ? '✓ 100% Recycled to Nature' : '🌱 Organic Cellulose';
+                    naturalBadge = step >= 2 ? '✓ 100% Recycled to Nature' : '🌱 Organic Plant fiber';
 
                     syntheticImg = plasticImgs[step] || plasticImgs[0];
                     syntheticTitle = 'Synthetic Plastic Pellets';
@@ -1958,7 +1958,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
             {currentStepIndex === 1 && (
               <InquiryQuestionCard
                 title="Challenge 2: Mountain Climbing Rope"
-                question="You are packing rope to climb a steep 500-meter rocky cliff. Which rope has tensile strength stronger than steel?"
+                question="You are packing rope to climb a steep 500-meter rocky cliff. Which rope has pulling strength stronger than steel?"
                 scenarioEmoji="🧗‍♂️🪢"
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
@@ -1968,7 +1968,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     label: 'Braided Synthetic Nylon Rope',
                     icon: '🪢💪',
                     isCorrect: true,
-                    explanation: 'Nylon has extraordinary tensile strength, elasticity, and resists abrasion, making it the universal choice for mountain rescue!',
+                    explanation: 'Nylon has extraordinary pulling strength, elasticity, and resists abrasion, making it the universal choice for mountain rescue!',
                     hint: 'Which synthetic fibre was famously proven stronger than steel of the same thickness?',
                   },
                   {
@@ -1977,7 +1977,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     icon: '🌾🪢',
                     isCorrect: false,
                     explanation: '',
-                    hint: 'Plant twine has low tensile strength and snaps easily under heavy human climbing weight.',
+                    hint: 'Plant twine has low pulling strength and snaps easily under heavy human climbing weight.',
                   },
                 ]}
               />

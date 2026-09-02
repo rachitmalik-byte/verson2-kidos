@@ -44,7 +44,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     type: 'natural',
     origin: 'Cotton Plant Seed Capsule',
     hint: 'Grown on plant stems in open fields!',
-    description: 'Natural plant cellulose fibers harvested from fluffy white bolls.',
+    description: 'Soft plant fibers harvested from fluffy white bolls.',
   },
   {
     id: 'wool',
@@ -72,7 +72,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     emoji: '🪵',
     image: naturalWoodTimberImg,
     type: 'natural',
-    origin: 'Forest Trees (Lignin & Cellulose)',
+    origin: 'Natural Forest Trees',
     hint: 'From oak and pine trees in forests!',
     description: 'Rigid natural plant material created through years of sunlight and rain.',
   },
@@ -84,7 +84,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     type: 'synthetic',
     origin: 'Petrochemical Polymerization',
     hint: 'Made by scientists in a lab!',
-    description: 'Man-made continuous polymer chain with extreme tensile strength.',
+    description: 'Man-made continuous synthetic thread with strong pulling power.',
   },
   {
     id: 'polyester',
@@ -93,7 +93,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     image: polyesterFabricRollImg,
     type: 'synthetic',
     origin: 'Petroleum Ester Polymers',
-    hint: 'Synthesized with chemical polymer chains!',
+    hint: 'Made by scientists using special ingredients!',
     description: 'Wrinkle-free hydrophobic plastic fabric crafted in modern factories.',
   },
   {
@@ -294,7 +294,7 @@ export function SortingMission() {
               </h2>
               <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
                 Pip's laboratory desk is piled high with real materials from all around the world! Some were grown by{' '}
-                <span className="text-emerald-700 font-black">Mother Nature</span>, while others were synthesized by{' '}
+                <span className="text-emerald-700 font-black">Mother Nature</span>, while others were made by{' '}
                 <span className="text-sky-700 font-black">Scientists in Labs</span>. Can you sort them into the right scientific trays?
               </p>
 
@@ -519,7 +519,7 @@ export function SortingMission() {
 
                 <div className="flex flex-col gap-2.5">
                   {[
-                    'They are synthesized by people using chemicals and polymer chains 🏭',
+                    'They are made by scientists in labs using special ingredients 🏭',
                     'They grow on oak trees in forest valleys 🌳',
                     'They are harvested directly from sheep and caterpillars 🐑',
                   ].map((option, idx) => (

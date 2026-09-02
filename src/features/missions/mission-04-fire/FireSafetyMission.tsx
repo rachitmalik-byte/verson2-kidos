@@ -172,7 +172,7 @@ export function FireSafetyMission() {
                     <img src={cottonSwatchCleanImg} alt="Clean Cotton Swatch" className="w-full h-full object-cover rounded-xl" />
                   </div>
                   <span className="font-black text-xs text-slate-800">1. Natural Cotton</span>
-                  <span className="text-[10px] font-bold text-amber-700">Plant Cellulose</span>
+                  <span className="text-[10px] font-bold text-amber-700">Natural Plant Cotton</span>
                 </div>
 
                 <div className="bg-white p-4 rounded-3xl border-3 border-rose-300 shadow-md flex flex-col items-center text-center">
@@ -180,7 +180,7 @@ export function FireSafetyMission() {
                     <img src={polyesterSwatchCleanImg} alt="Clean Polyester Swatch" className="w-full h-full object-cover rounded-xl" />
                   </div>
                   <span className="font-black text-xs text-slate-800">2. Synthetic Polyester</span>
-                  <span className="text-[10px] font-bold text-rose-700">Petroleum Polymer</span>
+                  <span className="text-[10px] font-bold text-rose-700">Synthetic Plastic</span>
                 </div>
               </div>
 
@@ -211,13 +211,13 @@ export function FireSafetyMission() {
               {/* Dual Flame Experiment Cards Wrapped in Focus Spotlight */}
               <ExperimentFocusSpotlight
                 isActive={isIgnitingCotton || isIgnitingPolyester}
-                activeLabel="🔥 Flame Thermal Breakdown Reaction in Progress..."
+                activeLabel="🔥 Flame Test in Progress..."
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                   {/* Cotton Flame Test */}
                   <div className="bg-white p-6 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
                     <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1">
-                      Natural Cotton (Plant Cellulose)
+                      Natural Cotton (Natural Plant Cotton)
                     </span>
                     <span className="text-[11px] font-bold text-slate-500 mb-3">
                       {burnedCotton ? '✅ Result: Burns cleanly into soft gray ash' : 'Unburned specimen on ceramic lab tile'}
@@ -318,7 +318,7 @@ export function FireSafetyMission() {
                       }`}
                     >
                       <Flame className="w-4 h-4 text-white" />
-                      <span>{burnedPolyester ? '⚠️ Result: Molten Plastic Bead' : 'Test Polyester in Flame! 🔥'}</span>
+                      <span>{burnedPolyester ? '⚠️ Result: Melted Sticky Bead' : 'Test Polyester in Flame! 🔥'}</span>
                     </button>
 
                     {burnedPolyester && (
@@ -344,7 +344,7 @@ export function FireSafetyMission() {
               <div className="flex items-center gap-4 mb-6">
                 <Pip mood="celebrating" size="lg" />
                 <PipSpeechBubble
-                  message="Look under the microscope at thermal breakdown! See why cellulose becomes harmless ash while polymers melt into beads!"
+                  message="Look under the microscope! See how natural cotton burns into soft ash, while synthetic polyester melts into hot sticky beads!"
                   isVisible={true}
                 />
               </div>
@@ -354,7 +354,7 @@ export function FireSafetyMission() {
                 <div className="flex items-center justify-between w-full mb-4 z-10 flex-wrap gap-2">
                   <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-500/50 px-3 py-1 rounded-full flex items-center gap-1.5">
                     <ZoomIn className="w-4 h-4 text-amber-400 animate-pulse" />
-                    <span>Thermal Reaction Microscope Studio</span>
+                    <span>Fire Microscope Studio</span>
                   </span>
 
                   <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
@@ -419,7 +419,7 @@ export function FireSafetyMission() {
                         : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
                     }`}
                   >
-                    <span>🌿 Cotton Ash: Porous Mineral Powder</span>
+                    <span>🌿 Cotton Ash: Soft Gray Ash</span>
                   </button>
 
                   <button
@@ -433,7 +433,7 @@ export function FireSafetyMission() {
                         : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
                     }`}
                   >
-                    <span>⚠️ Polyester: Molten Plastic Beads</span>
+                    <span>⚠️ Polyester: Melted Sticky Beads</span>
                   </button>
                 </div>
               </div>
