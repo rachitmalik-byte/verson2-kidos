@@ -22,7 +22,7 @@ interface WaterBlob {
 }
 
 export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
-  const [currentStation, setCurrentStation] = useState<'cohesion' | 'daily_life' | 'gravity_toggle'>('cohesion');
+  const [currentStation, setCurrentStation] = useState<'cohesion' | 'daily_life' | 'gravity_toggle'>('daily_life');
 
   // ── Station 1: Draggable Bottle & Towel States ──
   const [waterBlobs, setWaterBlobs] = useState<WaterBlob[]>([
@@ -33,12 +33,11 @@ export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }
   const stageRef = useRef<HTMLDivElement>(null);
 
   // ── Station 2: Daily Life Topic ──
-  const [activeLifeTab, setActiveLifeTab] = useState<'eating' | 'sleeping' | 'hair'>('eating');
+  const [activeLifeTab, setActiveLifeTab] = useState<'eating' | 'sleeping' | 'hair'>('hair');
 
   // ── Station 3: Gravity Mode ──
   const [gravityMode, setGravityMode] = useState<'orbit' | 'earth'>('orbit');
 
-  // Dispense water when bottle is dragged/released in center
   const handleBottleDragEnd = (event: any, info: any) => {
     if (Math.abs(info.offset.x) > 40 || Math.abs(info.offset.y) > 30) {
       sounds.sparkle();
@@ -56,7 +55,6 @@ export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }
     }
   };
 
-  // Absorb water when towel is dragged over center
   const handleTowelDragEnd = (event: any, info: any) => {
     if (Math.abs(info.offset.x) > 30 || Math.abs(info.offset.y) > 20) {
       if (waterBlobs.length > 0) {
@@ -336,16 +334,16 @@ export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }
       )}
 
       {/* ════════════════════════════════════════════════════════════════
-          STATION 2: DAILY LIFE IN ORBIT (ANIMATED FLYING FOOD & SLEEP)
+          STATION 2: DAILY LIFE IN ORBIT (DETAILED REFERENCE VISUALS)
       ════════════════════════════════════════════════════════════════ */}
       {currentStation === 'daily_life' && (
         <div className="w-full flex flex-col items-center">
           {/* Subtabs: Eating, Sleeping, Hair */}
           <div className="flex gap-2 mb-3">
             {[
-              { id: 'eating', label: '🥪 1. Floating Food & Velcro Tray', icon: Utensils },
-              { id: 'sleeping', label: '🛌 2. Tied Sleeping Bag', icon: Moon },
-              { id: 'hair', label: '💇‍♀️ 3. Zero-G Floating Hair', icon: Scissors },
+              { id: 'hair', label: '💇‍♀️ 1. Floating Hair in Orbit', icon: Scissors },
+              { id: 'eating', label: '🥪 2. Eating & Velcro Trays', icon: Utensils },
+              { id: 'sleeping', label: '🛌 3. Tied Sleeping Bag', icon: Moon },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -364,128 +362,214 @@ export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }
             ))}
           </div>
 
-          {/* 2.5D Animated Storybook Stage */}
+          {/* 2.5D Detailed Reference Comparison Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full h-88 sm:h-96">
-            {/* Left Card: 🌍 On Earth (1g Gravity) */}
-            <div className="bg-sky-50 border-3 border-sky-300 rounded-3xl p-6 flex flex-col items-center justify-between shadow-md">
+            {/* ── LEFT CARD: 🌍 ON EARTH (1G GRAVITY) ── */}
+            <div className="bg-sky-50 border-3 border-sky-300 rounded-3xl p-5 flex flex-col items-center justify-between shadow-md">
               <span className="text-xs font-black uppercase text-sky-800 bg-sky-100 px-3 py-1 rounded-full border border-sky-300">
                 🌍 On Earth (1g Gravity)
               </span>
 
-              <div className="text-center my-auto">
-                {activeLifeTab === 'eating' && (
-                  <div className="flex flex-col items-center">
-                    <div className="w-24 h-24 rounded-full bg-white border-3 border-sky-200 shadow-inner flex items-center justify-center text-5xl mb-3">
-                      🍽️🥪
-                    </div>
-                    <h4 className="font-black text-base text-slate-900">Food Stays on the Plate</h4>
-                    <p className="text-xs text-slate-600 mt-1 max-w-xs font-bold">
-                      Earth’s gravity pulls your sandwich down onto the plate and keeps water resting in your cup.
-                    </p>
-                  </div>
-                )}
-                {activeLifeTab === 'sleeping' && (
-                  <div className="flex flex-col items-center">
-                    <div className="w-24 h-24 rounded-full bg-white border-3 border-sky-200 shadow-inner flex items-center justify-center text-5xl mb-3">
-                      🛏️😴
-                    </div>
-                    <h4 className="font-black text-base text-slate-900">Sleep Flat on Beds</h4>
-                    <p className="text-xs text-slate-600 mt-1 max-w-xs font-bold">
-                      Your body rests naturally on a soft mattress with pillows holding your head down.
-                    </p>
-                  </div>
-                )}
+              <div className="text-center my-auto flex flex-col items-center">
                 {activeLifeTab === 'hair' && (
                   <div className="flex flex-col items-center">
-                    <div className="w-24 h-24 rounded-full bg-white border-3 border-sky-200 shadow-inner flex items-center justify-center text-5xl mb-3">
-                      👩‍🦰
+                    {/* Rich Detailed Earth Hair Illustration */}
+                    <div className="w-32 h-36 relative mb-2 flex items-center justify-center">
+                      <svg width="120" height="130" viewBox="0 0 120 130">
+                        {/* Shoulders */}
+                        <path d="M 20 125 Q 60 105 100 125 L 100 130 L 20 130 Z" fill="#0284c7" />
+                        {/* Neck */}
+                        <rect x="52" y="85" width="16" height="25" fill="#fcd34d" />
+                        {/* Face */}
+                        <circle cx="60" cy="65" r="24" fill="#fcd34d" />
+                        <circle cx="52" cy="65" r="2.5" fill="#0f172a" />
+                        <circle cx="68" cy="65" r="2.5" fill="#0f172a" />
+                        <path d="M 54 75 Q 60 80 66 75" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+                        {/* Hair resting down under gravity */}
+                        <path d="M 36 60 Q 34 85 32 115 Q 36 120 44 115 Q 42 85 40 60 Z" fill="#78350f" />
+                        <path d="M 84 60 Q 86 85 88 115 Q 84 120 76 115 Q 78 85 80 60 Z" fill="#78350f" />
+                        <path d="M 36 60 Q 60 30 84 60 Q 60 42 36 60 Z" fill="#78350f" />
+                        {/* Gravity Arrow */}
+                        <line x1="105" y1="45" x2="105" y2="85" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
+                        <polygon points="100,80 105,92 110,80" fill="#0284c7" />
+                        <text x="105" y="105" fill="#0284c7" fontSize="8" fontWeight="900" textAnchor="middle">1g Down</text>
+                      </svg>
                     </div>
-                    <h4 className="font-black text-base text-slate-900">Hair Falls Down</h4>
-                    <p className="text-xs text-slate-600 mt-1 max-w-xs font-bold">
-                      Gravity pulls strands of hair downwards onto your neck and shoulders.
+                    <h4 className="font-black text-sm text-slate-900">Hair Pulled Down by Gravity</h4>
+                    <p className="text-[11px] text-slate-600 mt-0.5 max-w-xs font-bold">
+                      Earth’s 1g gravitational pull (9.8 m/s²) pulls hair strands downward naturally onto your shoulders.
+                    </p>
+                  </div>
+                )}
+
+                {activeLifeTab === 'eating' && (
+                  <div className="flex flex-col items-center">
+                    {/* Rich Detailed Earth Dining Table */}
+                    <div className="w-36 h-32 relative mb-2 flex items-center justify-center">
+                      <svg width="140" height="120" viewBox="0 0 140 120">
+                        {/* Table surface */}
+                        <rect x="10" y="80" width="120" height="14" rx="3" fill="#92400e" stroke="#451a03" strokeWidth="1.5" />
+                        <rect x="25" y="94" width="10" height="26" fill="#78350f" />
+                        <rect x="105" y="94" width="10" height="26" fill="#78350f" />
+                        {/* Porcelain plate */}
+                        <ellipse cx="70" cy="74" rx="42" ry="12" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="2" />
+                        {/* Sandwich sitting flat */}
+                        <rect x="48" y="55" width="44" height="8" rx="2" fill="#d97706" />
+                        <rect x="46" y="50" width="48" height="5" rx="1" fill="#22c55e" />
+                        <circle cx="62" cy="48" r="7" fill="#ef4444" />
+                        <circle cx="78" cy="48" r="7" fill="#ef4444" />
+                        <rect x="48" y="42" width="44" height="8" rx="2" fill="#d97706" />
+                        {/* Water glass sitting on table */}
+                        <rect x="102" y="44" width="16" height="30" rx="3" fill="#e0f2fe" stroke="#38bdf8" strokeWidth="1.5" />
+                        <rect x="104" y="54" width="12" height="18" rx="2" fill="#0284c7" />
+                      </svg>
+                    </div>
+                    <h4 className="font-black text-sm text-slate-900">Food Stays Flat on Plate</h4>
+                    <p className="text-[11px] text-slate-600 mt-0.5 max-w-xs font-bold">
+                      Gravity firmly anchors solid food to plates and liquid inside open drinking cups.
+                    </p>
+                  </div>
+                )}
+
+                {activeLifeTab === 'sleeping' && (
+                  <div className="flex flex-col items-center">
+                    {/* Rich Detailed Earth Bed */}
+                    <div className="w-36 h-32 relative mb-2 flex items-center justify-center">
+                      <svg width="140" height="120" viewBox="0 0 140 120">
+                        {/* Wooden bed frame */}
+                        <rect x="15" y="70" width="110" height="20" rx="4" fill="#78350f" />
+                        <rect x="15" y="40" width="12" height="50" rx="2" fill="#451a03" />
+                        <rect x="113" y="55" width="12" height="35" rx="2" fill="#451a03" />
+                        {/* Mattress & Pillows */}
+                        <rect x="27" y="62" width="86" height="12" rx="3" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" />
+                        <ellipse cx="40" cy="58" rx="10" ry="6" fill="#fde047" stroke="#ca8a04" strokeWidth="1" />
+                        {/* Person sleeping under blanket */}
+                        <rect x="45" y="58" width="68" height="16" rx="4" fill="#38bdf8" />
+                        <circle cx="40" cy="54" r="6" fill="#fcd34d" />
+                      </svg>
+                    </div>
+                    <h4 className="font-black text-sm text-slate-900">Sleep Flat on Mattresses</h4>
+                    <p className="text-[11px] text-slate-600 mt-0.5 max-w-xs font-bold">
+                      Your body weight presses down into a mattress with pillows supporting your head.
                     </p>
                   </div>
                 )}
               </div>
 
-              <span className="text-[11px] font-black text-sky-700 bg-white px-3 py-1 rounded-full border border-sky-200">
+              <span className="text-[10px] font-black text-sky-700 bg-white px-3 py-1 rounded-full border border-sky-200">
                 Earth Gravity pulls downward (9.8 m/s²)
               </span>
             </div>
 
-            {/* Right Card: 🚀 In Orbit ISS (0g Freefall) with Animated Physics */}
-            <div className="bg-indigo-950 text-white border-3 border-indigo-500 rounded-3xl p-6 flex flex-col items-center justify-between shadow-xl relative overflow-hidden">
+            {/* ── RIGHT CARD: 🚀 IN ORBIT ISS (0G FREEFALL) ── */}
+            <div className="bg-indigo-950 text-white border-3 border-indigo-500 rounded-3xl p-5 flex flex-col items-center justify-between shadow-xl relative overflow-hidden">
               <span className="text-xs font-black uppercase text-indigo-300 bg-indigo-900 px-3 py-1 rounded-full border border-indigo-400 z-10">
                 🚀 In Orbit ISS (0g Freefall)
               </span>
 
-              <div className="text-center my-auto z-10">
-                {activeLifeTab === 'eating' && (
-                  <div className="flex flex-col items-center">
-                    {/* Animated Floating Sandwich Slices drifting in Zero-G */}
-                    <div className="relative w-36 h-28 flex items-center justify-center mb-2">
-                      <motion.span
-                        animate={{ y: [-15, 15, -15], rotate: [-12, 12, -12] }}
-                        transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-                        className="text-4xl absolute left-2 top-0"
-                      >
-                        🥪
-                      </motion.span>
-                      <motion.span
-                        animate={{ y: [12, -12, 12], rotate: [10, -10, 10] }}
-                        transition={{ repeat: Infinity, duration: 2.6, ease: 'easeInOut' }}
-                        className="text-3xl absolute right-2 bottom-1"
-                      >
-                        🧃
-                      </motion.span>
-                      <motion.span
-                        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-                        transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
-                        className="text-2xl absolute top-3 right-5 text-amber-300"
-                      >
-                        ✨
-                      </motion.span>
-                    </div>
-
-                    <h4 className="font-black text-base text-amber-300">Food Floats in the Air!</h4>
-                    <p className="text-xs text-slate-300 mt-1 max-w-xs font-bold">
-                      Astronauts use velcro trays and squeeze pouches to catch floating food with their mouths!
-                    </p>
-                  </div>
-                )}
-                {activeLifeTab === 'sleeping' && (
-                  <div className="flex flex-col items-center">
-                    <motion.div
-                      animate={{ y: [-6, 6, -6], rotate: [-2, 2, -2] }}
-                      transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
-                      className="text-6xl mb-3"
-                    >
-                      ⛺😴🔒
-                    </motion.div>
-                    <h4 className="font-black text-base text-amber-300">Tied Inside Sleeping Bags</h4>
-                    <p className="text-xs text-slate-300 mt-1 max-w-xs font-bold">
-                      Astronauts zip into sleeping bags strapped securely to the wall so they don't drift into fans while sleeping!
-                    </p>
-                  </div>
-                )}
+              <div className="text-center my-auto z-10 flex flex-col items-center">
                 {activeLifeTab === 'hair' && (
                   <div className="flex flex-col items-center">
-                    <motion.div
-                      animate={{ scale: [1, 1.08, 1], y: [-4, 4, -4] }}
-                      transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-                      className="text-6xl mb-3"
-                    >
-                      👩‍🚀✨
-                    </motion.div>
-                    <h4 className="font-black text-base text-amber-300">Hair Stands Straight Up!</h4>
-                    <p className="text-xs text-slate-300 mt-1 max-w-xs font-bold">
-                      Without downward gravity, Sunita Williams' hair floats straight up in all directions like a dandelion!
+                    {/* Authentic Sunita Williams Zero-G Hair Illustration */}
+                    <div className="w-36 h-36 relative mb-2 flex items-center justify-center">
+                      <svg width="140" height="130" viewBox="0 0 140 130">
+                        {/* ISS Module Background Grid */}
+                        <rect x="10" y="10" width="120" height="110" rx="12" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+                        {/* Blue NASA Suit */}
+                        <path d="M 40 115 Q 70 95 100 115 L 100 120 L 40 120 Z" fill="#1d4ed8" stroke="#38bdf8" strokeWidth="1.5" />
+                        {/* NASA Badge */}
+                        <rect x="74" y="105" width="12" height="6" fill="#f97316" rx="1" />
+                        {/* Neck & Face */}
+                        <rect x="64" y="80" width="12" height="18" fill="#fcd34d" />
+                        <circle cx="70" cy="65" r="22" fill="#fcd34d" />
+                        <circle cx="63" cy="65" r="2.5" fill="#0f172a" />
+                        <circle cx="77" cy="65" r="2.5" fill="#0f172a" />
+                        <path d="M 64 74 Q 70 79 76 74" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+                        
+                        {/* SUNITA'S FLOATING HAIR STANDING STRAIGHT UP IN ZERO-G */}
+                        <g>
+                          <path d="M 50 50 Q 30 25 35 15 Q 45 25 54 46" fill="#78350f" />
+                          <path d="M 56 46 Q 45 15 52 10 Q 60 20 62 44" fill="#78350f" />
+                          <path d="M 66 44 Q 70 10 74 10 Q 78 20 74 44" fill="#78350f" />
+                          <path d="M 76 45 Q 85 15 90 12 Q 92 25 82 48" fill="#78350f" />
+                          <path d="M 82 48 Q 105 25 108 18 Q 102 35 88 54" fill="#78350f" />
+                          <path d="M 50 54 Q 25 40 20 35 Q 32 50 50 58" fill="#78350f" />
+                          <path d="M 90 58 Q 112 50 118 45 Q 108 60 90 64" fill="#78350f" />
+                        </g>
+
+                        {/* Floating Zero-G Sparkles */}
+                        <text x="25" y="70" fill="#fde047" fontSize="14" className="animate-ping">✨</text>
+                        <text x="110" y="70" fill="#fde047" fontSize="14" className="animate-ping">✨</text>
+                      </svg>
+                    </div>
+                    <h4 className="font-black text-sm text-amber-300">Hair Stands Straight Up!</h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5 max-w-xs font-bold">
+                      Without downward gravity, Sunita Williams' hair floats upward in all directions like a dandelion in freefall!
+                    </p>
+                  </div>
+                )}
+
+                {activeLifeTab === 'eating' && (
+                  <div className="flex flex-col items-center">
+                    {/* Authentic Floating Food & Velcro Tray */}
+                    <div className="w-36 h-32 relative mb-2 flex items-center justify-center">
+                      <svg width="140" height="120" viewBox="0 0 140 120">
+                        {/* ISS Metal Bulkhead */}
+                        <rect x="10" y="10" width="120" height="100" rx="10" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+                        {/* Velcro Food Tray anchored with strap */}
+                        <rect x="25" y="75" width="90" height="24" rx="4" fill="#334155" stroke="#facc15" strokeWidth="1.5" />
+                        <text x="70" y="90" fill="#facc15" fontSize="8" fontWeight="900" textAnchor="middle">VELCRO FOOD TRAY</text>
+                        {/* Floating Slices drifting in air */}
+                        <g>
+                          <rect x="30" y="25" width="28" height="6" rx="2" fill="#d97706" transform="rotate(-15 30 25)" />
+                          <circle cx="85" cy="30" r="7" fill="#ef4444" />
+                          <rect x="95" y="45" width="26" height="5" rx="1" fill="#22c55e" transform="rotate(20 95 45)" />
+                          <rect x="50" y="45" width="28" height="6" rx="2" fill="#d97706" transform="rotate(10 50 45)" />
+                          {/* Floating Water Bubble */}
+                          <circle cx="65" cy="22" r="6" fill="#38bdf8" opacity="0.85" />
+                        </g>
+                      </svg>
+                    </div>
+                    <h4 className="font-black text-sm text-amber-300">Food Floats in the Air!</h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5 max-w-xs font-bold">
+                      Astronauts use velcro straps to anchor food trays and catch floating juice with straw pouches!
+                    </p>
+                  </div>
+                )}
+
+                {activeLifeTab === 'sleeping' && (
+                  <div className="flex flex-col items-center">
+                    {/* Authentic Wall-Tied Sleeping Bag in ISS */}
+                    <div className="w-36 h-32 relative mb-2 flex items-center justify-center">
+                      <svg width="140" height="120" viewBox="0 0 140 120">
+                        {/* ISS Module Wall & Vent */}
+                        <rect x="10" y="10" width="120" height="100" rx="10" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+                        {/* Ventilation Fan */}
+                        <circle cx="110" cy="30" r="10" fill="#1e293b" stroke="#64748b" strokeWidth="1" />
+                        <line x1="102" y1="30" x2="118" y2="30" stroke="#94a3b8" />
+                        <line x1="110" y1="22" x2="110" y2="38" stroke="#94a3b8" />
+                        {/* Vertical Sleeping Bag */}
+                        <rect x="45" y="25" width="45" height="75" rx="12" fill="#7c3aed" stroke="#a78bfa" strokeWidth="2" />
+                        {/* Astronaut Face inside hood */}
+                        <circle cx="67" cy="40" r="10" fill="#fcd34d" />
+                        <path d="M 63 42 Q 67 44 71 42" fill="none" stroke="#0f172a" strokeWidth="1.5" />
+                        {/* Wall Anchor Tension Straps */}
+                        <line x1="20" y1="45" x2="45" y2="45" stroke="#f59e0b" strokeWidth="3" />
+                        <line x1="20" y1="75" x2="45" y2="75" stroke="#f59e0b" strokeWidth="3" />
+                        <circle cx="20" cy="45" r="3" fill="#ea580c" />
+                        <circle cx="20" cy="75" r="3" fill="#ea580c" />
+                        <text x="67" y="85" fill="#fef08a" fontSize="7" fontWeight="900" textAnchor="middle">STRAPPED TO WALL</text>
+                      </svg>
+                    </div>
+                    <h4 className="font-black text-sm text-amber-300">Tied Inside Sleeping Bags</h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5 max-w-xs font-bold">
+                      Astronauts zip into sleeping bags strapped securely to the wall so they don't drift into fans while sleeping!
                     </p>
                   </div>
                 )}
               </div>
 
-              <span className="text-[11px] font-black text-amber-300 bg-slate-900 px-3 py-1 rounded-full border border-indigo-400 z-10">
+              <span className="text-[10px] font-black text-amber-300 bg-slate-900 px-3 py-1 rounded-full border border-indigo-400 z-10">
                 Zero Gravity Freefall in Orbit (0g)
               </span>
             </div>
