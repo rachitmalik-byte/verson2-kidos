@@ -860,98 +860,256 @@ export const GolcondaFortWaterAndDefenseSim: React.FC<{ onCompleted?: () => void
 };
 
 /* ============================================================================
-   5. 🛢️ DYNAMIC PETROLEUM FRACTIONAL DISTILLATION (CHAPTER 5)
+   5. 🛢️ 2.5D PETROLEUM FRACTIONAL DISTILLATION & EVERYDAY FUELS LAB
    ============================================================================ */
 export const PetroleumRefineryAndSolarSim: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
-  const [boilerTemp, setBoilerTemp] = useState(270);
+  const [boilerTemp, setBoilerTemp] = useState<number>(270);
+  const [activeFuelId, setActiveFuelId] = useState<string | null>(null);
+
+  const fuels = [
+    {
+      id: 'lpg',
+      name: '1. LPG Cooking Gas',
+      temp: 20,
+      icon: '🍳',
+      vehicle: 'Kitchen Stove',
+      vehicleEmoji: '🔥🍳',
+      color: 'bg-rose-500',
+      activeColor: 'border-rose-400 bg-rose-50 text-rose-950',
+      tag: 'Boils at 20°C (Top / Coolest)',
+      desc: 'Liquid Petroleum Gas powers home kitchen cooking stoves and heaters!',
+    },
+    {
+      id: 'petrol',
+      name: '2. Petrol (Gasoline)',
+      temp: 70,
+      icon: '🚗',
+      vehicle: 'Family Car',
+      vehicleEmoji: '🚗💨',
+      color: 'bg-amber-500',
+      activeColor: 'border-amber-400 bg-amber-50 text-amber-950',
+      tag: 'Boils at 70°C',
+      desc: 'Clean, light fuel that powers lightweight cars, motorcycles, and scooters!',
+    },
+    {
+      id: 'kerosene',
+      name: '3. Aviation Kerosene',
+      temp: 170,
+      icon: '✈️',
+      vehicle: 'Jet Airplane',
+      vehicleEmoji: '✈️☁️',
+      color: 'bg-sky-500',
+      activeColor: 'border-sky-400 bg-sky-50 text-sky-950',
+      tag: 'Boils at 170°C',
+      desc: 'High-energy jet fuel that doesn\'t freeze even in -50°C high-altitude clouds!',
+    },
+    {
+      id: 'diesel',
+      name: '4. Heavy Diesel',
+      temp: 270,
+      icon: '🚌',
+      vehicle: 'City Bus & Truck',
+      vehicleEmoji: '🚌📦',
+      color: 'bg-emerald-500',
+      activeColor: 'border-emerald-400 bg-emerald-50 text-emerald-950',
+      tag: 'Boils at 270°C',
+      desc: 'Powerful high-torque fuel for heavy school buses, freight trucks, and trains!',
+    },
+    {
+      id: 'bitumen',
+      name: '5. Bitumen (Tar)',
+      temp: 350,
+      icon: '🛣️',
+      vehicle: 'Road Roller',
+      vehicleEmoji: '🛣️🚜',
+      color: 'bg-slate-700',
+      activeColor: 'border-slate-400 bg-slate-100 text-slate-950',
+      tag: 'Boils at 350°C (Bottom / Hottest)',
+      desc: 'Thick, sticky black residue used to pave smooth, waterproof highway roads!',
+    },
+  ];
 
   const handleTempChange = (val: number) => {
     setBoilerTemp(val);
-    if (val >= 380) {
+    if (val >= 350) {
       sounds.fanfare();
       voiceAssistant.speak(
-        'Crude oil fully separated! LPG gas, petrol for cars, kerosene for planes, diesel for buses, and bitumen tar for paving roads!'
+        'All 5 fuels separated! Thick crude oil is now powering stoves, cars, jet planes, city buses, and highway paving!'
       );
       if (onCompleted) onCompleted();
+    } else {
+      sounds.pop();
     }
   };
 
-  return (
-    <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-slate-700 shadow-xl flex flex-col items-center">
-      <h3 className="text-xl font-black text-slate-900 mb-2">Petroleum Fractional Distillation Lab</h3>
-      <p className="text-xs text-slate-600 font-bold mb-4 text-center max-w-md">
-        Adjust furnace temperature to boil and separate crude petroleum into 5 essential fuels!
-      </p>
+  const handleSelectFuel = (fuel: typeof fuels[0]) => {
+    sounds.pop();
+    setActiveFuelId(fuel.id);
+    setBoilerTemp(fuel.temp);
+    voiceAssistant.speak(`${fuel.name}. ${fuel.desc}`);
+  };
 
-      {/* Dynamic Fractional Tower Stage */}
-      <div className="relative w-full h-80 rounded-3xl overflow-hidden border-3 border-slate-700 shadow-2xl flex items-center justify-between p-6 bg-slate-950 text-white">
-        {/* Distillation Column with Rising Vapor */}
-        <div className="w-28 h-64 bg-slate-800 border-3 border-slate-500 rounded-2xl relative flex flex-col justify-between p-2 shadow-inner">
-          {/* Boiling Bubbles at Bottom */}
-          <div className="w-full h-14 bg-gradient-to-t from-red-600 to-amber-500 rounded-lg flex items-center justify-center text-[10px] font-black text-white">
-            🔥 {boilerTemp}°C
+  return (
+    <div className="w-full max-w-4xl bg-white p-5 sm:p-7 rounded-[36px] border-4 border-amber-500 shadow-2xl flex flex-col items-center select-none font-sans text-slate-900">
+      {/* Top Header HUD */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-4 border-b-2 border-slate-100 pb-3">
+        <div className="text-center sm:text-left">
+          <span className="text-xs font-black uppercase text-amber-800 bg-amber-100 px-3 py-1 rounded-full border border-amber-300 inline-block mb-1">
+            🛢️ 2.5D Petroleum Refinery Lab
+          </span>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            How Does Black Crude Oil Power Everyday Life?
+          </h3>
+        </div>
+
+        {/* Live Furnace Heat Badge */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 bg-slate-900 px-3.5 py-1.5 rounded-full text-white text-xs font-black shadow-sm">
+            <Flame className="w-4 h-4 text-amber-400 animate-pulse" />
+            <span>Refinery Furnace: {boilerTemp}°C</span>
+          </div>
+          <span className="text-xs font-black px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">
+            {fuels.filter((f) => boilerTemp >= f.temp).length} of 5 Fuels Flowing!
+          </span>
+        </div>
+      </div>
+
+      {/* ── 2.5D REFINERY TOWER & EVERYDAY VEHICLES VISUAL STAGE ── */}
+      <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-3 border-slate-700 shadow-2xl bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 text-white gap-4">
+        {/* Left: Crude Oil Boiler Furnace */}
+        <div className="flex flex-col items-center shrink-0">
+          <div className="w-24 h-20 bg-gradient-to-b from-slate-800 to-slate-950 border-3 border-amber-500/80 rounded-2xl flex flex-col items-center justify-center p-2 shadow-xl relative">
+            <span className="text-2xl">🛢️</span>
+            <span className="text-[10px] font-black text-amber-400">Crude Oil</span>
+            <div className="absolute -bottom-3 bg-red-600 px-2 py-0.5 rounded-full text-[9px] font-black border border-amber-300">
+              🔥 {boilerTemp}°C
+            </div>
+          </div>
+          <span className="text-[10px] font-bold text-slate-400 mt-4">Furnace Chamber</span>
+        </div>
+
+        {/* Middle: Clear Distillation Fraction Column with Bubbles */}
+        <div className="w-28 sm:w-32 h-64 sm:h-72 bg-slate-900/90 border-3 border-slate-600 rounded-3xl relative flex flex-col justify-between p-2 shadow-inner overflow-hidden shrink-0">
+          {/* Internal Tower Trays & Rising Vapor Stream */}
+          <div className="absolute inset-0 flex flex-col justify-around py-4 pointer-events-none opacity-40">
+            {[1, 2, 3, 4, 5].map((t) => (
+              <div key={t} className="w-full h-1 bg-amber-400 border-b border-white/40" />
+            ))}
           </div>
 
-          {/* Animated Rising Vapor Vanes */}
-          <div className="flex flex-col gap-3 my-auto">
-            {[1, 2, 3].map((v) => (
+          {/* Animated Vapor Bubbles */}
+          <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-around py-2">
+            {[1, 2, 3, 4].map((b) => (
               <motion.div
-                key={v}
-                animate={{ y: [0, -15, 0], opacity: [0.4, 0.9, 0.4] }}
-                transition={{ repeat: Infinity, duration: 1.2 + v * 0.3 }}
-                className="w-full h-1 bg-amber-400/60 rounded-full"
+                key={b}
+                animate={{ y: [15, -15], opacity: [0.3, 0.9, 0.3], scale: [0.8, 1.2, 0.8] }}
+                transition={{ repeat: Infinity, duration: 1.4 + b * 0.3, ease: 'easeInOut' }}
+                className="w-3 h-3 rounded-full bg-amber-300/60 shadow-[0_0_8px_#fde047]"
               />
             ))}
           </div>
-          <span className="text-[8px] font-black text-center text-slate-400">Fractional Tower</span>
+
+          <div className="text-[9px] font-black text-center text-sky-300 z-10">
+            ❄️ 20°C (Cool Top)
+          </div>
+          <div className="text-[9px] font-black text-center text-slate-300 z-10">
+            ⚗️ Vapor Column
+          </div>
+          <div className="text-[9px] font-black text-center text-rose-400 z-10">
+            🔥 350°C (Hot Base)
+          </div>
         </div>
 
-        {/* Output Condensed Fractions based on Temp! */}
-        <div className="flex-1 flex flex-col gap-2 ml-6">
-          {[
-            { name: '1. LPG Gas (Cooking)', temp: 20, color: 'bg-rose-500', active: boilerTemp >= 20 },
-            { name: '2. Petrol (Car Fuel)', temp: 70, color: 'bg-amber-500', active: boilerTemp >= 70 },
-            { name: '3. Kerosene (Jet Fuel)', temp: 170, color: 'bg-sky-500', active: boilerTemp >= 170 },
-            { name: '4. Diesel (Bus / Truck)', temp: 270, color: 'bg-emerald-500', active: boilerTemp >= 270 },
-            { name: '5. Bitumen (Tar for Roads)', temp: 350, color: 'bg-slate-700', active: boilerTemp >= 350 },
-          ].map((f) => (
-            <div
-              key={f.name}
-              className={`p-2 rounded-xl text-xs font-black flex items-center justify-between border transition-all ${
-                f.active
-                  ? `${f.color} text-white shadow-md scale-102 border-white/50`
-                  : 'bg-slate-900 text-slate-600 border-slate-800'
+        {/* Right: 5 Visual Everyday Fuel Output Stations (Connected Pipes) */}
+        <div className="flex-1 w-full flex flex-col justify-between gap-1.5 z-10">
+          {fuels.map((fuel) => {
+            const isCondensed = boilerTemp >= fuel.temp;
+            return (
+              <div
+                key={fuel.id}
+                onClick={() => handleSelectFuel(fuel)}
+                className={`p-2 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between gap-2 ${
+                  isCondensed
+                    ? `${fuel.color} text-white shadow-lg scale-101 border-white/60`
+                    : 'bg-slate-900/80 text-slate-500 border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{fuel.icon}</span>
+                  <div>
+                    <span className="font-black text-xs block">{fuel.name}</span>
+                    <span className="text-[10px] opacity-90 font-bold">
+                      {fuel.vehicleEmoji} {fuel.vehicle}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[11px] font-black block">
+                    {fuel.temp}°C
+                  </span>
+                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
+                    isCondensed ? 'bg-white/30 text-white' : 'bg-slate-800 text-slate-600'
+                  }`}>
+                    {isCondensed ? '✓ FLOWING' : '⏳ NEEDS HEAT'}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Furnace Temperature Slider & Quick Fuel Preset Buttons */}
+      <div className="w-full flex flex-col gap-3 mt-4">
+        {/* Quick Fuel Select Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 w-full">
+          {fuels.map((fuel) => (
+            <button
+              key={fuel.id}
+              onClick={() => handleSelectFuel(fuel)}
+              className={`p-2.5 rounded-2xl text-xs font-black border-2 cursor-pointer transition-all flex flex-col items-center justify-center gap-1 shadow-xs ${
+                boilerTemp >= fuel.temp
+                  ? 'bg-amber-400 border-amber-500 text-slate-950 shadow-md scale-102 font-black ring-2 ring-amber-300'
+                  : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-amber-50'
               }`}
             >
-              <span>{f.name}</span>
-              <span className="text-[10px]">{f.temp}°C {f.active ? '✓ CONDENSING' : '⏳'}</span>
-            </div>
+              <span className="text-lg">{fuel.icon}</span>
+              <span className="font-black text-[11px]">{fuel.vehicle}</span>
+              <span className="text-[9px] text-slate-500 font-bold">{fuel.temp}°C</span>
+            </button>
           ))}
         </div>
-      </div>
 
-      {/* Furnace Temperature Slider */}
-      <div className="w-full max-w-lg my-4 flex flex-col gap-2">
-        <div className="flex justify-between items-center text-xs font-black text-slate-700">
-          <span>Cool (20°C)</span>
-          <span className="text-amber-700 font-black text-sm bg-amber-100 px-3 py-1 rounded-full">
-            Furnace Heat: {boilerTemp}°C
+        {/* Temperature Slider */}
+        <div className="w-full flex items-center gap-3 bg-slate-50 p-3.5 rounded-2xl border-2 border-slate-200">
+          <span className="text-xs font-black text-slate-700 shrink-0 flex items-center gap-1.5">
+            <Flame className="w-4 h-4 text-amber-500" />
+            <span>Furnace Temperature:</span>
           </span>
-          <span>Boiling Max (400°C)</span>
+          <input
+            type="range"
+            min="20"
+            max="380"
+            step="10"
+            value={boilerTemp}
+            onChange={(e) => handleTempChange(parseInt(e.target.value, 10))}
+            className="w-full accent-amber-500 h-2 bg-slate-200 rounded-lg cursor-pointer"
+          />
+          <span className="text-xs font-black text-slate-900 w-20 text-right bg-white px-2 py-1 rounded-md border border-slate-300">
+            {boilerTemp}°C
+          </span>
         </div>
-        <input
-          type="range"
-          min="20"
-          max="400"
-          step="20"
-          value={boilerTemp}
-          onChange={(e) => handleTempChange(parseInt(e.target.value, 10))}
-          className="w-full h-4 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
-        />
-      </div>
 
-      <div className="w-full bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 text-center text-xs font-bold text-slate-800">
-        🛢️ <strong>Fractional Distillation Law:</strong> Different hydrocarbons boil and turn to gas at different temperatures. By heating crude oil, we collect cooking gas at the top and road tar at the bottom!
+        {/* 5th Grade Key Teaching Secret */}
+        <div className="text-xs font-bold text-slate-700 bg-amber-50 p-3.5 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div>
+            💡 <strong>5th Grade Science Secret (Fractional Distillation):</strong>
+            <p className="text-[11px] text-slate-600 mt-0.5">
+              Crude petroleum is a natural recipe of many hydrocarbons mixed together. Because <strong>lighter fuels boil at lower temperatures</strong>, heating crude oil separates it into cooking gas (20°C), car petrol (70°C), jet fuel (170°C), bus diesel (270°C), and road tar (350°C)!
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
