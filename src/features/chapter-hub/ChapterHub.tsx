@@ -149,147 +149,93 @@ export function ChapterHub() {
           <AudioNavBarControls showProfile={true} />
         </div>
 
-        {/* ── Chapter Hero Banner with Progress Gauge ── */}
-        <div id="chapter-hero-banner" className="bg-white/95 rounded-3xl md:rounded-[36px] p-6 md:p-8 border-4 border-amber-400 shadow-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
-          <div className="relative">
-            <Pip mood={isAllComplete ? 'celebrating' : 'idle'} size="lg" />
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              className="absolute -top-2 -right-2 bg-amber-400 text-slate-950 p-1.5 rounded-full shadow-md border-2 border-white"
-            >
-              <Sparkles className="w-4 h-4 fill-slate-950" />
-            </motion.div>
+        {/* ── Compact Chapter Hero Header ── */}
+        <div id="chapter-hero-banner" className="bg-white/95 rounded-2xl p-3.5 sm:p-4 border-2 border-amber-400 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3 font-sans">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="shrink-0 bg-amber-50 p-1 rounded-2xl border border-amber-200 shadow-2xs">
+              <Pip mood={isAllComplete ? 'celebrating' : 'idle'} size={48} />
+            </div>
+
+            <div>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-950 rounded-full text-[10px] font-black uppercase">
+                  Class 5 • Theme 6
+                </span>
+                <span className="text-[11px] font-bold text-slate-500">
+                  {completedMissions.length}/{missions.length} Done ({progressPercent}%)
+                </span>
+              </div>
+              <h2 className="text-base sm:text-lg font-black text-slate-900 leading-tight mt-0.5" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                The World of Materials 🧪✨
+              </h2>
+            </div>
           </div>
 
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
-              <span className="px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-xs font-black uppercase tracking-wider">
-                CBSE Class 5 EVS • Chapter 3
-              </span>
-              <span className="px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                <span>{totalStars} Science Stars</span>
-              </span>
-              <span className="px-3 py-1 bg-sky-100 border border-sky-300 text-sky-900 rounded-full text-xs font-black uppercase tracking-wider">
-                {progressPercent}% Mastered
-              </span>
-            </div>
-
-            <h1
-              className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight"
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+          {/* Clean, Compact Horizontal Nav Pills */}
+          <div className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-end w-full sm:w-auto">
+            <button
+              onClick={() => {
+                sounds.pop();
+                setActiveTab('missions');
+              }}
+              className={`px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1 cursor-pointer transition-all ${
+                activeTab === 'missions'
+                  ? 'bg-amber-400 text-slate-950 shadow-xs ring-1 ring-amber-500'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+              }`}
             >
-              The World of Natural & Synthetic Materials 🧪✨
-            </h1>
-            <p className="text-xs md:text-sm font-bold text-slate-600 mt-1 max-w-xl">
-              Welcome back, {child?.name || 'Young Scientist'}! Explore Class 5 EVS hands-on laboratory missions with real materials, interactive simulations, and speech challenges!
-            </p>
+              <Compass className="w-3.5 h-3.5" />
+              <span>Missions ({missions.length})</span>
+            </button>
 
-            {/* Chapter Progress Bar */}
-            <div className="w-full max-w-md mt-3 bg-slate-100 rounded-full h-3.5 p-0.5 border border-slate-300 shadow-inner">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-                className="bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-500 h-full rounded-full shadow-xs"
-              />
-            </div>
+            <button
+              onClick={() => {
+                sounds.pop();
+                voiceAssistant.stop();
+                navigate('/intro/materials');
+              }}
+              className="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-950 font-black text-xs flex items-center gap-1 cursor-pointer transition-all"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-sky-600" />
+              <span>Story</span>
+            </button>
 
-            {/* Quick Actions & View Switcher */}
-            <div className="flex flex-wrap gap-2.5 mt-4 justify-center md:justify-start">
-              <button
-                id="chapter-story-intro-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  navigate('/intro/materials');
-                }}
-                className="font-black text-xs py-2.5 px-4 rounded-2xl shadow-md bg-gradient-to-r from-sky-500 to-indigo-600 text-white flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all border-2 border-sky-400 ring-2 ring-sky-300"
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>📖 Play Chapter Story Intro</span>
-              </button>
+            <button
+              onClick={() => {
+                sounds.pop();
+                setActiveTab('video');
+              }}
+              className={`px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1 cursor-pointer transition-all ${
+                activeTab === 'video'
+                  ? 'bg-sky-500 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+              }`}
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>Video</span>
+            </button>
 
-              <button
-                id="tab-missions-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  setActiveTab('missions');
-                }}
-                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
-                  activeTab === 'missions'
-                    ? 'bg-amber-400 border-2 border-amber-600 text-slate-950 ring-2 ring-amber-300'
-                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
-                }`}
-              >
-                <Compass className="w-3.5 h-3.5" />
-                <span>13 Hands-on Missions 🗺️</span>
-              </button>
+            <button
+              onClick={() => {
+                sounds.pop();
+                navigate('/mystery-lab');
+              }}
+              className="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-black text-xs flex items-center gap-1 cursor-pointer transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>Quiz</span>
+            </button>
 
-              <button
-                id="tab-video-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  setActiveTab('video');
-                }}
-                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
-                  activeTab === 'video'
-                    ? 'bg-sky-500 border-2 border-sky-700 text-white ring-2 ring-sky-300 shadow-sky-200'
-                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
-                }`}
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Video Lab (Synced Chapters) 🎬</span>
-              </button>
-
-
-
-              <button
-                id="tab-guidebook-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  setActiveTab('guidebook');
-                }}
-                className={`font-black text-xs py-2.5 px-4 rounded-2xl shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
-                  activeTab === 'guidebook'
-                    ? 'bg-indigo-600 border-2 border-indigo-800 text-white ring-2 ring-indigo-300 shadow-indigo-200'
-                    : 'bg-white/90 hover:bg-white text-slate-700 border-2 border-slate-200'
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Science Field Guidebook 📖</span>
-              </button>
-
-              <button
-                id="chapter-mystery-quiz-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  navigate('/mystery-lab');
-                }}
-                className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all"
-              >
-                <Sparkles className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
-                <span>Mystery Specimen Quiz Lab 🔬 (+25🪙)</span>
-              </button>
-
-              <button
-                id="chapter-journal-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  navigate('/discovery-book');
-                }}
-                className="px-4 py-2.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-xs transition-all"
-              >
-                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Field Journal ({discoveries.length})</span>
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                sounds.pop();
+                navigate('/discovery-book');
+              }}
+              className="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-950 font-black text-xs flex items-center gap-1 cursor-pointer transition-all"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Journal ({discoveries.length})</span>
+            </button>
           </div>
         </div>
 

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { Pip } from '@/components/pip/Pip';
-import { Sparkles, Flame, CheckCircle2, HelpCircle, ArrowRight, Trophy, Star } from 'lucide-react';
+import { Sparkles, Flame, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface DailyRiddle {
   id: string;
@@ -16,53 +15,51 @@ interface DailyRiddle {
 const DAILY_RIDDLES: DailyRiddle[] = [
   {
     id: 'riddle-1',
-    question: "Why do raindrops slide right off a duck's feathers and a polyester raincoat?",
+    question: "Why do raindrops slide right off a polyester raincoat?",
     options: [
-      { text: 'Coated in waterproof hydrophobic polymers that repel water!', isCorrect: true, explanation: 'Exactly! Both duck oil and polyester are hydrophobic and refuse to absorb water!' },
-      { text: 'Water gets too scared to touch them', isCorrect: false, explanation: "Haha, water doesn't have feelings! It's chemistry!" },
-      { text: 'They are made of heavy metal steel', isCorrect: false, explanation: 'Nope! If a duck were metal, it would sink like a stone!' },
+      { text: 'Plastic fibers are waterproof and repel water droplets!', isCorrect: true, explanation: 'Correct! Polyester is a synthetic plastic fiber that refuses to absorb water!' },
+      { text: 'Water is afraid of the bright raincoat colors', isCorrect: false, explanation: "Haha, water doesn't have eyes! It's material science!" },
+      { text: 'Raincoats are made of heavy metal steel', isCorrect: false, explanation: 'Nope! Raincoats are lightweight plastic fibers!' },
     ],
-    funFact: '🦆 Duck feathers have natural wax that works just like synthetic polyester raincoats!',
+    funFact: '🦆 Duck feathers have natural wax that works just like synthetic raincoats!',
     badgeEmoji: '🦆🌧️',
   },
   {
     id: 'riddle-2',
-    question: "Why doesn't a chef's plastic spatula melt in a 100°C soup pot?",
+    question: "Why doesn't a hard plastic kettle handle melt in boiling heat?",
     options: [
-      { text: 'Made of thermosetting plastic with locked 3D crosslinks!', isCorrect: true, explanation: 'Spot on! Thermoset plastics like Bakelite have locked 3D molecular bonds that resist boiling heat!' },
-      { text: 'The soup is secretly made of ice cream', isCorrect: false, explanation: 'Yum, but hot soup is 100°C!' },
-      { text: 'It melts every 5 minutes and we buy new ones', isCorrect: false, explanation: 'That would get very expensive!' },
+      { text: 'Made of heat-proof Bakelite plastic with locked bonds!', isCorrect: true, explanation: 'Spot on! Bakelite is a thermoset plastic that never melts once heated!' },
+      { text: 'The kettle handle stays frozen like ice', isCorrect: false, explanation: 'The kettle gets boiling hot, but the handle stays safe!' },
+      { text: 'It melts every day and we glue it back', isCorrect: false, explanation: 'That would take too much glue!' },
     ],
-    funFact: '🍳 Thermosetting polymers were invented in 1907 and never melt once cured!',
+    funFact: '🍳 Bakelite was invented in 1907 and is the world’s first synthetic plastic!',
     badgeEmoji: '🍳🔥',
   },
   {
     id: 'riddle-3',
-    question: 'Why are electrical wires wrapped in bright plastic instead of bare copper?',
+    question: 'Why are electric wires wrapped in plastic instead of bare copper?',
     options: [
-      { text: 'Plastic is an electrical insulator that blocks shocks!', isCorrect: true, explanation: 'Correct! Plastic polymer bonds hold electrons tightly so current stays inside the wire!' },
-      { text: 'To make the wire look like rainbow spaghetti', isCorrect: false, explanation: 'It looks colorful, but safety is the real superpower!' },
-      { text: 'Because copper metal dissolves in air', isCorrect: false, explanation: "Copper doesn't dissolve in air, but it conducts dangerous shocks without insulation!" },
+      { text: 'Plastic is an electrical insulator that blocks dangerous shocks!', isCorrect: true, explanation: 'Correct! Plastic holds electric charges inside so you can safely touch the wire!' },
+      { text: 'To make the wires look like colorful noodles', isCorrect: false, explanation: 'It looks colorful, but safety is the real superpower!' },
+      { text: 'Copper metal evaporates into thin air', isCorrect: false, explanation: "Copper doesn't evaporate, but it conducts dangerous shocks without plastic!" },
     ],
-    funFact: '⚡ PVC plastic insulation can block over 10,000 Volts of electricity!',
+    funFact: '⚡ PVC plastic insulation protects you from thousands of Volts of electricity!',
     badgeEmoji: '⚡🛡️',
   },
 ];
 
 export const DailyCuriosityQuest: React.FC = () => {
-  const [currentRiddle, setCurrentRiddle] = useState<DailyRiddle>(DAILY_RIDDLES[1]);
+  const [currentRiddle, setCurrentRiddle] = useState<DailyRiddle>(DAILY_RIDDLES[2]);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [streakCount, setStreakCount] = useState<number>(8);
+  const [streakCount, setStreakCount] = useState<number>(13);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
 
   useEffect(() => {
     const dayIndex = new Date().getDate() % DAILY_RIDDLES.length;
     setCurrentRiddle(DAILY_RIDDLES[dayIndex]);
-
     const savedStreak = localStorage.getItem('kidos_daily_streak');
-    if (savedStreak) {
-      setStreakCount(parseInt(savedStreak, 10));
-    }
+    if (savedStreak) setStreakCount(parseInt(savedStreak, 10));
   }, []);
 
   const handleSelectOption = (idx: number) => {
@@ -84,93 +81,76 @@ export const DailyCuriosityQuest: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-white/90 backdrop-blur-md rounded-2xl border-2 border-amber-300 shadow-md p-3.5 sm:p-4 font-sans select-none relative overflow-hidden">
-      {/* Top Header Row (Compact) */}
-      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-amber-100 mb-2.5">
-        <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-[10px] uppercase rounded-full shadow-2xs flex items-center gap-1">
+    <div className="w-full bg-white/95 backdrop-blur-md rounded-2xl border-2 border-amber-300 shadow-sm font-sans select-none overflow-hidden">
+      {/* ── Compact Header Bar (Always Visible, ~42px) ── */}
+      <div
+        onClick={() => {
+          sounds.pop();
+          setIsExpanded(!isExpanded);
+        }}
+        className="px-3.5 py-2 flex items-center justify-between gap-2 cursor-pointer hover:bg-amber-50/60 transition-colors"
+      >
+        <div className="flex items-center gap-2 overflow-hidden">
+          <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] uppercase rounded-full shrink-0 flex items-center gap-1">
             <Sparkles className="w-3 h-3 fill-slate-950" />
-            <span>Daily Mystery Riddle</span>
+            <span>Daily Riddle</span>
           </span>
-          <span className="text-base">{currentRiddle.badgeEmoji}</span>
+          <span className="text-xs font-black text-slate-800 truncate">
+            {currentRiddle.badgeEmoji} {currentRiddle.question}
+          </span>
         </div>
 
-        {/* Streak Pill */}
-        <div className="px-2.5 py-0.5 bg-amber-50 border border-amber-300 text-amber-950 font-black text-[11px] rounded-full flex items-center gap-1 shadow-2xs">
-          <Flame className="w-3 h-3 text-orange-500 fill-orange-500 animate-pulse" />
-          <span>{streakCount}d Streak</span>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="px-2 py-0.5 bg-amber-100 text-amber-950 font-black text-[10px] rounded-full flex items-center gap-1">
+            <Flame className="w-3 h-3 text-orange-500 fill-orange-500" />
+            <span>{streakCount}d</span>
+          </div>
+
+          <button className="p-1 rounded-full text-slate-400 hover:text-slate-700">
+            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 
-      {/* Riddle Question & Compact Option Pills */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
-        {/* Question Text (5 Cols) */}
-        <div className="lg:col-span-5 flex items-start gap-2.5">
-          <div className="shrink-0 hidden sm:block">
-            <Pip mood={isAnswered ? 'celebrating' : 'idle'} size="sm" />
-          </div>
-          <div>
-            <h4 className="font-black text-slate-900 text-xs sm:text-sm leading-snug">
-              {currentRiddle.question}
-            </h4>
-            <span className="text-[10px] font-bold text-amber-700 block mt-0.5">
-              Solve to win +50 Science XP & keep your streak!
-            </span>
-          </div>
-        </div>
-
-        {/* 3 Compact Answer Pills (7 Cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-1.5">
-          {currentRiddle.options.map((opt, idx) => {
-            const isSelected = selectedIdx === idx;
-            const letter = String.fromCharCode(65 + idx);
-
-            return (
-              <motion.button
-                key={idx}
-                whileHover={{ scale: 1.01, x: 2 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => handleSelectOption(idx)}
-                disabled={isAnswered && !isSelected}
-                className={`w-full px-3 py-2 rounded-xl border text-left font-bold text-xs flex items-center justify-between gap-2 cursor-pointer transition-all ${
-                  isSelected && opt.isCorrect
-                    ? 'bg-emerald-100 border-emerald-500 text-emerald-950 ring-1 ring-emerald-300'
-                    : isSelected && !opt.isCorrect
-                    ? 'bg-rose-100 border-rose-400 text-rose-950'
-                    : 'bg-slate-50 border-slate-200 hover:bg-amber-50 hover:border-amber-300 text-slate-700'
-                }`}
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] font-black shrink-0 ${
-                    isSelected && opt.isCorrect
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-slate-200 text-slate-700'
-                  }`}>
-                    {letter}
+      {/* ── Expandable Question Body ── */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="px-3.5 pb-3 pt-1 border-t border-amber-100 bg-amber-50/40"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1">
+              {currentRiddle.options.map((opt, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSelectOption(idx)}
+                  className={`p-2.5 rounded-xl text-left text-xs font-bold transition-all cursor-pointer border ${
+                    selectedIdx === idx
+                      ? opt.isCorrect
+                        ? 'bg-emerald-500 border-emerald-600 text-white font-black shadow-xs'
+                        : 'bg-rose-400 border-rose-500 text-white'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="font-black mr-1 text-[10px] opacity-75">
+                    {String.fromCharCode(65 + idx)}.
                   </span>
-                  <span className="truncate leading-tight">{opt.text}</span>
-                </div>
+                  <span>{opt.text}</span>
+                </button>
+              ))}
+            </div>
 
-                {isSelected && opt.isCorrect && (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                )}
-              </motion.button>
-            );
-          })}
-
-          {/* Success Banner */}
-          {isAnswered && (
-            <motion.div
-              initial={{ opacity: 0, y: 3 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="px-3 py-1.5 bg-emerald-50 border border-emerald-300 rounded-xl text-[11px] font-bold text-emerald-900 flex items-center justify-between mt-0.5"
-            >
-              <span className="truncate">{currentRiddle.funFact}</span>
-              <span className="text-emerald-700 font-black shrink-0 ml-2">+50 XP 🌟</span>
-            </motion.div>
-          )}
-        </div>
-      </div>
+            {isAnswered && (
+              <div className="mt-2 p-2 bg-emerald-100 text-emerald-950 rounded-xl text-xs font-bold text-center border border-emerald-300">
+                🎉 {currentRiddle.funFact}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
