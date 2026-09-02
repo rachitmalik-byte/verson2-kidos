@@ -25,6 +25,7 @@ import { GlobalWordExplainer } from '@/components/dictionary/GlobalWordExplainer
 import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
 import { TryWithMeEngine } from '@/components/try-with-me/TryWithMeEngine';
 import { EnvironmentFXOverlay } from '@/components/effects/EnvironmentFXOverlay';
+import { AtmosphereControlWidget } from '@/components/effects/AtmosphereControlWidget';
 import { LivePipVoiceSidecar } from '@/components/ai/LivePipVoiceSidecar';
 
 export function App() {
@@ -91,6 +92,9 @@ export function App() {
 
         {/* Global Full-Screen Interactive Environmental Effects Overlay */}
         <EnvironmentFXOverlay />
+
+        {/* Global Atmosphere & Day/Night Mode Switcher */}
+        <AtmosphereControlWidget />
 
         {/* Global Developer Super-Hacks Drawer */}
         <DevDrawer />
