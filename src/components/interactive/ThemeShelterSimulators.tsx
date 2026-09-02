@@ -1,6 +1,9 @@
 import { ThreeEverestClimbLab } from "@/components/three-lab/ThreeEverestClimbLab";
 import { ThreePashminaThermalLab } from "@/components/three-lab/ThreePashminaThermalLab";
 import React, { useState } from 'react';
+import golcondaWheelImg from '@/assets/images/theme-shelter/golconda_persian_wheel.jpg';
+import golcondaBastionImg from '@/assets/images/theme-shelter/golconda_fort_bastions.jpg';
+import golcondaDarwazaImg from '@/assets/images/theme-shelter/golconda_fateh_darwaza.jpg';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -532,12 +535,14 @@ export const ZeroGravitySpaceStationSim: React.FC<{ onCompleted?: () => void }> 
 };
 
 /* ============================================================================
-   4. 🏰 2.5D GOLCONDA FORT PERSIAN WATER WHEEL & BASTION ARCHITECTURE LAB
+   4. 🏰 GOLCONDA FORT WATER WHEEL & DEFENSE LAB (AUTHENTIC IMAGES & HUD)
    ============================================================================ */
 export const GolcondaFortWaterAndDefenseSim: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
+  const [activeTab, setActiveTab] = useState<'wheel' | 'bastion' | 'acoustic'>('wheel');
   const [waterLiftedFeet, setWaterLiftedFeet] = useState<number>(25);
   const [isPumping, setIsPumping] = useState<boolean>(false);
-  const [showBastionRays, setShowBastionRays] = useState<boolean>(false);
+  const [showRadar, setShowRadar] = useState<boolean>(true);
+  const [isClapping, setIsClapping] = useState<boolean>(false);
 
   const isFull = waterLiftedFeet >= 100;
 
@@ -559,13 +564,17 @@ export const GolcondaFortWaterAndDefenseSim: React.FC<{ onCompleted?: () => void
       voiceAssistant.speak(`Turned the Persian wheel! Lifted stepwell water to ${newLift} feet!`);
     }
 
-    setTimeout(() => setIsPumping(false), 800);
+    setTimeout(() => setIsPumping(false), 600);
   };
 
-  const handleReset = () => {
+  const handleClap = () => {
     sounds.pop();
-    setWaterLiftedFeet(0);
-    setIsPumping(false);
+    setIsClapping(true);
+    sounds.sparkle();
+    voiceAssistant.speak(
+      'Clapped at Fateh Darwaza! The acoustic dome concentrates sound waves, carrying the warning echo 1 kilometer up to the king’s palace at Bala Hissar!'
+    );
+    setTimeout(() => setIsClapping(false), 2000);
   };
 
   return (
@@ -573,287 +582,302 @@ export const GolcondaFortWaterAndDefenseSim: React.FC<{ onCompleted?: () => void
       {/* Top Header HUD */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-4 border-b-2 border-slate-100 pb-3">
         <div className="text-center sm:text-left">
-          <span className="text-xs font-black uppercase text-amber-800 bg-amber-100 px-3 py-1 rounded-full border border-amber-300 inline-block mb-1">
-            🏰 2.5D Ancient Hydraulic Engineering Lab
+          <span className="text-xs font-black uppercase text-amber-800 bg-amber-100 px-3 py-1 rounded-full border border-amber-300 inline-block mb-1 shadow-xs">
+            🏰 Ancient Hydraulic & Defensive Engineering
           </span>
           <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            Golconda Fort Water Lift & 360° Bastion Lab
+            Golconda Fort: Persian Water Lift & Bastion Architecture
           </h3>
         </div>
 
-        {/* Live Hydraulic Gauges */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 bg-slate-900 px-3.5 py-1.5 rounded-full text-white text-xs font-black shadow-sm">
-            <Droplets className="w-4 h-4 text-sky-400" />
-            <span>Water Lifted: {waterLiftedFeet} ft / 100 ft</span>
-          </div>
-
-          <button
-            onClick={() => {
-              sounds.pop();
-              setShowBastionRays(!showBastionRays);
-            }}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-black border cursor-pointer transition-all shadow-sm ${
-              showBastionRays
-                ? 'bg-amber-500 text-slate-950 border-amber-600 ring-2 ring-amber-300 font-black'
-                : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
-            }`}
-          >
-            🛡️ {showBastionRays ? '360° Bastion Sight: ON' : '360° Bastion Sight'}
-          </button>
+        {/* 3 Nav Tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+          {[
+            { id: 'wheel', label: '💧 1. Persian Water Wheel (Rahat)' },
+            { id: 'bastion', label: '🛡️ 2. 360° Bastion Wall Defense' },
+            { id: 'acoustic', label: '👏 3. 1km Acoustic Echo Dome' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                sounds.pop();
+                setActiveTab(tab.id as any);
+              }}
+              className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all cursor-pointer ${
+                activeTab === tab.id
+                  ? 'bg-amber-500 text-slate-950 font-black shadow-md ring-2 ring-amber-300'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* ── 2.5D ARCHITECTURAL CROSS-SECTION OF GOLCONDA FORT ── */}
-      <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-3 border-amber-600 shadow-2xl bg-gradient-to-b from-amber-100 via-sky-100 to-amber-50">
-        <svg className="w-full h-full" viewBox="0 0 520 320" preserveAspectRatio="none">
-          <defs>
-            {/* Ancient Stone Wall Gradient */}
-            <linearGradient id="fortStoneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#78350f" />
-              <stop offset="40%" stopColor="#92400e" />
-              <stop offset="100%" stopColor="#451a03" />
-            </linearGradient>
-
-            {/* Stepwell Underground Water Gradient */}
-            <linearGradient id="wellWaterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="100%" stopColor="#0369a1" />
-            </linearGradient>
-
-            {/* Bronze Gear Wheel Gradient */}
-            <linearGradient id="bronzeGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f59e0b" />
-              <stop offset="50%" stopColor="#b45309" />
-              <stop offset="100%" stopColor="#78350f" />
-            </linearGradient>
-
-            {/* Terracotta Clay Pipe Gradient */}
-            <linearGradient id="clayPipeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c2410c" />
-              <stop offset="100%" stopColor="#ea580c" />
-            </linearGradient>
-          </defs>
-
-          {/* ── 1. BACKGROUND GRANITE FORTRESS HILL & SKY ── */}
-          <polygon points="0,320 0,140 180,180 340,110 520,60 520,320" fill="#fed7aa" opacity="0.4" />
-
-          {/* ── 2. PROTRUDING 360° DEFENSIVE BASTION (BURJ) - (LEFT SECTION) ── */}
-          <g transform="translate(45, 110)">
-            {/* Semicircular Bastion Tower */}
-            <path
-              d="M -30,170 L -30,20 C -30,-15 30,-15 30,20 L 30,170 Z"
-              fill="url(#fortStoneGrad)"
-              stroke="#291204"
-              strokeWidth="2.5"
+      {/* ════════════════════════════════════════════════════════════════
+          STATION 1: PERSIAN WATER WHEEL (RAHAT) & 100FT PALACE RESERVOIR
+      ════════════════════════════════════════════════════════════════ */}
+      {activeTab === 'wheel' && (
+        <div className="w-full flex flex-col items-center">
+          {/* Main Visual Stage with Authentic Historic Photo + Mechanical Overlay */}
+          <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-4 border-amber-600 shadow-2xl bg-slate-950 flex flex-col sm:flex-row items-center justify-between p-6">
+            {/* Authentic Background Photo with Blur & Dimmer */}
+            <img
+              src={golcondaWheelImg}
+              alt="Golconda Fort Persian Wheel"
+              className="absolute inset-0 w-full h-full object-cover opacity-35 filter blur-xs"
             />
-            {/* Crenellations (Teeth) on Top */}
-            <rect x="-30" y="-12" width="12" height="14" fill="#78350f" stroke="#291204" strokeWidth="1.5" />
-            <rect x="-6" y="-12" width="12" height="14" fill="#78350f" stroke="#291204" strokeWidth="1.5" />
-            <rect x="18" y="-12" width="12" height="14" fill="#78350f" stroke="#291204" strokeWidth="1.5" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
 
-            {/* Narrow Arrow Slit Windows */}
-            <rect x="-5" y="25" width="10" height="26" rx="2" fill="#0c0a09" stroke="#92400e" strokeWidth="1" />
-            <rect x="-5" y="75" width="10" height="26" rx="2" fill="#0c0a09" stroke="#92400e" strokeWidth="1" />
+            {/* Left: Deep Stepwell & Rotating Persian Gear Wheel */}
+            <div className="relative z-10 flex flex-col items-center">
+              <span className="text-[10px] font-black text-amber-300 bg-slate-900/90 px-3 py-1 rounded-full border border-amber-400 mb-2 shadow-md">
+                Subterranean Stepwell (Baoli)
+              </span>
 
-            {/* Soldier on Bastion */}
-            <circle cx="0" cy="-20" r="6" fill="#fef08a" />
-            <rect x="-4" y="-14" width="8" height="10" fill="#dc2626" />
+              {/* Animated Rotating Persian Wheel */}
+              <motion.div
+                animate={isPumping ? { rotate: 360 } : {}}
+                transition={{ duration: 0.6, ease: 'linear' }}
+                className="w-36 h-36 sm:w-44 sm:h-44 rounded-full border-6 border-amber-600 bg-amber-950/70 relative flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.4)]"
+              >
+                {/* Gear Spokes */}
+                <div className="w-full h-1.5 bg-amber-500 absolute" />
+                <div className="h-full w-1.5 bg-amber-500 absolute" />
+                <div className="w-full h-1.5 bg-amber-500 absolute rotate-45" />
+                <div className="w-full h-1.5 bg-amber-500 absolute -rotate-45" />
 
-            <text x="0" y="145" fill="#fef3c7" fontSize="8" fontWeight="900" textAnchor="middle">
-              360° BASTION
-            </text>
+                {/* Central Axle */}
+                <div className="w-8 h-8 rounded-full bg-amber-400 border-3 border-amber-900 shadow-md flex items-center justify-center z-10">
+                  <div className="w-2.5 h-2.5 rounded-full bg-slate-950" />
+                </div>
 
-            {/* 360° Vision Field Rays (When Toggled) */}
-            {showBastionRays && (
-              <g opacity="0.6">
-                <polygon points="0,25 -80,-50 -60,120" fill="#f59e0b" opacity="0.3" />
-                <line x1="0" y1="25" x2="-80" y2="-50" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,3" />
-                <line x1="0" y1="25" x2="-60" y2="120" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,3" />
-                <text x="-45" y="25" fill="#78350f" fontSize="7" fontWeight="900">
-                  Full 360° Vision
-                </text>
-              </g>
-            )}
-          </g>
+                {/* 4 Clay Water Buckets Mounted on Rim */}
+                {[0, 90, 180, 270].map((deg) => (
+                  <div
+                    key={deg}
+                    className="w-6 h-7 bg-orange-600 border-2 border-amber-300 rounded-b-md absolute flex items-center justify-center shadow-md"
+                    style={{
+                      transform: `rotate(${deg}deg) translate(0, -68px)`,
+                    }}
+                  >
+                    <span className="text-[8px]">💧</span>
+                  </div>
+                ))}
+              </motion.div>
 
-          {/* ── 3. DEEP UNDERGROUND BAOLI STEPWELL (BOTTOM LEFT) ── */}
-          <g transform="translate(130, 210)">
-            {/* Stepwell Granite Walls */}
-            <rect x="-35" y="0" width="70" height="105" fill="#44403c" stroke="#1c1917" strokeWidth="2" />
-            {/* Steps descending */}
-            <polygon points="-35,0 -20,20 -35,20" fill="#78716c" />
-            <polygon points="-35,20 -10,40 -35,40" fill="#78716c" />
-            <polygon points="35,0 20,20 35,20" fill="#78716c" />
-            <polygon points="35,20 10,40 35,40" fill="#78716c" />
+              <span className="text-xs font-black text-amber-200 mt-2">
+                Persian Gear Wheel (Rahat)
+              </span>
+            </div>
 
-            {/* Stepwell Groundwater Pool */}
-            <rect x="-30" y="45" width="60" height="55" fill="url(#wellWaterGrad)" />
-            <text x="0" y="80" fill="#ffffff" fontSize="8" fontWeight="900" textAnchor="middle">
-              Deep Baoli Well
-            </text>
-          </g>
+            {/* Middle: Terracotta Gravity Pipe Conduit */}
+            <div className="relative z-10 flex flex-col items-center my-4 sm:my-0">
+              <div className="flex items-center gap-1 bg-slate-900/90 px-3 py-1 rounded-full border border-sky-400 text-[10px] font-black text-sky-200 shadow-md mb-2">
+                <span>Terracotta Gravity Siphon</span>
+              </div>
+              <div className="w-32 sm:w-44 h-3 bg-gradient-to-r from-orange-600 via-amber-500 to-sky-400 rounded-full shadow-inner relative overflow-hidden">
+                {isPumping && (
+                  <motion.div
+                    animate={{ x: [-50, 150] }}
+                    transition={{ repeat: Infinity, duration: 0.6, ease: 'linear' }}
+                    className="w-12 h-full bg-white opacity-80"
+                  />
+                )}
+              </div>
+            </div>
 
-          {/* ── 4. PERSIAN WHEEL (RAHAT) WITH GEARS & BUCKET CHAIN (CENTER) ── */}
-          <g transform="translate(260, 180)">
-            {/* Wooden Framework */}
-            <line x1="-50" y1="80" x2="0" y2="0" stroke="#78350f" strokeWidth="4" />
-            <line x1="50" y1="80" x2="0" y2="0" stroke="#78350f" strokeWidth="4" />
+            {/* Right: 100-Foot Hilltop Palace Rooftop Reservoir & Fountain */}
+            <div className="relative z-10 flex flex-col items-center">
+              <span className="text-[10px] font-black text-amber-300 bg-slate-900/90 px-3 py-1 rounded-full border border-amber-400 mb-2 shadow-md">
+                Hilltop Palace (Bala Hissar)
+              </span>
 
-            {/* Large Persian Wheel Ring */}
-            <circle cx="0" cy="0" r="46" fill="#fef3c7" stroke="url(#bronzeGearGrad)" strokeWidth="6" opacity="0.9" />
+              {/* Water Tank */}
+              <div className="w-28 sm:w-32 h-44 sm:h-48 bg-slate-900/90 border-4 border-amber-400 rounded-3xl p-2.5 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                {/* Royal Terrace Fountain on Top */}
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl">🏛️</span>
+                  {isFull && (
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1], y: [-2, 2, -2] }}
+                      transition={{ repeat: Infinity, duration: 1.5 }}
+                      className="text-xs font-black text-sky-300 bg-blue-950 px-2 py-0.5 rounded-full border border-sky-400 mt-1"
+                    >
+                      ⛲ FOUNTAIN FLOWING!
+                    </motion.div>
+                  )}
+                </div>
 
-            {/* Interlocking Gear Teeth around rim */}
-            {Array.from({ length: 16 }).map((_, idx) => {
-              const angle = (idx * 360) / 16;
-              return (
-                <rect
-                  key={idx}
-                  x="-3"
-                  y="-52"
-                  width="6"
-                  height="8"
-                  fill="#b45309"
-                  stroke="#78350f"
-                  strokeWidth="0.8"
-                  transform={`rotate(${angle} 0 0)`}
-                />
-              );
-            })}
+                {/* Rising Water Level */}
+                <div className="w-full h-24 bg-slate-800 rounded-2xl relative overflow-hidden flex flex-col justify-end p-1">
+                  <motion.div
+                    animate={{ height: `${waterLiftedFeet}%` }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full bg-gradient-to-t from-blue-600 via-sky-400 to-cyan-200 rounded-b-xl shadow-lg"
+                  />
+                  <span className="absolute top-1 left-0 right-0 text-center text-[10px] font-black text-white drop-shadow">
+                    {waterLiftedFeet} ft / 100 ft
+                  </span>
+                </div>
+              </div>
+            </div>
 
-            {/* 8 Radial Spokes */}
-            {Array.from({ length: 8 }).map((_, idx) => (
-              <line
-                key={idx}
-                x1="0"
-                y1="0"
-                x2={Math.cos((idx * Math.PI) / 4) * 44}
-                y2={Math.sin((idx * Math.PI) / 4) * 44}
-                stroke="#78350f"
-                strokeWidth="2.5"
-              />
-            ))}
-
-            {/* Central Axle Gear Hub */}
-            <circle cx="0" cy="0" r="14" fill="url(#bronzeGearGrad)" stroke="#451a03" strokeWidth="2" />
-            <circle cx="0" cy="0" r="6" fill="#0f172a" />
-
-            {/* 4 Clay Water Lifting Buckets Mounted on Rim */}
-            {[0, 90, 180, 270].map((deg) => (
-              <g key={deg} transform={`rotate(${deg} 0 0) translate(0, -46)`}>
-                <rect x="-7" y="-6" width="14" height="12" rx="2" fill="#ea580c" stroke="#7c2d12" strokeWidth="1.5" />
-                <circle cx="0" cy="0" r="3" fill="#38bdf8" />
-              </g>
-            ))}
-
-            <text x="0" y="65" fill="#78350f" fontSize="9" fontWeight="900" textAnchor="middle">
-              Persian Gear Wheel (Rahat)
-            </text>
-          </g>
-
-          {/* ── 5. TERRACOTTA CLAY PIPELINE & WATER CONDUIT (From Wheel to Palace) ── */}
-          <path
-            d="M 260,135 Q 330,110 390,95 T 440,80"
-            fill="none"
-            stroke="url(#clayPipeGrad)"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 260,135 Q 330,110 390,95 T 440,80"
-            fill="none"
-            stroke="#38bdf8"
-            strokeWidth="3.5"
-            strokeDasharray="6,4"
-            opacity={isPumping || waterLiftedFeet > 0 ? 0.9 : 0.2}
-          />
-
-          {/* ── 6. HIGH PALACE ROOFTOP RESERVOIR & FOUNTAIN (RIGHT SECTION) ── */}
-          <g transform="translate(440, 90)">
-            {/* Palace Stone Tower */}
-            <rect x="-35" y="0" width="70" height="190" fill="url(#fortStoneGrad)" stroke="#291204" strokeWidth="2" />
-
-            {/* Palace Arches */}
-            <path d="M -20,60 Q 0,40 20,60 L 20,100 L -20,100 Z" fill="#291204" />
-            <path d="M -20,130 Q 0,110 20,130 L 20,170 L -20,170 Z" fill="#291204" />
-
-            {/* Rooftop Water Reservoir Tank */}
-            <rect x="-28" y="-35" width="56" height="35" rx="4" fill="#f8fafc" stroke="#78350f" strokeWidth="2" />
-
-            {/* Dynamic Rising Water Level inside Tank */}
-            <rect
-              x="-26"
-              y={-33 + (1 - waterLiftedFeet / 100) * 31}
-              width="52"
-              height={(waterLiftedFeet / 100) * 31}
-              rx="2"
-              fill="url(#wellWaterGrad)"
-            />
-
-            {/* Royal Terrace Fountain on Top */}
-            <ellipse cx="0" cy="-42" rx="18" ry="5" fill="#d97706" stroke="#78350f" strokeWidth="1.5" />
-            <rect x="-3" y="-50" width="6" height="8" fill="#d97706" />
-
-            {/* Active Royal Fountain Water Jets when Full (100 ft) */}
-            {isFull && (
-              <g>
-                <path d="M 0,-50 Q -12,-70 -16,-45" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M 0,-50 Q 0,-74 0,-44" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M 0,-50 Q 12,-70 16,-45" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
-                <text x="0" y="-76" fill="#0369a1" fontSize="9" fontWeight="900" textAnchor="middle">
-                  ⛲ FOUNTAIN ACTIVE!
-                </text>
-              </g>
-            )}
-
-            <text x="0" y="-12" fill="#0f172a" fontSize="8" fontWeight="900" textAnchor="middle">
-              {waterLiftedFeet} ft
-            </text>
-            <text x="0" y="20" fill="#fef3c7" fontSize="8" fontWeight="900" textAnchor="middle">
-              Rooftop Palace Tank
-            </text>
-          </g>
-        </svg>
-
-        {/* Live Water Flow Animation Puffs when turning */}
-        {isPumping && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-2xl animate-bounce">
-            💧 ⚙️ 💧
+            {/* Bottom Status Banner */}
+            <div className="absolute bottom-2 left-4 right-4 bg-slate-950/90 backdrop-blur-md px-4 py-1.5 rounded-2xl border border-amber-400 text-xs font-bold text-white shadow-lg text-center z-20">
+              {isFull
+                ? '🎉 100 FT REACHED! Water reached the hilltop palace rooftop — Royal fountains are flowing!'
+                : '💧 Tap "Turn Persian Water Wheel" to lift water from the deep stepwell up 100 feet to the palace!'}
+            </div>
           </div>
-        )}
 
-        {/* Bottom Banner Status */}
-        <div className="absolute bottom-3 left-4 right-4 bg-slate-950/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-amber-600 text-xs font-bold text-white shadow-lg text-center">
-          {isFull
-            ? '🎉 100 FT REACHED! Stepwell water reached the rooftop tank — Royal palace fountains are flowing!'
-            : '💧 Tap "Turn Persian Wheel" to lift water from the deep baoli stepwell to the hilltop palace!'}
+          {/* Interactive Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-3 w-full mt-4">
+            <button
+              onClick={handleTurnWheel}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 hover:brightness-110 text-slate-950 font-black text-sm shadow-md cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <Droplets className="w-5 h-5 fill-slate-950" />
+              <span>💧 Turn Persian Water Wheel (+25 ft)</span>
+            </button>
+
+            {waterLiftedFeet > 0 && (
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setWaterLiftedFeet(0);
+                }}
+                className="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs border border-slate-300 cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>Empty Reservoir</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Interactive Controls */}
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
-        <button
-          onClick={handleTurnWheel}
-          className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 hover:brightness-110 text-slate-950 font-black text-sm shadow-md cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-2"
-        >
-          <Droplets className="w-5 h-5 fill-slate-950" />
-          <span>💧 Turn Persian Water Wheel (+25 ft)</span>
-        </button>
+      {/* ════════════════════════════════════════════════════════════════
+          STATION 2: 360° BASTIONS (BURJ) & DEFENSIVE ARCHITECTURE
+      ════════════════════════════════════════════════════════════════ */}
+      {activeTab === 'bastion' && (
+        <div className="w-full flex flex-col items-center">
+          <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-4 border-amber-600 shadow-2xl bg-slate-950 flex flex-col sm:flex-row items-center justify-between p-6">
+            {/* Authentic Background Photo of Bastions */}
+            <img
+              src={golcondaBastionImg}
+              alt="Golconda Fort Bastions"
+              className="absolute inset-0 w-full h-full object-cover opacity-50"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent pointer-events-none" />
 
-        {waterLiftedFeet > 0 && (
-          <button
-            onClick={handleReset}
-            className="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs border border-slate-300 cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
-          >
-            <RotateCcw className="w-4 h-4" />
-            <span>Empty Tank</span>
-          </button>
-        )}
-      </div>
+            {/* Interactive 360° Radar Overlay */}
+            <div className="relative z-10 w-full flex flex-col sm:flex-row items-center justify-around gap-4 text-white">
+              {/* Bastion Info Card */}
+              <div className="bg-slate-950/90 backdrop-blur-md p-5 rounded-3xl border-2 border-amber-400 max-w-sm shadow-xl">
+                <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950 px-2.5 py-1 rounded-full border border-amber-500">
+                  87 Semicircular Bastions (Burj)
+                </span>
+                <h4 className="text-lg font-black text-white mt-2">Why are Fort Bastions Round?</h4>
+                <p className="text-xs text-slate-300 mt-1 leading-relaxed font-bold">
+                  Unlike flat walls with blind spots, semicircular round bastions provide <strong>360-degree surveillance</strong> and narrow arrow slits to spot and repel enemy cannons from all directions!
+                </p>
+              </div>
 
-      {/* 5th Grade Key Scientific Takeaway */}
-      <div className="w-full bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 text-center sm:text-left text-xs font-bold text-amber-950 mt-3">
-        🏰 <strong>Ancient Hydraulic Engineering:</strong> Over 400 years ago at Golconda Fort, engineers connected <strong>interlocking wooden gears to endless clay bucket chains (Rahat)</strong>, lifting water 100+ feet through terracotta gravity pipes to royal hilltop fountains without electricity!
+              {/* 360° Radar Scanner */}
+              <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 border-amber-400 bg-slate-950/80 shadow-[0_0_30px_rgba(245,158,11,0.5)] flex items-center justify-center overflow-hidden">
+                {/* Radar Grid Lines */}
+                <div className="w-full h-0.5 bg-amber-500/40 absolute" />
+                <div className="h-full w-0.5 bg-amber-500/40 absolute" />
+                <div className="w-32 h-32 rounded-full border border-amber-400/40 absolute" />
+                <div className="w-16 h-16 rounded-full border border-amber-400/40 absolute" />
+
+                {/* Sweeping Radar Beam */}
+                {showRadar && (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
+                    className="w-full h-full absolute origin-center bg-gradient-to-tr from-transparent via-amber-400/30 to-transparent"
+                  />
+                )}
+
+                <div className="w-4 h-4 rounded-full bg-amber-400 border-2 border-slate-950 z-10 shadow-md" />
+                <span className="absolute bottom-2 text-[9px] font-black text-amber-200">360° Radar Field</span>
+              </div>
+            </div>
+
+            {/* Bottom Status Banner */}
+            <div className="absolute bottom-2 left-4 right-4 bg-slate-950/90 backdrop-blur-md px-4 py-1.5 rounded-2xl border border-amber-400 text-xs font-bold text-white shadow-lg text-center z-20">
+              🛡️ 87 Bastions guarded Golconda Fort — thick granite walls withstand heavy siege artillery!
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════
+          STATION 3: 1KM ACOUSTIC ECHO DOME (FATEH DARWAZA)
+      ════════════════════════════════════════════════════════════════ */}
+      {activeTab === 'acoustic' && (
+        <div className="w-full flex flex-col items-center">
+          <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-4 border-amber-600 shadow-2xl bg-slate-950 flex flex-col items-center justify-between p-6">
+            {/* Authentic Background Photo of Fateh Darwaza */}
+            <img
+              src={golcondaDarwazaImg}
+              alt="Golconda Fort Fateh Darwaza"
+              className="absolute inset-0 w-full h-full object-cover opacity-45"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent pointer-events-none" />
+
+            {/* Acoustic Clap Interactive Area */}
+            <div className="relative z-10 w-full flex flex-col items-center text-center my-auto text-white">
+              <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950 px-3 py-1 rounded-full border border-amber-500 mb-2">
+                Fateh Darwaza (Victory Gate) Acoustic Science
+              </span>
+              <h4 className="text-xl font-black text-white">Acoustic Sound Channeling</h4>
+              <p className="text-xs text-slate-300 mt-1 max-w-md font-bold">
+                A single hand-clap under the entry dome creates sound waves that travel <strong>1,000 meters</strong> all the way up to the hilltop royal palace at Bala Hissar!
+              </p>
+
+              {/* Clap Action Button */}
+              <button
+                onClick={handleClap}
+                className="mt-4 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 hover:brightness-110 text-slate-950 font-black text-sm shadow-xl cursor-pointer active:scale-95 transition-all flex items-center gap-2"
+              >
+                <span className="text-xl">👏</span>
+                <span>Clap at Fateh Darwaza Entrance!</span>
+              </button>
+
+              {/* Animated Sound Wave Rings when Clapped */}
+              {isClapping && (
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  {[1, 2, 3].map((ring) => (
+                    <motion.div
+                      key={ring}
+                      initial={{ scale: 0.2, opacity: 1 }}
+                      animate={{ scale: 2.2, opacity: 0 }}
+                      transition={{ duration: 1.5, delay: ring * 0.3, ease: 'easeOut' }}
+                      className="w-48 h-48 rounded-full border-3 border-amber-400 absolute"
+                    />
+                  ))}
+                  <div className="bg-slate-950/90 text-amber-300 text-xs font-black px-4 py-2 rounded-2xl border border-amber-400 shadow-2xl z-20">
+                    🔊 Sound Echo Traveling 1,000m to King’s Hilltop Palace!
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Status Banner */}
+            <div className="absolute bottom-2 left-4 right-4 bg-slate-950/90 backdrop-blur-md px-4 py-1.5 rounded-2xl border border-amber-400 text-xs font-bold text-white shadow-lg text-center z-20">
+              👏 Ancient Security: Guards clapped at the gate to signal alarms instantly without messengers!
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5th Grade Key Engineering Takeaway */}
+      <div className="w-full bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 text-center sm:text-left text-xs font-bold text-amber-950 mt-4">
+        🏰 <strong>Ancient Engineering Genius:</strong> Over 400 years ago at Golconda Fort, architects combined <strong>interlocking wooden gears & clay bucket chains (Rahat)</strong> to lift water 100+ feet, built <strong>round 360° bastions</strong> with zero blind spots, and engineered <strong>1km acoustic domes</strong> to signal alarms!
       </div>
     </div>
   );
