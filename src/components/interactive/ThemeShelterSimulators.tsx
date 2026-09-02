@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import {
+  Mountain,
+  AlertTriangle,
+  Compass,
   Thermometer,
   Wind,
   Gauge,
