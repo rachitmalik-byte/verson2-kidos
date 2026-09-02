@@ -324,7 +324,7 @@ export function SortingMission() {
           {currentPhase === 'SORTING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-4">
-                <Pip mood="explaining" size="lg" />
+                <Pip mood="explaining" size="md" />
                 <PipSpeechBubble
                   message="Tap any real item photo below, then tap the tray where it belongs!"
                   isVisible={true}
@@ -470,7 +470,7 @@ export function SortingMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'REFLECT' && (
             <div className="w-full max-w-3xl flex flex-col items-center">
-              <Pip mood="thinking" size="lg" />
+              <Pip mood="thinking" size="md" />
               <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2 text-center" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 Scientific Observation Time! 🔍
               </h2>
@@ -550,7 +550,7 @@ export function SortingMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'UNDERSTANDING' && (
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
-              <Pip mood="celebrating" size="lg" />
+              <Pip mood="celebrating" size="md" />
               <h2 className="text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 The Two Great Kingdoms of Materials 👑
               </h2>
@@ -589,7 +589,7 @@ export function SortingMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {(currentPhase === 'PRACTICE' || currentPhase === 'APPLY') && (
             <div className="w-full max-w-2xl flex flex-col items-center text-center">
-              <Pip mood="thinking" size="lg" />
+              <Pip mood="thinking" size="md" />
               <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 Mastery Challenge: The Lab Invention 🔬
               </h2>

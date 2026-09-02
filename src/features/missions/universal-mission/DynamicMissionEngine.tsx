@@ -2119,7 +2119,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
       default:
         return (
           <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-3xl md:rounded-[36px] border-4 border-sky-400 shadow-xl flex flex-col items-center text-center">
-            <Pip mood="explaining" size="lg" />
+            <Pip mood="explaining" size="md" />
             <h3 className="text-2xl font-black text-slate-900 mt-3 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
               {currentStep.title || mission.title}
             </h3>

@@ -239,7 +239,7 @@ export function RaincoatMission() {
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="curious" size="lg" />
+                <Pip mood="curious" size="md" />
                 <PipSpeechBubble
                   message="Look outside! A sudden rainstorm is rolling in! 🌧️ Which raincoat would you grab to stay completely dry?"
                   isVisible={true}
@@ -342,7 +342,7 @@ export function RaincoatMission() {
           {currentPhase === 'INSPECT' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="explaining" size="lg" />
+                <Pip mood="explaining" size="md" />
                 <PipSpeechBubble
                   message="Let's spray water on both fabrics to see real water absorption vs water beading! Tap both spray buttons!"
                   isVisible={true}
@@ -643,7 +643,7 @@ export function RaincoatMission() {
           {currentPhase === 'UNDERSTANDING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="celebrating" size="lg" />
+                <Pip mood="celebrating" size="md" />
                 <PipSpeechBubble
                   message="Let's place both fabrics under the high-powered microscope! Tap the buttons below to switch specimens and zoom in!"
                   isVisible={true}

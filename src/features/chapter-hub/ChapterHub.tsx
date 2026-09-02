@@ -302,6 +302,38 @@ export function ChapterHub() {
 
         {activeTab === 'missions' && (
           <>
+            {/* First-Time Start Banner (shown if no missions completed yet) */}
+            {completedMissions.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 rounded-2xl p-4 sm:p-5 border-2 border-amber-600 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl shrink-0">🔬</span>
+                  <div>
+                    <h3 className="font-black text-slate-950 text-sm sm:text-base" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      Ready to begin your Science Journey?
+                    </h3>
+                    <p className="text-xs font-bold text-slate-900 mt-0.5">
+                      Start with <strong>Mission 1: The Raincoat Mystery</strong> below to unlock the rest! 🗺️
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    sounds.pop();
+                    voiceAssistant.stop();
+                    navigate('/chapter/3/mission/1');
+                  }}
+                  className="shrink-0 px-5 py-2.5 bg-slate-950 text-amber-400 font-black text-xs sm:text-sm rounded-xl flex items-center gap-1.5 cursor-pointer hover:bg-slate-800 transition-all active:scale-95 shadow-md"
+                >
+                  <span>Start Mission 1</span>
+                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                </button>
+              </motion.div>
+            )}
+
             {/* ── Daily Curiosity Quest Riddle Widget ── */}
             <DailyCuriosityQuest />
 
@@ -366,6 +398,7 @@ export function ChapterHub() {
                   {missions.map((m, index) => {
                     const isCompleted = completedMissions.includes(m.id);
                     const isUnlocked = index === 0 || completedMissions.includes(missions[index - 1]?.id);
+                    const isNextMission = !isCompleted && isUnlocked && index === completedMissions.length;
                     const thumbnail = missionThumbnails[m.id] || raincoatWaterproofImg;
 
                     return (
@@ -377,8 +410,10 @@ export function ChapterHub() {
                         className={`rounded-3xl border-3 transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden bg-white shadow-md ${
                           isCompleted
                             ? 'border-emerald-400 hover:shadow-emerald-100/60'
+                            : isNextMission
+                            ? 'border-amber-500 ring-4 ring-amber-400/70 shadow-lg shadow-amber-200/50'
                             : isUnlocked
-                            ? 'border-amber-400 ring-4 ring-amber-300/40 hover:shadow-amber-100'
+                            ? 'border-amber-300 ring-2 ring-amber-200/40 hover:shadow-amber-100'
                             : 'border-slate-200 opacity-60 bg-slate-50 cursor-not-allowed'
                         }`}
                       >
@@ -404,10 +439,14 @@ export function ChapterHub() {
                                 <CheckCircle2 className="w-3 h-3 text-white" />
                                 <span>Done ⭐⭐⭐</span>
                               </span>
-                            ) : isUnlocked ? (
+                            ) : isNextMission ? (
                               <span className="flex items-center gap-1 bg-amber-400 text-slate-950 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md animate-pulse">
                                 <Zap className="w-3 h-3 fill-slate-950" />
-                                <span>Ready!</span>
+                                <span>Start Here! 👈</span>
+                              </span>
+                            ) : isUnlocked ? (
+                              <span className="flex items-center gap-1 bg-amber-200 text-amber-950 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md">
+                                <span>Unlocked</span>
                               </span>
                             ) : (
                               <span className="flex items-center gap-1 bg-slate-800/90 text-slate-300 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md">

@@ -201,7 +201,7 @@ export function FireSafetyMission() {
           {currentPhase === 'BURN_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-4">
-                <Pip mood="explaining" size="lg" />
+                <Pip mood="explaining" size="md" />
                 <PipSpeechBubble
                   message="Ignite both fabric swatches on the ceramic lab plate to see how natural fibers vs synthetic plastics react to heat!"
                   isVisible={true}
@@ -342,7 +342,7 @@ export function FireSafetyMission() {
           {currentPhase === 'MICROSCOPE' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="flex items-center gap-4 mb-6">
-                <Pip mood="celebrating" size="lg" />
+                <Pip mood="celebrating" size="md" />
                 <PipSpeechBubble
                   message="Look under the microscope! See how natural cotton burns into soft ash, while synthetic polyester melts into hot sticky beads!"
                   isVisible={true}
@@ -481,7 +481,7 @@ export function FireSafetyMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
             <div className="w-full max-w-2xl flex flex-col items-center text-center">
-              <Pip mood="thinking" size="lg" />
+              <Pip mood="thinking" size="md" />
               <h2 className="text-2xl md:text-3xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 Chef Apron Safety Decision 🍳
               </h2>
