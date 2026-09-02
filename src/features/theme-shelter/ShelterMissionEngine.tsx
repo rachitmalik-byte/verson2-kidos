@@ -39,6 +39,7 @@ import {
   SpecimenGolcondaGearMechanics,
   SpecimenPetroleumPorousSandstone,
 } from '@/components/microscope/MicroscopeSpecimenRenders';
+import { KutchBhungaArchitecturalLab } from '@/components/interactive/KutchBhungaArchitecturalLab';
 import {
   ChangthangPashminaSim,
   EverestMountaineeringSim,
@@ -485,7 +486,14 @@ export function ShelterMissionEngine() {
                 {num === 2 && <EverestMountaineeringSim />}
                 {num === 3 && <SunitaInSpaceMultiStationLab />}
                 {num === 4 && <GolcondaFortWaterAndDefenseSim />}
-                {num === 5 && <PetroleumRefineryAndSolarSim />}
+                {num === 5 && (
+                  <div className="w-full flex flex-col items-center gap-4">
+                    <KutchBhungaArchitecturalLab />
+                    <div className="w-full pt-4 border-t-2 border-slate-200">
+                      <PetroleumRefineryAndSolarSim />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
