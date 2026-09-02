@@ -102,12 +102,12 @@ import thermosetPlugSwitchImg from '@/assets/images/experiments/thermoset_plug_s
 import vulcanizedCarTireTreadImg from '@/assets/images/experiments/vulcanized_car_tire_tread.jpg';
 import epoxyResinAdhesiveGlueImg from '@/assets/images/experiments/epoxy_resin_adhesive_glue.jpg';
 import parachuteCanopyJumpImg from '@/assets/images/experiments/parachute_canopy_jump.jpg';
-// Newly Generated 100x SEM Micrographs & Specimens
+// Newly Generated 100x SEM Micrographs & Samples
 import cottonMicrograph100xImg from '@/assets/images/microscope/cotton_micrograph_100x.jpg';
 import nylonMicrograph100xImg from '@/assets/images/microscope/nylon_micrograph_100x.jpg';
 import woolMicrograph100xImg from '@/assets/images/microscope/wool_micrograph_100x.jpg';
 import silkMicrograph100xImg from '@/assets/images/microscope/silk_micrograph_100x.jpg';
-import steelWireSpecimenImg from '@/assets/images/experiments/steel_wire_specimen.jpg';
+import steelWireSampleImg from '@/assets/images/experiments/steel_wire_sample.jpg';
 import summerComfortEvaporationImg from '@/assets/images/experiments/summer_comfort_evaporation_test.jpg';
 
 
@@ -1064,9 +1064,9 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 {/* 3D Vector Circuit Workbench */}
                 <div className="w-full mb-6">
                   <VectorCircuitWorkbench
-                    specimenId={interactiveState.testedId || 'copper'}
+                    sampleId={interactiveState.testedId || 'copper'}
                     conducts={interactiveState.conducts === true}
-                    specimenName={interactiveState.testedMaterial || 'Solid Copper Metal Rod'}
+                    sampleName={interactiveState.testedMaterial || 'Solid Copper Metal Rod'}
                     isFlowing={interactiveState.conducts === true}
                   />
                 </div>
@@ -1441,7 +1441,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
               </div>
             )}
 
-            {/* Step 1: Multi-Specimen Consistent Soil Decay Simulator */}
+            {/* Step 1: Multi-Sample Consistent Soil Decay Simulator */}
             {currentStepIndex === 1 && (
               <div className="w-full max-w-4xl flex flex-col items-center bg-white p-5 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl">
                 <div className="flex items-center gap-2 mb-1">
@@ -1454,7 +1454,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                   Choose a pair of materials below, then travel forward in time to discover why nature eats organic items but plastic trash stays for centuries!
                 </p>
 
-                {/* Specimen Category Selector */}
+                {/* Sample Category Selector */}
                 <div className="flex flex-wrap justify-center gap-2 mb-5 w-full">
                   {[
                     { id: 'cotton', label: '👕 1. Cotton Fabric vs Plastic Bottle', natural: 'Cotton Fabric' },
@@ -1597,7 +1597,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
 
                   return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
-                      {/* Left: Natural Biodegradable Specimen Card */}
+                      {/* Left: Natural Biodegradable Sample Card */}
                       <div className="p-5 bg-gradient-to-b from-emerald-50 to-white rounded-3xl border-3 border-emerald-400 text-center flex flex-col items-center shadow-lg relative overflow-hidden">
                         <div className="w-full flex items-center justify-between mb-2">
                           <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-950 border border-emerald-300">
@@ -1631,7 +1631,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                         </p>
                       </div>
 
-                      {/* Right: Synthetic Non-Biodegradable Specimen Card */}
+                      {/* Right: Synthetic Non-Biodegradable Sample Card */}
                       <div className="p-5 bg-gradient-to-b from-rose-50 to-white rounded-3xl border-3 border-rose-400 text-center flex flex-col items-center shadow-lg relative overflow-hidden">
                         <div className="w-full flex items-center justify-between mb-2">
                           <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-rose-200 text-rose-950 border border-rose-300">

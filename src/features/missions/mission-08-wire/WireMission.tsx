@@ -41,7 +41,7 @@ import {
 
 type Phase = 'HOOK' | 'CIRCUIT_TEST' | 'MICROSCOPE' | 'APPLY';
 
-interface TestSpecimen {
+interface TestItem {
   id: string;
   name: string;
   category: 'Metal Conductor' | 'Plastic Insulator' | 'Rubber Insulator';
@@ -52,7 +52,7 @@ interface TestSpecimen {
   renderGraphic: () => React.ReactNode;
 }
 
-const SPECIMENS: TestSpecimen[] = [
+const SPECIMENS: TestItem[] = [
   {
     id: 'copper',
     name: 'Solid Copper Metal Rod',
@@ -97,10 +97,10 @@ const SPECIMENS: TestSpecimen[] = [
 
 export function WireMission() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('HOOK');
-  const [activeSpecimenId, setActiveSpecimenId] = useState<string>('copper');
-  const [testedSpecimens, setTestedSpecimens] = useState<Record<string, boolean>>({});
+  const [activeItemId, setActiveItemId] = useState<string>('copper');
+  const [testedItems, setTestedItems] = useState<Record<string, boolean>>({});
   const [isCircuitFlowing, setIsCircuitFlowing] = useState(false);
-  const [activeMicroscopeSpecimen, setActiveMicroscopeSpecimen] = useState<'copper' | 'pvc'>('copper');
+  const [activeMicroscopeItem, setActiveMicroscopeItem] = useState<'copper' | 'pvc'>('copper');
   const [microscopeZoomLevel, setMicroscopeZoomLevel] = useState<number>(250);
   const [applyChoice, setApplyChoice] = useState<string | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -140,8 +140,8 @@ export function WireMission() {
 
   const handleRedo = () => {
     sounds.pop();
-    setActiveSpecimenId('copper');
-    setTestedSpecimens({});
+    setActiveItemId('copper');
+    setTestedItems({});
     setIsCircuitFlowing(false);
     setApplyChoice(null);
   };
@@ -151,7 +151,7 @@ export function WireMission() {
       case 'HOOK':
         return true;
       case 'CIRCUIT_TEST':
-        return Object.keys(testedSpecimens).length >= 2;
+        return Object.keys(testedItems).length >= 2;
       case 'MICROSCOPE':
         return true;
       case 'APPLY':
@@ -161,30 +161,30 @@ export function WireMission() {
     }
   };
 
-  const handleTestSpecimen = (specimen: TestSpecimen) => {
-    setActiveSpecimenId(specimen.id);
+  const handleTestItem = (item: TestItem) => {
+    setActiveItemId(item.id);
     setIsCircuitFlowing(true);
 
-    if (specimen.conducts) {
+    if (item.conducts) {
       sounds.sparkle();
       useFXStore.getState().triggerFX('spark', 2500);
       voiceAssistant.speak(
-        `⚡ ${specimen.name} conducts electric current! Look at the lightbulb blazing with bright light!`
+        `⚡ ${item.name} conducts electric current! Look at the lightbulb blazing with bright light!`
       );
     } else {
       sounds.pop();
       voiceAssistant.speak(
-        `🛡️ ${specimen.name} is a powerful electrical insulator! It completely blocks electric current and keeps our hands 100% safe!`
+        `🛡️ ${item.name} is a powerful electrical insulator! It completely blocks electric current and keeps our hands 100% safe!`
       );
     }
 
     setTimeout(() => {
-      setTestedSpecimens((prev) => ({ ...prev, [specimen.id]: true }));
+      setTestedItems((prev) => ({ ...prev, [item.id]: true }));
       setIsCircuitFlowing(false);
     }, 900);
   };
 
-  const activeSpecimen = SPECIMENS.find((s) => s.id === activeSpecimenId) || SPECIMENS[0];
+  const activeItem = SPECIMENS.find((s) => s.id === activeItemId) || SPECIMENS[0];
 
   return (
     <MissionLayout
@@ -298,7 +298,7 @@ export function WireMission() {
               <ExperimentFocusSpotlight
                 isActive={isCircuitFlowing}
                 activeLabel={
-                  activeSpecimen.conducts
+                  activeItem.conducts
                     ? '⚡ Live Electricity Flowing Through Conductor...'
                     : '🛡️ Plastic Insulator Blocking Electric Current...'
                 }
@@ -306,9 +306,9 @@ export function WireMission() {
                 {/* ── HIGH-DEFINITION 3D VECTOR CIRCUIT BENCH ── */}
                 <div className="w-full mb-6">
                   <VectorCircuitWorkbench
-                    specimenId={activeSpecimen.id}
-                    conducts={activeSpecimen.conducts}
-                    specimenName={activeSpecimen.name}
+                    itemId={activeItem.id}
+                    conducts={activeItem.conducts}
+                    itemName={activeItem.name}
                     isFlowing={isCircuitFlowing}
                   />
 
@@ -317,18 +317,18 @@ export function WireMission() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`mt-4 p-4 rounded-2xl w-full text-center text-xs font-bold border-2 ${
-                      activeSpecimen.conducts
+                      activeItem.conducts
                         ? 'bg-amber-950/80 border-amber-400 text-amber-200 shadow-md'
                         : 'bg-emerald-950/80 border-emerald-400 text-emerald-200 shadow-md'
                     }`}
                   >
-                    {activeSpecimen.conducts ? (
+                    {activeItem.conducts ? (
                       <span>
-                        ⚡ <strong>ELECTRICAL CONDUCTOR:</strong> {activeSpecimen.name} contains free electrons that carry electrical charge instantly through the circuit into the lamp!
+                        ⚡ <strong>ELECTRICAL CONDUCTOR:</strong> {activeItem.name} contains free electrons that carry electrical charge instantly through the circuit into the lamp!
                       </span>
                     ) : (
                       <span>
-                        🛡️ <strong>ELECTRICAL INSULATOR:</strong> {activeSpecimen.name} tightly locks its electrons inside polymer bonds, completely shielding human skin from electric shocks!
+                        🛡️ <strong>ELECTRICAL INSULATOR:</strong> {activeItem.name} tightly locks its electrons inside polymer bonds, completely shielding human skin from electric shocks!
                       </span>
                     )}
                   </motion.div>
@@ -337,15 +337,15 @@ export function WireMission() {
                 {/* ── 4 TACTILE SPECIMEN CARDS WITH CLEAN VECTOR ART ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 w-full">
                   {SPECIMENS.map((s) => {
-                    const isTested = testedSpecimens[s.id];
-                    const isSelected = activeSpecimenId === s.id;
+                    const isTested = testedItems[s.id];
+                    const isSelected = activeItemId === s.id;
 
                     return (
                       <motion.button
                         key={s.id}
                         whileHover={{ scale: 1.03, y: -2 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={() => handleTestSpecimen(s)}
+                        onClick={() => handleTestItem(s)}
                         className={`p-4 rounded-3xl border-3 flex flex-col items-center text-center cursor-pointer transition-all ${
                           isSelected
                             ? 'bg-amber-100 border-amber-500 shadow-xl ring-4 ring-amber-300 scale-102'
@@ -420,9 +420,9 @@ export function WireMission() {
                 <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 ring-4 ring-amber-400/80 my-2 flex items-center justify-center">
                   <AnimatePresence mode="wait">
                     <motion.img
-                      key={`${activeMicroscopeSpecimen}-${microscopeZoomLevel}`}
-                      src={activeMicroscopeSpecimen === 'copper' ? copperWireMacroImg : pvcInsulatedCableImg}
-                      alt="Microscope Specimen"
+                      key={`${activeMicroscopeItem}-${microscopeZoomLevel}`}
+                      src={activeMicroscopeItem === 'copper' ? copperWireMacroImg : pvcInsulatedCableImg}
+                      alt="Microscope Item"
                       initial={{ scale: 0.8, opacity: 0.3 }}
                       animate={{
                         scale: microscopeZoomLevel === 100 ? 1.05 : microscopeZoomLevel === 250 ? 1.45 : 2.0,
@@ -446,10 +446,10 @@ export function WireMission() {
                   <button
                     onClick={() => {
                       sounds.pop();
-                      setActiveMicroscopeSpecimen('copper');
+                      setActiveMicroscopeItem('copper');
                     }}
                     className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
-                      activeMicroscopeSpecimen === 'copper'
+                      activeMicroscopeItem === 'copper'
                         ? 'bg-amber-400 border-amber-300 text-slate-950 shadow-lg scale-102 ring-4 ring-amber-400/40'
                         : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
                     }`}
@@ -460,10 +460,10 @@ export function WireMission() {
                   <button
                     onClick={() => {
                       sounds.pop();
-                      setActiveMicroscopeSpecimen('pvc');
+                      setActiveMicroscopeItem('pvc');
                     }}
                     className={`p-3.5 rounded-2xl font-black text-xs md:text-sm flex items-center justify-center gap-2 border-2 transition-all cursor-pointer ${
-                      activeMicroscopeSpecimen === 'pvc'
+                      activeMicroscopeItem === 'pvc'
                         ? 'bg-sky-400 border-sky-300 text-slate-950 shadow-lg scale-102 ring-4 ring-sky-400/40'
                         : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
                     }`}

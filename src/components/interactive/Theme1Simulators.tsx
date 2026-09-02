@@ -67,7 +67,7 @@ export const AntTrailPheromoneSim: React.FC<{ onCompleted?: () => void }> = ({ o
     setHasBarrier(false);
     setViewState('before');
     setIsAntsRouting(false);
-    voiceAssistant.speak('Barrier removed! The ants resume their neat, straight pheromone superhighway!');
+    voiceAssistant.speak('Barrier removed! The ants resume their neat, straight smell trail!');
   };
 
   return (
@@ -77,7 +77,7 @@ export const AntTrailPheromoneSim: React.FC<{ onCompleted?: () => void }> = ({ o
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-xs font-black uppercase text-slate-800 tracking-wider">
-            🐜 Live Ant Colony Chemical Radar Simulation
+            🐜 Live Ant Scent Trail Lab
           </span>
         </div>
         <span
@@ -87,7 +87,7 @@ export const AntTrailPheromoneSim: React.FC<{ onCompleted?: () => void }> = ({ o
               : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
           }`}
         >
-          {hasBarrier ? '⚠️ SCENT TRAIL OBSTRUCTED (ANTENNAE ROUTING)' : '⚡ INVISIBLE CHEMICAL LINE (DIRECT)'}
+          {hasBarrier ? '⚠️ SMELL TRAIL BLOCKED! (ANTS FIND DETOUR)' : '⚡ INVISIBLE SMELL TRAIL (STRAIGHT PATH)'}
         </span>
       </div>
 
@@ -101,7 +101,7 @@ export const AntTrailPheromoneSim: React.FC<{ onCompleted?: () => void }> = ({ o
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          1. Before: Straight Chemical Trail ⚡
+          1. Before: Straight Smell Trail ⚡
         </button>
 
         <button
@@ -112,7 +112,7 @@ export const AntTrailPheromoneSim: React.FC<{ onCompleted?: () => void }> = ({ o
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          2. After: Barrier Placed & Detour ✏️
+          2. After: Path Blocked with Pencil ✏️
         </button>
       </div>
 

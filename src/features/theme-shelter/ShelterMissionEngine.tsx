@@ -33,12 +33,12 @@ import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { SHELTER_CHAPTERS, ShelterChapter } from '@/data/themeShelterMissions';
 import {
-  SpecimenPashminaVsHumanHair,
-  SpecimenAirMoleculeBarometer,
-  SpecimenZeroGravityWaterSphere,
-  SpecimenGolcondaGearMechanics,
-  SpecimenPetroleumPorousSandstone,
-} from '@/components/microscope/MicroscopeSpecimenRenders';
+  SamplePashminaVsHumanHair,
+  SampleAirMoleculeBarometer,
+  SampleZeroGravityWaterSphere,
+  SampleGolcondaGearMechanics,
+  SamplePetroleumPorousSandstone,
+} from '@/components/microscope/MicroscopeSampleRenders';
 import { KutchBhungaArchitecturalLab } from '@/components/interactive/KutchBhungaArchitecturalLab';
 import {
   ChangthangPashminaSim,
@@ -506,8 +506,8 @@ export function ShelterMissionEngine() {
                 {num === 1 && (
                   <MultiTierMicroscopeStudio
                     config={{
-                      specimenId: 'pashmina-fiber',
-                      specimenName: 'Changthang Pashmina Underfleece',
+                      sampleId: 'pashmina-fiber',
+                      sampleName: 'Changthang Pashmina Underfleece',
                       themeColor: 'bg-indigo-600',
                       borderColor: 'border-indigo-400',
                       tiers: {
@@ -554,8 +554,8 @@ export function ShelterMissionEngine() {
                 {num === 3 && (
                   <MultiTierMicroscopeStudio
                     config={{
-                      specimenId: 'microgravity-water',
-                      specimenName: 'Zero-G Water Sphere & Surface Cohesion',
+                      sampleId: 'microgravity-water',
+                      sampleName: 'Zero-G Water Sphere & Surface Cohesion',
                       themeColor: 'bg-sky-600',
                       borderColor: 'border-sky-400',
                       tiers: {
@@ -607,8 +607,8 @@ export function ShelterMissionEngine() {
                 {num === 5 && (
                   <MultiTierMicroscopeStudio
                     config={{
-                      specimenId: 'petroleum-sandstone',
-                      specimenName: 'Porous Sandstone Hydrocarbon Trap',
+                      sampleId: 'petroleum-sandstone',
+                      sampleName: 'Porous Sandstone Hydrocarbon Trap',
                       themeColor: 'bg-amber-600',
                       borderColor: 'border-amber-400',
                       tiers: {

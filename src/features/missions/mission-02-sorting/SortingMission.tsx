@@ -129,7 +129,7 @@ export function SortingMission() {
   const [activePracticeItem, setActivePracticeItem] = useState<string | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
 
-  // Shuffle specimen cards on desk
+  // Shuffle material cards on desk
   const [shuffledItems] = useState(() => {
     const arr = [...SORTING_ITEMS];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -298,11 +298,11 @@ export function SortingMission() {
                 <span className="text-sky-700 font-black">Scientists in Labs</span>. Can you sort them into the right scientific trays?
               </p>
 
-              {/* Real Specimen Gallery Preview */}
+              {/* Real Item Gallery Preview */}
               <div className="grid grid-cols-4 gap-3 w-full max-w-lg mb-8">
                 {[rawCottonBollImg, sheepWoolFleeceImg, nylonThreadSpoolImg, polyesterFabricRollImg].map((img, i) => (
                   <div key={i} className="w-full aspect-square rounded-2xl overflow-hidden border-3 border-slate-200 shadow-sm bg-white p-1">
-                    <img src={img} alt="Specimen" className="w-full h-full object-cover rounded-xl" />
+                    <img src={img} alt="Item" className="w-full h-full object-cover rounded-xl" />
                   </div>
                 ))}
               </div>
@@ -326,7 +326,7 @@ export function SortingMission() {
               <div className="flex items-center gap-4 mb-4">
                 <Pip mood="explaining" size="lg" />
                 <PipSpeechBubble
-                  message="Tap any real specimen photo below, then tap the tray where it belongs!"
+                  message="Tap any real item photo below, then tap the tray where it belongs!"
                   isVisible={true}
                 />
               </div>
@@ -434,7 +434,7 @@ export function SortingMission() {
                             setInspectItem(item);
                           }}
                           className="absolute bottom-1.5 right-1.5 p-1 bg-slate-900/80 text-white rounded-lg text-[10px] flex items-center gap-0.5 shadow-md cursor-pointer hover:bg-slate-900"
-                          title="Inspect Specimen under Magnifier"
+                          title="Inspect Item under Magnifier"
                         >
                           <Search className="w-3 h-3" />
                         </button>

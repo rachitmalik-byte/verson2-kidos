@@ -125,7 +125,7 @@ export function ThemeWaterHub() {
           </div>
         </div>
 
-        {/* ── 4 Re-Engineered 3D Specimen Chapter Cards ── */}
+        {/* ── 4 Re-Engineered 3D Chapter Cards ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
           {WATER_CHAPTERS.map((ch) => {
             const art = WATER_ARTWORK[ch.chapterNumber] || WATER_ARTWORK[1];
@@ -137,7 +137,7 @@ export function ThemeWaterHub() {
                 onClick={() => handleChapterClick(ch.chapterNumber)}
                 className={`rounded-[32px] bg-white border-4 ${art.borderAccent} shadow-xl text-left cursor-pointer transition-all flex flex-col overflow-hidden group select-none`}
               >
-                {/* ── Top 3D Specimen Banner ── */}
+                {/* ── Top 3D Chapter Banner ── */}
                 <div className="w-full h-44 sm:h-48 relative overflow-hidden bg-slate-900">
                   <img
                     src={art.imageSrc}

@@ -38,7 +38,7 @@ import woolZoomGif from '@/assets/videos/wool_zoom_fibers.gif';
 import rubberZoomGif from '@/assets/videos/tire_rubber_crosslink.gif';
 import treeLatexZoomGif from '@/assets/videos/tree_latex_zoom_polymers.gif';
 
-// ── Strictly Relevant Macro Specimen Photography ──
+// ── Strictly Relevant Macro Item Photography ──
 import antsSugarImg from '@/assets/images/theme1/ants_trail_sugar.jpg';
 import eagleMouseImg from '@/assets/images/theme1/eagle_view_mouse.jpg';
 import snakeVibrationImg from '@/assets/images/specimens/snake_jawbone_vibrations.jpg';
@@ -165,8 +165,8 @@ export const DiscoveryBook: React.FC = () => {
   const currentAsset: ChapterAsset = CHAPTER_PRACTICAL_ASSET_MAP[activeChapter.chapterId] || {
     type: 'gif',
     src: cottonZoomGif,
-    badge: '🔬 Microscopic Specimen Scan',
-    scaleNote: 'High-resolution calibrated specimen structure',
+    badge: '🔬 Microscopic Item Scan',
+    scaleNote: 'High-resolution calibrated item structure',
   };
 
   const handlePronounceChapter = () => {
@@ -392,14 +392,14 @@ export const DiscoveryBook: React.FC = () => {
             </div>
           )}
 
-          {/* Core Specimen Discoveries (3-Card Matrix) */}
+          {/* Core Item Discoveries (3-Card Matrix) */}
           <div className="flex flex-col gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Chapter Specimen Discoveries ({journal.specimenFacts.length} Observations)</span>
+              <span>Chapter Item Discoveries ({journal.itemFacts.length} Observations)</span>
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {journal.specimenFacts.map((f, fIdx) => (
+              {journal.itemFacts.map((f, fIdx) => (
                 <div key={fIdx} className="p-4 bg-gradient-to-tr from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1 shadow-xs">
                   <span className="text-2xl">{f.icon}</span>
                   <span className="text-xs font-black text-amber-950">{f.title}</span>

@@ -40,11 +40,11 @@ import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { SpeechReadAloudCoach } from '@/components/voice/SpeechReadAloudCoach';
 import { THEME_1_CHAPTERS, Theme1Chapter } from '@/data/theme1Missions';
 import {
-  SpecimenAntAntennaSensilla,
-  SpecimenSnakeHollowFang,
-  SpecimenTonguePapillaeTasteBud,
-  SpecimenBurdockVelcroHooks,
-} from '@/components/microscope/MicroscopeSpecimenRenders';
+  SampleAntAntennaSensilla,
+  SampleSnakeHollowFang,
+  SampleTonguePapillaeTasteBud,
+  SampleBurdockVelcroHooks,
+} from '@/components/microscope/MicroscopeSampleRenders';
 import {
   AntTrailPheromoneSim,
   EagleZoomVisionSim,
@@ -367,14 +367,14 @@ export function SuperSensesMissionEngine() {
                 PHASE 3: SCIENTIFIC SPECIMEN & MICROSCOPE STUDIO (Clean Light Theme)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'MICROSCOPE' && (() => {
-              const specimenImages: Record<number, Record<number, { img: string; title: string; desc: string }>> = {
+              const sampleImages: Record<number, Record<number, { img: string; title: string; desc: string }>> = {
                 1: {
                   1: { img: ant1x, title: '1x Macro View: Ant Worker on Trail', desc: 'Macroscopic anatomical view showing whole ant body, jointed legs, and antennae.' },
                   10: { img: ant10x, title: '10x Stereo Zoom: Antenna Base & Joint', desc: '10x magnification showing the mobile scape joint and antennae chemoreceptors.' },
                   100: { img: ant100x, title: '100x High-Power: Sensilla Scent Pores', desc: '100x optical micrograph of individual microscopic sensilla hairs and chemical pores.' },
                 },
                 2: {
-                  1: { img: snake1x, title: '1x Macro View: Spectacled Cobra Jaw', desc: 'Specimen showing the lower jaw resting directly against the ground substrate.' },
+                  1: { img: snake1x, title: '1x Macro View: Spectacled Cobra Jaw', desc: 'Sample showing the lower jaw resting directly against the ground substrate.' },
                   10: { img: snake10x, title: '10x Stereo Zoom: Quadrate Jaw & Scales', desc: '10x view showing keeled keratin scales and flexible quadrate bone for ground acoustics.' },
                   100: { img: snake100x, title: '100x High-Power: Hollow Venom Channel', desc: '100x cross-section showing internal hypodermic needle venom canal of hollow fang.' },
                 },
@@ -396,7 +396,7 @@ export function SuperSensesMissionEngine() {
                 { label: '100x High-Power', val: 100 },
               ];
 
-              const currentSpecimen = specimenImages[num]?.[zoomLevel] || specimenImages[num]?.[10] || specimenImages[1][10];
+              const currentSample = sampleImages[num]?.[zoomLevel] || sampleImages[num]?.[10] || sampleImages[1][10];
 
               return (
                 <div className="w-full bg-white p-5 sm:p-8 rounded-[36px] border-4 border-emerald-400 shadow-xl flex flex-col items-center select-none font-sans">
@@ -407,7 +407,7 @@ export function SuperSensesMissionEngine() {
                         🔬 High-Resolution Scientific Microscope Studio
                       </span>
                       <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                        {currentSpecimen.title}
+                        {currentSample.title}
                       </h3>
                     </div>
 
@@ -438,8 +438,8 @@ export function SuperSensesMissionEngine() {
                       initial={{ scale: 0.95, opacity: 0.6 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.25, ease: 'easeOut' }}
-                      src={currentSpecimen.img}
-                      alt={currentSpecimen.title}
+                      src={currentSample.img}
+                      alt={currentSample.title}
                       className="w-full h-full object-contain select-none"
                     />
 
@@ -451,7 +451,7 @@ export function SuperSensesMissionEngine() {
 
                   {/* Scientific Description Caption */}
                   <div className="w-full max-w-2xl bg-emerald-50/80 p-4 rounded-2xl border-2 border-emerald-200 text-xs sm:text-sm text-slate-800 font-bold text-center mt-3 shadow-xs">
-                    {currentSpecimen.desc}
+                    {currentSample.desc}
                   </div>
                 </div>
               );

@@ -10,7 +10,7 @@ import { ArrowLeft, BookOpen, ArrowRight, Home, Mountain } from 'lucide-react';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { ShelterAnimatedMountainBackground } from '@/components/effects/ShelterAnimatedMountainBackground';
 
-// Clean 3D Specimen Artwork Assets
+// Clean 3D Chapter Cards Assets
 import pashminaImg from '@/assets/images/microscope/pashmina_1x.jpg';
 import cramponsImg from '@/assets/images/specimens/mountaineer_crampons.jpg';
 import spaceWaterImg from '@/assets/images/microscope/microgravity_water_1x.jpg';
@@ -144,7 +144,7 @@ export function ThemeShelterHub() {
                 onClick={() => handleChapterClick(ch.chapterNumber)}
                 className={`rounded-[32px] bg-white border-4 ${art.borderAccent} shadow-xl text-left cursor-pointer transition-all flex flex-col overflow-hidden group select-none`}
               >
-                {/* ── Top 3D Specimen Banner ── */}
+                {/* ── Top 3D Chapter Banner ── */}
                 <div className="w-full h-44 sm:h-48 relative overflow-hidden bg-slate-900">
                   <img
                     src={art.imageSrc}

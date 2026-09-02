@@ -44,7 +44,7 @@ import insulatedCableImg from '@/assets/images/wire/pvc_insulated_cable.jpg';
 import acrylicYarnImg from '@/assets/images/specimens/synthetic_acrylic_yarn.jpg';
 import epoxyGlueImg from '@/assets/images/experiments/epoxy_resin_adhesive_glue.jpg';
 
-interface MysterySpecimen {
+interface MysteryObject {
   id: string;
   name: string;
   image: string;
@@ -57,7 +57,7 @@ interface MysterySpecimen {
   wrongExplanation: string;
 }
 
-const MYSTERY_SPECIMENS: MysterySpecimen[] = [
+const MYSTERY_SPECIMENS: MysteryObject[] = [
   {
     id: 'raincoat',
     name: 'Yellow Storm Raincoat',
@@ -266,18 +266,18 @@ export const MysteryObjectQuiz: React.FC = () => {
   const [streak, setStreak] = useState(0);
   const [isQuizComplete, setIsQuizComplete] = useState(false);
 
-  const specimen = MYSTERY_SPECIMENS[currentIndex];
+  const object = MYSTERY_SPECIMENS[currentIndex];
   const progressPercent = Math.round(((currentIndex + 1) / MYSTERY_SPECIMENS.length) * 100);
 
-  // Shuffle options for the current specimen
+  // Shuffle options for the current object
   const randomizedOptions = React.useMemo(() => {
-    const arr = [...specimen.options];
+    const arr = [...object.options];
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
-  }, [currentIndex, specimen.options]);
+  }, [currentIndex, object.options]);
 
   // Cancel prior voice speech when moving to next question
   React.useEffect(() => {
@@ -293,7 +293,7 @@ export const MysteryObjectQuiz: React.FC = () => {
     setSelectedOption(opt);
     setIsAnswered(true);
 
-    const isCorrect = opt === specimen.correctMaterial;
+    const isCorrect = opt === object.correctMaterial;
 
     if (isCorrect) {
       sounds.success();
@@ -302,17 +302,17 @@ export const MysteryObjectQuiz: React.FC = () => {
       setStreak((st) => st + 1);
       addCredits(10);
       addDiscovery({
-        materialId: specimen.id,
+        materialId: object.id,
         discoveredAt: Date.now(),
-        properties: specimen.clues,
-        uses: [specimen.name],
-        scienceWord: specimen.correctMaterial,
+        properties: object.clues,
+        uses: [object.name],
+        scienceWord: object.correctMaterial,
       });
-      voiceAssistant.speak(specimen.rightExplanation);
+      voiceAssistant.speak(object.rightExplanation);
     } else {
       sounds.boing();
       setStreak(0);
-      voiceAssistant.speak(specimen.wrongExplanation);
+      voiceAssistant.speak(object.wrongExplanation);
     }
   };
 
@@ -328,7 +328,7 @@ export const MysteryObjectQuiz: React.FC = () => {
       sounds.fanfare();
       setIsQuizComplete(true);
       addCredits(50);
-      voiceAssistant.speak(`Grand Master of Materials! You completed the Specimen Mystery Quiz Lab with ${score} points!`);
+      voiceAssistant.speak(`Grand Master of Materials! You completed the Object Mystery Quiz Lab with ${score} points!`);
     }
   };
 
@@ -365,7 +365,7 @@ export const MysteryObjectQuiz: React.FC = () => {
             <div className="flex items-center gap-2">
               <Search className="w-5 h-5 text-amber-400" />
               <span className="font-black text-sm text-white hidden md:inline">
-                Specimen Mystery Quiz Lab 🔬
+                Object Mystery Quiz Lab 🔬
               </span>
             </div>
           </div>
@@ -410,11 +410,11 @@ export const MysteryObjectQuiz: React.FC = () => {
         ═══════════════════════════════════════════════════════════════════ */}
         {!isQuizComplete ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Column: Specimen Macro Photography Studio (5 cols) */}
+            {/* Left Column: Object Macro Photography Studio (5 cols) */}
             <div className="lg:col-span-5 bg-slate-800/90 border-4 border-amber-400/60 rounded-3xl p-5 shadow-2xl flex flex-col items-center relative overflow-hidden">
               <div className="flex items-center justify-between w-full mb-3">
                 <span className="px-3 py-1 bg-amber-400/20 border border-amber-400/40 text-amber-300 rounded-full text-xs font-black uppercase tracking-wider">
-                  Unknown Specimen #{currentIndex + 1}
+                  Unknown Object #{currentIndex + 1}
                 </span>
                 <button
                   onClick={() => {
@@ -433,8 +433,8 @@ export const MysteryObjectQuiz: React.FC = () => {
                 <motion.img
                   animate={{ scale: isZoomed ? 1.75 : 1 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  src={specimen.image}
-                  alt={specimen.name}
+                  src={object.image}
+                  alt={object.name}
                   className="w-full h-full object-cover select-none cursor-pointer"
                   onClick={() => setIsZoomed(!isZoomed)}
                 />
@@ -445,12 +445,12 @@ export const MysteryObjectQuiz: React.FC = () => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className={`absolute bottom-3 px-4 py-1.5 rounded-full text-xs font-black shadow-xl border-2 ${
-                      specimen.classification === 'Natural'
+                      object.classification === 'Natural'
                         ? 'bg-emerald-500 text-slate-950 border-white'
                         : 'bg-sky-500 text-slate-950 border-white'
                     }`}
                   >
-                    {specimen.classification === 'Natural' ? '🌿 100% NATURAL MATERIAL' : '🧪 SYNTHETIC POLYMER'}
+                    {object.classification === 'Natural' ? '🌿 100% NATURAL MATERIAL' : '🧪 SYNTHETIC POLYMER'}
                   </motion.div>
                 )}
               </div>
@@ -459,7 +459,7 @@ export const MysteryObjectQuiz: React.FC = () => {
                 className="text-xl sm:text-2xl font-black text-white mt-4 text-center"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
-                {specimen.name}
+                {object.name}
               </h3>
             </div>
 
@@ -472,11 +472,11 @@ export const MysteryObjectQuiz: React.FC = () => {
                     <Sparkles className="w-4 h-4 text-amber-400" />
                     <h4 className="text-sm font-black text-slate-200">Investigation Clues</h4>
                   </div>
-                  {unlockedClues < specimen.clues.length && !isAnswered && (
+                  {unlockedClues < object.clues.length && !isAnswered && (
                     <button
                       onClick={() => {
                         sounds.pop();
-                        setUnlockedClues((c) => Math.min(c + 1, specimen.clues.length));
+                        setUnlockedClues((c) => Math.min(c + 1, object.clues.length));
                       }}
                       className="px-3 py-1 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
                     >
@@ -486,7 +486,7 @@ export const MysteryObjectQuiz: React.FC = () => {
                 </div>
 
                 <div className="space-y-2.5">
-                  {specimen.clues.slice(0, unlockedClues).map((clue, idx) => (
+                  {object.clues.slice(0, unlockedClues).map((clue, idx) => (
                     <motion.div
                       key={idx}
                       initial={{ opacity: 0, x: -10 }}
@@ -505,13 +505,13 @@ export const MysteryObjectQuiz: React.FC = () => {
               {/* Multiple Choice Material Options */}
               <div className="space-y-2.5">
                 <span className="text-xs font-black text-slate-400 block ml-1">
-                  What material is this specimen constructed from?
+                  What material is this object constructed from?
                 </span>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {randomizedOptions.map((opt) => {
                     const isSelected = selectedOption === opt;
-                    const isCorrect = opt === specimen.correctMaterial;
+                    const isCorrect = opt === object.correctMaterial;
 
                     let btnStyle = 'bg-slate-800 border-slate-700 hover:bg-slate-750 text-white';
                     if (isAnswered) {
@@ -548,19 +548,19 @@ export const MysteryObjectQuiz: React.FC = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={`p-4 rounded-3xl border-3 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl ${
-                    selectedOption === specimen.correctMaterial
+                    selectedOption === object.correctMaterial
                       ? 'bg-emerald-950/80 border-emerald-400 text-emerald-200'
                       : 'bg-rose-950/80 border-rose-400 text-rose-200'
                   }`}
                 >
                   <div className="flex items-center gap-3 text-center sm:text-left">
-                    <Pip mood={selectedOption === specimen.correctMaterial ? 'celebrating' : 'curious'} size="sm" />
+                    <Pip mood={selectedOption === object.correctMaterial ? 'celebrating' : 'curious'} size="sm" />
                     <div>
                       <h5 className="font-black text-sm text-white">
-                        {selectedOption === specimen.correctMaterial ? '🎉 Correct Identification!' : '🔬 Review Science Observation:'}
+                        {selectedOption === object.correctMaterial ? '🎉 Correct Identification!' : '🔬 Review Science Observation:'}
                       </h5>
                       <p className="text-xs font-bold mt-0.5 leading-relaxed">
-                        {selectedOption === specimen.correctMaterial ? specimen.rightExplanation : specimen.wrongExplanation}
+                        {selectedOption === object.correctMaterial ? object.rightExplanation : object.wrongExplanation}
                       </p>
                     </div>
                   </div>
@@ -590,7 +590,7 @@ export const MysteryObjectQuiz: React.FC = () => {
                 Junior Scientist Certified 🎓
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Specimen Mystery Master!
+                Object Mystery Master!
               </h2>
               <p className="text-sm text-slate-300 font-bold max-w-md mx-auto">
                 You successfully analyzed and classified all 12 real-world materials using macroscopic investigation and material properties!

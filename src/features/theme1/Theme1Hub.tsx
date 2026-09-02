@@ -130,7 +130,7 @@ export function Theme1Hub() {
           </div>
         </div>
 
-        {/* ── 4 Re-Engineered 3D Specimen Chapter Cards ── */}
+        {/* ── 4 Re-Engineered 3D Chapter Cards ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
           {THEME_1_CHAPTERS.map((ch) => {
             const art = CHAPTER_ARTWORK[ch.chapterNumber] || CHAPTER_ARTWORK[1];
