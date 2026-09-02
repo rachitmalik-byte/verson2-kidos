@@ -12,7 +12,7 @@ export interface PipProps {
   mood?: PipMood;
   stateOverride?: PipState;
   className?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;
   showGoggles?: boolean;
   showPointerStick?: boolean;
   interactive?: boolean;
@@ -70,12 +70,19 @@ export const Pip: React.FC<PipProps> = ({
   const [highFiveImpact, setHighFiveImpact] = useState(false);
   const [showWardrobeQuickBtn, setShowWardrobeQuickBtn] = useState(false);
 
-  const sizeClasses = {
-    sm: 'w-20 h-20',
-    md: 'w-32 h-32 sm:w-36 sm:h-36',
-    lg: 'w-44 h-44 sm:w-52 sm:h-52',
-    xl: 'w-56 h-56 sm:w-64 sm:h-64',
+  const sizeClasses: Record<string, string> = {
+    xs: 'w-14 h-14 min-w-[56px] min-h-[56px]',
+    sm: 'w-20 h-20 min-w-[80px] min-h-[80px]',
+    md: 'w-28 h-28 sm:w-32 sm:h-32 min-w-[112px] min-h-[112px]',
+    lg: 'w-40 h-40 sm:w-48 sm:h-48 min-w-[160px] min-h-[160px]',
+    xl: 'w-52 h-52 sm:w-60 sm:h-60 min-w-[208px] min-h-[208px]',
   };
+
+  const isNumericSize = typeof size === 'number';
+  const customSizeStyle: React.CSSProperties = isNumericSize
+    ? { width: size, height: size, minWidth: size, minHeight: size, maxWidth: size, maxHeight: size }
+    : {};
+  const computedSizeClass = isNumericSize ? '' : (sizeClasses[size as string] || sizeClasses.md);
 
   // ── 1. BUTTERY SMOOTH CURSOR EYE TRACKING ──
   useEffect(() => {
@@ -257,8 +264,8 @@ export const Pip: React.FC<PipProps> = ({
       onClick={handleClick}
       onMouseEnter={() => setShowWardrobeQuickBtn(true)}
       onMouseLeave={() => setShowWardrobeQuickBtn(false)}
-      className={`relative select-none inline-block ${interactive ? 'cursor-pointer' : 'cursor-default'} ${sizeClasses[size]} ${className}`}
-      style={{ filter: 'drop-shadow(0 8px 16px rgba(124, 58, 237, 0.22))' }}
+      className={`relative select-none inline-block ${interactive ? 'cursor-pointer' : 'cursor-default'} ${computedSizeClass} ${className}`}
+      style={{ filter: 'drop-shadow(0 8px 16px rgba(124, 58, 237, 0.22))', ...customSizeStyle }}
     >
       {/* Tap Floating Emojis */}
       <AnimatePresence>
