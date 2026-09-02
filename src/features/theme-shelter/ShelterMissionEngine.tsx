@@ -358,28 +358,73 @@ export function ShelterMissionEngine() {
       />
 
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center relative z-10">
-        {/* Top Navbar */}
-        <div className="w-full flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 rounded-3xl border-2 border-indigo-200 shadow-md mb-4">
-          <button
-            onClick={() => {
-              sounds.pop();
-              voiceAssistant.stop();
-              navigate('/theme/shelter/hub');
-            }}
-            className="p-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Theme Hub</span>
-          </button>
-
+        {/* Top Navbar with Instant Phase Jumper & Skip Intro */}
+        <div className="w-full flex flex-wrap items-center justify-between gap-2 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-3xl border-2 border-indigo-200 shadow-md mb-4">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-indigo-100 text-indigo-900 rounded-full text-xs font-black">
-              Chapter {chapter.chapterNumber} of {SHELTER_CHAPTERS.length}
-            </span>
-            <span className="text-xs font-black text-slate-600">
-              Phase {currentStepIndex + 1} / {totalSteps}
+            <button
+              onClick={() => {
+                sounds.pop();
+                voiceAssistant.stop();
+                navigate('/theme/shelter/hub');
+              }}
+              className="p-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Theme Hub</span>
+            </button>
+
+            <span className="px-3 py-1 bg-indigo-100 text-indigo-900 rounded-full text-xs font-black hidden sm:inline-block">
+              Chapter {chapter.chapterNumber}: {chapter.title}
             </span>
           </div>
+
+          {/* Interactive Phase Navigation Pills (Jump to any phase directly!) */}
+          <div className="flex items-center gap-1 overflow-x-auto py-1">
+            {phaseOrder.map((phase, idx) => {
+              const phaseLabels: Record<string, string> = {
+                HOOK: '1. Intro 📖',
+                EXPERIMENT: '2. Live Lab 🔬',
+                MICROSCOPE: '3. Scope 🔍',
+                SCIENCE_LAW: '4. Principle 💡',
+                SPEECH_COACH: '5. Coach 🗣️',
+                QUIZ_LAB: '6. Quiz 🎯',
+              };
+              const isCurrent = currentPhase === phase;
+              return (
+                <button
+                  key={phase}
+                  onClick={() => {
+                    sounds.pop();
+                    setCurrentPhase(phase);
+                  }}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 cursor-pointer transition-all ${
+                    isCurrent
+                      ? 'bg-indigo-600 text-white shadow-md ring-2 ring-indigo-300'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                  }`}
+                  title={`Jump to ${phaseLabels[phase] || phase}`}
+                >
+                  {phaseLabels[phase] || phase}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Direct "Skip Intro" Quick Action */}
+          {currentPhase === 'HOOK' && (
+            <button
+              onClick={() => {
+                sounds.fanfare();
+                voiceAssistant.stop();
+                setCurrentPhase('EXPERIMENT');
+              }}
+              className="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all border border-amber-500"
+              title="Skip introduction and jump straight into the interactive lab"
+            >
+              <span>⚡ Skip Intro</span>
+              <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+            </button>
+          )}
         </div>
 
         {/* Phase Content View */}
@@ -408,13 +453,26 @@ export function ShelterMissionEngine() {
                   {chapter.realWorldWonder}
                 </p>
 
-                <button
-                  onClick={handleNextPhase}
-                  className="px-10 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-lg rounded-2xl shadow-lg cursor-pointer transition-all active:scale-95 flex items-center gap-2"
-                >
-                  <span>Enter Live Experiment Lab 🔬</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    onClick={handleNextPhase}
+                    className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-base sm:text-lg rounded-2xl shadow-lg cursor-pointer transition-all active:scale-95 flex items-center gap-2"
+                  >
+                    <span>Enter Live Experiment Lab 🔬</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      sounds.fanfare();
+                      voiceAssistant.stop();
+                      setCurrentPhase('EXPERIMENT');
+                    }}
+                    className="px-6 py-4 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-base rounded-2xl shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 border-2 border-amber-500"
+                  >
+                    <span>⚡ Skip Intro & Start Lab</span>
+                  </button>
+                </div>
               </div>
             )}
 
