@@ -10,37 +10,53 @@ import {
   CheckCircle2,
   Globe,
   HelpCircle,
+  Zap,
+  Flame,
+  ArrowRight,
 } from 'lucide-react';
 
 export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }> = ({ onCompleted }) => {
-  const [currentStation, setCurrentStation] = useState<'cohesion' | 'daily_life' | 'gravity_toggle'>('cohesion');
+  const [currentStation, setCurrentStation] = useState<'cohesion' | 'gravity_toggle'>('cohesion');
 
-  // Station A: Water Blob State
-  const [blobSize, setBlobSize] = useState(0); // 0 (empty) to 50px
-  const [isTowelAbsorbed, setIsTowelAbsorbed] = useState(false);
+  // Station A: Floating Water Spheres
+  const [waterBlobs, setWaterBlobs] = useState<{ id: number; size: number; x: number; y: number }[]>([
+    { id: 1, size: 36, x: 0, y: 0 },
+  ]);
 
-  // Station C: Gravity Toggle State
+  // Station B: Gravity Mode
   const [gravityMode, setGravityMode] = useState<'orbit' | 'earth'>('orbit');
 
   const handleSqueezePouch = () => {
     sounds.sparkle();
-    const newSize = Math.min(55, blobSize + 15);
-    setBlobSize(newSize);
-    setIsTowelAbsorbed(false);
+    const newBlob = {
+      id: Date.now(),
+      size: 28 + Math.random() * 16,
+      x: (Math.random() - 0.5) * 80,
+      y: (Math.random() - 0.5) * 60,
+    };
+    setWaterBlobs((prev) => [...prev, newBlob]);
 
     voiceAssistant.speak(
-      'Water squeezed! Watch how surface tension pulls water into a floating round liquid sphere in zero gravity!'
+      'Water squeezed! In zero gravity freefall, cohesive surface tension pulls liquid water into floating spheres!'
     );
+    if (onCompleted) onCompleted();
+  };
+
+  const handleMergeBlobs = () => {
+    sounds.pop();
+    if (waterBlobs.length > 1) {
+      sounds.success();
+      setWaterBlobs([{ id: Date.now(), size: 56, x: 0, y: 0 }]);
+      voiceAssistant.speak('Floating water droplets collided and merged into one giant liquid sphere!');
+    }
   };
 
   const handleAbsorbWater = () => {
-    if (blobSize > 0) {
-      sounds.pop();
-      setIsTowelAbsorbed(true);
-      setBlobSize(0);
-      sounds.success();
-      voiceAssistant.speak('Towel captured the floating droplet! Astronauts use paper towels to dry their hands in space!');
-      if (onCompleted) onCompleted();
+    sounds.pop();
+    if (waterBlobs.length > 0) {
+      sounds.bubble();
+      setWaterBlobs([]);
+      voiceAssistant.speak('Towel captured the floating water droplets! Astronauts use towels to capture floating bubbles in space!');
     }
   };
 
@@ -49,226 +65,234 @@ export const SunitaInSpaceMultiStationLab: React.FC<{ onCompleted?: () => void }
     setGravityMode(mode);
     if (mode === 'orbit') {
       sounds.sparkle();
-      voiceAssistant.speak('Orbital weightlessness! The space station is falling around Earth, creating continuous zero-g freefall!');
+      voiceAssistant.speak(
+        'Orbital Freefall (0g)! The International Space Station is in continuous freefall around Earth, so water floats as spheres!'
+      );
     } else {
-      voiceAssistant.speak('Earth gravity 1g! Earth’s mass pulls all objects downwards at 9.8 meters per second squared.');
+      sounds.success();
+      voiceAssistant.speak(
+        'Earth Gravity (1g)! Earth’s gravity pulls water straight down into the cup.'
+      );
     }
   };
 
   return (
-    <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col items-center text-white relative overflow-hidden">
-      {/* 3-Station Navigation Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-6 bg-slate-900 p-1.5 rounded-2xl border border-slate-700">
-        {[
-          { id: 'cohesion', label: '1. Surface Tension & Water Spheres 💧', desc: 'Liquid Physics' },
-          { id: 'daily_life', label: '2. Daily Life in Orbit vs Earth 👩‍🚀', desc: 'Habitats' },
-          { id: 'gravity_toggle', label: '3. 1g Earth vs 0g Orbit Freefall 🌍', desc: 'Gravity Engine' },
-        ].map((s) => (
+    <div className="w-full max-w-4xl bg-white p-5 sm:p-7 rounded-[36px] border-4 border-indigo-400 shadow-2xl flex flex-col items-center select-none font-sans text-slate-900">
+      {/* Top Header Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-4 border-b-2 border-indigo-100 pb-3">
+        <div className="text-center sm:text-left">
+          <span className="text-xs font-black uppercase text-indigo-800 bg-indigo-100 px-3 py-1 rounded-full border border-indigo-300 inline-block mb-1 shadow-xs">
+            🚀 2.5D Space Station Microgravity Lab
+          </span>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            Sunita Williams: Why Does Water Float in Space?
+          </h3>
+        </div>
+
+        {/* 2 Navigation Mode Buttons */}
+        <div className="flex items-center gap-2">
           <button
-            key={s.id}
             onClick={() => {
               sounds.pop();
-              setCurrentStation(s.id as any);
+              setCurrentStation('cohesion');
             }}
-            className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all cursor-pointer ${
-              currentStation === s.id
-                ? 'bg-indigo-600 text-white shadow-lg ring-2 ring-indigo-400 scale-102'
-                : 'text-slate-400 hover:text-white'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-black border cursor-pointer transition-all shadow-sm ${
+              currentStation === 'cohesion'
+                ? 'bg-indigo-600 text-white border-indigo-700 ring-2 ring-indigo-300'
+                : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
             }`}
           >
-            {s.label}
+            💧 1. Floating Water Spheres
           </button>
-        ))}
+          <button
+            onClick={() => {
+              sounds.pop();
+              setCurrentStation('gravity_toggle');
+            }}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-black border cursor-pointer transition-all shadow-sm ${
+              currentStation === 'gravity_toggle'
+                ? 'bg-indigo-600 text-white border-indigo-700 ring-2 ring-indigo-300'
+                : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            🌍 2. 0g Orbit vs 1g Earth
+          </button>
+        </div>
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════
-          STATION 1: LIQUID SURFACE TENSION & COHESION
-      ════════════════════════════════════════════════════════════════ */}
+      {/* ── STATION 1: FLOATING SURFACE TENSION WATER SPHERES ── */}
       {currentStation === 'cohesion' && (
         <div className="w-full flex flex-col items-center">
-          <span className="text-xs font-black uppercase text-indigo-400 mb-1">
-            Station A: Surface Tension & Floating Water Droplets
-          </span>
-          <p className="text-xs text-slate-300 font-bold mb-4 text-center max-w-md">
-            Squeeze the drink pouch to dispense water in orbit, then use the microfiber towel to catch the floating sphere!
-          </p>
-
-          <div className="relative w-full max-w-md h-72 rounded-3xl bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-950 border-3 border-indigo-500 shadow-2xl flex items-center justify-between p-6 overflow-hidden">
-            {/* Squeeze Drink Pouch (Left) */}
-            <div className="flex flex-col items-center">
-              <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleSqueezePouch}
-                className="w-20 h-28 bg-gradient-to-b from-sky-400 to-blue-600 rounded-xl border-3 border-white shadow-xl flex flex-col items-center justify-between py-2 cursor-pointer"
-              >
-                <span className="text-xs font-black text-slate-950">DRINK POUCH</span>
-                <span className="text-2xl">🧃</span>
-                <span className="text-[9px] font-black text-white bg-slate-900/80 px-2 py-0.5 rounded-full">
-                  Squeeze!
-                </span>
-              </motion.button>
+          {/* 2.5D ISS Cupola Viewing Dome Stage */}
+          <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-4 border-indigo-600 shadow-2xl bg-gradient-to-b from-[#020617] via-[#09142e] to-[#0284c7] flex items-center justify-center relative">
+            {/* Earth Horizon Orbit View in Background */}
+            <div className="absolute inset-0 pointer-events-none flex items-end justify-center overflow-hidden opacity-60">
+              <div className="w-[180%] h-56 bg-gradient-to-t from-sky-400 via-blue-600 to-transparent rounded-[100%] blur-sm" />
             </div>
 
-            {/* Floating Wobbly Water Sphere (Center) */}
-            <div className="flex-1 flex items-center justify-center relative">
-              {blobSize > 0 && !isTowelAbsorbed ? (
+            {/* ISS Metal Truss Frame & Space Station Interior Details */}
+            <div className="absolute inset-0 pointer-events-none border-8 border-slate-800/80 rounded-3xl" />
+
+            {/* Astronaut Sunita Williams Floating in Module (Left) */}
+            <motion.div
+              animate={{ y: [0, -8, 0], rotate: [-2, 2, -2] }}
+              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+              className="absolute left-6 bottom-8 pointer-events-none flex flex-col items-center z-10"
+            >
+              <span className="text-4xl">👩‍🚀</span>
+              <span className="text-[10px] font-black text-indigo-200 bg-slate-900/90 px-2.5 py-0.5 rounded-full border border-indigo-400 mt-1 shadow-md">
+                Sunita Williams (ISS)
+              </span>
+            </motion.div>
+
+            {/* Floating Water Spheres with Cohesive Surface Tension Wobble (Center) */}
+            <div className="relative w-64 h-64 flex items-center justify-center z-20">
+              {waterBlobs.map((blob) => (
                 <motion.div
+                  key={blob.id}
                   animate={{
-                    scale: [1, 1.08, 0.95, 1],
-                    y: [-6, 6, -6],
+                    x: [blob.x, blob.x + 8, blob.x - 8, blob.x],
+                    y: [blob.y, blob.y - 10, blob.y + 6, blob.y],
+                    scale: [1, 1.06, 0.96, 1],
                   }}
-                  transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-                  className="rounded-full bg-gradient-to-br from-cyan-200 via-sky-400 to-blue-600 border-2 border-white/90 shadow-[0_0_30px_#38bdf8] flex items-center justify-center relative"
-                  style={{ width: blobSize * 2, height: blobSize * 2 }}
+                  transition={{ repeat: Infinity, duration: 3 + (blob.id % 3) * 0.5, ease: 'easeInOut' }}
+                  className="absolute rounded-full shadow-[0_0_20px_#38bdf8] flex items-center justify-center"
+                  style={{
+                    width: blob.size,
+                    height: blob.size,
+                    background: 'radial-gradient(circle at 35% 35%, #ffffff 0%, #7dd3fc 45%, #0284c7 85%, #0369a1 100%)',
+                    border: '2px solid rgba(255,255,255,0.85)',
+                  }}
                 >
-                  <div className="w-3 h-3 bg-white rounded-full absolute top-2 left-2 opacity-80" />
-                  <span className="text-[9px] font-black text-slate-950">Surface Tension</span>
+                  <span className="text-[8px] font-black text-white/90 drop-shadow select-none">
+                    H₂O
+                  </span>
                 </motion.div>
-              ) : isTowelAbsorbed ? (
-                <span className="text-xs font-black text-emerald-400 bg-emerald-950/80 px-3 py-1.5 rounded-full border border-emerald-500">
-                  ✓ Water Droplet Absorbed by Towel!
-                </span>
-              ) : (
-                <span className="text-xs font-bold text-slate-500">
-                  Tap Drink Pouch to Inject Water Blob
-                </span>
+              ))}
+
+              {waterBlobs.length === 0 && (
+                <div className="text-xs font-black text-indigo-300 bg-slate-900/80 px-4 py-2 rounded-2xl border border-indigo-500">
+                  💧 Squeeze the Drink Pouch below to create floating water spheres!
+                </div>
               )}
             </div>
 
-            {/* Microfiber Towel Catch Tool (Right) */}
-            <div className="flex flex-col items-center">
-              <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleAbsorbWater}
-                disabled={blobSize === 0}
-                className="w-20 h-28 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 rounded-xl border-3 border-white shadow-xl flex flex-col items-center justify-between py-2 cursor-pointer text-slate-950 font-black text-xs"
+            {/* Bottom Status Banner */}
+            <div className="absolute bottom-3 left-4 right-4 bg-slate-950/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-indigo-400 text-xs font-bold text-white shadow-lg text-center z-20">
+              {waterBlobs.length > 1
+                ? `💧 ${waterBlobs.length} water spheres floating! Tap "Merge Water Spheres" to combine them!`
+                : waterBlobs.length === 1
+                ? '💧 Zero-G Physics: Surface tension pulls water molecules inward into a perfect round bubble!'
+                : 'Towel dried the water! Squeeze the drink pouch to inject new water!'}
+            </div>
+          </div>
+
+          {/* Interactive Action Controls */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-4 w-full">
+            <button
+              onClick={handleSqueezePouch}
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-sky-400 to-blue-600 hover:brightness-110 text-white font-black text-xs sm:text-sm shadow-md cursor-pointer active:scale-95 transition-all flex items-center gap-2"
+            >
+              <Droplets className="w-5 h-5 text-sky-100" />
+              <span>🧃 Squeeze Straw Drink Pouch (+Water)</span>
+            </button>
+
+            {waterBlobs.length > 1 && (
+              <button
+                onClick={handleMergeBlobs}
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:brightness-110 text-white font-black text-xs sm:text-sm shadow-md cursor-pointer active:scale-95 transition-all flex items-center gap-2"
               >
-                <span>TOWEL</span>
-                <span className="text-2xl">🧻</span>
-                <span className="text-[9px] bg-slate-950 text-white px-2 py-0.5 rounded-full">
-                  Absorb!
-                </span>
-              </motion.button>
-            </div>
+                <Sparkles className="w-5 h-5 text-amber-300" />
+                <span>✨ Merge Into Giant Water Sphere</span>
+              </button>
+            )}
+
+            {waterBlobs.length > 0 && (
+              <button
+                onClick={handleAbsorbWater}
+                className="px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs border border-slate-300 cursor-pointer active:scale-95 transition-all flex items-center gap-1.5"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>Catch with Microfiber Towel</span>
+              </button>
+            )}
           </div>
         </div>
       )}
 
-      {/* ════════════════════════════════════════════════════════════════
-          STATION 2: DAILY LIFE IN ORBIT VS EARTH
-      ════════════════════════════════════════════════════════════════ */}
-      {currentStation === 'daily_life' && (
-        <div className="w-full flex flex-col items-center">
-          <span className="text-xs font-black uppercase text-indigo-400 mb-1">
-            Station B: Sunita Williams Daily Living Matrix (Earth vs ISS Orbit)
-          </span>
-          <p className="text-xs text-slate-300 font-bold mb-4 text-center max-w-md">
-            Compare how normal daily activities change completely in zero-gravity space orbit!
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl">
-            <div className="p-4 rounded-2xl bg-slate-900 border-2 border-indigo-500 flex flex-col items-center text-center">
-              <span className="text-3xl mb-1">💇‍♀️</span>
-              <h4 className="text-sm font-black text-white">Hair Standing Up</h4>
-              <p className="text-[11px] text-slate-300 mt-1">
-                On Earth, gravity pulls hair down. In orbit, hair floats straight up in all directions!
-              </p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-slate-900 border-2 border-indigo-500 flex flex-col items-center text-center">
-              <span className="text-3xl mb-1">🛌 🪢</span>
-              <h4 className="text-sm font-black text-white">Wall-Tethered Sleep</h4>
-              <p className="text-[11px] text-slate-300 mt-1">
-                No beds! Astronauts strap sleeping bags to the wall so they don't float and bump into computers.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-slate-900 border-2 border-indigo-500 flex flex-col items-center text-center">
-              <span className="text-3xl mb-1">🍝 🫧</span>
-              <h4 className="text-sm font-black text-white">Eating Floating Food</h4>
-              <p className="text-[11px] text-slate-300 mt-1">
-                Food cannot be placed on open plates; astronauts catch floating food pastes with tortillas and velcro trays!
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════
-          STATION 3: 1G EARTH VS 0G ORBIT FREEFALL
-      ════════════════════════════════════════════════════════════════ */}
+      {/* ── STATION 2: 1G EARTH VS 0G ORBIT COMPARISON ── */}
       {currentStation === 'gravity_toggle' && (
         <div className="w-full flex flex-col items-center">
-          <span className="text-xs font-black uppercase text-indigo-400 mb-1">
-            Station C: 1g Earth Gravity vs 0g Orbital Freefall Engine
-          </span>
-          <p className="text-xs text-slate-300 font-bold mb-4 text-center max-w-md">
-            Toggle the gravity physics engine to watch objects fall to the floor vs float in continuous orbital freefall!
-          </p>
-
-          <div className="relative w-full max-w-md h-64 rounded-3xl bg-slate-900 border-3 border-indigo-500 flex items-center justify-around p-6 overflow-hidden">
-            {/* 3 Objects (Apple, Pen, Water Droplet) with Dynamic Physics */}
-            <div className="flex flex-col items-center">
-              <motion.div
-                animate={gravityMode === 'earth' ? { y: 70 } : { y: [-15, 15, -15], rotate: [-10, 10, -10] }}
-                transition={gravityMode === 'earth' ? { type: 'spring', damping: 10 } : { repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-                className="text-4xl"
-              >
-                🍎
-              </motion.div>
-              <span className="text-[9px] font-bold text-slate-400 mt-2">Apple</span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <motion.div
-                animate={gravityMode === 'earth' ? { y: 70 } : { y: [15, -15, 15], rotate: [15, -15, 15] }}
-                transition={gravityMode === 'earth' ? { type: 'spring', damping: 10 } : { repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
-                className="text-4xl"
-              >
-                ✏️
-              </motion.div>
-              <span className="text-[9px] font-bold text-slate-400 mt-2">Pencil</span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <motion.div
-                animate={gravityMode === 'earth' ? { y: 70 } : { y: [-10, 10, -10], scale: [1, 1.1, 1] }}
-                transition={gravityMode === 'earth' ? { type: 'spring', damping: 10 } : { repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
-                className="text-4xl"
-              >
-                💧
-              </motion.div>
-              <span className="text-[9px] font-bold text-slate-400 mt-2">Water Drop</span>
-            </div>
-          </div>
-
-          <div className="flex gap-3 mt-4">
-            <button
+          <div className="relative w-full h-84 sm:h-96 rounded-3xl overflow-hidden border-4 border-indigo-600 shadow-2xl bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-950 flex flex-col sm:flex-row items-center justify-around p-6 text-white">
+            {/* Left Mode: 🌍 1G Earth Gravity */}
+            <div
               onClick={() => handleGravityToggle('earth')}
-              className={`px-5 py-2.5 rounded-2xl font-black text-xs border-2 cursor-pointer transition-all ${
+              className={`flex-1 w-full sm:w-auto h-full p-4 rounded-3xl border-3 cursor-pointer transition-all flex flex-col items-center justify-between ${
                 gravityMode === 'earth'
-                  ? 'bg-amber-400 border-amber-300 text-slate-950 shadow-md ring-2 ring-amber-300'
-                  : 'bg-slate-900 border-slate-700 text-slate-400'
+                  ? 'bg-blue-900/50 border-sky-400 ring-2 ring-sky-300 shadow-xl scale-102'
+                  : 'bg-slate-900/50 border-slate-700 opacity-60 hover:opacity-100'
               }`}
             >
-              🌍 1. Earth Gravity (1.0g - Downward Drop)
-            </button>
+              <div className="text-center">
+                <span className="text-xs font-black uppercase text-sky-400">1. On Earth (1g Gravity)</span>
+                <p className="text-[11px] text-slate-300 mt-1 font-bold">Gravity pulls water down into cups</p>
+              </div>
 
-            <button
+              {/* Visual Cup on Table with Liquid Poured Down */}
+              <div className="flex flex-col items-center my-auto">
+                <div className="w-16 h-22 border-3 border-sky-300 rounded-b-2xl bg-slate-800 relative overflow-hidden flex flex-col justify-end p-1">
+                  <div className="w-full h-14 bg-gradient-to-t from-blue-600 to-sky-400 rounded-b-xl" />
+                </div>
+                <div className="w-24 h-2 bg-amber-800 rounded-full mt-2" />
+                <span className="text-[10px] font-black text-amber-300 mt-1">Water stays in cup</span>
+              </div>
+
+              <span className="text-xs font-black text-sky-300 bg-slate-950 px-3 py-1 rounded-full border border-sky-500">
+                Earth Gravity Active
+              </span>
+            </div>
+
+            {/* Right Mode: 🚀 0G Orbital Freefall */}
+            <div
               onClick={() => handleGravityToggle('orbit')}
-              className={`px-5 py-2.5 rounded-2xl font-black text-xs border-2 cursor-pointer transition-all ${
+              className={`flex-1 w-full sm:w-auto h-full p-4 rounded-3xl border-3 cursor-pointer transition-all flex flex-col items-center justify-between mt-3 sm:mt-0 ${
                 gravityMode === 'orbit'
-                  ? 'bg-indigo-600 border-indigo-400 text-white shadow-md ring-2 ring-indigo-300 scale-102'
-                  : 'bg-slate-900 border-slate-700 text-slate-400'
+                  ? 'bg-purple-900/50 border-purple-400 ring-2 ring-purple-300 shadow-xl scale-102'
+                  : 'bg-slate-900/50 border-slate-700 opacity-60 hover:opacity-100'
               }`}
             >
-              🚀 2. ISS Orbit Freefall (0.0g - Weightless)
-            </button>
+              <div className="text-center">
+                <span className="text-xs font-black uppercase text-purple-300">2. In Orbit ISS (0g Freefall)</span>
+                <p className="text-[11px] text-slate-300 mt-1 font-bold">No downward weight — Water hovers!</p>
+              </div>
+
+              {/* Visual Floating Water Sphere & Astronaut */}
+              <div className="flex flex-col items-center my-auto">
+                <motion.div
+                  animate={{ y: [-6, 6, -6], scale: [1, 1.08, 1] }}
+                  transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
+                  className="w-16 h-16 rounded-full shadow-[0_0_20px_#38bdf8] flex items-center justify-center border-2 border-white"
+                  style={{
+                    background: 'radial-gradient(circle at 35% 35%, #ffffff 0%, #7dd3fc 45%, #0284c7 85%, #0369a1 100%)',
+                  }}
+                >
+                  <span className="text-xs font-black text-white">H₂O</span>
+                </motion.div>
+                <span className="text-[10px] font-black text-purple-200 mt-3">Floating liquid ball</span>
+              </div>
+
+              <span className="text-xs font-black text-purple-300 bg-slate-950 px-3 py-1 rounded-full border border-purple-500">
+                0g Microgravity Active
+              </span>
+            </div>
           </div>
         </div>
       )}
+
+      {/* 5th Grade Key Teaching Secret */}
+      <div className="w-full bg-indigo-50 p-4 rounded-2xl border-2 border-indigo-200 text-center sm:text-left text-xs font-bold text-indigo-950 mt-4">
+        🌍 <strong>5th Grade Science Secret (Microgravity Surface Tension):</strong> In space, the Space Station is falling continuously around Earth in zero-g freefall. Without downward weight, water molecules stick tightly to each other (<strong>cohesion</strong>) and pull the water into <strong>floating round liquid balls</strong>!
+      </div>
     </div>
   );
 };
