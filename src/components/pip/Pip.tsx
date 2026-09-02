@@ -5,6 +5,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useProgressStore } from '@/stores/progressStore';
 import { usePipStore } from '@/stores/pipStore';
+import { useEasterEggStore } from '@/stores/easterEggStore';
 import { Sparkles, Shirt } from 'lucide-react';
 
 export interface PipProps {
@@ -151,6 +152,7 @@ export const Pip: React.FC<PipProps> = ({
   // ── 4. CLICK / TAP INTERACTION ──
   const handleClick = (e: React.MouseEvent) => {
     if (!interactive) return;
+    useEasterEggStore.getState().registerPipClick();
 
     if (currentState === 'high_five' || isHighFiveReadyStore) {
       handleHighFiveClick(e);

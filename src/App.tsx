@@ -26,9 +26,13 @@ import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
 import { TryWithMeEngine } from '@/components/try-with-me/TryWithMeEngine';
 import { EnvironmentFXOverlay } from '@/components/effects/EnvironmentFXOverlay';
 import { AtmosphereControlWidget } from '@/components/effects/AtmosphereControlWidget';
+import { RickrollModal } from '@/components/easter-egg/RickrollModal';
+import { useEasterEggStore } from '@/stores/easterEggStore';
 import { LivePipVoiceSidecar } from '@/components/ai/LivePipVoiceSidecar';
 
 export function App() {
+  const isRickrollOpen = useEasterEggStore((s) => s.isRickrollOpen);
+  const closeRickroll = useEasterEggStore((s) => s.closeRickroll);
   return (
     <ErrorBoundary>
     <BrowserRouter>
@@ -95,6 +99,9 @@ export function App() {
 
         {/* Global Atmosphere & Day/Night Mode Switcher */}
         <AtmosphereControlWidget />
+
+        {/* Secret 7-Click Mascot Rickroll Easter Egg */}
+        <RickrollModal isOpen={isRickrollOpen} onClose={closeRickroll} />
 
         {/* Global Developer Super-Hacks Drawer */}
         <DevDrawer />
