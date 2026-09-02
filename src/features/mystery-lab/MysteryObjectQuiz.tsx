@@ -104,7 +104,7 @@ const MYSTERY_SPECIMENS: MysterySpecimen[] = [
     correctMaterial: 'Synthetic Nylon',
     classification: 'Synthetic',
     rightExplanation: 'Brilliant! Nylon was invented in 1935 as the world’s first fully synthetic fiber. It can hold immense weight without snapping!',
-    wrongExplanation: 'Natural cotton or grass rots and snaps easily under heavy loads. Climbers trust synthetic Nylon because chemists designed it for extreme strength!',
+    wrongExplanation: 'Natural cotton or grass rots and snaps easily under heavy loads. Climbers trust synthetic Nylon because scientists designed it for extreme strength!',
   },
   {
     id: 'wood-timber',
@@ -184,7 +184,7 @@ const MYSTERY_SPECIMENS: MysterySpecimen[] = [
     correctMaterial: 'Bakelite (Thermoset Plastic)',
     classification: 'Synthetic',
     rightExplanation: 'Genius! Bakelite was the first fully synthetic plastic invented in 1907. It is a thermoset polymer that never melts, protecting your hands from burns!',
-    wrongExplanation: 'Metals like copper or iron get blistering hot and would burn your hand! Chemists invented synthetic Bakelite plastic because it blocks heat.',
+    wrongExplanation: 'Metals like copper or iron get blistering hot and would burn your hand! Scientists invented heat-proof Bakelite plastic because it blocks heat.',
   },
   {
     id: 'silk-cocoon',
@@ -232,7 +232,7 @@ const MYSTERY_SPECIMENS: MysterySpecimen[] = [
     correctMaterial: 'Synthetic Acrylic Yarn',
     classification: 'Synthetic',
     rightExplanation: 'Spot on! Acrylic is synthetic wool created in laboratories. It provides cozy winter warmth while resisting moths and shrinking in the wash!',
-    wrongExplanation: 'Acrylic was invented by chemists to mimic sheep wool at lower cost and with higher durability against laundry washes.',
+    wrongExplanation: 'Acrylic was invented by scientists to work like sheep wool at lower cost and with higher durability against laundry washes.',
   },
   {
     id: 'epoxy-glue',

@@ -930,7 +930,7 @@ export function generateFallbackLessonConfig(prompt: string, targetGrade: number
         id: 'step_1',
         type: 'sorting_tray',
         title: 'Two-Tray Classification Workbench',
-        pipPrompt: 'Help me sort these materials! Did they come from living nature, or were they synthesized by chemists in a factory?',
+        pipPrompt: 'Help me sort these materials! Did they come from living nature, or were they made by scientists in a lab?',
         trays: [
           {
             id: 'natural',

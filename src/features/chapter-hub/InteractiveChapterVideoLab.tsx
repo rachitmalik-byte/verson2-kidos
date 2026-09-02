@@ -363,7 +363,7 @@ export const VIDEO_COURSES: VideoCourse[] = [
         timeLabel: '01:20',
         title: '2. What Makes a Material "Synthetic"?',
         summary:
-          'A material is synthetic when human chemists use chemical reactions to alter the atomic bonds of natural resources, creating a brand-new substance with different properties.',
+          'A material is synthetic when scientists make new materials in labs with special powers that do not exist in nature.',
         keyLaw: '🔬 Synthetic materials undergo permanent chemical changes to gain new properties.',
         image: nylonCordImg,
         quickQuestion: {

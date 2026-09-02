@@ -119,7 +119,7 @@ export const GUIDEBOOK_CHAPTERS: GuidebookChapter[] = [
 
       yearOrEra: "1823 CE",
 
-      discoverer: "Charles Macintosh (Scottish Chemist)",
+      discoverer: "Charles Macintosh (Scottish Inventor)",
 
       narrative: "Before 1823, people wore heavy woolen cloaks coated in wax or oil that melted in summer and cracked in winter. Charles Macintosh sandwiched a thin layer of natural rubber dissolved in coal-tar naphtha between two layers of cotton cloth, inventing the world’s first flexible waterproof raincoat (the Mackintosh)!",
 
@@ -249,9 +249,9 @@ export const GUIDEBOOK_CHAPTERS: GuidebookChapter[] = [
 
       yearOrEra: "1935 CE",
 
-      discoverer: "Wallace Carothers (DuPont Chemist)",
+      discoverer: "Wallace Carothers (DuPont Scientist)",
 
-      narrative: "In 1935, American chemist Wallace Carothers reacted adipic acid and hexamethylenediamine in a test tube. When he pulled a glass stirring rod from the warm liquid, it drew out a silky thread that stretched and hardened into Nylon — the world’s first 100% synthetic fiber!",
+      narrative: "In 1935, American scientist Wallace Carothers reacted adipic acid and hexamethylenediamine in a test tube. When he pulled a glass stirring rod from the warm liquid, it drew out a silky thread that stretched and hardened into Nylon — the world’s first 100% synthetic fiber!",
 
       significance: "Revolutionized human manufacturing by providing a man-made fiber stronger than natural silk and immune to rot."
 
@@ -637,7 +637,7 @@ export const GUIDEBOOK_CHAPTERS: GuidebookChapter[] = [
 
       yearOrEra: "1907 CE",
 
-      discoverer: "Leo Baekeland (Belgian-American Chemist)",
+      discoverer: "Leo Baekeland (Belgian-American Inventor)",
 
       narrative: "In 1907, Leo Baekeland placed phenol and formaldehyde into a high-pressure iron autoclave called the \"Bakelizer\". Under heat and pressure, the chemicals hardened into a dark, glossy, completely infusible solid — Bakelite, the world’s first fully synthetic thermosetting resin!",
 

@@ -167,7 +167,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
       const fallbackMsg: ChatMessage = {
         id: `pip-${Date.now()}`,
         sender: 'pip',
-        text: "That's an awesome science question! 🌟 Remember, natural materials come from plants and animals, while synthetics are made by chemists in labs!",
+        text: "That's an awesome science question! 🌟 Remember, natural materials come from plants and animals, while synthetics are made by scientists in labs!",
         timestamp: Date.now(),
       };
       setMessages((prev) => [...prev, fallbackMsg]);

@@ -83,7 +83,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     image: nylonThreadSpoolImg,
     type: 'synthetic',
     origin: 'Petrochemical Polymerization',
-    hint: 'Synthesized by chemists in a lab!',
+    hint: 'Made by scientists in a lab!',
     description: 'Man-made continuous polymer chain with extreme tensile strength.',
   },
   {
@@ -295,7 +295,7 @@ export function SortingMission() {
               <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
                 Pip's laboratory desk is piled high with real materials from all around the world! Some were grown by{' '}
                 <span className="text-emerald-700 font-black">Mother Nature</span>, while others were synthesized by{' '}
-                <span className="text-sky-700 font-black">Chemists in Factories</span>. Can you sort them into the right scientific trays?
+                <span className="text-sky-700 font-black">Scientists in Labs</span>. Can you sort them into the right scientific trays?
               </p>
 
               {/* Real Specimen Gallery Preview */}
@@ -378,7 +378,7 @@ export function SortingMission() {
                   <div className="flex items-center gap-2 mb-2">
                     <Factory className="w-6 h-6 text-sky-600" />
                     <h3 className="font-black text-lg text-sky-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                      🏭 MADE BY CHEMISTS (Synthetic)
+                      🏭 MADE BY SCIENTISTS (Synthetic)
                     </h3>
                   </div>
                   <span className="text-xs font-bold text-sky-700">
@@ -486,7 +486,7 @@ export function SortingMission() {
                 <div className="flex flex-col gap-2.5">
                   {[
                     'They are grown naturally by living plants, animals, and trees 🌱',
-                    'They were invented by chemists inside laboratories 🧪',
+                    'They were invented by scientists inside laboratories 🧪',
                     'They are all made from melted plastic beads 🫙',
                   ].map((option, idx) => (
                     <button
@@ -594,7 +594,7 @@ export function SortingMission() {
                 Mastery Challenge: The Lab Invention 🔬
               </h2>
               <p className="text-sm md:text-base text-slate-600 font-bold mb-6">
-                A chemist mixes petroleum compounds in a test tube to invent an unbreakable new plastic bottle. Is this material Natural or Synthetic?
+                A scientist creates a brand new unbreakable plastic bottle inside a laboratory. Is this material Natural or Synthetic?
               </p>
 
               <div className="grid grid-cols-2 gap-4 w-full mb-6">

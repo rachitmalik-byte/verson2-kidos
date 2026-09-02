@@ -95,7 +95,7 @@ export const GUIDE_STORIES: GuideStory[] = [
     ),
     content: [
       'Before 1935, every thread in the world came from plants or animals — like sheep wool and silkworm cocoons.',
-      'Then, brilliant chemists discovered that by linking petroleum chemicals together under high pressure, they could create a brand-new fibre called Nylon.',
+      'Then, brilliant scientists discovered that by linking petroleum chemicals together under high pressure, they could create a brand-new fibre called Nylon.',
       'When scientists tested nylon on tensile weight machines, they were stunned: a single thin strand of nylon held MORE weight than steel wire of the exact same thickness!',
       'Today, nylon is used for parachutes, mountain climbing ropes, fishing nets, and toothbrush bristles.',
     ],

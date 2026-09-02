@@ -1794,7 +1794,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 </div>
                 <h2 className="text-3xl font-black text-slate-900 mb-2">The Race Track Rubber Mystery! 🏎️🛞</h2>
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base">
-                  Natural rubber comes from milky tree latex. But racing cars at 300 km/h heat tyres up to 160°C! How did chemists transform rubber into high-grip racing tyres?
+                  Natural rubber comes from milky tree latex. But racing cars at 300 km/h heat tyres up to 160°C! How did scientists transform rubber into high-grip racing tyres?
                 </p>
                 <button
                   onClick={() => {

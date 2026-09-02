@@ -219,7 +219,7 @@ export const MATERIALS_COURSE_CHAPTERS: CourseChapter[] = [
           { text: 'Nylon parachute rope synthesized from petrochemical monomers', isCorrect: true },
           { text: 'Raw silk spun from a silkworm cocoon', isCorrect: false }
         ],
-        explanation: "Nylon was invented in 1935 by chemist Wallace Carothers as the world’s first 100% synthetic polymer!"
+        explanation: "Nylon was invented in 1935 by scientist Wallace Carothers as the world’s first 100% synthetic polymer!"
 
       }
     },
