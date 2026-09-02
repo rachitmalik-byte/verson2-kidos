@@ -247,7 +247,7 @@ export const UniversalMascotChapterIntro: React.FC = () => {
         ))}
       </div>
 
-      {/* ── Sleek Top Navigation Bar ── */}
+      {/* ── Sleek Top Navigation Bar with Direct Skip Button ── */}
       <header className="w-full max-w-4xl flex items-center justify-between z-20">
         <button
           onClick={() => {
@@ -261,9 +261,25 @@ export const UniversalMascotChapterIntro: React.FC = () => {
           <span>All Subjects</span>
         </button>
 
-        <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 bg-white/80 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200 shadow-xs">
-          {config.syllabusCode}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 bg-white/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-xs hidden sm:inline-block">
+            {config.syllabusCode}
+          </span>
+
+          {/* ⚡ DIRECT SKIP INTRO BUTTON */}
+          <button
+            onClick={() => {
+              sounds.fanfare();
+              voiceAssistant.stop();
+              navigate(config.hubRoute);
+            }}
+            className="px-4 py-2 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all border border-amber-500"
+            title="Skip Pip intro and go straight to chapter hub"
+          >
+            <span>⚡ Skip Intro</span>
+            <ArrowRight className="w-4 h-4 stroke-[3]" />
+          </button>
+        </div>
       </header>
 
       {/* ── ONE FOCUSED HERO STAGE CARD WITH ANIMATED SUBTITLE OVERLAY ── */}
@@ -302,26 +318,44 @@ export const UniversalMascotChapterIntro: React.FC = () => {
           ))}
         </div>
 
-        {/* Primary Action Button */}
-        <button
-          onClick={handleNext}
-          className={`w-full py-4 px-8 rounded-2xl ${config.accentColor} font-black text-sm sm:text-base cursor-pointer ${config.btnShadow} active:translate-y-1 transition-all flex items-center justify-center gap-2`}
-        >
-          <span>{lessonIndex < config.pipLessons.length - 1 ? 'Continue Lesson ➔' : "🚀 START CHAPTER EXPERIMENTS!"}</span>
-          <ArrowRight className="w-5 h-5 stroke-[3]" />
-        </button>
+        {/* Action Buttons with Skip Shortcut */}
+        <div className="w-full flex flex-col sm:flex-row items-center gap-2.5">
+          <button
+            onClick={handleNext}
+            className={`flex-1 w-full py-3.5 px-6 rounded-2xl ${config.accentColor} font-black text-xs sm:text-sm cursor-pointer ${config.btnShadow} active:translate-y-1 transition-all flex items-center justify-center gap-2`}
+          >
+            <span>{lessonIndex < config.pipLessons.length - 1 ? 'Continue Lesson ➔' : "🚀 START CHAPTER EXPERIMENTS!"}</span>
+            <ArrowRight className="w-4 h-4 stroke-[3]" />
+          </button>
+
+          <button
+            onClick={() => {
+              sounds.fanfare();
+              voiceAssistant.stop();
+              navigate(config.hubRoute);
+            }}
+            className="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs border border-slate-300 cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
+          >
+            <span>⚡ Skip Directly to Hub</span>
+          </button>
+        </div>
       </main>
 
-      {/* ── Bottom Step Indicator ── */}
+      {/* ── Bottom Step Indicator (Clickable to jump) ── */}
       <footer className="w-full max-w-md flex items-center justify-center gap-2 z-20 pb-2">
         {config.pipLessons.map((_, idx) => (
-          <div
+          <button
             key={idx}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
+            onClick={() => {
+              sounds.pop();
+              setLessonIndex(idx);
+            }}
+            className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
               idx === lessonIndex
                 ? 'w-8 bg-slate-900 shadow-md'
-                : 'w-2.5 bg-slate-400/60'
+                : 'w-2.5 bg-slate-400/60 hover:bg-slate-600'
             }`}
+            title={`Jump to step ${idx + 1}`}
           />
         ))}
       </footer>
