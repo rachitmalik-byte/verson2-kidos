@@ -101,7 +101,6 @@ export function WireMission() {
   const [testedItems, setTestedItems] = useState<Record<string, boolean>>({});
   const [isCircuitFlowing, setIsCircuitFlowing] = useState(false);
   const [activeMicroscopeItem, setActiveMicroscopeItem] = useState<'copper' | 'pvc'>('copper');
-  const [microscopeZoomLevel, setMicroscopeZoomLevel] = useState<number>(250);
   const [applyChoice, setApplyChoice] = useState<string | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
 
@@ -391,62 +390,29 @@ export function WireMission() {
                 />
               </div>
 
-              {/* ── OPTICAL MICROSCOPE STAGE ── */}
-              <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">
+              {/* ── CIRCUIT OBSERVATION LAB ── */}
+              <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-500 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">
                 <div className="flex items-center justify-between w-full mb-4 z-10 flex-wrap gap-2">
                   <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-500/50 px-3 py-1 rounded-full flex items-center gap-1.5">
                     <ZoomIn className="w-4 h-4 text-amber-400 animate-pulse" />
-                    <span>Conductor vs Insulator Electron Microscope</span>
+                    <span>Conductor vs Insulator Lab</span>
                   </span>
-
-                  <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-700">
-                    {[
-                      { level: 100, label: '100x' },
-                      { level: 250, label: '250x' },
-                      { level: 500, label: '500x' },
-                    ].map((z) => (
-                      <button
-                        key={z.level}
-                        onClick={() => {
-                          sounds.pop();
-                          setMicroscopeZoomLevel(z.level);
-                        }}
-                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                          microscopeZoomLevel === z.level
-                            ? 'bg-amber-400 text-slate-950 shadow-md scale-105'
-                            : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {z.label}
-                      </button>
-                    ))}
-                  </div>
                 </div>
 
-                {/* Microscope Lens Viewport */}
-                <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 ring-4 ring-amber-400/80 my-2 flex items-center justify-center">
+                {/* Observation Viewport */}
+                <div className="relative w-full max-w-2xl aspect-video rounded-2xl border-4 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 ring-2 ring-amber-500/50 my-2 flex items-center justify-center">
                   <AnimatePresence mode="wait">
                     <motion.img
-                      key={`${activeMicroscopeItem}-${microscopeZoomLevel}`}
+                      key={activeMicroscopeItem}
                       src={activeMicroscopeItem === 'copper' ? copperWireMacroImg : pvcInsulatedCableImg}
-                      alt="Microscope Item"
-                      initial={{ scale: 0.8, opacity: 0.3 }}
-                      animate={{
-                        scale: microscopeZoomLevel === 100 ? 1.05 : microscopeZoomLevel === 250 ? 1.45 : 2.0,
-                        opacity: 1,
-                      }}
-                      exit={{ scale: 1.2, opacity: 0.3 }}
-                      transition={{ type: 'spring', damping: 20, stiffness: 180 }}
+                      alt="Observation Item"
+                      initial={{ scale: 0.95, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 1.05, opacity: 0 }}
+                      transition={{ type: 'tween', duration: 0.3 }}
                       className="w-full h-full object-cover select-none pointer-events-none"
                     />
                   </AnimatePresence>
-
-                  <div className="absolute inset-0 pointer-events-none border border-cyan-400/30 rounded-full flex items-center justify-center">
-                    <div className="w-full h-[1px] bg-cyan-400/30 absolute" />
-                    <div className="h-full w-[1px] bg-cyan-400/30 absolute" />
-                    <div className="w-24 h-24 rounded-full border border-cyan-400/40 absolute" />
-                  </div>
-                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent rounded-full" />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg mt-4 z-10">
