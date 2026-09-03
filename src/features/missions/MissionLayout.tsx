@@ -154,8 +154,8 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
       {/* ── Always-Visible "Stuck / Ask Pip" Confused Self-Advocacy Button ── */}
       <AskPipAssistant
         currentGoal={`In this step of "${derivedTitle}", we are investigating how physical properties decide everyday uses.`}
-        stepHint="Look closely at the materials on screen. Tap each specimen or drop weights to see how they respond under testing!"
-        conceptBreakdown="Natural materials come from organic plants and animals with porous fibers. Synthetic materials are made in factories from continuous polymer chains with specialized superpowers!"
+        stepHint="Look closely at the materials on screen. Tap each material or test button to see what happens!"
+        conceptBreakdown="Natural materials come from plants and animals. Synthetic materials are made by science inventors in labs with special superpowers!"
       />
 
       {/* ── "Explain It Back In Your Own Words" Modal ── */}
@@ -170,6 +170,58 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
         isOpen={showStoppingPointModal}
         onContinue={() => setShowStoppingPointModal(false)}
       />
+
+      {/* ── Mission Complete Final Celebration Banner Overlay ── */}
+      <AnimatePresence>
+        {currentStep >= totalSteps && isStepComplete && (
+          <motion.div
+            key="mission-complete-splash"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ type: 'spring', damping: 18, stiffness: 250 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm px-4 pointer-events-none select-none font-sans"
+          >
+            <div className="bg-white rounded-3xl border-4 border-amber-400 shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center pointer-events-auto">
+              <motion.div
+                animate={{ rotate: [0, -10, 10, -5, 5, 0], scale: [1, 1.15, 1] }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-5xl mb-2"
+              >
+                🏆
+              </motion.div>
+              <h2
+                className="text-2xl font-black text-slate-900 mb-1"
+                style={{ fontFamily: 'Nunito, sans-serif' }}
+              >
+                Mission Complete!
+              </h2>
+              <p className="text-xs sm:text-sm font-bold text-slate-600 mb-3">
+                You mastered <strong>{derivedTitle}</strong>!
+              </p>
+              <div className="flex items-center justify-center gap-1.5 text-2xl mb-4">
+                {['⭐', '⭐', '⭐'].map((s, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ scale: 0, rotate: -30 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.2 + i * 0.12, type: 'spring', stiffness: 300 }}
+                  >
+                    {s}
+                  </motion.span>
+                ))}
+              </div>
+              <button
+                onClick={handleNextClick}
+                className="w-full py-3 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-sm rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all cursor-pointer border border-amber-500 flex items-center justify-center gap-2"
+              >
+                <span>Save Progress &amp; Finish ⭐</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Persistent Bottom Step Navigation Action Bar ── */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t-2 border-slate-200/90 py-2.5 px-4 sm:px-8 shadow-2xl">

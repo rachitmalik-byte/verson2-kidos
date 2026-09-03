@@ -54,7 +54,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     type: 'natural',
     origin: 'Animal Fleece (Sheep)',
     hint: 'Gently sheared from live sheep!',
-    description: 'Natural animal protein keratin fibers that trap body warmth.',
+    description: 'Fluffy natural animal fleece that traps cozy body warmth.',
   },
   {
     id: 'silk',
@@ -64,7 +64,7 @@ const SORTING_ITEMS: MaterialItem[] = [
     type: 'natural',
     origin: 'Spun by Silkworms',
     hint: 'Spun by silkworm caterpillars!',
-    description: 'Shimmering natural continuous protein filament spun for cocoons.',
+    description: 'Shimmering natural threads spun by silkworms for their cocoons.',
   },
   {
     id: 'wood',
@@ -74,17 +74,17 @@ const SORTING_ITEMS: MaterialItem[] = [
     type: 'natural',
     origin: 'Natural Forest Trees',
     hint: 'From oak and pine trees in forests!',
-    description: 'Rigid natural plant material created through years of sunlight and rain.',
+    description: 'Rigid natural tree wood grown through years of sunlight and rain.',
   },
   {
     id: 'nylon',
-    name: 'Nylon Filament Spool',
+    name: 'Nylon Thread Spool',
     emoji: '🧵',
     image: nylonThreadSpoolImg,
     type: 'synthetic',
-    origin: 'Petrochemical Polymerization',
+    origin: 'Made by Scientists in Labs',
     hint: 'Made by scientists in a lab!',
-    description: 'Man-made continuous synthetic thread with strong pulling power.',
+    description: 'Continuous synthetic thread with super-strong pulling power.',
   },
   {
     id: 'polyester',
@@ -92,19 +92,19 @@ const SORTING_ITEMS: MaterialItem[] = [
     emoji: '👕',
     image: polyesterFabricRollImg,
     type: 'synthetic',
-    origin: 'Petroleum Ester Polymers',
+    origin: 'Made from Oil in Factories',
     hint: 'Made by scientists using special ingredients!',
-    description: 'Wrinkle-free hydrophobic plastic fabric crafted in modern factories.',
+    description: 'Smooth, water-resistant fabric that never gets wrinkles.',
   },
   {
     id: 'plastic',
-    name: 'Thermoplastic PET Pellets',
+    name: 'Thermoplastic Pellets',
     emoji: '🫙',
     image: plasticPetPelletsImg,
     type: 'synthetic',
-    origin: 'Mouldable Chemical Resins',
-    hint: 'Moulded in chemical factory machines!',
-    description: 'Lightweight thermoplastic resins that soften with heat to take any shape.',
+    origin: 'Mouldable Plastic',
+    hint: 'Moulded in factory machines!',
+    description: 'Lightweight plastic pellets that soften with heat to take any shape.',
   },
   {
     id: 'acrylic',
@@ -112,9 +112,9 @@ const SORTING_ITEMS: MaterialItem[] = [
     emoji: '🧶',
     image: syntheticAcrylicYarnImg,
     type: 'synthetic',
-    origin: 'Polyacrylonitrile Chemical Polymer',
-    hint: 'Artificial wool substitute made from petroleum!',
-    description: 'Man-made warm synthetic yarn engineered to mimic wool without sheep.',
+    origin: 'Synthetic Yarn Factory',
+    hint: 'Fluffy artificial wool substitute made in a factory!',
+    description: 'Warm, cozy synthetic yarn made in factories without needing sheep.',
   },
 ];
 
@@ -323,7 +323,14 @@ export function SortingMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'SORTING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-4">
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-100 text-amber-950 rounded-full font-black text-xs sm:text-sm border border-amber-300 animate-pulse shadow-xs">
+                  👇 Tap any material card below, then tap a tray above to sort it!
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4 mb-3">
                 <Pip mood="explaining" size="md" />
                 <PipSpeechBubble
                   message="Tap any real item photo below, then tap the tray where it belongs!"
@@ -332,19 +339,19 @@ export function SortingMission() {
               </div>
 
               {/* ── TWO SCIENTIFIC SORTING TRAYS ── */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-5">
                 {/* Natural Zone Tray */}
                 <button
                   onClick={() => handleZoneClick('natural')}
-                  className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
+                  className={`p-4 sm:p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
                     activeItem
                       ? 'bg-emerald-50 border-emerald-400 ring-4 ring-emerald-300/60 shadow-xl hover:scale-101'
                       : 'bg-emerald-50/70 border-emerald-300 shadow-md'
                   }`}
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <TreePine className="w-6 h-6 text-emerald-600" />
-                    <h3 className="font-black text-lg text-emerald-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <TreePine className="w-5 h-5 text-emerald-600" />
+                    <h3 className="font-black text-base sm:text-lg text-emerald-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
                       🌿 FROM NATURE (Natural)
                     </h3>
                   </div>
@@ -353,11 +360,11 @@ export function SortingMission() {
                   </span>
 
                   {/* Sorted Count */}
-                  <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                  <div className="mt-2.5 flex flex-wrap gap-2 justify-center">
                     {SORTING_ITEMS.filter((i) => sortedItems[i.id] === 'natural').map((item) => (
                       <span
                         key={item.id}
-                        className="px-3 py-1 bg-white rounded-full text-xs font-black text-emerald-900 border border-emerald-300 shadow-xs flex items-center gap-1"
+                        className="px-2.5 py-0.5 bg-white rounded-full text-xs font-black text-emerald-900 border border-emerald-300 shadow-xs flex items-center gap-1"
                       >
                         <span>{item.emoji}</span>
                         <span>{item.name}</span>
@@ -369,28 +376,28 @@ export function SortingMission() {
                 {/* Synthetic Zone Tray */}
                 <button
                   onClick={() => handleZoneClick('synthetic')}
-                  className={`p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
+                  className={`p-4 sm:p-5 rounded-3xl border-4 transition-all flex flex-col items-center text-center cursor-pointer relative overflow-hidden ${
                     activeItem
                       ? 'bg-sky-50 border-sky-400 ring-4 ring-sky-300/60 shadow-xl hover:scale-101'
                       : 'bg-sky-50/70 border-sky-300 shadow-md'
                   }`}
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <Factory className="w-6 h-6 text-sky-600" />
-                    <h3 className="font-black text-lg text-sky-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Factory className="w-5 h-5 text-sky-600" />
+                    <h3 className="font-black text-base sm:text-lg text-sky-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
                       🏭 MADE BY SCIENTISTS (Synthetic)
                     </h3>
                   </div>
                   <span className="text-xs font-bold text-sky-700">
-                    Chemical Polymerization & Man-Made Resins
+                    Made in Labs & Modern Factories
                   </span>
 
                   {/* Sorted Count */}
-                  <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                  <div className="mt-2.5 flex flex-wrap gap-2 justify-center">
                     {SORTING_ITEMS.filter((i) => sortedItems[i.id] === 'synthetic').map((item) => (
                       <span
                         key={item.id}
-                        className="px-3 py-1 bg-white rounded-full text-xs font-black text-sky-900 border border-sky-300 shadow-xs flex items-center gap-1"
+                        className="px-2.5 py-0.5 bg-white rounded-full text-xs font-black text-sky-900 border border-sky-300 shadow-xs flex items-center gap-1"
                       >
                         <span>{item.emoji}</span>
                         <span>{item.name}</span>
@@ -400,7 +407,7 @@ export function SortingMission() {
                 </button>
               </div>
 
-              {/* ── 8 REAL STUDIO SPECIMEN CARDS (SHUFFLED) ── */}
+              {/* ── 8 REAL STUDIO MATERIAL CARDS (SHUFFLED) ── */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full">
                 {shuffledItems.map((item) => {
                   const isSorted = Boolean(sortedItems[item.id]);

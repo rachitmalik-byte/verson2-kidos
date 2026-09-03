@@ -379,7 +379,7 @@ export function ChapterHub() {
                   }`}
                 >
                   <Grid className="w-3.5 h-3.5" />
-                  <span>Specimen Cards</span>
+                  <span>Mission Cards</span>
                 </button>
               </div>
             </div>

@@ -68,8 +68,8 @@ const SPECIMENS: TestItem[] = [
     name: 'Polished Steel Key',
     category: 'Metal Conductor',
     conducts: true,
-    material: 'Iron-carbon metallic alloy lattice',
-    hint: 'Metals have a sea of free electrons that carry current!',
+    material: 'Solid steel metal',
+    hint: 'Metals let electric current flow freely through them!',
     scienceDetail: 'Steel conducts electricity, though with slightly more resistance than copper.',
     renderGraphic: () => <VectorSteelKeySpecimen />,
   },
@@ -78,8 +78,8 @@ const SPECIMENS: TestItem[] = [
     name: 'Plastic Toy Building Brick',
     category: 'Plastic Insulator',
     conducts: false,
-    material: 'Molded synthetic polymer plastic with tightly locked covalent bonds',
-    hint: 'Plastic holds its electrons tightly, blocking any electrical current!',
+    material: 'Molded plastic that blocks electric current completely',
+    hint: 'Plastic stops electric current so you do not get shocked!',
     scienceDetail: 'Synthetic plastic is a premier insulator used for plugs, switches, and appliance casings.',
     renderGraphic: () => <VectorPlasticBrickSpecimen />,
   },
@@ -88,8 +88,8 @@ const SPECIMENS: TestItem[] = [
     name: 'Flexible Rubber Band',
     category: 'Rubber Insulator',
     conducts: false,
-    material: 'Natural cross-linked rubber elastomer polymer',
-    hint: 'Rubber stops electron transfer completely, preventing dangerous shocks!',
+    material: 'Natural stretchy rubber that stops electric shocks',
+    hint: 'Rubber stops electricity 100%, preventing dangerous shocks!',
     scienceDetail: 'Rubber stops electric flow 100%, which is why electrician gloves are made of thick rubber.',
     renderGraphic: () => <VectorRubberBandSpecimen />,
   },
@@ -232,40 +232,40 @@ export function WireMission() {
               </p>
 
               {/* Clean Macro Photo Pair Preview */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full max-w-2xl mb-6">
                 {/* Copper Wire Core Card */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-amber-300 shadow-xl flex flex-col items-center text-center overflow-hidden">
-                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-2">
+                <div className="bg-white p-4 sm:p-5 rounded-3xl border-3 border-amber-300 shadow-xl flex flex-col items-center text-center overflow-hidden">
+                  <span className="px-3 py-0.5 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase mb-1.5">
                     1. Inside Core: Pure Copper Wire
                   </span>
-                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 bg-slate-50 flex items-center justify-center p-2">
+                  <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shadow-inner my-1.5 border-2 border-slate-100 bg-slate-50 flex items-center justify-center p-1.5">
                     <img
                       src={copperWireMacroImg}
                       alt="Raw Copper Metal Wire Strands"
                       className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
-                  <span className="text-sm font-black text-amber-800 mt-2">Electrical Conductor ⚡</span>
-                  <p className="text-xs font-bold text-slate-500 mt-1 max-w-xs leading-snug">
-                    Red-orange metallic atoms with free valence electrons that let electrical current stream effortlessly!
+                  <span className="text-sm font-black text-amber-800 mt-1">Electrical Conductor ⚡</span>
+                  <p className="text-xs font-bold text-slate-500 mt-0.5 max-w-xs leading-snug">
+                    Pure metal wire that lets electric current stream effortlessly to power your home!
                   </p>
                 </div>
 
                 {/* PVC Plastic Insulation Photo Card */}
-                <div className="bg-white p-6 rounded-3xl border-4 border-sky-300 shadow-xl flex flex-col items-center text-center overflow-hidden">
-                  <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-2">
+                <div className="bg-white p-4 sm:p-5 rounded-3xl border-3 border-sky-300 shadow-xl flex flex-col items-center text-center overflow-hidden">
+                  <span className="px-3 py-0.5 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase mb-1.5">
                     2. Outside Layer: PVC Plastic Sheath
                   </span>
-                  <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 bg-slate-50 flex items-center justify-center p-2">
+                  <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shadow-inner my-1.5 border-2 border-slate-100 bg-slate-50 flex items-center justify-center p-1.5">
                     <img
                       src={pvcInsulatedCableImg}
                       alt="Colorful PVC Insulated Multi-Core Cable"
                       className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
-                  <span className="text-sm font-black text-sky-800 mt-2">Electrical Insulator 🛡️</span>
-                  <p className="text-xs font-bold text-slate-500 mt-1 max-w-xs leading-snug">
-                    Polymer chains lock all electrons tightly in place, shielding human hands from lethal 240V shocks!
+                  <span className="text-sm font-black text-sky-800 mt-1">Electrical Insulator 🛡️</span>
+                  <p className="text-xs font-bold text-slate-500 mt-0.5 max-w-xs leading-snug">
+                    Tough plastic sleeve that blocks electricity, keeping your hands 100% safe from electric shocks!
                   </p>
                 </div>
               </div>
@@ -286,8 +286,15 @@ export function WireMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'CIRCUIT_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-4">
-                <Pip mood="explaining" size="lg" />
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-100 text-amber-950 rounded-full font-black text-xs sm:text-sm border border-amber-300 animate-pulse shadow-xs">
+                  👇 Tap any material below to test if it lets electricity flow!
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4 mb-3">
+                <Pip mood="explaining" size="md" />
                 <PipSpeechBubble
                   message="Tap any material below to snap it into the circuit alligator clips and test if current flows!"
                   isVisible={true}
@@ -468,7 +475,7 @@ export function WireMission() {
                         : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
                     }`}
                   >
-                    <span>🛡️ PVC Plastic: Bound Covalent Polymers</span>
+                    <span>🛡️ PVC Plastic: Electric Shield</span>
                   </button>
                 </div>
               </div>

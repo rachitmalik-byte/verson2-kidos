@@ -89,7 +89,7 @@ const ROPES: RopeSpecimen[] = [
     category: 'Synthetic',
     icon: '🪢',
     breakingLimitKg: 25,
-    simpleExplanation: 'Made from continuous, super-strong plastic polymer chains.',
+    simpleExplanation: 'Made from continuous, super-strong synthetic threads.',
     failureReason: 'Held immense weight before finally snapping at extreme force!',
     intactImage: nylonRopeIntactImg,
     snappedImage: nylonRopeSnappedImg,
@@ -257,7 +257,7 @@ export function NylonStrengthMission() {
             <div className="w-full max-w-3xl flex flex-col items-center text-center">
               <Pip mood="curious" size="md" />
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 mt-4 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                The Great Tensile Strength Rig! 🏋️
+                The Great Rope Strength Rig! 🏋️
               </h2>
               <p className="text-base md:text-lg text-slate-600 font-bold max-w-xl leading-relaxed mb-6">
                 Mountain climbers and skydivers trust thin ropes with their lives! Which rope is strong enough to hold heavy weights without snapping?
@@ -279,7 +279,7 @@ export function NylonStrengthMission() {
                 className="bg-amber-400 border-2 border-amber-600 shadow-[0_6px_0_#D97706] active:translate-y-1.5 active:shadow-none text-slate-900 font-black text-xl py-4 px-12 rounded-3xl hover:bg-amber-300 transition-all cursor-pointer flex items-center gap-2"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
-                <span>Enter 1v1 Tensile Rig 🔬</span>
+                <span>Enter Rope Strength Rig 🔬</span>
                 <ArrowRight className="w-6 h-6 stroke-[3]" />
               </button>
             </div>
@@ -290,6 +290,13 @@ export function NylonStrengthMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'TENSILE_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-3">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-100 text-amber-950 rounded-full font-black text-xs sm:text-sm border border-amber-300 animate-pulse shadow-xs">
+                  👇 Tap weights to test pulling force on each rope!
+                </span>
+              </div>
+
               <ThreeTensileRigLab
                 onTested={(ropeId) => {
                   setTestedRopes((prev) => ({ ...prev, [ropeId]: true }));
@@ -310,14 +317,14 @@ export function NylonStrengthMission() {
                 Why is Nylon so much Stronger than Cotton?
               </h3>
               <p className="text-xs sm:text-sm font-bold text-slate-600 max-w-lg mb-6">
-                Switch specimens to see why smooth unbroken synthetic filaments hold heavy loads while short natural fibers pull apart!
+                Switch materials to see why smooth unbroken synthetic threads hold heavy loads while short natural fibers pull apart!
               </p>
 
-              {/* Specimen Switcher */}
+              {/* Material Switcher */}
               <div className="flex items-center gap-2 mb-6 flex-wrap justify-center">
                 {[
                   { id: 'cotton', label: 'Cotton (Short Fibers)', icon: '🧵', img: cottonMicrograph100xImg, note: 'Short plant fibers with tiny hollow pores that slide apart when pulled!' },
-                  { id: 'nylon', label: 'Nylon (Solid Chains)', icon: '🪢', img: nylonMicrograph100xImg, note: 'Long unbroken solid polymer chains that lock tightly under tension!' },
+                  { id: 'nylon', label: 'Nylon (Solid Threads)', icon: '🪢', img: nylonMicrograph100xImg, note: 'Long unbroken solid synthetic threads that stay super strong when pulled!' },
                   { id: 'silk', label: 'Silk (Triangular)', icon: '🐛', img: silkMicrograph100xImg, note: 'Smooth caterpillar silk filaments with rounded triangular strength.' },
                   { id: 'wool', label: 'Wool (Cuticle Scales)', icon: '🐑', img: woolMicrograph100xImg, note: 'Curly sheep hairs with overlapping scales that trap warm air.' },
                 ].map((s) => (
@@ -402,10 +409,17 @@ export function NylonStrengthMission() {
                 When a skydiver jumps from an airplane, the parachute lines must hold heavy body weight under extreme sudden wind force. Which material must engineers choose?
               </p>
 
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-100 text-amber-950 rounded-full font-black text-xs sm:text-sm border border-amber-300 animate-pulse shadow-xs">
+                  👇 Choose the safest rope for the skydiver!
+                </span>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mb-6">
                 {[
                   { id: 'cotton', title: 'Natural Cotton Rope', desc: 'Short fibers slide apart and snap under heavy opening shock.', isCorrect: false },
-                  { id: 'nylon', title: 'Synthetic Nylon Cord', desc: 'Continuous polymer chains hold massive weight with safe elastic stretch.', isCorrect: true },
+                  { id: 'nylon', title: 'Synthetic Nylon Cord', desc: 'Continuous synthetic threads hold massive weight with safe springy stretch.', isCorrect: true },
                 ].map((opt) => (
                   <button
                     key={opt.id}

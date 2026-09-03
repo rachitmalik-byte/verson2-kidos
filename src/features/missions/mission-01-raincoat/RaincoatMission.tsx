@@ -246,77 +246,84 @@ export function RaincoatMission() {
                 />
               </div>
 
-              <div id="mission-testing-rig" className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-2">
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-100 text-amber-950 rounded-full font-black text-xs sm:text-sm border border-amber-300 animate-pulse shadow-xs">
+                  👇 Choose a raincoat below to continue!
+                </span>
+              </div>
+
+              <div id="mission-testing-rig" className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mt-1">
                 {/* Coat A: Real Dry Cotton Trench Coat */}
                 <motion.div
-                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileHover={{ scale: 1.02, y: -3 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     sounds.pop();
                     setInitialChoice('A');
                   }}
-                  className={`p-6 rounded-3xl border-4 transition-all flex flex-col items-center cursor-pointer relative overflow-hidden bg-white ${
+                  className={`p-4 sm:p-5 rounded-3xl border-3 transition-all flex flex-col items-center cursor-pointer relative overflow-hidden bg-white ${
                     initialChoice === 'A'
-                      ? 'border-amber-500 shadow-2xl ring-6 ring-amber-300/60 scale-102'
-                      : 'border-slate-200 shadow-lg hover:shadow-xl'
+                      ? 'border-amber-500 shadow-xl ring-4 ring-amber-300/60 scale-102'
+                      : 'border-slate-200 shadow-md hover:shadow-lg'
                   }`}
                 >
-                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider mb-3 border border-amber-300">
+                  <span className="px-3 py-0.5 bg-amber-100 text-amber-900 rounded-full text-xs font-black uppercase tracking-wider mb-2 border border-amber-300">
                     Traditional Coat A
                   </span>
-                  <div className="w-48 h-48 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 bg-slate-50 flex items-center justify-center">
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden shadow-inner my-1.5 border-2 border-slate-100 bg-slate-50 flex items-center justify-center">
                     <img
                       src={cottonCoatDryImg}
                       alt="Dry Natural Cotton Trench Coat"
                       className="w-full h-full object-contain p-1"
                     />
                   </div>
-                  <h3 className="text-lg font-black text-slate-800 mt-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h3 className="text-base sm:text-lg font-black text-slate-800 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
                     Woven Cotton Fabric Coat
                   </h3>
                   <p className="text-xs text-slate-500 font-bold text-center mt-0.5">
                     Made from natural cotton plant fibers
                   </p>
                   {initialChoice === 'A' && (
-                    <div className="mt-3 px-4 py-1.5 bg-amber-500 text-white rounded-full text-xs font-black flex items-center gap-1 shadow-md">
-                      <Check className="w-4 h-4 stroke-[3]" /> Selected
+                    <div className="mt-2 px-3 py-1 bg-amber-500 text-white rounded-full text-xs font-black flex items-center gap-1 shadow-md">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" /> Selected
                     </div>
                   )}
                 </motion.div>
 
                 {/* Coat B: Real Dry Synthetic Polyester Raincoat */}
                 <motion.div
-                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileHover={{ scale: 1.02, y: -3 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     sounds.pop();
                     setInitialChoice('B');
                   }}
-                  className={`p-6 rounded-3xl border-4 transition-all flex flex-col items-center cursor-pointer relative overflow-hidden bg-white ${
+                  className={`p-4 sm:p-5 rounded-3xl border-3 transition-all flex flex-col items-center cursor-pointer relative overflow-hidden bg-white ${
                     initialChoice === 'B'
-                      ? 'border-sky-500 shadow-2xl ring-6 ring-sky-300/60 scale-102'
-                      : 'border-slate-200 shadow-lg hover:shadow-xl'
+                      ? 'border-sky-500 shadow-xl ring-4 ring-sky-300/60 scale-102'
+                      : 'border-slate-200 shadow-md hover:shadow-lg'
                   }`}
                 >
-                  <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase tracking-wider mb-3 border border-sky-300">
+                  <span className="px-3 py-0.5 bg-sky-100 text-sky-900 rounded-full text-xs font-black uppercase tracking-wider mb-2 border border-sky-300">
                     Modern Raincoat B
                   </span>
-                  <div className="w-48 h-48 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 bg-slate-50 flex items-center justify-center">
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden shadow-inner my-1.5 border-2 border-slate-100 bg-slate-50 flex items-center justify-center">
                     <img
                       src={polyesterRaincoatDryImg}
                       alt="Dry Synthetic Polyester Raincoat"
                       className="w-full h-full object-contain p-1"
                     />
                   </div>
-                  <h3 className="text-lg font-black text-slate-800 mt-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h3 className="text-base sm:text-lg font-black text-slate-800 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
                     Synthetic Polyester Raincoat
                   </h3>
                   <p className="text-xs text-slate-500 font-bold text-center mt-0.5">
-                    Made from smooth man-made polymers
+                    Made from smooth water-resistant fibers
                   </p>
                   {initialChoice === 'B' && (
-                    <div className="mt-3 px-4 py-1.5 bg-sky-500 text-white rounded-full text-xs font-black flex items-center gap-1 shadow-md">
-                      <Check className="w-4 h-4 stroke-[3]" /> Selected
+                    <div className="mt-2 px-3 py-1 bg-sky-500 text-white rounded-full text-xs font-black flex items-center gap-1 shadow-md">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" /> Selected
                     </div>
                   )}
                 </motion.div>
@@ -349,15 +356,22 @@ export function RaincoatMission() {
                 />
               </div>
 
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-sky-100 text-sky-950 rounded-full font-black text-xs sm:text-sm border border-sky-300 animate-pulse shadow-xs">
+                  👇 Tap "Spray Water" on BOTH coats to test them!
+                </span>
+              </div>
+
               <ExperimentFocusSpotlight
                 isActive={isSprayingA || isSprayingB}
                 activeLabel="💧 Water Spray Absorption & Beading Test..."
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
                 {/* Coat A Test Card: Cotton Absorption */}
-                <div className="bg-white p-5 rounded-3xl border-4 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                  <div className="flex items-center justify-between w-full mb-3">
-                    <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-black uppercase">
+                <div className="bg-white p-4 sm:p-5 rounded-3xl border-3 border-amber-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                  <div className="flex items-center justify-between w-full mb-2.5">
+                    <span className="px-3 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs font-black uppercase">
                       Plant Fibre (Natural Cotton)
                     </span>
                     {testedWater.a && (
@@ -368,7 +382,7 @@ export function RaincoatMission() {
                   </div>
 
                   {/* Real Photo with Live Wet Transition & Water Mist Ripple */}
-                  <div className="w-52 h-52 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center">
+                  <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shadow-inner my-1.5 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center">
                     <AnimatePresence mode="wait">
                       <motion.img
                         key={testedWater.a ? 'soaked' : 'dry'}
@@ -405,7 +419,7 @@ export function RaincoatMission() {
                         setIsSprayingA(false);
                       }, 400);
                     }}
-                    className={`w-full py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    className={`w-full py-2.5 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       testedWater.a
                         ? 'bg-rose-100 text-rose-700 border-2 border-rose-300'
                         : 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-md active:scale-95'
@@ -419,30 +433,30 @@ export function RaincoatMission() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95, y: 8 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      className="mt-4 bg-gradient-to-b from-amber-50 to-rose-50 p-4 rounded-3xl border-3 border-amber-300 w-full flex flex-col items-center text-center shadow-md"
+                      className="mt-3 bg-gradient-to-b from-amber-50 to-rose-50 p-3 rounded-2xl border-2 border-amber-300 w-full flex flex-col items-center text-center shadow-sm"
                     >
-                      <div className="w-36 h-36 md:w-44 md:h-44 rounded-2xl overflow-hidden border-3 border-rose-300 shadow-md mb-2 bg-white flex items-center justify-center p-1">
+                      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden border-2 border-rose-300 shadow-sm mb-1.5 bg-white flex items-center justify-center p-1">
                         <img
                           src={personWetCottonImg}
                           alt="Child drenched in cotton coat"
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="font-black text-xs md:text-sm text-rose-700 block">
+                      <span className="font-black text-xs text-rose-700 block">
                         🥶 RESULT: Child Gets Soaked & Cold!
                       </span>
-                      <p className="text-[11px] font-bold text-slate-600 mt-1 leading-snug max-w-xs">
-                        Water soaked straight through the natural cotton fibers! The clothes and skin underneath are completely wet.
+                      <p className="text-[11px] font-bold text-slate-600 mt-0.5 leading-snug max-w-xs">
+                        Water soaked straight through the natural cotton fibers! The clothes underneath are wet.
                       </p>
                     </motion.div>
                   )}
                 </div>
 
                 {/* Coat B Test Card: Synthetic Polyester Water Beading */}
-                <div className="bg-white p-5 rounded-3xl border-4 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
-                  <div className="flex items-center justify-between w-full mb-3">
-                    <span className="px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-xs font-black uppercase">
-                      Synthetic Fibre (Polyester Polymer)
+                <div className="bg-white p-4 sm:p-5 rounded-3xl border-3 border-sky-200 shadow-xl flex flex-col items-center relative overflow-hidden">
+                  <div className="flex items-center justify-between w-full mb-2.5">
+                    <span className="px-3 py-0.5 bg-sky-100 text-sky-800 rounded-full text-xs font-black uppercase">
+                      Synthetic Fibre (Polyester)
                     </span>
                     {testedWater.b && (
                       <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-full text-[10px] font-black">
@@ -452,7 +466,7 @@ export function RaincoatMission() {
                   </div>
 
                   {/* Real Photo with Live Waterproof Droplets Transformation */}
-                  <div className="w-52 h-52 rounded-2xl overflow-hidden shadow-inner my-2 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center">
+                  <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shadow-inner my-1.5 border-2 border-slate-100 relative bg-slate-50 flex items-center justify-center">
                     <AnimatePresence mode="wait">
                       <motion.img
                         key={testedWater.b ? 'waterproof' : 'dry'}
@@ -489,7 +503,7 @@ export function RaincoatMission() {
                         setIsSprayingB(false);
                       }, 400);
                     }}
-                    className={`w-full py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    className={`w-full py-2.5 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       testedWater.b
                         ? 'bg-emerald-100 text-emerald-700 border-2 border-emerald-300'
                         : 'bg-sky-500 hover:bg-sky-600 text-white shadow-md active:scale-95'
@@ -503,19 +517,19 @@ export function RaincoatMission() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95, y: 8 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      className="mt-4 bg-gradient-to-b from-sky-50 to-emerald-50 p-4 rounded-3xl border-3 border-sky-300 w-full flex flex-col items-center text-center shadow-md"
+                      className="mt-3 bg-gradient-to-b from-sky-50 to-emerald-50 p-3 rounded-2xl border-2 border-sky-300 w-full flex flex-col items-center text-center shadow-sm"
                     >
-                      <div className="w-36 h-36 md:w-44 md:h-44 rounded-2xl overflow-hidden border-3 border-emerald-300 shadow-md mb-2 bg-white flex items-center justify-center p-1">
+                      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden border-2 border-emerald-300 shadow-sm mb-1.5 bg-white flex items-center justify-center p-1">
                         <img
                           src={personDryRaincoatImg}
                           alt="Child dry in synthetic raincoat"
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="font-black text-xs md:text-sm text-emerald-700 block">
+                      <span className="font-black text-xs text-emerald-700 block">
                         😄 RESULT: Child Stays 100% Cozy & Dry!
                       </span>
-                      <p className="text-[11px] font-bold text-slate-600 mt-1 leading-snug max-w-xs">
+                      <p className="text-[11px] font-bold text-slate-600 mt-0.5 leading-snug max-w-xs">
                         Raindrops formed round beads and rolled right off the coat like an invisible shield!
                       </p>
                     </motion.div>
@@ -530,7 +544,14 @@ export function RaincoatMission() {
               PHASE 3: CHOOSE & REASON (Clean, Well-Formatted Layout)
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'CHOOSE' && (
-            <div className="w-full max-w-3xl flex flex-col items-center gap-4">
+            <div className="w-full max-w-3xl flex flex-col items-center gap-3">
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-sky-100 text-sky-950 rounded-full font-black text-xs sm:text-sm border border-sky-300 animate-pulse shadow-xs">
+                  👇 Choose which coat you would wear, then select your reasons!
+                </span>
+              </div>
+
               {/* Pip Speech Banner (Neat & Aligned) */}
               <div className="flex items-center gap-3 w-full bg-white/90 p-3 rounded-2xl border-2 border-violet-200 shadow-sm">
                 <Pip mood="thinking" size="sm" />
@@ -645,7 +666,7 @@ export function RaincoatMission() {
               <div className="flex items-center gap-4 mb-6">
                 <Pip mood="celebrating" size="md" />
                 <PipSpeechBubble
-                  message="Let's place both fabrics under the high-powered microscope! Tap the buttons below to switch specimens and zoom in!"
+                  message="Let's place both fabrics under the high-powered microscope! Tap the buttons below to switch materials and zoom in!"
                   isVisible={true}
                 />
               </div>
@@ -822,8 +843,15 @@ export function RaincoatMission() {
                   Match Objects to Superpowers! 🎯
                 </h2>
                 <p className="text-slate-600 font-bold text-xs md:text-sm">
-                  Tap an object on the left, then tap its matching superpower property on the right!
+                  Match each everyday object with its most useful superpower!
                 </p>
+              </div>
+
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-100 text-amber-950 rounded-full font-black text-xs sm:text-sm border border-amber-300 animate-pulse shadow-xs">
+                  👇 Tap an object on the left, then tap its matching superpower on the right!
+                </span>
               </div>
 
               {feedback && (
@@ -899,7 +927,7 @@ export function RaincoatMission() {
                   </span>
                   {[
                     { id: 'water', label: 'Water-Resistant & Repellent', icon: '💧', desc: 'Raindrops bead up and roll off!' },
-                    { id: 'strong', label: 'High Tensile Strength (Super Tough)', icon: '💪', desc: 'Holds extreme weight without snapping!' },
+                    { id: 'strong', label: 'Super Strong Pulling Power (Tough)', icon: '💪', desc: 'Holds extreme weight without snapping!' },
                     { id: 'warm', label: 'Traps Body Heat (Warm & Fluffy)', icon: '🔥', desc: 'Curly fibres hold cozy warm air!' },
                   ].map((prop) => {
                     const isMatched = Object.values(matches).includes(prop.id);
@@ -981,15 +1009,22 @@ export function RaincoatMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'APPLY' && (
             <div className="w-full max-w-3xl flex flex-col items-center">
-              <div className="bg-white p-6 md:p-8 rounded-3xl border-4 border-indigo-300 shadow-2xl mb-5 w-full text-center flex flex-col items-center">
-                <div className="w-32 h-32 rounded-2xl overflow-hidden border-2 border-indigo-200 shadow-md mb-3">
+              {/* Contextual Action Instruction Banner */}
+              <div className="w-full text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-indigo-100 text-indigo-950 rounded-full font-black text-xs sm:text-sm border border-indigo-300 animate-pulse shadow-xs">
+                  👇 Tap the best material for Pip's rescue parachute!
+                </span>
+              </div>
+
+              <div className="bg-white p-5 sm:p-6 rounded-3xl border-3 border-indigo-300 shadow-xl mb-4 w-full text-center flex flex-col items-center">
+                <div className="w-28 h-28 rounded-2xl overflow-hidden border-2 border-indigo-200 shadow-md mb-2">
                   <img src={nylonParachuteSkyImg} alt="Real Nylon Parachute" className="w-full h-full object-cover" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                <h2 className="text-xl md:text-2xl font-black text-slate-800 mb-1.5" style={{ fontFamily: 'Nunito, sans-serif' }}>
                   Pip's Rescue Parachute Mission! 🪂
                 </h2>
                 <p className="text-xs md:text-sm text-slate-600 font-bold leading-relaxed max-w-xl mx-auto">
-                  Pip needs to drop a heavy emergency supply crate safely from the sky. <br />
+                  Pip needs to drop a heavy supply crate safely from the sky. <br />
                   The parachute canopy must be <span className="text-sky-600 font-black">super strong</span> to hold the weight, but{' '}
                   <span className="text-emerald-600 font-black">feather-light and flexible</span> so it catches the wind!
                 </p>
@@ -1041,7 +1076,7 @@ export function RaincoatMission() {
                     name: 'Wet Mud & Clay',
                     icon: <span className="text-5xl">🧱</span>,
                     isCorrect: false,
-                    wrongExplanation: 'Wet clay is heavy, sticky, and crumbles apart when pulled! It has almost zero tensile strength.',
+                    wrongExplanation: 'Wet clay is heavy, sticky, and crumbles apart when pulled! It has almost zero pulling strength.',
                   },
                 ].map((item) => (
                   <motion.button

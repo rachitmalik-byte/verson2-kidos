@@ -283,7 +283,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                       </span>
                       {interactiveState.crumpled && (
                         <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full mt-1">
-                          Hydrogen bonds broke & creased ♨️
+                          Cotton fibers bent and stayed wrinkled! ♨️
                         </span>
                       )}
                     </div>
@@ -327,7 +327,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                       </span>
                       {interactiveState.crumpled && (
                         <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1">
-                          Elastic polymer chains snapped back ✨
+                          Springy synthetic threads snapped right back! ✨
                         </span>
                       )}
                     </div>
@@ -413,12 +413,12 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 <span className="text-5xl mb-2">🔬✨</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Why Synthetics Resist Wrinkles</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 max-w-lg">
-                  Natural cotton is made of plant fiber strands that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are long polymer chains engineered with elastic molecular memory — they spring back straight when released!
+                  Natural cotton is made of plant fibers that bend and get stuck in folds. Synthetic fibers like Polyester and Nylon are made of springy threads that bounce right back into shape when released!
                 </p>
                 <div className="p-5 bg-sky-50 rounded-2xl border-2 border-sky-200 w-full max-w-md mb-6">
                   <span className="text-xs font-black text-sky-900 block mb-1">💡 Key Science Takeaway:</span>
                   <p className="text-xs font-bold text-sky-800">
-                    Synthetic polymers have strong molecular backbone bonds that do not break under everyday bending, keeping clothes crisp without an iron!
+                    Synthetic fabrics have strong springy threads that do not stay bent under everyday pressure, keeping clothes wrinkle-free without an iron!
                   </p>
                 </div>
                 <button
@@ -601,7 +601,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 <span className="text-5xl mb-3 block">🔬🔥</span>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Fire Test: Why Plastics Melt into Beads</h3>
                 <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
-                  Synthetic fibres are long chemical polymer chains made from petroleum. When exposed to heat, the polymer chains collapse into a hot liquid plastic puddle that clings to skin.
+                  Synthetic fibres are made from oil in factories. When exposed to heat, they melt into a hot sticky liquid that can burn and stick to skin!
                 </p>
                 <div className="p-5 bg-rose-100 border-2 border-rose-300 rounded-2xl w-full text-left font-black text-xs text-rose-950 mb-4">
                   <span className="block text-sm mb-1">🚨 Safety Golden Rule:</span>
