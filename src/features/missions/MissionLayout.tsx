@@ -1,15 +1,13 @@
-import React, { useState, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { ArrowLeft, ArrowRight, Home, Map, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Home, Map } from 'lucide-react';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { missions } from '@/data/missions';
 import { MissionAudioControls } from '@/components/navigation/AudioNavBarControls';
 import { AskPipAssistant } from '@/components/pip/AskPipAssistant';
-import { ExplainItBackModal } from '@/components/reflection/ExplainItBackModal';
-import { NaturalStoppingPointModal } from '@/components/wellness/NaturalStoppingPointModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MissionLayoutProps {
@@ -45,9 +43,6 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
   const derivedNumber = missionNumber ?? currentMission?.number ?? 1;
   const derivedTitle = missionTitle || currentMission?.title || 'Science Mission';
 
-  const [showExplainModal, setShowExplainModal] = useState(false);
-  const [showStoppingPointModal, setShowStoppingPointModal] = useState(false);
-
   const stepProgressPercent = Math.round((currentStep / Math.max(totalSteps, 1)) * 100);
 
   const handleReturnToHub = () => {
@@ -63,23 +58,8 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
   };
 
   const handleNextClick = () => {
-    if (currentStep >= totalSteps) {
-      sounds.fanfare();
-      // Trigger "Explain It Back" reflection moment
-      setShowExplainModal(true);
-    } else {
-      sounds.pop();
-      onNext();
-    }
-  };
-
-  const handleExplainClose = () => {
-    setShowExplainModal(false);
+    sounds.pop();
     onNext();
-    // If completed >= 2 missions, offer a natural stopping pause
-    if (completedMissions.length >= 2) {
-      setShowStoppingPointModal(true);
-    }
   };
 
   return (
@@ -158,70 +138,6 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
         conceptBreakdown="Natural materials come from plants and animals. Synthetic materials are made by science inventors in labs with special superpowers!"
       />
 
-      {/* ── "Explain It Back In Your Own Words" Modal ── */}
-      <ExplainItBackModal
-        isOpen={showExplainModal}
-        missionTitle={derivedTitle}
-        onClose={handleExplainClose}
-      />
-
-      {/* ── Natural Stopping Point Modal ── */}
-      <NaturalStoppingPointModal
-        isOpen={showStoppingPointModal}
-        onContinue={() => setShowStoppingPointModal(false)}
-      />
-
-      {/* ── Mission Complete Final Celebration Banner Overlay ── */}
-      <AnimatePresence>
-        {currentStep >= totalSteps && isStepComplete && (
-          <motion.div
-            key="mission-complete-splash"
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 18, stiffness: 250 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm px-4 pointer-events-none select-none font-sans"
-          >
-            <div className="bg-white rounded-3xl border-4 border-amber-400 shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center pointer-events-auto">
-              <motion.div
-                animate={{ rotate: [0, -10, 10, -5, 5, 0], scale: [1, 1.15, 1] }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-5xl mb-2"
-              >
-                🏆
-              </motion.div>
-              <h2
-                className="text-2xl font-black text-slate-900 mb-1"
-                style={{ fontFamily: 'Nunito, sans-serif' }}
-              >
-                Mission Complete!
-              </h2>
-              <p className="text-xs sm:text-sm font-bold text-slate-600 mb-3">
-                You mastered <strong>{derivedTitle}</strong>!
-              </p>
-              <div className="flex items-center justify-center gap-1.5 text-2xl mb-4">
-                {['⭐', '⭐', '⭐'].map((s, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ scale: 0, rotate: -30 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ delay: 0.2 + i * 0.12, type: 'spring', stiffness: 300 }}
-                  >
-                    {s}
-                  </motion.span>
-                ))}
-              </div>
-              <button
-                onClick={handleNextClick}
-                className="w-full py-3 bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-sm rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all cursor-pointer border border-amber-500 flex items-center justify-center gap-2"
-              >
-                <span>Save Progress &amp; Finish ⭐</span>
-                <ArrowRight className="w-4 h-4 stroke-[3]" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ── Ultra-thin Bottom Nav ── */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-3 sm:px-6 py-1">
