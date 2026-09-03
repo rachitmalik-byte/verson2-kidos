@@ -34,6 +34,7 @@ import {
   MolecularVulcanizationSim,
   EpoxySyringeMixerSim,
 } from '@/components/interactive/ScenarioSimulators';
+import { PlasticFactoryMouldingSimulator } from '@/components/interactive/PlasticFactoryMouldingSimulator';
 import {
   PlasticIllustration,
   WireIllustration,
@@ -902,68 +903,17 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
             )}
 
             {currentStepIndex === 2 && (
-              <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl border-4 border-amber-300 shadow-xl flex flex-col items-center text-center">
-                <div className="w-36 h-36 rounded-2xl overflow-hidden mb-3 border-2 border-slate-100 shadow-md">
-                  <img src={petWaterBottleMoldingImg} alt="Moulded Plastic" className="w-full h-full object-cover" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">
-                  Interactive Heat & Pressure Moulding Simulator!
-                </h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6">
-                  Synthetic plastic polymers melt at moderate heat and take any mould shape under pressure. Operate the factory press below!
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-6">
-                  <button
-                    onClick={() => {
-                      sounds.splash();
-                      setInteractiveState((p) => ({ ...p, heatApplied: true }));
-                    }}
-                    className={`p-4 rounded-2xl border-3 flex flex-col items-center gap-1 cursor-pointer transition-all ${
-                      interactiveState.heatApplied
-                        ? 'bg-rose-100 border-rose-400 text-rose-900 shadow-md'
-                        : 'bg-slate-50 border-slate-300 hover:bg-slate-100'
-                    }`}
-                  >
-                    <Thermometer className="w-6 h-6 text-rose-500" />
-                    <span className="font-black text-xs md:text-sm">
-                      {interactiveState.heatApplied ? '✓ 200°C Heat Applied' : '1. Apply 200°C Heat 🔥'}
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (!interactiveState.heatApplied) {
-                        sounds.boing();
-                        voiceAssistant.speak('Heat the plastic first so it turns soft and molten!');
-                        return;
-                      }
-                      sounds.success();
-                      setInteractiveState((p) => ({
-                        ...p,
-                        pressureApplied: true,
-                        [`step_${currentStepIndex}`]: true,
-                      }));
-                    }}
-                    className={`p-4 rounded-2xl border-3 flex flex-col items-center gap-1 cursor-pointer transition-all ${
-                      interactiveState.pressureApplied
-                        ? 'bg-emerald-100 border-emerald-400 text-emerald-900 shadow-md'
-                        : 'bg-slate-50 border-slate-300 hover:bg-slate-100'
-                    }`}
-                  >
-                    <Gauge className="w-6 h-6 text-emerald-600" />
-                    <span className="font-black text-xs md:text-sm">
-                      {interactiveState.pressureApplied ? '✓ 500 PSI Pressed!' : '2. Apply 500 PSI Pressure ⚙️'}
-                    </span>
-                  </button>
-                </div>
-                {interactiveState.pressureApplied && (
-                  <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl w-full">
-                    <span className="font-black text-sm text-emerald-950 block">
-                      ✨ Moulding Complete! High-strength thermoplastic bottle formed!
-                    </span>
-                  </div>
-                )}
-              </div>
+              <PlasticFactoryMouldingSimulator
+                onComplete={() => {
+                  setInteractiveState((p) => ({
+                    ...p,
+                    heatApplied: true,
+                    pressureApplied: true,
+                    [`step_${currentStepIndex}`]: true,
+                  }));
+                }}
+                isStepCompleted={!!interactiveState[`step_${currentStepIndex}`]}
+              />
             )}
 
             {/* Step 3: Thermoplastics vs Thermosets */}
