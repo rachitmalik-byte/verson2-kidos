@@ -84,7 +84,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 
   return (
     <div
-      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-2 sm:pt-3 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none`}
+      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-2 sm:pt-3 pb-12 sm:pb-14 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none`}
     >
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
         {/* ── Compact Top Level Mission Header & Progress Indicator ── */}
@@ -223,57 +223,34 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
         )}
       </AnimatePresence>
 
-      {/* ── Compact Bottom Step Navigation Bar ── */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-3 sm:px-6 shadow-lg">
-        {/* Action Hint Strip — shown when step not yet complete */}
-        <AnimatePresence>
-          {!isStepComplete && (
-            <motion.div
-              key="hint-strip"
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.2 }}
-              className="text-center mb-1"
-            >
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5 animate-bounce">
-                👆 Tap or choose something above to continue
-              </span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
-          {/* Previous Step Button */}
+      {/* ── Ultra-thin Bottom Nav ── */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-3 sm:px-6 py-1">
+        <div className="max-w-5xl mx-auto flex items-center justify-between h-8">
           <button
-            onClick={() => {
-              sounds.pop();
-              onPrev();
-            }}
+            onClick={() => { sounds.pop(); onPrev(); }}
             disabled={currentStep <= 1}
-            className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] sm:text-xs flex items-center gap-1 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all border border-slate-300"
+            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] flex items-center gap-0.5 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 transition-all border border-slate-200"
           >
-            <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span className="hidden sm:inline">Previous</span>
+            <ArrowLeft className="w-3 h-3 stroke-[2.5]" />
+            <span className="hidden sm:inline">Prev</span>
           </button>
 
-          {/* Center Step Counter */}
-          <span className="text-[10px] sm:text-xs font-black text-slate-600">
-            Step {currentStep} of {totalSteps}
+          <span className="text-[10px] font-black text-slate-500">
+            {!isStepComplete && <span className="text-amber-600 mr-1">👆</span>}
+            {currentStep}/{totalSteps}
           </span>
 
-          {/* Next Step / Complete Button */}
           <button
             onClick={handleNextClick}
             disabled={!isStepComplete}
-            className={`px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-xl font-black text-[10px] sm:text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 ${
+            className={`px-2.5 py-1 rounded-lg font-black text-[10px] flex items-center gap-0.5 cursor-pointer transition-all active:scale-95 ${
               isStepComplete
-                ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-slate-950 shadow-md ring-2 ring-amber-300/60 animate-pulse'
-                : 'bg-slate-200 text-slate-400 border border-slate-300 opacity-60 cursor-not-allowed'
+                ? 'bg-amber-400 text-slate-950 shadow-sm'
+                : 'bg-slate-100 text-slate-400 border border-slate-200 opacity-50 cursor-not-allowed'
             }`}
           >
-            <span>{currentStep >= totalSteps ? 'Complete ⭐' : 'Next ➔'}</span>
-            <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+            <span>{currentStep >= totalSteps ? 'Done ⭐' : 'Next'}</span>
+            <ArrowRight className="w-3 h-3 stroke-[3]" />
           </button>
         </div>
       </footer>
