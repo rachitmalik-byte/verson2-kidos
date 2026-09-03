@@ -367,26 +367,98 @@ export function SuperSensesMissionEngine() {
                 PHASE 3: SCIENTIFIC SPECIMEN & MICROSCOPE STUDIO (Clean Light Theme)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'MICROSCOPE' && (() => {
-              const sampleImages: Record<number, Record<number, { img: string; title: string; desc: string }>> = {
+              const sampleImages: Record<number, Record<number, { img: string; title: string; desc: string; fact: string; tag: string }>> = {
                 1: {
-                  1: { img: ant1x, title: '1x Macro View: Ant Worker on Trail', desc: 'Macroscopic anatomical view showing whole ant body, jointed legs, and antennae.' },
-                  10: { img: ant10x, title: '10x Stereo Zoom: Antenna Base & Joint', desc: '10x magnification showing the mobile scape joint and antennae chemoreceptors.' },
-                  100: { img: ant100x, title: '100x High-Power: Sensilla Scent Pores', desc: '100x optical micrograph of individual microscopic sensilla hairs and chemical pores.' },
+                  1: {
+                    img: ant1x,
+                    title: '1x Macro View: Ant Worker on Trail',
+                    desc: 'Macroscopic anatomical view of a black ant worker. Notice the large compound eyes, powerful mandibles, and two long jointed antennae continuously scanning the terrain.',
+                    fact: 'Ants use their antennae like steering antennae and chemical noses, sweeping them across the ground 10 times a second!',
+                    tag: 'Macroscopic Specimen'
+                  },
+                  10: {
+                    img: ant10x,
+                    title: '10x Stereo Zoom: Antenna Base & Scape Joint',
+                    desc: '10x magnification showing the mobile ball-and-socket scape joint, allowing 360° rotational freedom to locate scent direction.',
+                    fact: 'The elbowed joint lets the ant point each antenna independently toward different scent sources to compare pheromone strength.',
+                    tag: '10x Stereo Optical'
+                  },
+                  100: {
+                    img: ant100x,
+                    title: '100x High-Power: Sensilla Scent Pores (SEM)',
+                    desc: 'Scanning Electron Micrograph (SEM) showing individual sensory hairs (sensilla basiconica) covered with microscopic chemical receptor pores.',
+                    fact: 'Airborne pheromone molecules enter through these nano-scale pores and bind directly to olfactory receptor neurons inside!',
+                    tag: '100x Electron Micrograph (SEM)'
+                  },
                 },
                 2: {
-                  1: { img: snake1x, title: '1x Macro View: Spectacled Cobra Jaw', desc: 'Sample showing the lower jaw resting directly against the ground substrate.' },
-                  10: { img: snake10x, title: '10x Stereo Zoom: Quadrate Jaw & Scales', desc: '10x view showing keeled keratin scales and flexible quadrate bone for ground acoustics.' },
-                  100: { img: snake100x, title: '100x High-Power: Hollow Venom Channel', desc: '100x cross-section showing internal hypodermic needle venom canal of hollow fang.' },
+                  1: {
+                    img: snake1x,
+                    title: '1x Macro View: Spectacled Cobra Jaw on Ground',
+                    desc: 'Sample showing the lower jaw resting directly against the sandy ground substrate to detect seismic ground vibrations.',
+                    fact: 'Snakes have no external ears or eardrums! They detect the vibrations of footsteps walking hundreds of feet away through the ground.',
+                    tag: 'Macroscopic Specimen'
+                  },
+                  10: {
+                    img: snake10x,
+                    title: '10x Stereo Zoom: Quadrate Jaw & Keeled Scales',
+                    desc: '10x magnification showing keeled keratin scales and the flexible quadrate bone coupling the lower jaw directly to the inner ear columella.',
+                    fact: 'Ground vibration waves travel up through the jawbone directly into the inner ear fluid, allowing instantaneous predator warning.',
+                    tag: '10x Stereo Optical'
+                  },
+                  100: {
+                    img: snake100x,
+                    title: '100x High-Power: Hollow Venom Canal Anatomy',
+                    desc: 'Anatomical cross-section showing the internal hypodermic needle venom canal, dentin sheath, and sharp discharge exit aperture.',
+                    fact: 'The venom canal works like a doctor’s hollow injection needle! Muscular contractions squeeze venom from the gland right through the canal tip.',
+                    tag: '100x Anatomical Cross-Section'
+                  },
                 },
                 3: {
-                  1: { img: tongue1x, title: '1x Macro View: Tongue & Papillae Regions', desc: 'Full anatomical diagram showing the distribution of Circumvallate, Foliate, Fungiform, and Filiform papillae.' },
-                  10: { img: tongue10x, title: '10x Stereo Zoom: Fungiform & Foliate Papilla', desc: 'Enlarged cross-section showing embedded taste buds, stratified squamous epithelium, and connective core.' },
-                  100: { img: tongue100x, title: '100x High-Power: Cellular Taste Bud Cross-Section', desc: 'Cellular anatomy showing taste pore, microvilli, gustatory receptor cells, and sensory nerve fiber.' },
+                  1: {
+                    img: tongue1x,
+                    title: '1x Macro View: Tongue & Papillae Distribution',
+                    desc: 'Full anatomical diagram showing the distribution of Circumvallate, Foliate, Fungiform, and Filiform papillae across the human tongue.',
+                    fact: 'Your tongue has thousands of tiny bumps called papillae, and each papilla can contain between 1 and 100 taste buds!',
+                    tag: 'Macroscopic Specimen'
+                  },
+                  10: {
+                    img: tongue10x,
+                    title: '10x Stereo Zoom: Fungiform & Foliate Papilla Cross-Section',
+                    desc: 'Enlarged cross-section showing embedded taste buds lining the epithelial side crevices of each papilla bump.',
+                    fact: 'Saliva dissolves food chemicals so they can wash into the side grooves where sensitive taste buds are sheltered from damage.',
+                    tag: '10x Tissue Histology'
+                  },
+                  100: {
+                    img: tongue100x,
+                    title: '100x High-Power: Cellular Taste Bud Cross-Section',
+                    desc: 'Cellular anatomy showing microscopic taste hairs (microvilli) protruding through the taste pore to contact dissolved chemicals.',
+                    fact: 'Receptor cells trigger sensory nerves that shoot taste signals to your brain in under 150 milliseconds!',
+                    tag: '100x Cellular Histology'
+                  },
                 },
                 4: {
-                  1: { img: burdock1x, title: '1x Macro View: Burdock Seed on Fur', desc: 'Macro photograph of brown burdock seed burrs latching securely into natural animal fur.' },
-                  10: { img: burdock10x, title: '10x Stereo Zoom: Curved Hook Array', desc: '10x view showing hundreds of sharp, elastic curved spines that George de Mestral copied.' },
-                  100: { img: burdock100x, title: '100x High-Power: Hook Interlocked in Loop', desc: '100x micrograph showing a natural burdock hook locked inside a synthetic nylon loop.' },
+                  1: {
+                    img: burdock1x,
+                    title: '1x Macro View: Burdock Seed Clinging to Fur',
+                    desc: 'Macro photograph of a brown burdock seed burr latching firmly into animal fur for plant seed dispersal.',
+                    fact: 'In 1941, Swiss engineer George de Mestral examined these burrs sticking to his dog after an Alpine hike, inspiring the invention of Velcro!',
+                    tag: 'Macroscopic Specimen'
+                  },
+                  10: {
+                    img: burdock10x,
+                    title: '10x Stereo Zoom: Spherical Burr & Curved Hook Array',
+                    desc: '10x stereo micrograph showing hundreds of stiff, elastic, curved micro-hooks radiating outward in every direction.',
+                    fact: 'Each spine tip curves into an elastic hook that bends smoothly to slip into fur or fabric, then springs back to latch tight!',
+                    tag: '10x Stereo Optical'
+                  },
+                  100: {
+                    img: burdock100x,
+                    title: '100x High-Power: Burdock Hook Interlocked in Nylon Loop (SEM)',
+                    desc: 'Scanning Electron Micrograph (SEM) showing a natural burdock hook locked inside a woven synthetic nylon loop fiber of Velcro.',
+                    fact: 'This biomimetic discovery led to the dual-sided fastener: one side covered in rigid hooks, the opposite side with soft nylon loops!',
+                    tag: '100x Electron Micrograph (SEM)'
+                  },
                 },
               };
 
@@ -404,7 +476,7 @@ export function SuperSensesMissionEngine() {
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mb-4 border-b-2 border-slate-100 pb-3">
                     <div>
                       <span className="text-xs font-black uppercase text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 inline-block mb-1">
-                        🔬 High-Resolution Scientific Microscope Studio
+                        🔬 High-Resolution Scientific Microscope Studio • {currentSample.tag}
                       </span>
                       <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
                         {currentSample.title}
@@ -418,11 +490,15 @@ export function SuperSensesMissionEngine() {
                           onClick={() => {
                             sounds.pop();
                             setZoomLevel(tier.val);
+                            const t = sampleImages[num]?.[tier.val];
+                            if (t) {
+                              voiceAssistant.speak(`${t.title}. ${t.desc}`);
+                            }
                           }}
                           className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                             zoomLevel === tier.val
                               ? 'bg-emerald-500 text-white shadow-md scale-105 font-black'
-                              : 'text-slate-600 hover:text-slate-950'
+                              : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200'
                           }`}
                         >
                           {tier.label}
@@ -431,8 +507,8 @@ export function SuperSensesMissionEngine() {
                     </div>
                   </div>
 
-                  {/* Clean Square Image Display Container (No circular cropping, pure white bg) */}
-                  <div className="w-full max-w-2xl h-[340px] sm:h-[420px] bg-slate-50 border-3 border-slate-200 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center p-3 sm:p-4 my-2 relative">
+                  {/* Clean Square Image Display Container with Clear Micrograph View */}
+                  <div className="w-full max-w-2xl h-[340px] sm:h-[420px] bg-slate-950 border-3 border-slate-200 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center p-2 sm:p-3 my-2 relative">
                     <motion.img
                       key={`${num}-${zoomLevel}`}
                       initial={{ scale: 0.95, opacity: 0.6 }}
@@ -443,15 +519,40 @@ export function SuperSensesMissionEngine() {
                       className="w-full h-full object-contain select-none"
                     />
 
-                    {/* Clean Magnification Tag */}
-                    <div className="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black text-emerald-300 border border-slate-700 shadow-sm">
+                    {/* Magnification Badge */}
+                    <div className="absolute top-4 right-4 bg-slate-900/85 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-black text-emerald-300 border border-emerald-500/50 shadow-md">
                       {zoomLevel}x Magnification
                     </div>
+
+                    {/* Audio Listen Button */}
+                    <button
+                      onClick={() => {
+                        sounds.pop();
+                        voiceAssistant.speak(`${currentSample.title}. ${currentSample.desc} Fun fact: ${currentSample.fact}`);
+                      }}
+                      className="absolute bottom-4 right-4 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-lg cursor-pointer flex items-center gap-1.5 active:scale-95 transition-all"
+                      title="Read Aloud"
+                    >
+                      <span>🔊 Listen</span>
+                    </button>
                   </div>
 
                   {/* Scientific Description Caption */}
-                  <div className="w-full max-w-2xl bg-emerald-50/80 p-4 rounded-2xl border-2 border-emerald-200 text-xs sm:text-sm text-slate-800 font-bold text-center mt-3 shadow-xs">
+                  <div className="w-full max-w-2xl bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 text-xs sm:text-sm text-slate-800 font-bold text-center mt-3 shadow-xs">
                     {currentSample.desc}
+                  </div>
+
+                  {/* Did You Know Discovery Fact Callout */}
+                  <div className="w-full max-w-2xl bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3.5 mt-2.5 flex items-center gap-3 text-left">
+                    <span className="text-2xl shrink-0">💡</span>
+                    <div>
+                      <span className="text-[11px] font-black uppercase text-emerald-800 block">
+                        Scientific Secret:
+                      </span>
+                      <p className="text-xs font-bold text-emerald-950">
+                        {currentSample.fact}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
