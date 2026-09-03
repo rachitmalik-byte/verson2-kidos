@@ -7,7 +7,7 @@ import { useParentStore } from '@/stores/parentStore';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { missions } from '@/data/missions';
-import { Pip } from '@/components/pip/Pip';
+import { SparkyMascot } from '@/components/mascot/SparkyMascot';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
@@ -21,13 +21,10 @@ import {
   Lock,
   CheckCircle2,
   Star,
-  Trophy,
   Play,
-  Flame,
-  Sun,
-  Layers,
   Compass,
-  FlaskConical, GraduationCap,
+  FlaskConical,
+  GraduationCap,
   Zap,
   RotateCcw,
   Map,
@@ -106,11 +103,11 @@ export function ChapterHub() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
       <MaterialsAnimatedLabBackground />
-      <div className="w-full max-w-7xl mx-auto flex flex-col gap-6">
+      <div className="w-full max-w-7xl mx-auto flex flex-col gap-5 relative z-10">
         {/* ── Top Game Navbar ── */}
-        <div id="navbar-top-controls" className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
+        <div id="navbar-top-controls" className="flex items-center justify-between squircle-card p-3 sm:p-4 shadow-soft-card">
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
@@ -118,16 +115,16 @@ export function ChapterHub() {
                 voiceAssistant.stop();
                 navigate('/subjects');
               }}
-              className="px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 border border-slate-300 cursor-pointer transition-all active:scale-95 shadow-xs"
+              className="pill-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1.5"
               title="Return to Subjects"
             >
-              <ArrowLeft className="w-4 h-4 stroke-[3]" />
+              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
               <span className="hidden sm:inline">Subjects</span>
             </button>
 
             <div className="flex items-center gap-2 ml-1 shrink-0">
-              <FlaskConical className="w-5 h-5 text-amber-500 shrink-0" />
-              <span className="font-black text-xs sm:text-sm text-slate-800 whitespace-nowrap">
+              <FlaskConical className="w-4 h-4 text-[#EA580C] shrink-0" />
+              <span className="font-extrabold text-xs sm:text-sm text-[#262930] whitespace-nowrap">
                 Theme 6: Materials Science
               </span>
             </div>
@@ -138,7 +135,7 @@ export function ChapterHub() {
                 voiceAssistant.stop();
                 navigate('/teacher-studio');
               }}
-              className="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-300 font-black text-xs flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-xs ml-2"
+              className="pill-btn-ghost px-3 py-1.5 text-xs flex items-center gap-1 ml-1"
               title="Open Teacher Studio"
             >
               <GraduationCap className="w-3.5 h-3.5" />
@@ -149,59 +146,49 @@ export function ChapterHub() {
           <AudioNavBarControls showProfile={true} />
         </div>
 
-        {/* ── Compact Chapter Hero Banner (All Elements Preserved, Tightly Formatted) ── */}
-        <div id="chapter-hero-banner" className="bg-white/95 rounded-3xl p-4 sm:p-6 border-4 border-amber-400 shadow-xl flex flex-col md:flex-row items-center gap-5 relative overflow-hidden font-sans">
-          {/* Pip Mascot in Compact Size */}
+        {/* ── Compact Chapter Hero Banner (Muted Pastels & Sparky Micro-Branding) ── */}
+        <div id="chapter-hero-banner" className="squircle-card p-5 sm:p-6 shadow-soft-card flex flex-col md:flex-row items-center gap-5 relative overflow-hidden font-sans">
+          {/* Sparky Mascot in Line-Art Style */}
           <div className="relative shrink-0 flex items-center justify-center">
-            <Pip mood={isAllComplete ? 'celebrating' : 'idle'} size="sm" />
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              className="absolute -top-1 -right-1 bg-amber-400 text-slate-950 p-1 rounded-full shadow-md border border-white"
-            >
-              <Sparkles className="w-3.5 h-3.5 fill-slate-950" />
-            </motion.div>
+            <SparkyMascot mood={isAllComplete ? 'celebrating' : 'thinking'} size={88} animate />
           </div>
 
-          {/* Banner Text & All 6 Actions */}
+          {/* Banner Text & All Actions */}
           <div className="flex-1 text-center md:text-left">
             {/* Badges Row */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mb-1.5">
-              <span className="px-2.5 py-0.5 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-[11px] font-black uppercase tracking-wider">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mb-2">
+              <span className="px-3 py-1 bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] rounded-full text-[11px] font-extrabold uppercase tracking-wide">
                 CBSE Class 5 EVS • Chapter 3
               </span>
-              <span className="px-2.5 py-0.5 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-[11px] font-black uppercase tracking-wider flex items-center gap-1">
-                <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
+              <span className="px-3 py-1 bg-[#FEFCE8] border border-[#FEF08A] text-[#854D0E] rounded-full text-[11px] font-extrabold uppercase tracking-wide flex items-center gap-1">
+                <Star className="w-3 h-3 fill-[#EAB308] text-[#EAB308]" />
                 <span>{totalStars} Science Stars</span>
               </span>
-              <span className="px-2.5 py-0.5 bg-sky-100 border border-sky-300 text-sky-900 rounded-full text-[11px] font-black uppercase tracking-wider">
+              <span className="px-3 py-1 bg-[#F0F9FF] border border-[#BAE6FD] text-[#075985] rounded-full text-[11px] font-extrabold uppercase tracking-wide">
                 {progressPercent}% Mastered
               </span>
             </div>
 
             {/* Title */}
-            <h1
-              className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight"
-              style={{ fontFamily: 'Nunito, sans-serif' }}
-            >
-              The World of Natural & Synthetic Materials 🧪✨
+            <h1 className="text-xl md:text-2xl font-extrabold text-[#262930] tracking-tight leading-tight">
+              The World of Natural & Synthetic Materials 🧪
             </h1>
-            <p className="text-xs font-bold text-slate-600 mt-0.5 max-w-2xl">
-              Welcome back, {child?.name || 'Aarav'} (Grade 5)! Explore Class 5 hands-on science missions with real materials, interactive simulations, and speech challenges!
+            <p className="text-xs font-medium text-[#5A6072] mt-1 max-w-2xl leading-relaxed">
+              Welcome back, {child?.name || 'Aarav'} (Grade 5)! Explore hands-on science missions with real materials, interactive simulations, and audio-guided discovery.
             </p>
 
             {/* Progress Bar */}
-            <div className="w-full max-w-md mt-2 bg-slate-100 rounded-full h-2.5 p-0.5 border border-slate-300 shadow-inner mx-auto md:mx-0">
+            <div className="w-full max-w-md mt-2.5 bg-[#F1EFEA] rounded-full h-2 p-0.5 border border-slate-200/80 mx-auto md:mx-0">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 1, ease: 'easeOut' }}
-                className="bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-500 h-full rounded-full shadow-xs"
+                className="bg-gradient-to-r from-[#FDE047] via-[#FDBA74] to-[#86EFAC] h-full rounded-full"
               />
             </div>
 
-            {/* All 6 Action Buttons (Compact & Organized) */}
-            <div className="flex flex-wrap gap-2 mt-3 justify-center md:justify-start">
+            {/* All 6 Action Buttons (Pill Affordances) */}
+            <div className="flex flex-wrap gap-2 mt-3.5 justify-center md:justify-start">
               <button
                 id="chapter-story-intro-btn"
                 onClick={() => {
@@ -209,10 +196,10 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   navigate('/intro/materials');
                 }}
-                className="font-black text-xs py-2 px-3.5 rounded-xl shadow-xs bg-gradient-to-r from-sky-500 to-indigo-600 text-white flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all border border-sky-400"
+                className="pill-btn-primary px-3.5 py-1.5 text-xs flex items-center gap-1.5 shadow-soft-pill"
               >
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>📖 Play Chapter Story Intro</span>
+                <span>Story Intro</span>
               </button>
 
               <button
@@ -222,14 +209,14 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   setActiveTab('missions');
                 }}
-                className={`font-black text-xs py-2 px-3.5 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                className={`px-3.5 py-1.5 rounded-full font-extrabold text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
                   activeTab === 'missions'
-                    ? 'bg-amber-400 border border-amber-600 text-slate-950 font-black'
-                    : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
+                    ? 'bg-[#262930] text-white shadow-soft-pill'
+                    : 'pill-btn-secondary'
                 }`}
               >
-                <Compass className="w-3.5 h-3.5 text-amber-700" />
-                <span>13 Hands-on Missions 🗺️</span>
+                <Compass className="w-3.5 h-3.5" />
+                <span>13 Missions</span>
               </button>
 
               <button
@@ -239,14 +226,14 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   setActiveTab('video');
                 }}
-                className={`font-black text-xs py-2 px-3.5 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                className={`px-3.5 py-1.5 rounded-full font-extrabold text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
                   activeTab === 'video'
-                    ? 'bg-sky-500 border border-sky-700 text-white'
-                    : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
+                    ? 'bg-[#262930] text-white shadow-soft-pill'
+                    : 'pill-btn-secondary'
                 }`}
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Video Lab 🎬</span>
+                <span>Video Lab</span>
               </button>
 
               <button
@@ -256,14 +243,14 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   setActiveTab('guidebook');
                 }}
-                className={`font-black text-xs py-2 px-3.5 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                className={`px-3.5 py-1.5 rounded-full font-extrabold text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
                   activeTab === 'guidebook'
-                    ? 'bg-indigo-600 border border-indigo-800 text-white'
-                    : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
+                    ? 'bg-[#262930] text-white shadow-soft-pill'
+                    : 'pill-btn-secondary'
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Science Guidebook 📖</span>
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Guidebook</span>
               </button>
 
               <button
@@ -273,10 +260,10 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   navigate('/mystery-lab');
                 }}
-                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all border border-amber-500"
+                className="px-3.5 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#9A3412] font-extrabold text-xs flex items-center gap-1.5 cursor-pointer hover:bg-[#FFEDD5] transition-all"
               >
-                <Sparkles className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
-                <span>Mystery Quiz Lab 🔬 (+25🪙)</span>
+                <Sparkles className="w-3.5 h-3.5 fill-[#EA580C] text-[#EA580C]" />
+                <span>Mystery Quiz (+25🪙)</span>
               </button>
 
               <button
@@ -286,9 +273,9 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   navigate('/discovery-book');
                 }}
-                className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-black text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-xs transition-all"
+                className="px-3.5 py-1.5 rounded-full bg-[#F5F3FF] border border-[#DDD6FE] text-[#5B21B6] font-extrabold text-xs flex items-center gap-1.5 cursor-pointer hover:bg-[#EDE9FE] transition-all"
               >
-                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                <BookOpen className="w-3.5 h-3.5" />
                 <span>Field Journal ({discoveries.length})</span>
               </button>
             </div>
@@ -302,20 +289,22 @@ export function ChapterHub() {
 
         {activeTab === 'missions' && (
           <>
-            {/* First-Time Start Banner (shown if no missions completed yet) */}
+            {/* First-Time Start Banner (Warm Butter-Yellow with Sparky) */}
             {completedMissions.length === 0 && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 rounded-2xl p-4 sm:p-5 border-2 border-amber-600 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4"
+                className="squircle-card p-4 sm:p-5 bg-[#FEFCE8] border border-[#FEF08A] shadow-soft-card flex flex-col sm:flex-row items-center justify-between gap-4"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl shrink-0">🔬</span>
+                <div className="flex items-center gap-3.5 text-center sm:text-left">
+                  <div className="w-11 h-11 rounded-2xl bg-[#FEF9C3] flex items-center justify-center text-2xl shrink-0">
+                    🔬
+                  </div>
                   <div>
-                    <h3 className="font-black text-slate-950 text-sm sm:text-base" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    <h3 className="font-extrabold text-[#262930] text-sm sm:text-base">
                       Ready to begin your Science Journey?
                     </h3>
-                    <p className="text-xs font-bold text-slate-900 mt-0.5">
+                    <p className="text-xs font-medium text-[#5A6072] mt-0.5">
                       Start with <strong>Mission 1: The Raincoat Mystery</strong> below to unlock the rest! 🗺️
                     </p>
                   </div>
@@ -326,10 +315,10 @@ export function ChapterHub() {
                     voiceAssistant.stop();
                     navigate('/chapter/3/mission/1');
                   }}
-                  className="shrink-0 px-5 py-2.5 bg-slate-950 text-amber-400 font-black text-xs sm:text-sm rounded-xl flex items-center gap-1.5 cursor-pointer hover:bg-slate-800 transition-all active:scale-95 shadow-md"
+                  className="shrink-0 pill-btn-primary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2 shadow-soft-pill"
                 >
                   <span>Start Mission 1</span>
-                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </motion.div>
             )}
@@ -338,44 +327,44 @@ export function ChapterHub() {
             <DailyCuriosityQuest />
 
             {/* ── Winding Adventure Map vs Grid View Controls ── */}
-            <div className="flex items-center justify-between bg-white/90 p-3 rounded-2xl border-2 border-slate-200 shadow-sm flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <Compass className="w-5 h-5 text-amber-500" />
+            <div className="flex items-center justify-between squircle-card p-3 sm:p-3.5 shadow-soft-card flex-wrap gap-2">
+              <div className="flex items-center gap-2.5">
+                <Compass className="w-5 h-5 text-[#EA580C]" />
                 <div>
-                  <h3 className="text-sm sm:text-base font-black text-slate-900 leading-none" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                    Chapter 3 Adventure Level Road 🗺️
+                  <h3 className="text-sm sm:text-base font-extrabold text-[#262930] leading-none">
+                    Chapter 3 Science Level Trail 🗺️
                   </h3>
-                  <span className="text-[11px] font-bold text-slate-500">
+                  <span className="text-[11px] font-medium text-[#7E8494]">
                     {completedMissions.length} of {missions.length} Missions Completed
                   </span>
                 </div>
               </div>
 
               {/* View Switcher Toggle */}
-              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-300">
+              <div className="flex items-center gap-1 bg-[#F1EFEA] p-1 rounded-full border border-slate-200/80">
                 <button
                   onClick={() => {
                     sounds.pop();
                     setViewMode('map');
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 cursor-pointer transition-all ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition-all ${
                     viewMode === 'map'
-                      ? 'bg-amber-400 text-slate-950 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-[#262930] text-white shadow-soft-pill'
+                      : 'text-[#5A6072] hover:text-[#262930]'
                   }`}
                 >
                   <Map className="w-3.5 h-3.5" />
-                  <span>Adventure Road Map</span>
+                  <span>Road Map</span>
                 </button>
                 <button
                   onClick={() => {
                     sounds.pop();
                     setViewMode('grid');
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 cursor-pointer transition-all ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition-all ${
                     viewMode === 'grid'
-                      ? 'bg-amber-400 text-slate-950 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-[#262930] text-white shadow-soft-pill'
+                      : 'text-[#5A6072] hover:text-[#262930]'
                   }`}
                 >
                   <Grid className="w-3.5 h-3.5" />
@@ -391,7 +380,7 @@ export function ChapterHub() {
               </div>
             )}
 
-            {/* ── View Mode: Specimen Grid Cards ── */}
+            {/* ── View Mode: Specimen Grid Cards (Squircle & Diffuse Shadows) ── */}
             {viewMode === 'grid' && (
               <div id="chapter-missions-trail" className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -404,21 +393,21 @@ export function ChapterHub() {
                     return (
                       <motion.div
                         key={m.id}
-                        whileHover={isUnlocked ? { scale: 1.025, y: -4 } : {}}
+                        whileHover={isUnlocked ? { scale: 1.015, y: -3 } : {}}
                         whileTap={isUnlocked ? { scale: 0.98 } : {}}
                         onClick={() => handleMissionClick(m, isUnlocked)}
-                        className={`rounded-3xl border-3 transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden bg-white shadow-md ${
+                        className={`squircle-card p-0 overflow-hidden transition-all flex flex-col justify-between cursor-pointer relative ${
                           isCompleted
-                            ? 'border-emerald-400 hover:shadow-emerald-100/60'
+                            ? 'hover:border-[#BBF7D0] shadow-soft-card'
                             : isNextMission
-                            ? 'border-amber-500 ring-4 ring-amber-400/70 shadow-lg shadow-amber-200/50'
+                            ? 'border-[#FED7AA] shadow-soft-float ring-2 ring-[#FED7AA]/60'
                             : isUnlocked
-                            ? 'border-amber-300 ring-2 ring-amber-200/40 hover:shadow-amber-100'
-                            : 'border-slate-200 opacity-60 bg-slate-50 cursor-not-allowed'
+                            ? 'shadow-soft-card hover:border-slate-300'
+                            : 'opacity-60 bg-[#FAF8F5]/80 cursor-not-allowed border-dashed'
                         }`}
                       >
                         {/* Visual Image Banner Header */}
-                        <div className="relative w-full h-36 md:h-40 overflow-hidden bg-slate-900">
+                        <div className="relative w-full h-36 md:h-40 overflow-hidden bg-[#FAF8F5]">
                           <img
                             src={thumbnail}
                             alt={m.title}
@@ -426,30 +415,30 @@ export function ChapterHub() {
                               isUnlocked ? 'hover:scale-105' : 'grayscale contrast-75'
                             }`}
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#262930]/80 via-[#262930]/20 to-transparent" />
 
                           {/* Top Overlay Badges */}
                           <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                            <span className="px-2.5 py-1 bg-slate-900/80 backdrop-blur-md text-amber-300 border border-amber-400/40 rounded-full text-[10px] font-black tracking-wider uppercase shadow-xs">
+                            <span className="px-2.5 py-1 bg-white/90 backdrop-blur-md text-[#262930] rounded-full text-[10px] font-extrabold tracking-wider uppercase shadow-xs">
                               Mission {m.number}
                             </span>
 
                             {isCompleted ? (
-                              <span className="flex items-center gap-1 bg-emerald-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black shadow-md">
-                                <CheckCircle2 className="w-3 h-3 text-white" />
-                                <span>Done ⭐⭐⭐</span>
+                              <span className="flex items-center gap-1 bg-[#DCFCE7] text-[#166534] border border-[#BBF7D0] px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow-xs">
+                                <CheckCircle2 className="w-3 h-3 text-[#16A34A]" />
+                                <span>Completed ⭐</span>
                               </span>
                             ) : isNextMission ? (
-                              <span className="flex items-center gap-1 bg-amber-400 text-slate-950 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md animate-pulse">
-                                <Zap className="w-3 h-3 fill-slate-950" />
-                                <span>Start Here! 👈</span>
+                              <span className="flex items-center gap-1 bg-[#262930] text-white px-3 py-1 rounded-full text-[10px] font-extrabold shadow-soft-pill">
+                                <Zap className="w-3 h-3 text-[#FDE047]" />
+                                <span>Start Next</span>
                               </span>
                             ) : isUnlocked ? (
-                              <span className="flex items-center gap-1 bg-amber-200 text-amber-950 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md">
+                              <span className="flex items-center gap-1 bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A] px-2.5 py-1 rounded-full text-[10px] font-extrabold">
                                 <span>Unlocked</span>
                               </span>
                             ) : (
-                              <span className="flex items-center gap-1 bg-slate-800/90 text-slate-300 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md">
+                              <span className="flex items-center gap-1 bg-white/80 backdrop-blur-sm text-[#7E8494] px-2.5 py-1 rounded-full text-[10px] font-bold">
                                 <Lock className="w-3 h-3" />
                                 <span>Locked</span>
                               </span>
@@ -457,12 +446,9 @@ export function ChapterHub() {
                           </div>
 
                           {/* Bottom Title on Image */}
-                          <div className="absolute bottom-2.5 left-3 right-3 flex items-center gap-2">
-                            <span className="text-2xl filter drop-shadow-md">{m.icon}</span>
-                            <h4
-                              className="text-base md:text-lg font-black text-white leading-tight tracking-tight filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate"
-                              style={{ fontFamily: 'Nunito, sans-serif' }}
-                            >
+                          <div className="absolute bottom-2.5 left-3 right-3 flex items-center gap-2 text-white">
+                            <span className="text-2xl filter drop-shadow-sm">{m.icon}</span>
+                            <h4 className="text-base md:text-lg font-extrabold leading-tight tracking-tight truncate">
                               {m.title}
                             </h4>
                           </div>
@@ -471,16 +457,16 @@ export function ChapterHub() {
                         {/* Card Content Body */}
                         <div className="p-4 flex-1 flex flex-col justify-between">
                           <div>
-                            <p className="text-xs font-bold text-slate-600 line-clamp-2 leading-relaxed mb-3">
+                            <p className="text-xs font-medium text-[#5A6072] line-clamp-2 leading-relaxed mb-3">
                               {m.subtitle}
                             </p>
 
-                            {/* Concept Tags */}
-                            <div className="flex flex-wrap gap-1 mb-3">
+                            {/* Concept Tags (Muted Pastels) */}
+                            <div className="flex flex-wrap gap-1.5 mb-3">
                               {m.concepts.slice(0, 3).map((c) => (
                                 <span
                                   key={c}
-                                  className="text-[9px] font-black uppercase tracking-wider bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200"
+                                  className="text-[9px] font-bold uppercase tracking-wider bg-[#F1EFEA] text-[#5A6072] px-2 py-0.5 rounded-full border border-slate-200/80"
                                 >
                                   #{c}
                                 </span>
@@ -491,20 +477,20 @@ export function ChapterHub() {
                           {/* Footer Action Button */}
                           <div className="pt-2.5 border-t border-slate-100">
                             {isCompleted ? (
-                              <div className="w-full py-2 px-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-black text-xs flex items-center justify-between">
+                              <div className="w-full py-2 px-3.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] font-bold text-xs flex items-center justify-between">
                                 <span className="flex items-center gap-1.5">
-                                  <RotateCcw className="w-3.5 h-3.5 text-emerald-600" />
+                                  <RotateCcw className="w-3.5 h-3.5 text-[#16A34A]" />
                                   Replay Lab
                                 </span>
                                 <ArrowRight className="w-3.5 h-3.5" />
                               </div>
                             ) : isUnlocked ? (
-                              <div className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs flex items-center justify-between shadow-xs">
+                              <div className="w-full py-2 px-3.5 rounded-full bg-[#262930] text-white font-bold text-xs flex items-center justify-between shadow-soft-pill">
                                 <span>Start Experiment 🔬</span>
-                                <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+                                <ArrowRight className="w-3.5 h-3.5" />
                               </div>
                             ) : (
-                              <div className="w-full py-2 px-3 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs flex items-center justify-between">
+                              <div className="w-full py-2 px-3.5 rounded-full bg-[#F1EFEA] text-[#8A90A0] font-medium text-xs flex items-center justify-between">
                                 <span>Locked</span>
                                 <Lock className="w-3.5 h-3.5" />
                               </div>
@@ -523,6 +509,9 @@ export function ChapterHub() {
 
       {/* First-Time Guided Tutorial Tour */}
       <FirstTimeTutorialOverlay isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
+
+      {/* Spaced Recall Practice Modal */}
+      <SpacedRecallModal isOpen={showRecallModal} onClose={() => setShowRecallModal(false)} />
     </div>
   );
 }

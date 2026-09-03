@@ -51,13 +51,26 @@ export const MissionAudioControls: React.FC = () => {
   const { isSfxMuted, isBgmMuted, toggleBgm, toggleSfx } = useAudioStore();
   const { showAiLabButton } = useUiSettingsStore();
 
+  const isAllMuted = isSfxMuted && isBgmMuted;
+
+  const handleToggleSoundMobile = () => {
+    sounds.pop();
+    if (!isAllMuted) {
+      if (!isSfxMuted) toggleSfx();
+      if (!isBgmMuted) toggleBgm();
+    } else {
+      if (isSfxMuted) toggleSfx();
+      if (isBgmMuted) toggleBgm();
+    }
+  };
+
   return (
     <>
-      <div className="flex items-center gap-1.5 shrink-0 select-none">
-        {/* Reading Level Accessibility Switcher */}
+      <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 select-none">
+        {/* Reading Level Accessibility Switcher (Responsive) */}
         <ReadingLevelToggle />
 
-        {/* Quick AI Science Lab Trigger */}
+        {/* Quick AI Science Lab Trigger (Tablet/Desktop) */}
         {showAiLabButton && (
           <motion.button
             whileHover={{ scale: 1.03 }}
@@ -66,15 +79,34 @@ export const MissionAudioControls: React.FC = () => {
               sounds.sparkle();
               setShowAiLabModal(true);
             }}
-            className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all whitespace-nowrap"
+            className="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all whitespace-nowrap"
             title="Open Gemini AI Science Tools"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
-            <span className="hidden sm:inline">AI Lab ✨</span>
+            <span className="hidden md:inline">AI Lab ✨</span>
           </motion.button>
         )}
 
-        {/* Quick Music Toggle */}
+        {/* Mobile: Consolidated Quick Mute Toggle */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.94 }}
+          onClick={handleToggleSoundMobile}
+          className={`flex sm:hidden p-1.5 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
+            !isAllMuted
+              ? 'bg-amber-100 border-amber-300 text-amber-800'
+              : 'bg-slate-100 border-slate-300 text-slate-400'
+          }`}
+          title={!isAllMuted ? 'Mute Audio' : 'Unmute Audio'}
+        >
+          {!isAllMuted ? (
+            <Volume2 className="w-3.5 h-3.5 text-amber-700" />
+          ) : (
+            <VolumeX className="w-3.5 h-3.5 text-slate-400" />
+          )}
+        </motion.button>
+
+        {/* Desktop / Tablet: Separate Quick Music Toggle */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.94 }}
@@ -82,7 +114,7 @@ export const MissionAudioControls: React.FC = () => {
             sounds.pop();
             toggleBgm();
           }}
-          className={`p-1.5 sm:p-2 rounded-xl border-2 flex items-center justify-center transition-all cursor-pointer ${
+          className={`hidden sm:flex p-1.5 sm:p-2 rounded-xl border-2 items-center justify-center transition-all cursor-pointer ${
             !isBgmMuted
               ? 'bg-rose-100 border-rose-300 text-rose-800'
               : 'bg-slate-100 border-slate-300 text-slate-400'
@@ -92,7 +124,7 @@ export const MissionAudioControls: React.FC = () => {
           <Music className={`w-3.5 h-3.5 ${!isBgmMuted ? 'text-rose-600' : 'text-slate-400'}`} />
         </motion.button>
 
-        {/* Quick SFX Toggle */}
+        {/* Desktop / Tablet: Separate Quick SFX Toggle */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.94 }}
@@ -100,7 +132,7 @@ export const MissionAudioControls: React.FC = () => {
             sounds.pop();
             toggleSfx();
           }}
-          className={`p-1.5 sm:p-2 rounded-xl border-2 flex items-center justify-center transition-all cursor-pointer ${
+          className={`hidden sm:flex p-1.5 sm:p-2 rounded-xl border-2 items-center justify-center transition-all cursor-pointer ${
             !isSfxMuted
               ? 'bg-amber-100 border-amber-300 text-amber-800'
               : 'bg-slate-100 border-slate-300 text-slate-400'
@@ -122,7 +154,7 @@ export const MissionAudioControls: React.FC = () => {
             sounds.pop();
             setShowSettingsModal(true);
           }}
-          className="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-600 flex items-center justify-center transition-all cursor-pointer"
+          className="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-600 flex items-center justify-center transition-all cursor-pointer shadow-xs"
           title="Audio & Narration Settings"
         >
           <Sliders className="w-3.5 h-3.5" />

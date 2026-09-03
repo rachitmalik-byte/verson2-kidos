@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useParentStore } from '@/stores/parentStore';
 import { useProgressStore } from '@/stores/progressStore';
-import { Pip } from '@/components/pip/Pip';
+import { SparkyMascot } from '@/components/mascot/SparkyMascot';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import {
   Sparkles,
-  Play,
   Users,
   GraduationCap,
   BookOpen,
@@ -16,39 +15,63 @@ import {
   Leaf,
   Droplets,
   Home,
-  Rocket,
   ChevronRight,
-  Star,
-  Zap,
-  Trophy,
   TrendingUp,
+  Award,
 } from 'lucide-react';
 import heroBannerImg from '@/assets/images/showcase/polyquest_hero_banner.jpg';
 
 const TOPIC_CARDS = [
-  { emoji: '🧪', label: 'Materials & Fibres', color: 'from-amber-400 to-orange-500', icon: FlaskConical, delay: 0 },
-  { emoji: '🐜', label: 'Super Senses', color: 'from-emerald-400 to-teal-500', icon: Leaf, delay: 0.1 },
-  { emoji: '💧', label: 'Water Magic', color: 'from-sky-400 to-blue-500', icon: Droplets, delay: 0.2 },
-  { emoji: '🏠', label: 'Shelter & Earth', color: 'from-indigo-400 to-violet-500', icon: Home, delay: 0.3 },
+  {
+    emoji: '🧪',
+    label: 'Materials & Fibres',
+    sub: 'Chapter 3',
+    bg: 'bg-[#FFF7ED]',
+    border: 'border-[#FED7AA]',
+    text: 'text-[#9A3412]',
+    iconBg: 'bg-[#FFEDD5]',
+    icon: FlaskConical,
+    delay: 0,
+  },
+  {
+    emoji: '🐜',
+    label: 'Super Senses',
+    sub: 'Theme 1',
+    bg: 'bg-[#F0FDF4]',
+    border: 'border-[#BBF7D0]',
+    text: 'text-[#166534]',
+    iconBg: 'bg-[#DCFCE7]',
+    icon: Leaf,
+    delay: 0.08,
+  },
+  {
+    emoji: '💧',
+    label: 'Water Magic',
+    sub: 'Theme 2',
+    bg: 'bg-[#F0F9FF]',
+    border: 'border-[#BAE6FD]',
+    text: 'text-[#075985]',
+    iconBg: 'bg-[#E0F2FE]',
+    icon: Droplets,
+    delay: 0.16,
+  },
+  {
+    emoji: '🏠',
+    label: 'Shelter & Earth',
+    sub: 'Theme 5',
+    bg: 'bg-[#F5F3FF]',
+    border: 'border-[#DDD6FE]',
+    text: 'text-[#5B21B6]',
+    iconBg: 'bg-[#EDE9FE]',
+    icon: Home,
+    delay: 0.24,
+  },
 ];
 
 const STATS = [
-  { icon: FlaskConical, label: 'Interactive Experiments', value: '40+' },
-  { icon: Zap, label: 'AI-Powered Learning', value: 'Live' },
-  { icon: Trophy, label: 'Missions & Quests', value: '13+' },
-];
-
-const FLOATING_PARTICLES = [
-  { emoji: '⚗️', x: '8%', y: '15%', duration: 5.2, size: 'text-3xl' },
-  { emoji: '🔬', x: '88%', y: '12%', duration: 4.8, size: 'text-2xl' },
-  { emoji: '🧬', x: '15%', y: '78%', duration: 6.1, size: 'text-2xl' },
-  { emoji: '⚡', x: '92%', y: '72%', duration: 5.5, size: 'text-3xl' },
-  { emoji: '🌡️', x: '5%', y: '45%', duration: 4.3, size: 'text-xl' },
-  { emoji: '🧲', x: '95%', y: '40%', duration: 5.8, size: 'text-xl' },
-  { emoji: '💎', x: '20%', y: '92%', duration: 6.5, size: 'text-xl' },
-  { emoji: '🔭', x: '80%', y: '88%', duration: 4.6, size: 'text-2xl' },
-  { emoji: '🪐', x: '50%', y: '8%', duration: 7.0, size: 'text-3xl' },
-  { emoji: '🌊', x: '70%', y: '55%', duration: 5.0, size: 'text-xl' },
+  { icon: FlaskConical, label: 'Hands-on Experiments', value: '40+' },
+  { icon: Sparkles, label: 'Mascot AI Coach', value: 'Sparky' },
+  { icon: Award, label: 'Curriculum Missions', value: '13+' },
 ];
 
 export const RoleSelection: React.FC = () => {
@@ -91,52 +114,32 @@ export const RoleSelection: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 flex flex-col relative overflow-hidden select-none font-sans">
-      {/* ── ANIMATED SCIENCE PARTICLES LAYER ── */}
-      <div className="absolute inset-0 pointer-events-none z-[1]">
-        {FLOATING_PARTICLES.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: [0.15, 0.4, 0.15],
-              y: [0, -18, 0],
-              x: [0, (i % 2 === 0 ? 6 : -6), 0],
-            }}
-            transition={{ duration: p.duration, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-            className={`absolute ${p.size}`}
-            style={{ left: p.x, top: p.y }}
-          >
-            {p.emoji}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* ── GRADIENT GLOW ORBS (Ambient) ── */}
-      <div className="absolute inset-0 pointer-events-none z-[0] overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px]" />
-        <div className="absolute -top-20 right-0 w-80 h-80 bg-sky-500/15 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-96 bg-emerald-500/10 rounded-full blur-[140px]" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-[100px]" />
+    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between relative overflow-hidden select-none font-sans">
+      {/* ── Soft Pastel Ambient Orbs (Low Saturation, Non-Intrusive) ── */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#FEF3C7]/40 rounded-full blur-[90px]" />
+        <div className="absolute top-20 right-0 w-80 h-80 bg-[#E0F2FE]/45 rounded-full blur-[80px]" />
+        <div className="absolute bottom-10 left-1/4 w-[450px] h-80 bg-[#DCFCE7]/35 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-10 w-72 h-72 bg-[#F3E8FF]/40 rounded-full blur-[90px]" />
       </div>
 
       {/* ── TOP NAVIGATION BAR ── */}
       <motion.header
-        initial={{ y: -20, opacity: 0 }}
+        initial={{ y: -15, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-2 flex items-center justify-between"
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-5 pb-3 flex items-center justify-between"
       >
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl shadow-lg shadow-amber-500/30">
-            <Sparkles className="w-5 h-5 text-white fill-white" />
+          <div className="w-10 h-10 rounded-2xl bg-[#FEF08A] border border-[#FDE047] flex items-center justify-center shadow-xs">
+            <Sparkles className="w-5 h-5 text-[#262930] fill-[#262930]" />
           </div>
           <div>
-            <h1 className="font-black text-lg text-white leading-none tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              POLY<span className="text-sky-400">QUEST</span>
+            <h1 className="font-extrabold text-lg text-[#262930] leading-none tracking-tight">
+              KIDOS <span className="font-medium text-[#5A6072] text-sm">• Class 5 EVS</span>
             </h1>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              Class 5 EVS Science
+            <span className="text-[10px] font-bold text-[#8A90A0] uppercase tracking-widest block mt-0.5">
+              Curriculum Science Adventures
             </span>
           </div>
         </div>
@@ -144,153 +147,152 @@ export const RoleSelection: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => { sounds.pop(); navigate('/teacher-studio'); }}
-            className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 backdrop-blur-sm text-white/80 hover:text-white font-bold text-xs border border-white/10 cursor-pointer flex items-center gap-1.5 transition-all"
+            className="pill-btn-ghost px-3.5 py-1.5 text-xs flex items-center gap-1.5"
           >
             <GraduationCap className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Teacher</span>
+            <span className="hidden sm:inline">Teacher Studio</span>
           </button>
           <button
             onClick={handleParentClick}
-            className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 backdrop-blur-sm text-white/80 hover:text-white font-bold text-xs border border-white/10 cursor-pointer flex items-center gap-1.5 transition-all"
+            className="pill-btn-secondary px-4 py-1.5 text-xs flex items-center gap-1.5"
           >
-            <Users className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Parents</span>
+            <Users className="w-3.5 h-3.5 text-[#5A6072]" />
+            <span>Parent Gate</span>
           </button>
         </div>
       </motion.header>
 
       {/* ── MAIN HERO SECTION ── */}
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 pb-8">
-        <div className="w-full max-w-5xl flex flex-col items-center gap-6 md:gap-8">
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-4">
+        <div className="w-full max-w-4xl flex flex-col items-center gap-6 md:gap-7 text-center">
 
-          {/* ── HERO BANNER IMAGE WITH PIP ── */}
+          {/* ── Sparky Mascot & Warm Welcome Banner ── */}
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-3xl"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="flex flex-col items-center"
           >
-            {/* Glow ring behind the banner */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-violet-500 via-sky-500 to-emerald-500 rounded-[32px] blur-sm opacity-60" />
-            
-            <div className="relative rounded-[28px] overflow-hidden border-2 border-white/20 shadow-2xl shadow-violet-500/20">
+            <div className="relative mb-1">
+              <SparkyMascot
+                mood="welcoming"
+                size={140}
+                showSpeechBubble
+                speechText="Hi! I'm Sparky 👋 Ready to explore?"
+                animate
+              />
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FEFCE8] border border-[#FEF08A] text-[11px] font-bold text-[#854D0E] mb-2 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 fill-[#EAB308] text-[#EAB308]" />
+              <span>Interactive Science Lab for Curious Young Minds</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#262930] tracking-tight max-w-xl leading-tight">
+              Learn Science Through Play & Discovery
+            </h2>
+            <p className="text-sm sm:text-base font-medium text-[#5A6072] max-w-md mx-auto mt-2 leading-relaxed">
+              Explore 40+ interactive experiments, animated microscopy, and guided quests crafted to make learning delightful.
+            </p>
+          </motion.div>
+
+          {/* ── HERO BANNER CARD (Soft Squircle with Diffuse Shadow) ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.55, delay: 0.15 }}
+            className="w-full max-w-2xl squircle-card p-2 sm:p-2.5 overflow-hidden"
+          >
+            <div className="relative rounded-2xl overflow-hidden aspect-[16/7] sm:aspect-[21/9] bg-[#FAF8F5]">
               <img
                 src={heroBannerImg}
-                alt="PolyQuest – Pip's Science Lab"
-                className={`w-full h-48 sm:h-56 md:h-72 object-cover object-center transition-opacity duration-700 ${heroLoaded ? 'opacity-100' : 'opacity-0'}`}
+                alt="PolyQuest Science Lab"
+                className={`w-full h-full object-cover object-center transition-opacity duration-500 ${heroLoaded ? 'opacity-100' : 'opacity-0'}`}
               />
-              {/* Dark gradient overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#262930]/75 via-[#262930]/20 to-transparent" />
 
-              {/* Floating Pip on the banner */}
-              <div className="absolute bottom-3 left-4 sm:left-6">
-                <div className="flex items-center gap-3 bg-white/15 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/20">
-                  <Pip mood="celebrating" size={48} interactive={false} />
+              {/* Progress Indicator Overlay */}
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                <div className="flex items-center gap-2 text-left">
+                  <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-xs">
+                    🔬
+                  </div>
                   <div>
-                    <span className="text-[11px] font-black text-amber-300 uppercase tracking-wider block">
-                      Hi, I'm Pip! 👋
-                    </span>
-                    <span className="text-xs font-bold text-white/80">
-                      Your AI Science Buddy
-                    </span>
+                    <span className="text-[10px] font-bold text-white/80 block uppercase tracking-wider">CBSE Class 5</span>
+                    <span className="text-xs font-bold text-white">Environmental Studies</span>
                   </div>
                 </div>
-              </div>
 
-              {/* Stats on the banner */}
-              <div className="absolute bottom-3 right-4 sm:right-6 hidden sm:flex items-center gap-2">
                 {completedMissions.length > 0 && (
-                  <div className="flex items-center gap-1.5 bg-emerald-500/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-emerald-400/30">
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-xs font-black text-emerald-300">
-                      {completedMissions.length}/13 Done
-                    </span>
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-xs font-bold text-white">
+                    <TrendingUp className="w-3.5 h-3.5 text-[#86EFAC]" />
+                    <span>{completedMissions.length}/13 Completed</span>
                   </div>
                 )}
               </div>
             </div>
           </motion.div>
 
-          {/* ── TITLE + SUBTITLE ── */}
+          {/* ── PRIMARY CTA: High-Contrast Dark Charcoal Pill Button ── */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-center space-y-2"
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="w-full max-w-sm flex flex-col items-center gap-2"
           >
-            <h2
-              className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight"
-              style={{ fontFamily: 'Nunito, sans-serif' }}
-            >
-              <span className="text-white">POLY</span>
-              <span className="bg-gradient-to-r from-sky-400 via-violet-400 to-emerald-400 bg-clip-text text-transparent">
-                QUEST
-              </span>
-            </h2>
-            <p className="text-sm sm:text-base font-bold text-slate-400 max-w-md mx-auto leading-relaxed">
-              Interactive 3D Science Adventures & Hands-on Experiments for Class 5 EVS
-            </p>
-          </motion.div>
-
-          {/* ── PRIMARY CTA BUTTON ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-            className="w-full max-w-md"
-          >
-            <motion.button
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.97 }}
+            <button
               onClick={handleScientistClick}
-              className="w-full group relative py-5 px-8 rounded-2xl bg-gradient-to-r from-emerald-400 via-teal-500 to-sky-500 text-white font-black text-lg sm:text-xl shadow-[0_12px_40px_rgba(16,185,129,0.35)] cursor-pointer transition-all flex items-center justify-center gap-3 border border-emerald-300/30 overflow-hidden"
+              className="w-full pill-btn-primary py-4 px-8 text-base sm:text-lg flex items-center justify-center gap-3 shadow-soft-pill group"
             >
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              <Play className="w-6 h-6 fill-white relative z-10" />
-              <span className="relative z-10">Start Science Adventure</span>
-              <ChevronRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+              <span>Start for Free</span>
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <span className="text-[11px] font-medium text-[#7E8494]">
+              Free access • No credit card required • 100% kid-safe
+            </span>
           </motion.div>
 
-          {/* ── TOPIC PREVIEW CARDS (Horizontal Grid) ── */}
+          {/* ── TOPIC PREVIEW CARDS (Soft Pastel Squircle Elements) ── */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-xl"
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl"
           >
-            {TOPIC_CARDS.map((card, i) => (
+            {TOPIC_CARDS.map((card) => (
               <motion.div
                 key={card.label}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + card.delay, duration: 0.4 }}
-                whileHover={{ scale: 1.05, y: -3 }}
-                className="group p-3.5 rounded-2xl bg-white/[0.07] backdrop-blur-sm border border-white/10 hover:border-white/25 text-center cursor-pointer transition-all hover:bg-white/[0.12]"
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleScientistClick}
+                className={`${card.bg} ${card.border} border p-3.5 rounded-2xl text-center cursor-pointer transition-all shadow-xs flex flex-col items-center justify-between min-h-[92px]`}
               >
-                <span className="text-2xl block mb-1.5">{card.emoji}</span>
-                <span className="text-[11px] font-black text-white/80 group-hover:text-white block leading-tight">
-                  {card.label}
-                </span>
+                <div className="text-2xl mb-1">{card.emoji}</div>
+                <div>
+                  <span className={`text-xs font-extrabold ${card.text} block leading-tight`}>
+                    {card.label}
+                  </span>
+                  <span className="text-[10px] font-semibold text-[#7E8494] block mt-0.5">
+                    {card.sub}
+                  </span>
+                </div>
               </motion.div>
             ))}
           </motion.div>
 
-          {/* ── MINI STATS BAR ── */}
+          {/* ── RESTFUL STATS BAR (Low Visual Noise) ── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="flex items-center gap-4 sm:gap-8 pt-2"
+            transition={{ duration: 0.5, delay: 0.45 }}
+            className="flex items-center justify-center gap-6 sm:gap-10 pt-1"
           >
             {STATS.map((stat) => (
-              <div key={stat.label} className="flex items-center gap-2 text-center">
-                <stat.icon className="w-4 h-4 text-slate-500" />
-                <div>
-                  <span className="text-xs font-black text-white/90 block">{stat.value}</span>
-                  <span className="text-[10px] font-bold text-slate-500 block">{stat.label}</span>
+              <div key={stat.label} className="flex items-center gap-2">
+                <stat.icon className="w-4 h-4 text-[#8A90A0]" />
+                <div className="text-left">
+                  <span className="text-xs font-extrabold text-[#262930] block leading-none">{stat.value}</span>
+                  <span className="text-[10px] font-medium text-[#7E8494] block mt-0.5">{stat.label}</span>
                 </div>
               </div>
             ))}
@@ -298,24 +300,20 @@ export const RoleSelection: React.FC = () => {
         </div>
       </main>
 
-      {/* ── FOOTER ── */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.0 }}
-        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-5 flex items-center justify-between"
-      >
-        <span className="text-xs font-bold text-slate-600">
-          Made for Grade 5 Science Explorers
+      {/* ── QUIET FOOTER ── */}
+      <footer className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between text-xs text-[#7E8494] border-t border-slate-200/50">
+        <span className="font-medium">
+          Designed with love for young scientists & learners
         </span>
         <button
           onClick={() => navigate('/discovery-book')}
-          className="text-xs font-bold text-slate-500 hover:text-sky-400 transition-colors cursor-pointer flex items-center gap-1"
+          className="font-semibold hover:text-[#262930] transition-colors cursor-pointer flex items-center gap-1.5"
         >
           <BookOpen className="w-3.5 h-3.5" />
-          <span>Science Field Journal</span>
+          <span>Field Journal</span>
         </button>
-      </motion.footer>
+      </footer>
     </div>
   );
 };
+

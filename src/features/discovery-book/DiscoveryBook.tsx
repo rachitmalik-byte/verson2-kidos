@@ -5,6 +5,7 @@ import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
+import { SparkyMascot } from '@/components/mascot/SparkyMascot';
 import {
   ALL_COURSES_CATALOG,
   CourseChapter,
@@ -175,9 +176,9 @@ export const DiscoveryBook: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-indigo-200 via-sky-100 to-amber-100 p-3 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden select-none">
-      {/* ── Top Header (Clean, Spacious, Single-Line) ── */}
-      <header className="w-full max-w-7xl bg-white/95 backdrop-blur-md rounded-3xl border-4 border-slate-200/80 px-4 sm:px-6 py-3.5 shadow-xl flex items-center justify-between gap-4 mb-6 z-20">
+    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] p-3 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden select-none">
+      {/* ── Top Header (Squircle Card with Diffuse Shadow) ── */}
+      <header className="w-full max-w-7xl squircle-card px-4 sm:px-6 py-3.5 shadow-soft-card flex items-center justify-between gap-4 mb-6 z-20">
         {/* Left: Navigation Buttons */}
         <div className="flex items-center gap-2 shrink-0">
           <button
@@ -185,7 +186,7 @@ export const DiscoveryBook: React.FC = () => {
               sounds.pop();
               navigate('/subjects');
             }}
-            className="p-2 sm:p-2.5 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
+            className="pill-btn-secondary p-2 text-[#5A6072]"
             title="Return to Subjects"
           >
             <Home className="w-4 h-4" />
@@ -196,7 +197,7 @@ export const DiscoveryBook: React.FC = () => {
               sounds.pop();
               navigate(-1);
             }}
-            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-amber-400 border-2 border-amber-600 shadow-[0_3px_0_#D97706] active:translate-y-0.5 text-slate-950 font-black text-xs sm:text-sm cursor-pointer whitespace-nowrap"
+            className="pill-btn-secondary px-3.5 py-2 text-xs flex items-center gap-1.5"
           >
             <ArrowLeft className="w-4 h-4 shrink-0" />
             <span>Go Back</span>
@@ -206,30 +207,37 @@ export const DiscoveryBook: React.FC = () => {
         {/* Center: Title & Subtitle */}
         <div className="text-center min-w-0 flex-1 px-2 hidden sm:block">
           <div className="flex items-center justify-center gap-2">
-            <BookOpen className="w-5 h-5 text-indigo-600 shrink-0" />
-            <h1 className="text-base sm:text-lg md:text-xl font-black text-slate-900 whitespace-nowrap truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <BookOpen className="w-5 h-5 text-[#262930] shrink-0" />
+            <h1 className="text-base sm:text-lg md:text-xl font-extrabold text-[#262930] whitespace-nowrap truncate">
               Master Science Field Journal 📖
             </h1>
           </div>
-          <p className="text-[10px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap truncate">
+          <p className="text-[10px] md:text-[11px] font-medium text-[#7E8494] whitespace-nowrap truncate">
             CBSE Class 5 EVS • Dedicated Chapter Field Logs, Practical Micro-Scans & DIY Labs
           </p>
         </div>
 
         {/* Right: Status & Compact Audio Controls */}
         <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden xl:flex items-center gap-1 px-3 py-1.5 bg-indigo-50 border-2 border-indigo-200 rounded-2xl text-indigo-900 font-black text-xs shadow-xs whitespace-nowrap">
-            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400 shrink-0" />
+          <div className="hidden xl:flex items-center gap-1 px-3 py-1.5 bg-[#FEFCE8] border border-[#FEF08A] rounded-full text-[#854D0E] font-bold text-xs shadow-xs whitespace-nowrap">
+            <Star className="w-3.5 h-3.5 text-[#EAB308] fill-[#EAB308] shrink-0" />
             <span>{discoveries.length} Discovered</span>
           </div>
           <AudioNavBarControls showProfile={false} />
         </div>
       </header>
 
-      {/* ── 4 Course Selector Tabs ── */}
+      {/* ── 4 Course Selector Tabs (Soft Pastel Squircle Tints) ── */}
       <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 z-10">
         {ALL_COURSES_CATALOG.map((course, idx) => {
           const isSelected = idx === selectedCourseIdx;
+          const coursePastels = [
+            { bg: 'bg-[#F0FDF4]', border: 'border-[#BBF7D0]', text: 'text-[#166534]', iconBg: 'bg-[#DCFCE7]' },
+            { bg: 'bg-[#FFF7ED]', border: 'border-[#FED7AA]', text: 'text-[#9A3412]', iconBg: 'bg-[#FFEDD5]' },
+            { bg: 'bg-[#F0F9FF]', border: 'border-[#BAE6FD]', text: 'text-[#075985]', iconBg: 'bg-[#E0F2FE]' },
+            { bg: 'bg-[#F5F3FF]', border: 'border-[#DDD6FE]', text: 'text-[#5B21B6]', iconBg: 'bg-[#EDE9FE]' },
+          ][idx % 4];
+
           return (
             <button
               key={course.courseId}
@@ -238,21 +246,21 @@ export const DiscoveryBook: React.FC = () => {
                 setSelectedCourseIdx(idx);
                 setSelectedChapterIdx(0);
               }}
-              className={`p-3.5 rounded-2xl border-3 text-left transition-all cursor-pointer flex items-center gap-3 ${
+              className={`p-3.5 squircle-card text-left transition-all cursor-pointer flex items-center gap-3 ${
                 isSelected
-                  ? 'bg-white border-indigo-600 shadow-lg scale-102 ring-2 ring-indigo-300'
-                  : 'bg-white/80 border-slate-200 hover:bg-white text-slate-700'
+                  ? 'border-[#262930] shadow-soft-card ring-2 ring-[#262930]/20'
+                  : 'border-slate-200/80 hover:border-slate-300'
               }`}
             >
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-tr ${course.themeGradient} flex items-center justify-center text-white shadow-xs shrink-0`}>
+              <div className={`w-10 h-10 rounded-2xl ${coursePastels.iconBg} flex items-center justify-center ${coursePastels.text} shadow-xs shrink-0`}>
                 {course.courseId === 'theme-senses' && <Leaf className="w-5 h-5" />}
                 {course.courseId === 'theme-materials' && <Layers className="w-5 h-5" />}
                 {course.courseId === 'theme-water' && <Droplets className="w-5 h-5" />}
                 {course.courseId === 'theme-shelter' && <Mountain className="w-5 h-5" />}
               </div>
               <div className="min-w-0">
-                <span className="text-[10px] font-black text-indigo-600 block uppercase">Course {idx + 1}</span>
-                <span className="text-xs font-black text-slate-900 truncate block leading-tight">{course.courseName}</span>
+                <span className={`text-[10px] font-extrabold ${coursePastels.text} block uppercase`}>Course {idx + 1}</span>
+                <span className="text-xs font-extrabold text-[#262930] truncate block leading-tight">{course.courseName}</span>
               </div>
             </button>
           );
@@ -262,7 +270,7 @@ export const DiscoveryBook: React.FC = () => {
       {/* ── Dedicated Chapter Field Journal Workspace ── */}
       <main className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 mb-12">
         {/* Left Column: Chapter Navigator (4 cols) */}
-        <div className="lg:col-span-4 bg-white/95 backdrop-blur-md p-4 rounded-3xl border-3 border-slate-200 shadow-md flex flex-col gap-2 h-fit">
+        <div className="lg:col-span-4 squircle-card p-4 shadow-soft-card bg-white flex flex-col gap-2 h-fit">
           <div className="flex items-center justify-between px-2 py-1">
             <span className="text-xs font-black uppercase tracking-wider text-slate-500">
               {activeCourse.courseName}:
@@ -309,18 +317,18 @@ export const DiscoveryBook: React.FC = () => {
         </div>
 
         {/* Right Column: Dedicated Chapter Field Journal (8 cols) */}
-        <div className="lg:col-span-8 bg-white/98 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 border-amber-400 shadow-2xl flex flex-col gap-6">
+        <div className="lg:col-span-8 squircle-card p-6 sm:p-8 shadow-soft-float flex flex-col gap-6 bg-white border border-slate-200/80">
           {/* Chapter Header */}
-          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b-2 border-slate-100 pb-4">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b border-slate-100 pb-4">
             <div className="flex items-center gap-3">
-              <span className="text-3xl sm:text-4xl p-2.5 rounded-2xl bg-amber-100 border border-amber-300 shadow-xs shrink-0">
+              <span className="text-3xl sm:text-4xl p-2.5 rounded-2xl bg-[#FEF9C3] border border-[#FEF08A] shadow-xs shrink-0">
                 {activeChapter.icon}
               </span>
               <div>
-                <span className="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full inline-block mb-1">
+                <span className="text-xs font-extrabold uppercase tracking-wide text-[#7C3AED] bg-[#F5F3FF] border border-[#DDD6FE] px-3 py-1 rounded-full inline-block mb-1">
                   {activeCourse.courseName} • Chapter {activeChapter.chapterNumber}
                 </span>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#262930] tracking-tight">
                   {journal.journalTitle}
                 </h2>
               </div>
@@ -328,15 +336,15 @@ export const DiscoveryBook: React.FC = () => {
 
             <button
               onClick={handlePronounceChapter}
-              className="p-2.5 bg-slate-100 hover:bg-slate-200 rounded-2xl text-slate-700 cursor-pointer self-start sm:self-center transition-all active:scale-95 shadow-xs"
-              title="Hear Pip read this chapter's field journal aloud"
+              className="p-2.5 pill-btn-secondary text-[#5A6072] cursor-pointer self-start sm:self-center"
+              title="Hear read aloud"
             >
-              <Volume2 className="w-5 h-5 text-indigo-600" />
+              <Volume2 className="w-5 h-5 text-[#262930]" />
             </button>
           </div>
 
-          {/* ── STRICTLY RELEVANT PRACTICAL SPECIMEN VIEWPORT (Large Hero) ── */}
-          <div className="w-full relative rounded-3xl bg-slate-950 border-4 border-indigo-400 overflow-hidden shadow-xl ring-4 ring-indigo-200/50 flex flex-col items-center justify-center">
+          {/* ── STRICTLY RELEVANT PRACTICAL SPECIMEN VIEWPORT ── */}
+          <div className="w-full relative rounded-3xl bg-slate-900 border border-slate-200/80 overflow-hidden shadow-soft-card flex flex-col items-center justify-center">
             <div className="w-full h-64 sm:h-72 md:h-80 relative overflow-hidden flex items-center justify-center">
               <img
                 src={currentAsset.src}

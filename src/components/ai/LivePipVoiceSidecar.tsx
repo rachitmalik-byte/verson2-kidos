@@ -220,8 +220,8 @@ export const LivePipVoiceSidecar: React.FC = () => {
 
   return (
     <>
-      {/* Floating Action Button for Pip (Right Side) */}
-      <div className="fixed bottom-12 sm:bottom-14 right-3 sm:right-6 z-[99900] flex items-center">
+      {/* Floating Action Button for Pip (Right Side, floating comfortably above bottom bar) */}
+      <div className="fixed bottom-14 sm:bottom-16 right-3 sm:right-6 z-[99900] flex items-center">
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}

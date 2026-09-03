@@ -112,13 +112,13 @@ export const DevDrawer: React.FC = () => {
 
   return (
     <>
-      {/* Dev Toggle Floating Button (Bottom Right) */}
+      {/* Dev Toggle Floating Button (Desktop Only — Hidden on mobile to prevent blocking primary action buttons) */}
       <button
         onClick={() => {
           sounds.pop();
           setIsOpen(true);
         }}
-        className="fixed bottom-4 right-4 z-40 p-2.5 bg-slate-950/90 hover:bg-slate-900 text-amber-400 border-2 border-amber-400/80 rounded-2xl shadow-xl flex items-center gap-1.5 font-mono text-xs font-black cursor-pointer hover:scale-105 active:scale-95 transition-all"
+        className="hidden sm:flex fixed bottom-4 right-4 z-40 p-2.5 bg-slate-950/90 hover:bg-slate-900 text-amber-400 border-2 border-amber-400/80 rounded-2xl shadow-xl items-center gap-1.5 font-mono text-xs font-black cursor-pointer hover:scale-105 active:scale-95 transition-all"
         title="Open Developer Super-Hacks Drawer"
       >
         <Code className="w-4 h-4 text-amber-400" />

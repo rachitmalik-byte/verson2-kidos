@@ -27,7 +27,7 @@ import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg
 import { MultiTierMicroscopeStudio } from '@/components/microscope/MultiTierMicroscopeStudio';
 import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
 import { SUPER_SENSES_COURSE_CHAPTERS } from '@/data/masterCurriculum';
-import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';
+import { SylvaLivingGreenCanvas } from '@/components/effects/SylvaLivingGreenCanvas';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -298,8 +298,8 @@ export function SuperSensesMissionEngine() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
-      <LivingWorldAnimatedForestBackground />
+    <div className="min-h-screen w-full sylva-canvas text-[#ECFDF5] flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+      <SylvaLivingGreenCanvas enableButterfly={true} />
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"
@@ -314,28 +314,60 @@ export function SuperSensesMissionEngine() {
       />
 
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center relative z-10">
-        {/* Top Navbar */}
-        <div className="w-full flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 rounded-3xl border-2 border-emerald-200 shadow-md mb-4">
+        {/* Top Sylva Glass Dock Navbar */}
+        <div className="w-full flex items-center justify-between sylva-glass-card p-3 sm:p-4 mb-3">
           <button
             onClick={() => {
               sounds.pop();
               voiceAssistant.stop();
               navigate('/theme/1/hub');
             }}
-            className="p-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer"
+            className="liquid-metal-btn px-3.5 py-1.5 text-xs flex items-center gap-1.5"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#34D399]" />
             <span>Theme 1 Hub</span>
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-emerald-100 text-emerald-900 rounded-full text-xs font-black">
-              Chapter {chapter.chapterNumber} of {THEME_1_CHAPTERS.length}
-            </span>
-            <span className="text-xs font-black text-slate-600">
-              Phase {currentStepIndex + 1} / {totalSteps}
-            </span>
+            <div className="sylva-radar-pill text-[10px] sm:text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#34D399] animate-pulse" />
+              <span>CH 0{chapter.chapterNumber} • {chapter.title}</span>
+            </div>
           </div>
+        </div>
+
+        {/* 6-Phase Interactive Stepper Dock */}
+        <div className="w-full flex items-center justify-center gap-1 sm:gap-2 mb-5 overflow-x-auto py-1 max-w-full">
+          {phaseOrder.map((ph, idx) => {
+            const isCurrent = ph === currentPhase;
+            const isPast = idx < currentStepIndex;
+            const phaseLabels: Record<Phase, string> = {
+              HOOK: '1. Intro',
+              EXPERIMENT: '2. Bio-Lab',
+              MICROSCOPE: '3. Micro-Scan',
+              SCIENCE_LAW: '4. Golden Law',
+              SPEECH_COACH: '5. Voice Coach',
+              QUIZ_LAB: '6. Mastery Quiz',
+            };
+            return (
+              <button
+                key={ph}
+                onClick={() => {
+                  sounds.pop();
+                  setCurrentPhase(ph);
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  isCurrent
+                    ? 'liquid-metal-btn-primary shadow-md'
+                    : isPast
+                    ? 'bg-[#10B981]/15 text-[#6EE7B7] border border-[#34D399]/30'
+                    : 'bg-black/40 text-slate-500 border border-white/5 hover:border-emerald-500/20'
+                }`}
+              >
+                {phaseLabels[ph]}
+              </button>
+            );
+          })}
         </div>
 
         {/* Phase Content View */}
@@ -575,35 +607,36 @@ export function SuperSensesMissionEngine() {
                 PHASE 4: SCIENCE_LAW (The 3-Pillar Golden Science Law)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'SCIENCE_LAW' && (
-              <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl">
-                <h3 className="text-center text-xs font-black uppercase tracking-widest text-emerald-700 mb-6 bg-emerald-100 px-4 py-1.5 rounded-full w-fit mx-auto">
-                  ⚡ The Golden Science Law
-                </h3>
+              <div className="w-full sylva-glass-card p-6 sm:p-8">
+                <div className="sylva-radar-pill mb-6 mx-auto flex w-fit">
+                  <span className="w-2 h-2 rounded-full bg-[#34D399] animate-pulse" />
+                  <span>THE GOLDEN SCIENCE LAW // BIOSENSORY TELEMETRY</span>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-5 rounded-3xl bg-amber-50 border-3 border-amber-300 text-center flex flex-col items-center shadow-md">
+                  <div className="p-5 rounded-3xl bg-[#07140c]/85 border border-amber-400/30 text-center flex flex-col items-center shadow-lg">
                     <span className="text-4xl mb-2">🐾</span>
-                    <span className="font-black text-slate-800 text-base">1. SENSORY ORGAN</span>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">What the animal HAS</p>
-                    <span className="text-[11px] font-black text-amber-900 bg-amber-200 px-3 py-0.5 rounded-full mt-2">
+                    <span className="font-extrabold text-white text-base">1. SENSORY ORGAN</span>
+                    <p className="text-xs font-medium text-[#9CA3AF] mt-0.5">What the organism HAS</p>
+                    <span className="text-[11px] font-mono font-bold text-amber-300 bg-amber-950/60 border border-amber-400/30 px-3 py-1 rounded-full mt-3">
                       {num === 1 ? 'Antennae / 4x Retina' : num === 2 ? 'Jawbone Sensor' : num === 3 ? '4-Zone Taste Buds' : 'Microscopic Seed Hooks'}
                     </span>
                   </div>
 
-                  <div className="p-5 rounded-3xl bg-sky-50 border-3 border-sky-300 text-center flex flex-col items-center shadow-md">
+                  <div className="p-5 rounded-3xl bg-[#07140c]/85 border border-sky-400/30 text-center flex flex-col items-center shadow-lg">
                     <span className="text-4xl mb-2">⚡</span>
-                    <span className="font-black text-slate-800 text-base">2. ADAPTATION</span>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">How it WORKS</p>
-                    <span className="text-[11px] font-black text-sky-900 bg-sky-200 px-3 py-0.5 rounded-full mt-2">
+                    <span className="font-extrabold text-white text-base">2. ADAPTATION</span>
+                    <p className="text-xs font-medium text-[#9CA3AF] mt-0.5">How it FUNCTIONS</p>
+                    <span className="text-[11px] font-mono font-bold text-sky-300 bg-sky-950/60 border border-sky-400/30 px-3 py-1 rounded-full mt-3">
                       {num === 1 ? 'Chemical Pheromones' : num === 2 ? 'Ground Acoustic Waves' : num === 3 ? 'Amylase Enzyme Breakdown' : 'Mechanical Hook Latch'}
                     </span>
                   </div>
 
-                  <div className="p-5 rounded-3xl bg-emerald-50 border-3 border-emerald-300 text-center flex flex-col items-center shadow-md">
+                  <div className="p-5 rounded-3xl bg-[#07140c]/85 border border-[#34D399]/30 text-center flex flex-col items-center shadow-lg">
                     <span className="text-4xl mb-2">🎯</span>
-                    <span className="font-black text-slate-800 text-base">3. REAL-WORLD USE</span>
-                    <p className="text-xs font-bold text-slate-500 mt-0.5">How HUMANS use it</p>
-                    <span className="text-[11px] font-black text-emerald-900 bg-emerald-200 px-3 py-0.5 rounded-full mt-2">
+                    <span className="font-extrabold text-white text-base">3. REAL-WORLD USE</span>
+                    <p className="text-xs font-medium text-[#9CA3AF] mt-0.5">How HUMANS apply it</p>
+                    <span className="text-[11px] font-mono font-bold text-[#34D399] bg-[#031d10]/80 border border-[#34D399]/40 px-3 py-1 rounded-full mt-3">
                       {num === 1 ? 'Search & Rescue Dogs' : num === 2 ? 'Medical Antivenom' : num === 3 ? 'ORS Hydration Therapy' : 'Velcro Fasteners'}
                     </span>
                   </div>
@@ -615,16 +648,16 @@ export function SuperSensesMissionEngine() {
                 PHASE 5: SPEECH_COACH (Real-Time Speech Karaoke Coach)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'SPEECH_COACH' && (
-              <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl flex flex-col items-center text-center">
+              <div className="w-full sylva-glass-card p-6 sm:p-8 flex flex-col items-center text-center">
                 <Pip mood="explaining" size="lg" />
-                <span className="px-3 py-1 bg-emerald-100 text-emerald-900 rounded-full text-xs font-black uppercase mt-3 mb-2">
+                <span className="px-3.5 py-1 bg-[#10B981]/20 border border-[#34D399]/30 text-[#6EE7B7] rounded-full text-xs font-mono font-bold uppercase mt-3 mb-2">
                   🎙️ AI Speech & Pronunciation Coach
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white mb-2">
                   Read the Discovery Fact Aloud!
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-bold mb-6 max-w-md">
-                  Speak clearly into your microphone word by word. Each recognized word will turn vibrant green!
+                <p className="text-xs sm:text-sm text-[#9CA3AF] font-medium mb-6 max-w-md">
+                  Speak clearly into your microphone word by word. Each recognized word will turn radiant green!
                 </p>
 
                 <div className="w-full max-w-xl">
@@ -643,10 +676,10 @@ export function SuperSensesMissionEngine() {
                 PHASE 6: QUIZ_LAB (3-Question Interactive Inquiry Quiz)
             ════════════════════════════════════════════════════════════════ */}
             {currentPhase === 'QUIZ_LAB' && (
-              <div className="w-full bg-white p-6 sm:p-8 rounded-3xl border-4 border-emerald-400 shadow-xl flex flex-col items-center">
-                <div className="flex items-center gap-2 mb-4">
-                  <Trophy className="w-6 h-6 text-amber-500" />
-                  <h3 className="text-2xl font-black text-slate-900">
+              <div className="w-full sylva-glass-card p-6 sm:p-8 flex flex-col items-center">
+                <div className="flex items-center gap-2.5 mb-5">
+                  <Trophy className="w-6 h-6 text-[#FDE047]" />
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-white">
                     Chapter {num} Mastery Quiz ({Object.keys(quizAnswers).length}/{quizList.length})
                   </h3>
                 </div>
@@ -657,22 +690,22 @@ export function SuperSensesMissionEngine() {
                     const isAnswered = selected !== undefined;
 
                     return (
-                      <div key={qIdx} className="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200">
-                        <span className="text-xs font-black uppercase text-emerald-700 mb-2 block">
+                      <div key={qIdx} className="p-5 rounded-2xl bg-[#06120b]/80 border border-[#34D399]/20">
+                        <span className="text-xs font-mono font-bold uppercase text-[#34D399] mb-2 block tracking-wider">
                           Question {qIdx + 1}
                         </span>
                         
                         {q.img && (
-                          <div className="w-full h-40 sm:h-48 mb-4 rounded-xl overflow-hidden border-2 border-slate-300 relative shadow-inner">
+                          <div className="w-full h-40 sm:h-48 mb-4 rounded-xl overflow-hidden border border-[#34D399]/30 relative shadow-inner">
                             <img src={q.img} alt={`Visual reference for question ${qIdx + 1}`} className="w-full h-full object-cover" />
                           </div>
                         )}
                         
-                        <h4 className="font-black text-slate-900 text-sm sm:text-base mb-4">
+                        <h4 className="font-extrabold text-white text-sm sm:text-base mb-4 leading-relaxed">
                           {q.question}
                         </h4>
 
-                        <div className="grid grid-cols-1 gap-2">
+                        <div className="grid grid-cols-1 gap-2.5">
                           {q.options.map((opt, oIdx) => {
                             const isSelected = selected === oIdx;
                             const isCorrect = oIdx === q.correctIndex;
@@ -690,12 +723,12 @@ export function SuperSensesMissionEngine() {
                                   }
                                   setQuizAnswers((p) => ({ ...p, [qIdx]: oIdx }));
                                 }}
-                                className={`p-3 rounded-xl text-left font-bold text-xs sm:text-sm border-2 transition-all cursor-pointer ${
+                                className={`p-3.5 rounded-xl text-left font-medium text-xs sm:text-sm border transition-all cursor-pointer ${
                                   isAnswered && isCorrect
-                                    ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-black'
+                                    ? 'bg-[#10B981]/25 border-[#34D399] text-white font-extrabold shadow-[0_0_16px_rgba(52,211,153,0.35)]'
                                     : isAnswered && isSelected && !isCorrect
-                                    ? 'bg-rose-100 border-rose-400 text-rose-950'
-                                    : 'bg-white border-slate-200 hover:border-emerald-300 text-slate-700'
+                                    ? 'bg-rose-950/40 border-rose-500 text-rose-200'
+                                    : 'bg-[#09170e]/80 border-[#34D399]/15 hover:border-[#34D399]/40 text-[#D1D5DB]'
                                 }`}
                               >
                                 <span>{opt}</span>
@@ -712,28 +745,29 @@ export function SuperSensesMissionEngine() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Bottom Step Progression Controls */}
-        <div className="w-full flex items-center justify-between mt-6 bg-white/90 backdrop-blur-md p-3.5 rounded-3xl border-2 border-emerald-200 shadow-md">
+        {/* Bottom Step Progression Controls (Sylva Glass Dock) */}
+        <div className="w-full flex items-center justify-between mt-6 sylva-glass-card p-3 sm:p-4">
           <button
             onClick={handlePrevPhase}
             disabled={currentStepIndex === 0}
-            className="px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs cursor-pointer disabled:opacity-40"
+            className="liquid-metal-btn px-5 py-2.5 text-xs font-bold disabled:opacity-30 disabled:cursor-not-allowed"
           >
             ← Previous
           </button>
 
           <button
             onClick={handleReset}
-            className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-xs cursor-pointer flex items-center gap-1"
+            className="liquid-metal-btn p-2.5 text-xs font-bold"
+            title="Reset Phase"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Reset</span>
+            <RotateCcw className="w-3.5 h-3.5 text-[#34D399]" />
+            <span className="hidden sm:inline ml-1">Reset</span>
           </button>
 
           <button
             onClick={handleNextPhase}
             disabled={!isStepComplete()}
-            className="px-7 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs cursor-pointer shadow-md active:scale-95 disabled:opacity-40 flex items-center gap-1.5"
+            className="liquid-metal-btn-primary px-6 sm:px-8 py-2.5 text-xs uppercase tracking-wider font-extrabold disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
           >
             <span>{currentStepIndex === totalSteps - 1 ? 'Claim Discovery Badge 🏆' : 'Next Step →'}</span>
           </button>

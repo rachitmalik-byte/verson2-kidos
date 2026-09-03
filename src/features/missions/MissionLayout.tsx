@@ -64,40 +64,37 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 
   return (
     <div
-      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-2 sm:pt-3 pb-12 sm:pb-14 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none`}
+      className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between pt-2 sm:pt-3 pb-24 sm:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none"
     >
-      <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
+      <div className="w-full max-w-5xl mx-auto flex flex-col gap-3 sm:gap-5">
         {/* ── Compact Top Level Mission Header & Progress Indicator ── */}
-        <header className="w-full bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl border border-slate-200 px-2.5 py-1.5 sm:px-3 sm:py-2 shadow-sm flex flex-col gap-1">
+        <header className="w-full squircle-card px-3 py-2 sm:px-4 sm:py-2.5 shadow-soft-card flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             {/* Left: Navigation Buttons & Mission Title */}
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   onClick={handleHomeClick}
-                  className="p-1 sm:p-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
+                  className="pill-btn-secondary p-2 text-[#5A6072]"
                   title="Return to Main Home"
                 >
-                  <Home className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <Home className="w-3.5 h-3.5" />
                 </button>
 
                 <button
                   onClick={handleReturnToHub}
-                  className="flex items-center gap-0.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-amber-400 border border-amber-600 rounded-lg font-black text-slate-950 text-[10px] sm:text-xs hover:bg-amber-300 transition-all cursor-pointer shrink-0 shadow-xs"
+                  className="pill-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1"
                 >
-                  <Map className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />
+                  <Map className="w-3.5 h-3.5 text-[#EA580C]" />
                   <span>Map</span>
                 </button>
               </div>
 
-              <div className="min-w-0 truncate">
-                <span className="text-[8px] font-black uppercase tracking-wider text-slate-400">
-                  Mission {derivedNumber} / {missions.length}
+              <div className="min-w-0 truncate ml-1">
+                <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#7E8494] block sm:inline sm:mr-1.5">
+                  M{derivedNumber}
                 </span>
-                <h1
-                  className="text-[10px] sm:text-xs font-black text-slate-900 truncate leading-tight"
-                  style={{ fontFamily: 'Nunito, sans-serif' }}
-                >
+                <h1 className="text-xs sm:text-sm font-extrabold text-[#262930] truncate leading-tight inline">
                   {derivedTitle}
                 </h1>
               </div>
@@ -110,16 +107,16 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
           </div>
 
           {/* Step Progress Bar with Step Counter */}
-          <div className="flex items-center gap-1.5">
-            <div className="flex-1 bg-slate-100 rounded-full h-1.5 p-0.5 border border-slate-200">
+          <div className="flex items-center gap-2 pt-0.5">
+            <div className="flex-1 bg-[#F1EFEA] rounded-full h-2 p-0.5 border border-slate-200/80">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${stepProgressPercent}%` }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-500 h-full rounded-full"
+                className="bg-gradient-to-r from-[#FDE047] via-[#FDBA74] to-[#86EFAC] h-full rounded-full"
               />
             </div>
-            <span className="text-[9px] font-black text-slate-500 shrink-0">
+            <span className="text-[10px] font-extrabold text-[#5A6072] shrink-0">
               {currentStep}/{totalSteps}
             </span>
           </div>
@@ -138,35 +135,34 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
         conceptBreakdown="Natural materials come from plants and animals. Synthetic materials are made by science inventors in labs with special superpowers!"
       />
 
-
-      {/* ── Ultra-thin Bottom Nav ── */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-3 sm:px-6 py-1">
-        <div className="max-w-5xl mx-auto flex items-center justify-between h-8">
+      {/* ── Ergonomic Bottom Nav ── */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-t border-slate-200/80 px-3 sm:px-6 py-2 shadow-soft-float">
+        <div className="max-w-5xl mx-auto flex items-center justify-between h-9 sm:h-10">
           <button
             onClick={() => { sounds.pop(); onPrev(); }}
             disabled={currentStep <= 1}
-            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] flex items-center gap-0.5 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 transition-all border border-slate-200"
+            className="pill-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ArrowLeft className="w-3 h-3 stroke-[2.5]" />
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Prev</span>
           </button>
 
-          <span className="text-[10px] font-black text-slate-500">
-            {!isStepComplete && <span className="text-amber-600 mr-1">👆</span>}
-            {currentStep}/{totalSteps}
+          <span className="text-xs font-bold text-[#5A6072]">
+            {!isStepComplete && <span className="text-[#EA580C] mr-1">👆</span>}
+            Step {currentStep} of {totalSteps}
           </span>
 
           <button
             onClick={handleNextClick}
             disabled={!isStepComplete}
-            className={`px-2.5 py-1 rounded-lg font-black text-[10px] flex items-center gap-0.5 cursor-pointer transition-all active:scale-95 ${
+            className={`px-5 py-2 rounded-full font-extrabold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
               isStepComplete
-                ? 'bg-amber-400 text-slate-950 shadow-sm'
-                : 'bg-slate-100 text-slate-400 border border-slate-200 opacity-50 cursor-not-allowed'
+                ? 'pill-btn-primary shadow-soft-pill'
+                : 'bg-[#F1EFEA] text-[#8A90A0] border border-slate-200/80 cursor-not-allowed opacity-60'
             }`}
           >
             <span>{currentStep >= totalSteps ? 'Done ⭐' : 'Next'}</span>
-            <ArrowRight className="w-3 h-3 stroke-[3]" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </footer>

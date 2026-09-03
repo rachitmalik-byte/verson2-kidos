@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { useEnvironmentStore, TimeOfDay } from '@/stores/environmentStore';
 import { useUiSettingsStore } from '@/stores/uiSettingsStore';
 import { sounds } from '@/lib/sounds';
@@ -13,11 +14,28 @@ const ATMOSPHERE_MODES: { id: TimeOfDay; label: string; icon: string; bg: string
   { id: 'rain', label: 'Rain (Storm 🌧️)', icon: '🌧️', bg: 'hover:bg-sky-100 text-sky-900' },
 ];
 
+// Only display the atmosphere time-of-day widget on global exploration hubs and worlds
+// where environmental lighting and skies actually react to it.
+const ALLOWED_ATMOSPHERE_PATHS = [
+  '/',
+  '/subjects',
+  '/chapter-hub',
+  '/theme/1/hub',
+  '/theme/water/hub',
+  '/theme/shelter/hub',
+];
+
 export const AtmosphereControlWidget: React.FC = () => {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
   const setTimeOfDay = useEnvironmentStore((state) => state.setTimeOfDay);
   const isLivePipOpen = useUiSettingsStore((state) => state.isLivePipOpen);
+
+  // Do NOT render on mission steps, experiments, quizzes, or tools where it clutters the UI
+  if (!ALLOWED_ATMOSPHERE_PATHS.includes(location.pathname)) {
+    return null;
+  }
 
   const currentModeObj = ATMOSPHERE_MODES.find((m) => m.id === timeOfDay) || ATMOSPHERE_MODES[0];
 
@@ -48,7 +66,7 @@ export const AtmosphereControlWidget: React.FC = () => {
         scale: isLivePipOpen ? 0.92 : 1,
       }}
       transition={{ type: 'spring', damping: 24, stiffness: 260 }}
-      className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[999990] flex items-center gap-2 select-none font-sans"
+      className="fixed top-14 right-3 sm:top-18 sm:right-6 z-[999990] flex items-center gap-2 select-none font-sans"
     >
       <div className="relative">
         <button
