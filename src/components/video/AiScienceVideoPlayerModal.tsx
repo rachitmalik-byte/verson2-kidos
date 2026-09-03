@@ -158,7 +158,7 @@ export const AiScienceVideoPlayerModal: React.FC = () => {
             <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black border-2 border-slate-700 shadow-2xl relative">
               <iframe
                 key={`${activeVideo.youtubeId}-${currentTimestamp}`}
-                src={`https://www.youtube-nocookie.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&start=${currentTimestamp}&modestbranding=1`}
+                src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&start=${currentTimestamp}&modestbranding=1&playsinline=1`}
                 title={activeVideo.title}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
