@@ -76,6 +76,11 @@ import { LivePipVoiceSidecar } from '@/components/ai/LivePipVoiceSidecar';
 import { AiScienceVideoPlayerModal } from '@/components/video/AiScienceVideoPlayerModal';
 
 export function App() {
+  React.useEffect(() => {
+    // Clear chunk retry flag if the app successfully mounts
+    window.sessionStorage.removeItem('pq-chunk-retry');
+  }, []);
+
   const isRickrollOpen = useEasterEggStore((s) => s.isRickrollOpen);
   const closeRickroll = useEasterEggStore((s) => s.closeRickroll);
 

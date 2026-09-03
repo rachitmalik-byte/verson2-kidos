@@ -25,6 +25,25 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught error:', error, errorInfo);
+    
+    // Automatically recover from Vite lazy-loading chunk errors (happens after new Vercel deployments)
+    const isChunkLoadError = 
+      error?.name === 'ChunkLoadError' || 
+      error?.message?.includes('Failed to fetch dynamically imported module') ||
+      error?.message?.includes('Importing a module script failed');
+      
+    if (isChunkLoadError) {
+      const hasRetried = window.sessionStorage.getItem('pq-chunk-retry');
+      if (!hasRetried) {
+        window.sessionStorage.setItem('pq-chunk-retry', 'true');
+        window.location.reload();
+        return;
+      } else {
+        // If it failed even after retry, clear the flag and show the error UI
+        window.sessionStorage.removeItem('pq-chunk-retry');
+      }
+    }
+
     this.setState({ errorInfo });
   }
 
