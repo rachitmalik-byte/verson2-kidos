@@ -84,38 +84,38 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
 
   return (
     <div
-      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-3 sm:pt-5 pb-24 sm:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none`}
+      className={`min-h-screen w-full bg-gradient-to-b ${themeGradient} flex flex-col justify-between pt-2 sm:pt-3 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none`}
     >
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 sm:gap-6">
-        {/* ── Persistent Top Level Mission Header & Progress Indicator ── */}
-        <header className="w-full bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 sm:border-3 border-slate-200 px-3 py-2.5 sm:px-4 sm:py-3 shadow-md flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-2 sm:gap-4">
+        {/* ── Compact Top Level Mission Header & Progress Indicator ── */}
+        <header className="w-full bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl border border-slate-200 px-2.5 py-1.5 sm:px-3 sm:py-2 shadow-sm flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-2">
             {/* Left: Navigation Buttons & Mission Title */}
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={handleHomeClick}
-                  className="p-1.5 sm:p-2 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-xl text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
+                  className="p-1 sm:p-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
                   title="Return to Main Home"
                 >
-                  <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <Home className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </button>
 
                 <button
                   onClick={handleReturnToHub}
-                  className="flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-2 bg-amber-400 border-2 border-amber-600 rounded-xl font-black text-slate-950 text-xs sm:text-sm hover:bg-amber-300 transition-all cursor-pointer shrink-0 shadow-xs"
+                  className="flex items-center gap-0.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-amber-400 border border-amber-600 rounded-lg font-black text-slate-950 text-[10px] sm:text-xs hover:bg-amber-300 transition-all cursor-pointer shrink-0 shadow-xs"
                 >
-                  <Map className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
+                  <Map className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />
                   <span>Map</span>
                 </button>
               </div>
 
               <div className="min-w-0 truncate">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">
+                <span className="text-[8px] font-black uppercase tracking-wider text-slate-400">
                   Mission {derivedNumber} / {missions.length}
                 </span>
                 <h1
-                  className="text-xs sm:text-sm font-black text-slate-900 truncate leading-tight"
+                  className="text-[10px] sm:text-xs font-black text-slate-900 truncate leading-tight"
                   style={{ fontFamily: 'Nunito, sans-serif' }}
                 >
                   {derivedTitle}
@@ -124,14 +124,14 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
             </div>
 
             {/* Right: Audio Controls */}
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 shrink-0">
               <MissionAudioControls />
             </div>
           </div>
 
           {/* Step Progress Bar with Step Counter */}
-          <div className="flex items-center gap-2">
-            <div className="flex-1 bg-slate-100 rounded-full h-2 p-0.5 border border-slate-200">
+          <div className="flex items-center gap-1.5">
+            <div className="flex-1 bg-slate-100 rounded-full h-1.5 p-0.5 border border-slate-200">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${stepProgressPercent}%` }}
@@ -139,7 +139,7 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
                 className="bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-500 h-full rounded-full"
               />
             </div>
-            <span className="text-[10px] font-black text-slate-500 shrink-0">
+            <span className="text-[9px] font-black text-slate-500 shrink-0">
               {currentStep}/{totalSteps}
             </span>
           </div>
@@ -223,27 +223,27 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
         )}
       </AnimatePresence>
 
-      {/* ── Persistent Bottom Step Navigation Action Bar ── */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t-2 border-slate-200/90 py-2.5 px-4 sm:px-8 shadow-2xl">
+      {/* ── Compact Bottom Step Navigation Bar ── */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-3 sm:px-6 shadow-lg">
         {/* Action Hint Strip — shown when step not yet complete */}
         <AnimatePresence>
           {!isStepComplete && (
             <motion.div
               key="hint-strip"
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 6 }}
-              transition={{ duration: 0.25 }}
-              className="text-center mb-2"
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.2 }}
+              className="text-center mb-1"
             >
-              <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1 animate-bounce">
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5 animate-bounce">
                 👆 Tap or choose something above to continue
               </span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
           {/* Previous Step Button */}
           <button
             onClick={() => {
@@ -251,31 +251,29 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
               onPrev();
             }}
             disabled={currentStep <= 1}
-            className="px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all border border-slate-300"
+            className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] sm:text-xs flex items-center gap-1 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all border border-slate-300"
           >
-            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+            <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
             <span className="hidden sm:inline">Previous</span>
           </button>
 
-          {/* Center Step Counter Indicator */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs sm:text-sm font-black text-slate-700">
-              Step {currentStep} of {totalSteps}
-            </span>
-          </div>
+          {/* Center Step Counter */}
+          <span className="text-[10px] sm:text-xs font-black text-slate-600">
+            Step {currentStep} of {totalSteps}
+          </span>
 
           {/* Next Step / Complete Button */}
           <button
             onClick={handleNextClick}
             disabled={!isStepComplete}
-            className={`px-5 py-2.5 sm:px-7 sm:py-3 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all active:scale-95 ${
+            className={`px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-xl font-black text-[10px] sm:text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 ${
               isStepComplete
-                ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-slate-950 shadow-lg ring-4 ring-amber-300/60 animate-pulse'
+                ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-slate-950 shadow-md ring-2 ring-amber-300/60 animate-pulse'
                 : 'bg-slate-200 text-slate-400 border border-slate-300 opacity-60 cursor-not-allowed'
             }`}
           >
-            <span>{currentStep >= totalSteps ? 'Complete & Explain ⭐' : 'Next Step ➔'}</span>
-            <ArrowRight className="w-4 h-4 stroke-[3]" />
+            <span>{currentStep >= totalSteps ? 'Complete ⭐' : 'Next ➔'}</span>
+            <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
           </button>
         </div>
       </footer>

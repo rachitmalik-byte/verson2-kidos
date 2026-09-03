@@ -9,14 +9,28 @@ interface FXState {
   clearFX: () => void;
 }
 
-export const useFXStore = create<FXState>((set) => ({
+let fxTimer: number | null = null;
+
+export const useFXStore = create<FXState>((set, get) => ({
   activeFX: null,
-  duration: 3500,
-  triggerFX: (type: FXType, durationMs = 3500) => {
+  duration: 1800,
+  triggerFX: (type: FXType, durationMs = 1800) => {
+    // Toggle: if same effect is already active, immediately stop it
+    if (get().activeFX === type) {
+      if (fxTimer) { clearTimeout(fxTimer); fxTimer = null; }
+      set({ activeFX: null });
+      return;
+    }
+    // Clear any existing timer
+    if (fxTimer) { clearTimeout(fxTimer); fxTimer = null; }
     set({ activeFX: type, duration: durationMs });
-    setTimeout(() => {
+    fxTimer = window.setTimeout(() => {
       set((state) => (state.activeFX === type ? { activeFX: null } : state));
+      fxTimer = null;
     }, durationMs);
   },
-  clearFX: () => set({ activeFX: null }),
+  clearFX: () => {
+    if (fxTimer) { clearTimeout(fxTimer); fxTimer = null; }
+    set({ activeFX: null });
+  },
 }));

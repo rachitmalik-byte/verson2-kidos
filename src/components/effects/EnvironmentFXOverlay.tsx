@@ -5,6 +5,7 @@ import { useFXStore } from '@/stores/fxStore';
 
 export const EnvironmentFXOverlay: React.FC = () => {
   const activeFX = useFXStore((state) => state.activeFX);
+  const clearFX = useFXStore((state) => state.clearFX);
 
   if (typeof document === 'undefined') return null;
 
@@ -15,167 +16,148 @@ export const EnvironmentFXOverlay: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 pointer-events-none z-[999998] overflow-hidden"
+          transition={{ duration: 0.2 }}
+          onClick={clearFX}
+          className="fixed inset-0 pointer-events-auto z-[999998] overflow-hidden cursor-pointer"
         >
-          {/* ═════════════════════════════════════════════════════════════════
-              1. 🌧️ RAINSTORM & WATER DROPLET EFFECT (3-4 SECONDS)
-              ═════════════════════════════════════════════════════════════════ */}
+          {/* ═══════════════════════════════════════════════════════════
+              1. 🌧️ RAIN — Thin realistic streaks, subtle blue tint
+          ═══════════════════════════════════════════════════════════ */}
           {activeFX === 'rain' && (
-            <div className="absolute inset-0 bg-sky-950/25 backdrop-blur-[1px]">
-              {/* Rain Streams */}
-              {Array.from({ length: 50 }).map((_, i) => {
-                const leftPos = `${(i * 100) / 50 + (Math.random() * 2 - 1)}%`;
-                const delay = Math.random() * 0.3;
-                const duration = 0.4 + Math.random() * 0.2;
-
+            <div className="absolute inset-0 bg-sky-900/10">
+              {Array.from({ length: 35 }).map((_, i) => {
+                const leftPos = `${(i / 35) * 100 + (Math.random() * 2 - 1)}%`;
+                const delay = Math.random() * 0.5;
+                const dur = 0.35 + Math.random() * 0.15;
                 return (
                   <motion.div
                     key={i}
-                    initial={{ y: '-15vh', opacity: 0.9 }}
-                    animate={{ y: '115vh', opacity: [0.3, 1, 0.4] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration,
-                      delay,
-                      ease: 'linear',
-                    }}
+                    initial={{ y: '-10vh', opacity: 0.6 }}
+                    animate={{ y: '110vh', opacity: [0.2, 0.6, 0.2] }}
+                    transition={{ repeat: Infinity, duration: dur, delay, ease: 'linear' }}
                     style={{ left: leftPos }}
-                    className="absolute top-0 w-1 sm:w-1.5 h-16 sm:h-28 bg-gradient-to-b from-transparent via-cyan-300 to-sky-100 rounded-full shadow-[0_0_12px_#38bdf8]"
+                    className="absolute top-0 w-[1px] h-10 sm:h-16 bg-gradient-to-b from-transparent via-sky-300/70 to-sky-200/40 rounded-full"
                   />
                 );
               })}
-
-              {/* Water Splash Rings on Bottom */}
-              <div className="absolute bottom-4 left-0 right-0 flex justify-around pointer-events-none">
-                {Array.from({ length: 14 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{ scale: [0.3, 2.2, 0], opacity: [0.9, 0.5, 0] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 0.55,
-                      delay: i * 0.08,
-                    }}
-                    className="w-12 h-4 rounded-full border-2 border-cyan-300 bg-cyan-400/30 shadow-[0_0_10px_#38bdf8]"
-                  />
-                ))}
-              </div>
-
-              {/* Rain Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/30 via-transparent to-sky-900/25" />
+              {/* Subtle bottom mist */}
+              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-sky-400/10 to-transparent" />
             </div>
           )}
 
-          {/* ═════════════════════════════════════════════════════════════════
-              2. ⚡ ELECTRICAL SPARK & LIGHTNING FLASH EFFECT
-              ═════════════════════════════════════════════════════════════════ */}
+          {/* ═══════════════════════════════════════════════════════════
+              2. ⚡ SPARK — Brief flash + a few sparks
+          ═══════════════════════════════════════════════════════════ */}
           {activeFX === 'spark' && (
-            <div className="absolute inset-0 bg-amber-950/20">
-              {/* Lightning Strobe Flashes */}
+            <div className="absolute inset-0 bg-amber-950/10">
+              {/* Single bright flash */}
               <motion.div
-                animate={{ opacity: [0, 0.8, 0, 0.95, 0, 0.4, 0] }}
-                transition={{ duration: 0.4, repeat: Infinity }}
-                className="absolute inset-0 bg-amber-300/30 pointer-events-none"
+                animate={{ opacity: [0, 0.6, 0, 0.8, 0] }}
+                transition={{ duration: 0.35, repeat: Infinity, repeatDelay: 0.5 }}
+                className="absolute inset-0 bg-amber-200/20 pointer-events-none"
               />
-
-              {/* High Voltage Lightning Bolt Arcs */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  animate={{ scale: [0.8, 1.2, 0.9, 1.1], rotate: [-5, 5, -3, 3] }}
-                  transition={{ repeat: Infinity, duration: 0.3 }}
-                  className="w-72 h-72 rounded-full border-4 border-amber-300/60 shadow-[0_0_50px_#f59e0b] blur-[1px]"
-                />
-              </div>
-
-              {/* Dynamic Electric Spark Particles */}
-              {Array.from({ length: 45 }).map((_, i) => {
-                const randomX = Math.random() * 100;
-                const randomY = Math.random() * 100;
+              {/* Fewer, more realistic spark particles */}
+              {Array.from({ length: 18 }).map((_, i) => {
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
                 return (
                   <motion.div
                     key={i}
                     initial={{ scale: 0, opacity: 1 }}
                     animate={{
-                      scale: [0, 2, 0],
-                      x: (Math.random() - 0.5) * 120,
-                      y: (Math.random() - 0.5) * 120,
-                      opacity: [1, 0.9, 0],
+                      scale: [0, 1.5, 0],
+                      x: (Math.random() - 0.5) * 60,
+                      y: (Math.random() - 0.5) * 60,
+                      opacity: [1, 0.8, 0],
                     }}
                     transition={{
                       repeat: Infinity,
-                      duration: 0.3 + Math.random() * 0.25,
-                      delay: Math.random() * 0.3,
+                      duration: 0.25 + Math.random() * 0.2,
+                      delay: Math.random() * 0.4,
                     }}
-                    style={{ left: `${randomX}%`, top: `${randomY}%` }}
-                    className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-amber-200 via-yellow-400 to-cyan-300 shadow-[0_0_20px_#f59e0b]"
+                    style={{ left: `${x}%`, top: `${y}%` }}
+                    className="absolute w-1.5 h-1.5 rounded-full bg-amber-300 shadow-[0_0_8px_#f59e0b]"
                   />
                 );
               })}
             </div>
           )}
 
-          {/* ═════════════════════════════════════════════════════════════════
-              3. 🔥 STEAM & BOILING HEAT SHIMMER EFFECT
-              ═════════════════════════════════════════════════════════════════ */}
+          {/* ═══════════════════════════════════════════════════════════
+              3. 🔥 STEAM — Soft rising wisps
+          ═══════════════════════════════════════════════════════════ */}
           {activeFX === 'steam' && (
-            <div className="absolute inset-0 bg-orange-950/20">
-              {Array.from({ length: 30 }).map((_, i) => {
-                const randomLeft = `${Math.random() * 100}%`;
+            <div className="absolute inset-0 bg-orange-900/5">
+              {Array.from({ length: 14 }).map((_, i) => {
+                const left = `${(i / 14) * 100}%`;
                 return (
                   <motion.div
                     key={i}
-                    initial={{ y: '105vh', opacity: 0.8, scale: 0.6 }}
+                    initial={{ y: '105vh', opacity: 0.5, scale: 0.5 }}
                     animate={{
-                      y: '-25vh',
-                      opacity: [0.4, 0.85, 0],
-                      scale: [0.6, 3, 5],
-                      x: Math.sin(i) * 50,
+                      y: '-20vh',
+                      opacity: [0.3, 0.5, 0],
+                      scale: [0.5, 2, 3.5],
+                      x: Math.sin(i * 0.8) * 30,
                     }}
                     transition={{
                       repeat: Infinity,
-                      duration: 2.0 + Math.random() * 1.2,
-                      delay: Math.random() * 0.7,
+                      duration: 2.2 + Math.random() * 1.0,
+                      delay: Math.random() * 0.8,
                       ease: 'easeOut',
                     }}
-                    style={{ left: randomLeft }}
-                    className="absolute bottom-0 w-28 h-28 rounded-full bg-gradient-to-t from-white/40 via-amber-100/30 to-transparent blur-lg"
+                    style={{ left }}
+                    className="absolute bottom-0 w-20 h-20 rounded-full bg-gradient-to-t from-white/25 via-amber-50/15 to-transparent blur-md"
                   />
                 );
               })}
+              {/* Heat shimmer at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-orange-300/10 to-transparent" />
             </div>
           )}
 
-          {/* ═════════════════════════════════════════════════════════════════
-              4. ⏳ 500-YEAR TIME MACHINE WORMHOLE DUST
-              ═════════════════════════════════════════════════════════════════ */}
+          {/* ═══════════════════════════════════════════════════════════
+              4. ⏳ TIMELAPSE — Swirling dust motes
+          ═══════════════════════════════════════════════════════════ */}
           {activeFX === 'timelapse' && (
-            <div className="absolute inset-0 bg-indigo-950/35">
+            <div className="absolute inset-0 bg-indigo-950/15">
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-400/25 via-purple-600/15 to-transparent"
+                transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-400/10 via-purple-500/5 to-transparent"
               />
-              {Array.from({ length: 50 }).map((_, i) => (
+              {Array.from({ length: 25 }).map((_, i) => (
                 <motion.div
                   key={i}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{
-                    scale: [0, 2, 0],
-                    opacity: [0, 1, 0],
-                    x: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerWidth * 0.9 : 800),
-                    y: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerHeight * 0.9 : 600),
+                    scale: [0, 1.5, 0],
+                    opacity: [0, 0.8, 0],
+                    x: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerWidth * 0.7 : 600),
+                    y: (Math.random() - 0.5) * (typeof window !== 'undefined' ? window.innerHeight * 0.7 : 400),
                   }}
                   transition={{
                     repeat: Infinity,
-                    duration: 1.0,
-                    delay: Math.random() * 0.6,
+                    duration: 1.2,
+                    delay: Math.random() * 0.8,
                   }}
-                  className="absolute left-1/2 top-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 shadow-[0_0_15px_#fbbf24]"
+                  className="absolute left-1/2 top-1/2 w-2 h-2 rounded-full bg-gradient-to-r from-amber-200 to-yellow-100 shadow-[0_0_8px_#fbbf24]"
                 />
               ))}
             </div>
           )}
+
+          {/* Tap to dismiss hint */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="absolute bottom-6 left-1/2 -translate-x-1/2"
+          >
+            <span className="text-[10px] font-black text-white/60 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full">
+              Tap anywhere to stop
+            </span>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>,
