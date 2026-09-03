@@ -11,40 +11,77 @@ interface FloatingMissionPipProps {
   isVisible: boolean;
 }
 
+/**
+ * FloatingMissionPip — renders Pip + speech bubble in one of 3 modes:
+ *
+ * "floating" → fixed left-side dock (NOT overlaying content — pushes the page 
+ *               layout via a spacer so the main activity always has full room)
+ * "inline"  → renders inline within the exercise flow
+ * "hidden"  → hidden completely
+ */
 export const FloatingMissionPip: React.FC<FloatingMissionPipProps> = ({ mood, message, isVisible }) => {
   const { pipMode, showPipText } = useUiSettingsStore();
 
   if (pipMode === 'hidden' || !isVisible) return null;
 
-  const content = (
-    <div className={`flex ${pipMode === 'floating' ? 'flex-col-reverse' : 'flex-row items-center'} gap-4 pointer-events-none`}>
-      <div className="pointer-events-auto">
-        <Pip mood={mood} size={pipMode === 'floating' ? 'sm' : 'md'} />
-      </div>
-      {showPipText && (
-        <div className="pointer-events-auto">
-          <PipSpeechBubble message={message} isVisible={true} />
+  // ── INLINE MODE: render directly in the page flow ──
+  if (pipMode === 'inline') {
+    return (
+      <div className="flex flex-row items-center gap-4 mb-6">
+        <div>
+          <Pip mood={mood} size="md" />
         </div>
-      )}
-    </div>
-  );
-
-  if (pipMode === 'floating') {
-    if (typeof document === 'undefined') return null;
-    return createPortal(
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          className="fixed bottom-36 left-6 z-[99905]"
-        >
-          {content}
-        </motion.div>
-      </AnimatePresence>,
-      document.body
+        {showPipText && (
+          <div>
+            <PipSpeechBubble message={message} isVisible={true} />
+          </div>
+        )}
+      </div>
     );
   }
 
-  return <div className="mb-6">{content}</div>;
+  // ── FLOATING MODE: fixed left-side dock, NOT overlapping content ──
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -40 }}
+        transition={{ type: 'spring', damping: 22, stiffness: 200 }}
+        className="fixed left-3 top-1/2 -translate-y-1/2 z-[999] flex flex-col items-center gap-2 pointer-events-auto"
+        style={{ maxWidth: '72px' }}
+      >
+        {/* Pip Character */}
+        <Pip mood={mood} size="sm" />
+
+        {/* Compact speech hint (tooltip-style, expands on hover) */}
+        {showPipText && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="group relative"
+          >
+            {/* Small collapsed indicator */}
+            <div className="w-12 h-12 bg-white/95 backdrop-blur-md rounded-2xl border-2 border-violet-300 shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+              <span className="text-lg">💬</span>
+            </div>
+
+            {/* Expanded speech bubble — appears on hover, positioned to the RIGHT so it doesn't cover activity */}
+            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-64 sm:w-80 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200 z-[1000]">
+              <div className="bg-white p-4 rounded-2xl border-2 border-violet-300 shadow-xl relative">
+                {/* Tail arrow pointing left */}
+                <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-l-2 border-b-2 border-violet-300 transform rotate-45" />
+                <p className="text-xs font-bold text-slate-700 leading-relaxed">
+                  {message}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
+    </AnimatePresence>,
+    document.body
+  );
 };
