@@ -5,7 +5,6 @@ import { useFXStore } from '@/stores/fxStore';
 
 export const EnvironmentFXOverlay: React.FC = () => {
   const activeFX = useFXStore((state) => state.activeFX);
-  const clearFX = useFXStore((state) => state.clearFX);
 
   if (typeof document === 'undefined') return null;
 
@@ -17,8 +16,7 @@ export const EnvironmentFXOverlay: React.FC = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          onClick={clearFX}
-          className="fixed inset-0 pointer-events-auto z-[999998] overflow-hidden cursor-pointer"
+          className="fixed inset-0 pointer-events-none z-[999998] overflow-hidden"
         >
           {/* ═══════════════════════════════════════════════════════════
               1. 🌧️ RAIN — Thin realistic streaks, subtle blue tint
@@ -147,17 +145,6 @@ export const EnvironmentFXOverlay: React.FC = () => {
             </div>
           )}
 
-          {/* Tap to dismiss hint */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="absolute bottom-6 left-1/2 -translate-x-1/2"
-          >
-            <span className="text-[10px] font-black text-white/60 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full">
-              Tap anywhere to stop
-            </span>
-          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>,
