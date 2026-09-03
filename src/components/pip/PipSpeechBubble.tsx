@@ -23,6 +23,8 @@ interface WordToken {
   cleanWord: string;
 }
 
+import { useUiSettingsStore } from '@/stores/uiSettingsStore';
+
 export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   message,
   isVisible,
@@ -37,6 +39,8 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const isTtsMuted = useAudioStore((state) => state.isTtsMuted);
   const toggleTts = useAudioStore((state) => state.toggleTts);
+  const { showPipText, playPipSpeech, pipMode } = useUiSettingsStore();
+  
   const WORD_LIMIT = 22;
 
   // Parse message into synchronized interactive word tokens

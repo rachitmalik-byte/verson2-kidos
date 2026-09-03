@@ -7,6 +7,7 @@ import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
+import { FloatingMissionPip } from '@/components/pip/FloatingMissionPip';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -199,13 +200,7 @@ export function FireSafetyMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'BURN_TEST' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-4">
-                <Pip mood="explaining" size="md" />
-                <PipSpeechBubble
-                  message="Ignite both fabric swatches on the ceramic lab plate to see how natural fibers vs synthetic plastics react to heat!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="explaining" message="Ignite both fabric swatches on the ceramic lab plate to see how natural fibers vs synthetic plastics react to heat!" isVisible={true} />
 
               {/* Dual Flame Experiment Cards Wrapped in Focus Spotlight */}
               <ExperimentFocusSpotlight
@@ -340,13 +335,7 @@ export function FireSafetyMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'MICROSCOPE' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="celebrating" size="md" />
-                <PipSpeechBubble
-                  message="Look under the microscope! See how natural cotton burns into soft ash, while synthetic polyester melts into hot sticky beads!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="celebrating" message="Look under the microscope! See how natural cotton burns into soft ash, while synthetic polyester melts into hot sticky beads!" isVisible={true} />
 
               {/* ── FIRE OBSERVATION LAB ── */}
               <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-rose-500 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">

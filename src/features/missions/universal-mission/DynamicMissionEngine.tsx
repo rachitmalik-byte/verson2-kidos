@@ -7,6 +7,7 @@ import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
+import { FloatingMissionPip } from '@/components/pip/FloatingMissionPip';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -218,10 +219,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 <p className="text-slate-600 font-bold mb-6 text-sm md:text-base leading-relaxed">
                   Have you ever packed clothes in a suitcase? Some shirts come out covered in messy wrinkles, while others look crisp and freshly ironed! Why do different fabrics behave so differently?
                 </p>
-                <div className="flex items-center gap-4 justify-center mb-6">
-                  <Pip mood="curious" size="md" />
-                  <PipSpeechBubble message="Let's test Cotton vs. Polyester in our Fabric Crumple Rig!" isVisible={true} />
-                </div>
+                <FloatingMissionPip mood="curious" message="Let's test Cotton vs. Polyester in our Fabric Crumple Rig!" isVisible={true} />
                 <button
                   onClick={() => {
                     sounds.success();
@@ -840,10 +838,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
 
             {currentStepIndex === 1 && (
               <div className="w-full max-w-3xl space-y-4">
-                <div className="flex items-center gap-4 mb-3 justify-center">
-                  <Pip mood="explaining" size="md" />
-                  <PipSpeechBubble message="Read aloud each plastic superpower in order into your mic! Gemini AI and Pip will coach your pronunciation!" isVisible={true} />
-                </div>
+                <FloatingMissionPip mood="explaining" message="Read aloud each plastic superpower in order into your mic! Gemini AI and Pip will coach your pronunciation!" isVisible={true} />
 
                 <div className="flex flex-col gap-4">
                   {[

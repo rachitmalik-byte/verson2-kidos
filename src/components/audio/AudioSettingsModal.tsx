@@ -57,6 +57,10 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
     toggleWardrobeButton,
     toggleArcadeButton,
     toggleAiLabButton,
+    pipMode,
+    setPipMode,
+    showPipText,
+    togglePipText,
   } = useUiSettingsStore();
 
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -405,6 +409,75 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                         sounds.pop();
                         toggleAiLabButton();
                       }}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* ════════════════════════════════════════════════════════════════════
+                  SECTION 4: PIP ASSISTANT PREFERENCES
+              ════════════════════════════════════════════════════════════════════ */}
+              <div className="bg-white p-5 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                     <Smile className="w-5 h-5 text-emerald-500" />
+                     <div>
+                       <h4 className="font-black text-sm text-slate-800">Pip Assistant Style</h4>
+                       <p className="text-[11px] text-slate-500 font-bold">Customize how Pip appears in missions</p>
+                     </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Pip Mode Toggle */}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      onClick={() => { sounds.pop(); setPipMode('floating'); }}
+                      className={`flex-1 p-3 rounded-2xl border-2 font-black text-xs transition-all cursor-pointer ${
+                        pipMode === 'floating'
+                          ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-md'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      Floating (Left Corner)
+                    </button>
+                    <button
+                      onClick={() => { sounds.pop(); setPipMode('inline'); }}
+                      className={`flex-1 p-3 rounded-2xl border-2 font-black text-xs transition-all cursor-pointer ${
+                        pipMode === 'inline'
+                          ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-md'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      Inline (Inside Page)
+                    </button>
+                    <button
+                      onClick={() => { sounds.pop(); setPipMode('hidden'); }}
+                      className={`flex-1 p-3 rounded-2xl border-2 font-black text-xs transition-all cursor-pointer ${
+                        pipMode === 'hidden'
+                          ? 'bg-rose-50 border-rose-400 text-rose-800 shadow-md'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      Hide Pip
+                    </button>
+                  </div>
+
+                  {/* Show Speech Text Toggle */}
+                  <label className={`flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer transition-colors ${pipMode === 'hidden' ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-100'}`}>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-black text-slate-700">Show Speech Bubbles</span>
+                      <span className="text-[10px] text-slate-500 font-bold">Display text when Pip talks</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
+                      checked={showPipText}
+                      onChange={() => {
+                        sounds.pop();
+                        togglePipText();
+                      }}
+                      disabled={pipMode === 'hidden'}
                     />
                   </label>
                 </div>

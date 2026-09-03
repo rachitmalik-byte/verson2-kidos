@@ -6,6 +6,7 @@ import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
+import { FloatingMissionPip } from '@/components/pip/FloatingMissionPip';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -292,13 +293,7 @@ export function WireMission() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-4 mb-3">
-                <Pip mood="explaining" size="md" />
-                <PipSpeechBubble
-                  message="Tap any material below to snap it into the circuit alligator clips and test if current flows!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="explaining" message="Tap any material below to snap it into the circuit alligator clips and test if current flows!" isVisible={true} />
 
               {/* High-Tech Circuit Test Bench Wrapped in Focus Spotlight */}
               <ExperimentFocusSpotlight
@@ -382,13 +377,7 @@ export function WireMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'MICROSCOPE' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="celebrating" size="lg" />
-                <PipSpeechBubble
-                  message="Look under the microscope! See how metals have loose free electrons while synthetic polymers lock electrons tight!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="celebrating" message="Look under the microscope! See how metals have loose free electrons while synthetic polymers lock electrons tight!" isVisible={true} />
 
               {/* ── CIRCUIT OBSERVATION LAB ── */}
               <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-500 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">

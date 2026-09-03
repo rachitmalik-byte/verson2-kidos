@@ -215,8 +215,8 @@ export const LivePipVoiceSidecar: React.FC = () => {
 
   return (
     <>
-      {/* ── Persistent Floating Pip AI Side Button (Always Accessible on Every Page) ── */}
-      <div className="fixed bottom-24 right-4 sm:right-6 z-[99900] flex items-center">
+      {/* Floating Action Button for Pip */}
+      <div className="fixed bottom-24 left-4 sm:left-6 z-[99900] flex items-center">
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
@@ -245,16 +245,16 @@ export const LivePipVoiceSidecar: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-xs z-[99990] sm:hidden"
+              className="fixed inset-0 bg-black/40 backdrop-blur-xs z-[999994] sm:hidden"
             />
 
             {/* Side Drawer Panel */}
             <motion.div
-              initial={{ x: '100%' }}
+              initial={{ x: '-100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 260 }}
-              className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-slate-950/95 backdrop-blur-xl border-l-4 border-indigo-500/50 shadow-2xl z-[99995] flex flex-col justify-between text-white overflow-hidden"
+              className="fixed top-0 left-0 bottom-0 w-full sm:w-[420px] bg-slate-950/95 backdrop-blur-xl border-r-4 border-indigo-500/50 shadow-2xl z-[999995] flex flex-col justify-between text-white overflow-hidden"
             >
               {/* Header */}
               <div className="p-4 sm:p-5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-3">

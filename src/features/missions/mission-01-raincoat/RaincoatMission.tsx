@@ -8,6 +8,7 @@ import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
+import { FloatingMissionPip } from '@/components/pip/FloatingMissionPip';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -238,13 +239,7 @@ export function RaincoatMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'HOOK' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="curious" size="md" />
-                <PipSpeechBubble
-                  message="Look outside! A sudden rainstorm is rolling in! 🌧️ Which raincoat would you grab to stay completely dry?"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="curious" message="Look outside! A sudden rainstorm is rolling in! 🌧️ Which raincoat would you grab to stay completely dry?" isVisible={true} />
 
               {/* Contextual Action Instruction Banner */}
               <div className="w-full text-center mb-2">
@@ -348,13 +343,7 @@ export function RaincoatMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'INSPECT' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="explaining" size="md" />
-                <PipSpeechBubble
-                  message="Let's spray water on both fabrics to see real water absorption vs water beading! Tap both spray buttons!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="explaining" message="Let's spray water on both fabrics to see real water absorption vs water beading! Tap both spray buttons!" isVisible={true} />
 
               {/* Contextual Action Instruction Banner */}
               <div className="w-full text-center mb-2">
@@ -663,13 +652,7 @@ export function RaincoatMission() {
           ════════════════════════════════════════════════════════════════════════ */}
           {currentPhase === 'UNDERSTANDING' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="flex items-center gap-4 mb-6">
-                <Pip mood="celebrating" size="md" />
-                <PipSpeechBubble
-                  message="Let's place both fabrics under the high-powered microscope! Tap the buttons below to switch materials and zoom in!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="celebrating" message="Let's place both fabrics under the high-powered microscope! Tap the buttons below to switch materials and zoom in!" isVisible={true} />
 
               {/* ── IMMERSIVE INTERACTIVE MICROSCOPE STAGE ── */}
               <div className="w-full bg-slate-950 p-6 md:p-8 rounded-3xl border-4 border-amber-400 shadow-2xl flex flex-col items-center relative overflow-hidden mb-8">

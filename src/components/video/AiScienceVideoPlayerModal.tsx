@@ -155,7 +155,7 @@ export const AiScienceVideoPlayerModal: React.FC = () => {
           {/* ── MAIN CINEMA CONTENT AREA ── */}
           <div className="p-4 sm:p-6 flex flex-col gap-5 max-h-[75vh] overflow-y-auto">
             {/* 16:9 Themed YouTube Player Stage */}
-            <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black border-2 border-slate-700 shadow-2xl relative">
+            <div className="w-full aspect-video shrink-0 rounded-2xl overflow-hidden bg-black border-2 border-slate-700 shadow-2xl relative">
               <iframe
                 key={`${activeVideo.youtubeId}-${currentTimestamp}`}
                 src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&start=${currentTimestamp}&modestbranding=1&playsinline=1`}

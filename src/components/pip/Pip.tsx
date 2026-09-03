@@ -7,6 +7,8 @@ import { useProgressStore } from '@/stores/progressStore';
 import { usePipStore } from '@/stores/pipStore';
 import { useEasterEggStore } from '@/stores/easterEggStore';
 import { Sparkles, Shirt } from 'lucide-react';
+import { useUiSettingsStore } from '@/stores/uiSettingsStore';
+import { createPortal } from 'react-dom';
 
 export interface PipProps {
   mood?: PipMood;
@@ -51,6 +53,8 @@ export const Pip: React.FC<PipProps> = ({
   const isHighFiveReadyStore = usePipStore((s) => s.isHighFiveReady);
   const handleMascotClick = usePipStore((s) => s.handleMascotClick);
   const completeHighFive = usePipStore((s) => s.completeHighFive);
+
+  const { pipMode } = useUiSettingsStore();
 
   // Active state resolution
   let currentState: PipState = stateOverride || storeState || 'idle';

@@ -6,6 +6,7 @@ import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { Pip } from '@/components/pip/Pip';
 import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
+import { FloatingMissionPip } from '@/components/pip/FloatingMissionPip';
 import { CelebrationOverlay } from '@/components/feedback/CelebrationOverlay';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -330,13 +331,7 @@ export function SortingMission() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-4 mb-3">
-                <Pip mood="explaining" size="md" />
-                <PipSpeechBubble
-                  message="Tap any real item photo below, then tap the tray where it belongs!"
-                  isVisible={true}
-                />
-              </div>
+              <FloatingMissionPip mood="explaining" message="Tap any real item photo below, then tap the tray where it belongs!" isVisible={true} />
 
               {/* ── TWO SCIENTIFIC SORTING TRAYS ── */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-5">
