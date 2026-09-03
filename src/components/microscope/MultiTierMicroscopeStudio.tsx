@@ -63,7 +63,7 @@ export const MultiTierMicroscopeStudio: React.FC<Props> = ({
   };
 
   return (
-    <div className={`w-full bg-slate-950 p-6 sm:p-8 rounded-[40px] border-4 ${config.borderColor} shadow-2xl flex flex-col items-center text-white text-center select-none`}>
+    <div className="w-full bg-slate-950 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl flex flex-col items-center text-white text-center select-none">
       {/* Top Header Controls */}
       <div className="flex items-center justify-between w-full mb-5 flex-wrap gap-3">
         <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export const MultiTierMicroscopeStudio: React.FC<Props> = ({
       </div>
 
       {/* Observation Breakdown Card */}
-      <div className="w-full max-w-2xl bg-slate-900/95 p-5 sm:p-6 rounded-3xl border-2 border-slate-800 flex flex-col gap-2.5 mt-3 text-left shadow-xl">
+      <div className="w-full max-w-2xl bg-slate-900/90 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-slate-800 flex flex-col gap-2.5 mt-3 text-left shadow-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs font-black text-sky-400 flex items-center gap-1.5 uppercase tracking-wider">

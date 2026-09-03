@@ -1,0 +1,219 @@
+/* ═════════════════════════════════════════════════════════════════════
+   KIDOS v2 — PREMIUM 3D EDTECH DESIGN SYSTEM (AGES 9–12)
+   Balance: WOW + CLARITY + LEARNING
+   ═════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Calm, Premium Neutral Foundation ── */
+  --canvas-bg: #F8FAFC;
+  --surface-card: #FFFFFF;
+  --surface-muted: #F1F5F9;
+  --surface-subtle: #F8FAFC;
+  
+  --border-subtle: rgba(226, 232, 240, 0.85);
+  --border-medium: rgba(203, 213, 225, 0.9);
+  --border-strong: rgba(148, 163, 184, 0.9);
+
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --text-subtle: #94A3B8;
+
+  /* ── Purposeful Semantic Educational Accents (1 Dominant + 1-2 Supporting) ── */
+  --ed-blue: #2563EB;
+  --ed-blue-hover: #1D4ED8;
+  --ed-blue-subtle: #EFF6FF;
+  --ed-blue-border: #BFDBFE;
+
+  --ed-emerald: #059669;
+  --ed-emerald-hover: #047857;
+  --ed-emerald-subtle: #ECFDF5;
+  --ed-emerald-border: #A7F3D0;
+
+  --ed-violet: #7C3AED;
+  --ed-violet-hover: #6D28D9;
+  --ed-violet-subtle: #F5F3FF;
+  --ed-violet-border: #DDD6FE;
+
+  --ed-amber: #D97706;
+  --ed-amber-hover: #B45309;
+  --ed-amber-subtle: #FFFBEB;
+  --ed-amber-border: #FDE68A;
+
+  --ed-cyan: #0284C7;
+  --ed-cyan-hover: #0369A1;
+  --ed-cyan-subtle: #F0F9FF;
+  --ed-cyan-border: #BAE6FD;
+
+  --ed-coral: #EA580C;
+  --ed-coral-hover: #C2410C;
+  --ed-coral-subtle: #FFF7ED;
+  --ed-coral-border: #FED7AA;
+
+  /* ── Geometry & Elevation Tokens ── */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;  /* 12px - Controls, buttons */
+  --radius-lg: 1rem;     /* 16px - Learning cards */
+  --radius-xl: 1.5rem;   /* 24px - Hero containers */
+  --radius-pill: 9999px; /* Status tags & badges */
+
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 1px 3px -1px rgba(15, 23, 42, 0.03);
+  --shadow-card-hover: 0 12px 30px -4px rgba(15, 23, 42, 0.09), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-floating: 0 20px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+}
+
+/* ── Typography Scale ── */
+.font-display {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+}
+
+.font-heading {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+
+.font-body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── EdTech Cards ── */
+.edtech-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease;
+}
+
+.edtech-card-interactive {
+  cursor: pointer;
+}
+
+.edtech-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(203, 213, 225, 1);
+}
+
+.edtech-card-interactive:active {
+  transform: translateY(0);
+}
+
+/* ── Interactive Controls & Buttons ── */
+.edtech-btn-primary {
+  background: var(--ed-blue);
+  color: #FFFFFF;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  transition: all 0.15s ease-out;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.edtech-btn-primary:hover {
+  background: var(--ed-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.edtech-btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.2);
+}
+
+.edtech-btn-secondary {
+  background: #FFFFFF;
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.125rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.15s ease-out;
+  cursor: pointer;
+}
+
+.edtech-btn-secondary:hover {
+  background: var(--surface-muted);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
+}
+
+.edtech-btn-secondary:active {
+  transform: translateY(1px);
+}
+
+/* ── Clean Status Badges & Pills ── */
+.edtech-pill {
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1px solid transparent;
+}
+
+/* ── Digital Notebook / Study Desk Lesson Blocks ── */
+.study-desk-block {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.study-desk-callout {
+  border-left: 4px solid var(--ed-blue);
+  background: var(--ed-blue-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1rem 1.25rem;
+}
+
+.study-desk-callout-emerald {
+  border-left: 4px solid var(--ed-emerald);
+  background: var(--ed-emerald-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1rem 1.25rem;
+}
+
+.study-desk-callout-amber {
+  border-left: 4px solid var(--ed-amber);
+  background: var(--ed-amber-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1rem 1.25rem;
+}
+
+/* ── Optical Viewport Reticle ── */
+.optical-reticle {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-medium);
+}
+
+.optical-reticle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 65%, rgba(15, 23, 42, 0.35) 100%);
+}

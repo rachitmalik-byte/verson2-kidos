@@ -10,7 +10,6 @@ import { missions } from '@/data/missions';
 import { SparkyMascot } from '@/components/mascot/SparkyMascot';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
 import { FirstTimeTutorialOverlay } from '@/components/tutorial/FirstTimeTutorialOverlay';
 import { GamifiedAdventureMap } from '@/components/trail/GamifiedAdventureMap';
 import {
@@ -23,7 +22,6 @@ import {
   Star,
   Play,
   Compass,
-  FlaskConical,
   GraduationCap,
   Zap,
   RotateCcw,
@@ -68,6 +66,8 @@ const missionThumbnails: Record<string, string> = {
   'mission-13': parachuteCanopyJumpImg,
 };
 
+import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
+
 export function ChapterHub() {
   const navigate = useNavigate();
   const child = useParentStore((state) => state.child);
@@ -76,7 +76,7 @@ export function ChapterHub() {
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
   const [activeTab, setActiveTab] = useState<'missions' | 'video' | 'guidebook'>('missions');
-  const [viewMode, setViewMode] = useState<'map' | 'grid'>('grid');
+  const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
   const [showRecallModal, setShowRecallModal] = useState(false);
   const shouldPromptRecall = useSpacedRecallStore((s) => s.shouldPromptRecall);
 
@@ -103,48 +103,51 @@ export function ChapterHub() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between pt-4 sm:pt-6 pb-24 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
-      <MaterialsAnimatedLabBackground />
-      <div className="w-full max-w-7xl mx-auto flex flex-col gap-5 relative z-10">
-        {/* ── Top Game Navbar ── */}
-        <div id="navbar-top-controls" className="flex items-center justify-between squircle-card p-3 sm:p-4 shadow-soft-card">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                sounds.pop();
-                voiceAssistant.stop();
-                navigate('/subjects');
-              }}
-              className="pill-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1.5"
-              title="Return to Subjects"
-            >
-              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-              <span className="hidden sm:inline">Subjects</span>
-            </button>
+    <PersistentAppShell activeDestination="map">
+      <div className="min-h-screen w-full bg-[#F8FAFC] text-[#0F172A] flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-4 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+        <MaterialsAnimatedLabBackground />
+        <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 relative z-10">
+          {/* ── Expedition Header Bar ── */}
+          <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  navigate('/subjects');
+                }}
+                className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5"
+                title="Return to Subjects"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Subjects</span>
+              </button>
 
-            <div className="flex items-center gap-2 ml-1 shrink-0">
-              <FlaskConical className="w-4 h-4 text-[#EA580C] shrink-0" />
-              <span className="font-extrabold text-xs sm:text-sm text-[#262930] whitespace-nowrap">
-                Theme 6: Materials Science
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-md bg-blue-50 text-blue-800 text-xs font-mono font-bold border border-blue-200/70">
+                  THEME 6
+                </span>
+                <span className="font-heading font-bold text-sm sm:text-base text-slate-900">
+                  Materials Science & Inventions
+                </span>
+              </div>
             </div>
 
-            <button
-              onClick={() => {
-                sounds.pop();
-                voiceAssistant.stop();
-                navigate('/teacher-studio');
-              }}
-              className="pill-btn-ghost px-3 py-1.5 text-xs flex items-center gap-1 ml-1"
-              title="Open Teacher Studio"
-            >
-              <GraduationCap className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Teacher Studio</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  navigate('/teacher-studio');
+                }}
+                className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1 text-slate-600"
+                title="Open Teacher Studio"
+              >
+                <GraduationCap className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Teacher Studio</span>
+              </button>
+            </div>
           </div>
-
-          <AudioNavBarControls showProfile={true} />
-        </div>
 
         {/* ── Compact Chapter Hero Banner (Muted Pastels & Sparky Micro-Branding) ── */}
         <div id="chapter-hero-banner" className="squircle-card p-5 sm:p-6 shadow-soft-card flex flex-col md:flex-row items-center gap-5 relative overflow-hidden font-sans">
@@ -513,5 +516,6 @@ export function ChapterHub() {
       {/* Spaced Recall Practice Modal */}
       <SpacedRecallModal isOpen={showRecallModal} onClose={() => setShowRecallModal(false)} />
     </div>
+    </PersistentAppShell>
   );
 }

@@ -42,38 +42,40 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
 
   return (
     <>
-      {/* Persistent Floating "Stuck / Ask Sparky" Button */}
+      {/* Persistent Floating "Stuck / Ask Pip" Button */}
       <motion.button
-        whileHover={{ scale: 1.04, y: -1 }}
-        whileTap={{ scale: 0.96 }}
+        whileHover={{ scale: 1.03, y: -1 }}
+        whileTap={{ scale: 0.97 }}
         onClick={handleOpen}
-        className="fixed bottom-14 left-3 sm:bottom-16 sm:left-6 z-30 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A] rounded-full font-extrabold text-xs sm:text-sm shadow-soft-card flex items-center gap-2 cursor-pointer transition-all"
+        className="fixed bottom-14 left-3 sm:bottom-16 sm:left-6 z-30 px-3.5 py-2 bg-white text-slate-800 border border-slate-200/90 rounded-xl font-bold text-xs shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer transition-all"
       >
-        <span className="text-base">💡</span>
-        <span className="hidden sm:inline">Stuck? Ask Sparky</span>
-        <span className="sm:hidden">Help?</span>
+        <span className="text-sm">💡</span>
+        <span className="hidden sm:inline">Stuck? Ask Pip</span>
+        <span className="sm:hidden">Hint</span>
       </motion.button>
 
-      {/* Gentle Help Modal (Squircle & Muted Pastels) */}
+      {/* Modern Socratic Help Modal */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262930]/40 backdrop-blur-xs">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
             <motion.div
-              initial={{ scale: 0.92, opacity: 0, y: 12 }}
+              initial={{ scale: 0.95, opacity: 0, y: 8 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.92, opacity: 0, y: 12 }}
-              className="w-full max-w-lg bg-[#FAF8F5] rounded-[32px] border border-slate-200/90 p-5 sm:p-6 shadow-soft-float flex flex-col gap-4 relative overflow-hidden"
+              exit={{ scale: 0.95, opacity: 0, y: 8 }}
+              className="w-full max-w-lg bg-white rounded-2xl border border-slate-200/90 p-6 shadow-2xl flex flex-col gap-4 relative overflow-hidden"
             >
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <SparkyMascot mood="thinking" size={48} animate={false} />
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200/70 flex items-center justify-center text-blue-600">
+                    <SparkyMascot mood="thinking" size={40} animate={false} />
+                  </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#262930] leading-none">
-                      Sparky's Helping Hand
+                    <h3 className="text-base font-heading font-bold text-slate-900 leading-none">
+                      Pip's Scientific Coach
                     </h3>
-                    <span className="text-[11px] font-medium text-[#5A6072] mt-0.5 block">
-                      No stress! Science is all about exploring.
+                    <span className="text-xs text-slate-500 mt-0.5 block">
+                      Every scientist learns by experimenting and asking questions!
                     </span>
                   </div>
                 </div>
@@ -81,7 +83,7 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={handleReadAloud}
-                    className="p-2 rounded-full bg-white hover:bg-slate-100 text-[#5A6072] border border-slate-200/80 cursor-pointer shadow-xs transition-colors"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                     title="Read Aloud"
                   >
                     <Volume2 className="w-4 h-4" />
@@ -92,24 +94,55 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                       voiceAssistant.stop();
                       setIsOpen(false);
                     }}
-                    className="p-2 rounded-full bg-white hover:bg-slate-100 text-[#5A6072] border border-slate-200/80 cursor-pointer shadow-xs transition-colors"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Dialogue Bubble (Soft Pastel Tint) */}
-              <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-soft-card flex flex-col gap-1.5">
-                <span className="text-[11px] font-extrabold uppercase text-[#854D0E] tracking-wider">
-                  {hintTier === 1 && '🎯 What to do here:'}
-                  {hintTier === 2 && '🔍 Step-by-Step Clue:'}
-                  {hintTier === 3 && '💡 Core Science Idea:'}
-                </span>
-                <p className="text-xs sm:text-sm font-medium text-[#262930] leading-relaxed">
-                  {hintTier === 1 && currentGoal}
-                  {hintTier === 2 && stepHint}
-                  {hintTier === 3 && conceptBreakdown}
+              {/* Progressive Hint Progression Tabs */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                <button
+                  onClick={() => setHintTier(1)}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    hintTier === 1
+                      ? 'bg-white text-blue-700 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  1. Current Goal
+                </button>
+                <button
+                  onClick={() => setHintTier(2)}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    hintTier === 2
+                      ? 'bg-white text-blue-700 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  2. Step Hint
+                </button>
+                <button
+                  onClick={() => setHintTier(3)}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    hintTier === 3
+                      ? 'bg-white text-blue-700 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  3. Deep Concept
+                </button>
+              </div>
+
+              {/* Active Socratic Message Block */}
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 text-left">
+                <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  {hintTier === 1
+                    ? currentGoal
+                    : hintTier === 2
+                    ? stepHint
+                    : conceptBreakdown}
                 </p>
               </div>
 
@@ -120,10 +153,10 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                   setIsOpen(false);
                   openVideoByContext(location.pathname);
                 }}
-                className="w-full py-2.5 px-4 rounded-full bg-[#F5F3FF] hover:bg-[#EDE9FE] border border-[#DDD6FE] text-[#5B21B6] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-xs"
+                className="w-full py-2.5 px-4 rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-800 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
               >
-                <Tv className="w-4 h-4 text-[#7C3AED]" />
-                <span>Watch Video Explanation 🍿</span>
+                <Tv className="w-4 h-4 text-violet-600" />
+                <span>Watch Video Explanation</span>
               </button>
 
               {/* Progressive Hint Escalator */}
@@ -131,9 +164,9 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                 {hintTier < 3 ? (
                   <button
                     onClick={handleNextHintTier}
-                    className="flex-1 py-3 px-4 rounded-full pill-btn-primary text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-soft-pill transition-all"
+                    className="flex-1 py-2.5 px-4 rounded-xl edtech-btn-primary text-xs flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <span>Need a bigger clue? (Level {hintTier + 1}/3)</span>
+                    <span>Need a deeper clue? (Level {hintTier + 1}/3)</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
@@ -142,9 +175,9 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                       sounds.pop();
                       setIsOpen(false);
                     }}
-                    className="flex-1 py-3 px-4 rounded-full bg-[#F0FDF4] hover:bg-[#DCFCE7] text-[#166534] border border-[#BBF7D0] font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-all"
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <span>Got it! Let's Try It 🔬</span>
+                    <span>Got it! Return to Experiment</span>
                   </button>
                 )}
               </div>

@@ -1,319 +1,421 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useParentStore } from '@/stores/parentStore';
 import { useProgressStore } from '@/stores/progressStore';
-import { SparkyMascot } from '@/components/mascot/SparkyMascot';
+import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import {
+  ArrowRight,
+  Compass,
   Sparkles,
-  Users,
-  GraduationCap,
-  BookOpen,
   FlaskConical,
   Leaf,
   Droplets,
   Home,
-  ChevronRight,
-  TrendingUp,
-  Award,
+  Clock,
+  Flame,
 } from 'lucide-react';
-import heroBannerImg from '@/assets/images/showcase/polyquest_hero_banner.jpg';
 
-const TOPIC_CARDS = [
-  {
-    emoji: '🧪',
-    label: 'Materials & Fibres',
-    sub: 'Chapter 3',
-    bg: 'bg-[#FFF7ED]',
-    border: 'border-[#FED7AA]',
-    text: 'text-[#9A3412]',
-    iconBg: 'bg-[#FFEDD5]',
-    icon: FlaskConical,
-    delay: 0,
-  },
-  {
-    emoji: '🐜',
-    label: 'Super Senses',
-    sub: 'Theme 1',
-    bg: 'bg-[#F0FDF4]',
-    border: 'border-[#BBF7D0]',
-    text: 'text-[#166534]',
-    iconBg: 'bg-[#DCFCE7]',
-    icon: Leaf,
-    delay: 0.08,
-  },
-  {
-    emoji: '💧',
-    label: 'Water Magic',
-    sub: 'Theme 2',
-    bg: 'bg-[#F0F9FF]',
-    border: 'border-[#BAE6FD]',
-    text: 'text-[#075985]',
-    iconBg: 'bg-[#E0F2FE]',
-    icon: Droplets,
-    delay: 0.16,
-  },
-  {
-    emoji: '🏠',
-    label: 'Shelter & Earth',
-    sub: 'Theme 5',
-    bg: 'bg-[#F5F3FF]',
-    border: 'border-[#DDD6FE]',
-    text: 'text-[#5B21B6]',
-    iconBg: 'bg-[#EDE9FE]',
-    icon: Home,
-    delay: 0.24,
-  },
-];
-
-const STATS = [
-  { icon: FlaskConical, label: 'Hands-on Experiments', value: '40+' },
-  { icon: Sparkles, label: 'Mascot AI Coach', value: 'Sparky' },
-  { icon: Award, label: 'Curriculum Missions', value: '13+' },
-];
+// Macro Specimen Imagery
+import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
 
 export const RoleSelection: React.FC = () => {
   const navigate = useNavigate();
-  const isSetUp = useParentStore((state) => state.isSetUp);
   const completedMissions = useProgressStore((state) => state.completedMissions);
-  const [heroLoaded, setHeroLoaded] = useState(false);
+  const discoveries = useDiscoveryStore((state) => state.discoveries);
 
-  useEffect(() => {
-    const img = new Image();
-    img.src = heroBannerImg;
-    img.onload = () => setHeroLoaded(true);
-  }, []);
+  const totalXP = completedMissions.length * 40 + discoveries.length * 25 + 120;
+  const streakDays = 3 + Math.min(completedMissions.length, 7);
 
-  const handleScientistClick = () => {
-    sounds.fanfare();
-    voiceAssistant.stop();
-    if (!isSetUp) {
-      const pStore = useParentStore.getState();
-      pStore.setChild({
-        name: 'Young Scientist',
-        grade: '5',
-        interests: ['science', 'space', 'water', 'animals', 'inventions'],
-        avatar: '🔬',
-      });
-      pStore.setPin('1234');
-      pStore.completeSetup();
-    }
-    navigate('/subjects');
-  };
-
-  const handleParentClick = () => {
+  const handleLaunch = (path: string) => {
     sounds.pop();
     voiceAssistant.stop();
-    if (!isSetUp) {
-      navigate('/parent/setup');
-    } else {
-      navigate('/parent/pin');
-    }
+    navigate(path);
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between relative overflow-hidden select-none font-sans">
-      {/* ── Soft Pastel Ambient Orbs (Low Saturation, Non-Intrusive) ── */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#FEF3C7]/40 rounded-full blur-[90px]" />
-        <div className="absolute top-20 right-0 w-80 h-80 bg-[#E0F2FE]/45 rounded-full blur-[80px]" />
-        <div className="absolute bottom-10 left-1/4 w-[450px] h-80 bg-[#DCFCE7]/35 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-10 w-72 h-72 bg-[#F3E8FF]/40 rounded-full blur-[90px]" />
-      </div>
-
-      {/* ── TOP NAVIGATION BAR ── */}
-      <motion.header
-        initial={{ y: -15, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-5 pb-3 flex items-center justify-between"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#FEF08A] border border-[#FDE047] flex items-center justify-center shadow-xs">
-            <Sparkles className="w-5 h-5 text-[#262930] fill-[#262930]" />
-          </div>
+    <PersistentAppShell activeDestination="home">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col gap-8">
+        {/* ── Top Explorer Greeting & Summary Bar ── */}
+        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
           <div>
-            <h1 className="font-extrabold text-lg text-[#262930] leading-none tracking-tight">
-              KIDOS <span className="font-medium text-[#5A6072] text-sm">• Class 5 EVS</span>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/70 inline-flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-blue-600" />
+                <span>Late Elementary STEM • Grade 5</span>
+              </span>
+              <span className="text-xs text-slate-400 font-medium">CBSE & NCERT Aligned</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
+              Welcome back, Young Explorer 👋
             </h1>
-            <span className="text-[10px] font-bold text-[#8A90A0] uppercase tracking-widest block mt-0.5">
-              Curriculum Science Adventures
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => { sounds.pop(); navigate('/teacher-studio'); }}
-            className="pill-btn-ghost px-3.5 py-1.5 text-xs flex items-center gap-1.5"
-          >
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Teacher Studio</span>
-          </button>
-          <button
-            onClick={handleParentClick}
-            className="pill-btn-secondary px-4 py-1.5 text-xs flex items-center gap-1.5"
-          >
-            <Users className="w-3.5 h-3.5 text-[#5A6072]" />
-            <span>Parent Gate</span>
-          </button>
-        </div>
-      </motion.header>
-
-      {/* ── MAIN HERO SECTION ── */}
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-4">
-        <div className="w-full max-w-4xl flex flex-col items-center gap-6 md:gap-7 text-center">
-
-          {/* ── Sparky Mascot & Warm Welcome Banner ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col items-center"
-          >
-            <div className="relative mb-1">
-              <SparkyMascot
-                mood="welcoming"
-                size={140}
-                showSpeechBubble
-                speechText="Hi! I'm Sparky 👋 Ready to explore?"
-                animate
-              />
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FEFCE8] border border-[#FEF08A] text-[11px] font-bold text-[#854D0E] mb-2 shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 fill-[#EAB308] text-[#EAB308]" />
-              <span>Interactive Science Lab for Curious Young Minds</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#262930] tracking-tight max-w-xl leading-tight">
-              Learn Science Through Play & Discovery
-            </h2>
-            <p className="text-sm sm:text-base font-medium text-[#5A6072] max-w-md mx-auto mt-2 leading-relaxed">
-              Explore 40+ interactive experiments, animated microscopy, and guided quests crafted to make learning delightful.
+            <p className="text-sm text-slate-600 mt-1">
+              Your science universe is active. Ready to continue today’s inquiry journey?
             </p>
-          </motion.div>
+          </div>
 
-          {/* ── HERO BANNER CARD (Soft Squircle with Diffuse Shadow) ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.55, delay: 0.15 }}
-            className="w-full max-w-2xl squircle-card p-2 sm:p-2.5 overflow-hidden"
-          >
-            <div className="relative rounded-2xl overflow-hidden aspect-[16/7] sm:aspect-[21/9] bg-[#FAF8F5]">
-              <img
-                src={heroBannerImg}
-                alt="PolyQuest Science Lab"
-                className={`w-full h-full object-cover object-center transition-opacity duration-500 ${heroLoaded ? 'opacity-100' : 'opacity-0'}`}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#262930]/75 via-[#262930]/20 to-transparent" />
-
-              {/* Progress Indicator Overlay */}
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                <div className="flex items-center gap-2 text-left">
-                  <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-xs">
-                    🔬
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-white/80 block uppercase tracking-wider">CBSE Class 5</span>
-                    <span className="text-xs font-bold text-white">Environmental Studies</span>
-                  </div>
-                </div>
-
-                {completedMissions.length > 0 && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-xs font-bold text-white">
-                    <TrendingUp className="w-3.5 h-3.5 text-[#86EFAC]" />
-                    <span>{completedMissions.length}/13 Completed</span>
-                  </div>
-                )}
+          {/* Quick Metrics */}
+          <div className="flex items-center gap-3">
+            <div className="edtech-card px-4 py-2.5 flex items-center gap-3 bg-white">
+              <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                <Flame className="w-5 h-5 fill-amber-500 text-amber-500" />
+              </div>
+              <div>
+                <span className="text-xs text-slate-400 font-semibold block leading-tight">Streak</span>
+                <span className="text-sm font-extrabold text-slate-800">{streakDays} Days</span>
               </div>
             </div>
-          </motion.div>
 
-          {/* ── PRIMARY CTA: High-Contrast Dark Charcoal Pill Button ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="w-full max-w-sm flex flex-col items-center gap-2"
-          >
-            <button
-              onClick={handleScientistClick}
-              className="w-full pill-btn-primary py-4 px-8 text-base sm:text-lg flex items-center justify-center gap-3 shadow-soft-pill group"
-            >
-              <span>Start for Free</span>
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <span className="text-[11px] font-medium text-[#7E8494]">
-              Free access • No credit card required • 100% kid-safe
-            </span>
-          </motion.div>
+            <div className="edtech-card px-4 py-2.5 flex items-center gap-3 bg-white">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-xs text-slate-400 font-semibold block leading-tight">Total XP</span>
+                <span className="text-sm font-extrabold text-slate-800">{totalXP}</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-          {/* ── TOPIC PREVIEW CARDS (Soft Pastel Squircle Elements) ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl"
-          >
-            {TOPIC_CARDS.map((card) => (
-              <motion.div
-                key={card.label}
-                whileHover={{ y: -2, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleScientistClick}
-                className={`${card.bg} ${card.border} border p-3.5 rounded-2xl text-center cursor-pointer transition-all shadow-xs flex flex-col items-center justify-between min-h-[92px]`}
-              >
-                <div className="text-2xl mb-1">{card.emoji}</div>
-                <div>
-                  <span className={`text-xs font-extrabold ${card.text} block leading-tight`}>
-                    {card.label}
-                  </span>
-                  <span className="text-[10px] font-semibold text-[#7E8494] block mt-0.5">
-                    {card.sub}
-                  </span>
+        {/* ── Hero Stage: Continue Your Journey ── */}
+        <section className="w-full edtech-card overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white shadow-xl relative">
+          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#34D399_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+          
+          <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="max-w-xl flex flex-col gap-4">
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold tracking-wide uppercase border border-emerald-400/30 inline-flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Active Expedition
+                </span>
+                <span className="text-xs text-slate-400 font-medium">Theme 1 • Super Senses</span>
+              </div>
+
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
+                  Plants & Living World: Super Senses
+                </h2>
+                <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                  Discover how ant pheromone highways guide trails, how snake jawbones detect ground acoustics, 
+                  and how burdock seed hooks inspired the invention of Velcro.
+                </p>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="flex flex-col gap-1.5 pt-1">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+                  <span>Expedition Progress</span>
+                  <span className="font-mono text-emerald-400">4 of 4 Chapters Unlocked</span>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* ── RESTFUL STATS BAR (Low Visual Noise) ── */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.45 }}
-            className="flex items-center justify-center gap-6 sm:gap-10 pt-1"
-          >
-            {STATS.map((stat) => (
-              <div key={stat.label} className="flex items-center gap-2">
-                <stat.icon className="w-4 h-4 text-[#8A90A0]" />
-                <div className="text-left">
-                  <span className="text-xs font-extrabold text-[#262930] block leading-none">{stat.value}</span>
-                  <span className="text-[10px] font-medium text-[#7E8494] block mt-0.5">{stat.label}</span>
+                <div className="w-full h-2.5 bg-white/15 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full w-3/4 transition-all duration-700" />
                 </div>
               </div>
-            ))}
-          </motion.div>
-        </div>
-      </main>
 
-      {/* ── QUIET FOOTER ── */}
-      <footer className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between text-xs text-[#7E8494] border-t border-slate-200/50">
-        <span className="font-medium">
-          Designed with love for young scientists & learners
-        </span>
-        <button
-          onClick={() => navigate('/discovery-book')}
-          className="font-semibold hover:text-[#262930] transition-colors cursor-pointer flex items-center gap-1.5"
-        >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>Field Journal</span>
-        </button>
-      </footer>
-    </div>
+              {/* Primary Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  onClick={() => handleLaunch('/theme/1/hub')}
+                  className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all transform active:scale-98 cursor-pointer"
+                >
+                  <span>Continue Expedition</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => handleLaunch('/subjects')}
+                  className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 transition-all cursor-pointer"
+                >
+                  <span>Explore All Subjects</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Specimen Visual Artwork Thumbnail */}
+            <div className="w-full md:w-72 shrink-0 flex flex-col gap-3">
+              <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black/40 aspect-4/3">
+                <img
+                  src={burdockVelcroImg}
+                  alt="Burdock Velcro Macro Specimen"
+                  className="w-full h-full object-cover brightness-90 hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
+                  <span className="font-mono text-emerald-300 font-bold text-[11px]">
+                    HOOK RETENTION // 450 N/m
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md bg-black/60 text-white/90 text-[10px] font-mono">
+                    3D Lab
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Today's Missions (4 Meaningful Educational Quests) ── */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-heading font-bold text-slate-900 tracking-tight">
+                Today’s Exploration Quests
+              </h2>
+              <p className="text-xs text-slate-500">
+                Four bite-sized inquiries designed for deep comprehension today.
+              </p>
+            </div>
+            <span className="text-xs font-mono text-slate-400">EST. TIME: ~20 MIN</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Quest 1: Learn */}
+            <motion.div
+              whileHover={{ y: -3 }}
+              onClick={() => handleLaunch('/theme/1/chapter/1')}
+              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-emerald-300 transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-bold tracking-wider uppercase border border-emerald-200/60">
+                    Learn
+                  </span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" /> 8 min
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors text-base leading-snug">
+                  Ant Pheromone Trails
+                </h3>
+                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
+                  Simulate sugar trail navigation and test scent path blockage.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
+                <span>Launch Lab</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+
+            {/* Quest 2: Explore */}
+            <motion.div
+              whileHover={{ y: -3 }}
+              onClick={() => handleLaunch('/chapter/3/mission/3')}
+              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-blue-300 transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-[10px] font-bold tracking-wider uppercase border border-blue-200/60">
+                    Explore
+                  </span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" /> 5 min
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors text-base leading-snug">
+                  Tensile Strength Rig
+                </h3>
+                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
+                  Pull test cotton fibers vs nylon ropes under heavy weights.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
+                <span>Start Simulation</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+
+            {/* Quest 3: Practice */}
+            <motion.div
+              whileHover={{ y: -3 }}
+              onClick={() => handleLaunch('/mystery-lab')}
+              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-violet-300 transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-1 rounded-lg bg-violet-50 text-violet-700 text-[10px] font-bold tracking-wider uppercase border border-violet-200/60">
+                    Practice
+                  </span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" /> 4 min
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-violet-700 transition-colors text-base leading-snug">
+                  Mystery Object Scan
+                </h3>
+                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
+                  Analyze microscopic fiber structures and identify hidden materials.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-violet-600">
+                <span>Open Quiz</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+
+            {/* Quest 4: Recall */}
+            <motion.div
+              whileHover={{ y: -3 }}
+              onClick={() => handleLaunch('/discovery-book')}
+              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-amber-300 transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 text-[10px] font-bold tracking-wider uppercase border border-amber-200/60">
+                    Recall
+                  </span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" /> 3 min
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-amber-800 transition-colors text-base leading-snug">
+                  Field Discovery Journal
+                </h3>
+                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
+                  Review specimen badges and retrieve key scientific definitions.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-700">
+                <span>Review Notes</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── Curriculum Thematic Portals (All 4 Subject Worlds) ── */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-heading font-bold text-slate-900 tracking-tight">
+                Curriculum Exploration Worlds
+              </h2>
+              <p className="text-xs text-slate-500">
+                Choose a domain to start or continue your themed learning expedition.
+              </p>
+            </div>
+            <button
+              onClick={() => handleLaunch('/subjects')}
+              className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
+            >
+              <span>View All</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* World 1: Plants & Living World */}
+            <div
+              onClick={() => handleLaunch('/theme/1/hub')}
+              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-emerald-300 transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-emerald-600 shrink-0">
+                <Leaf className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono font-bold text-emerald-700 uppercase">
+                    THEME 1 • LIVING SYSTEMS
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded-sm bg-emerald-100/70 text-emerald-800 text-[9px] font-bold">
+                    4 Chapters
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors text-base">
+                  Plants & Living World: Super Senses
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  ThreeUI Sylva moss canopy, ant scent trails, snake seismic vibration, and Velcro biomimicry.
+                </p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all mt-1" />
+            </div>
+
+            {/* World 2: Synthetic Materials & Inventions */}
+            <div
+              onClick={() => handleLaunch('/chapter-hub')}
+              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-blue-300 transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200/70 flex items-center justify-center text-blue-600 shrink-0">
+                <FlaskConical className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono font-bold text-blue-700 uppercase">
+                    THEME 6 • MATERIALS SCIENCE
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded-sm bg-blue-100/70 text-blue-800 text-[9px] font-bold">
+                    13 Missions
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors text-base">
+                  Materials, Polymers & Inventions
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Hydrophobic raincoat tests, nylon tensile pulling, electric circuits, and plastic molding.
+                </p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all mt-1" />
+            </div>
+
+            {/* World 3: Water & Aquatic Wonders */}
+            <div
+              onClick={() => handleLaunch('/theme/water/hub')}
+              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-cyan-300 transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200/70 flex items-center justify-center text-cyan-600 shrink-0">
+                <Droplets className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono font-bold text-cyan-700 uppercase">
+                    THEME 2 • HYDROLOGY
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded-sm bg-cyan-100/70 text-cyan-800 text-[9px] font-bold">
+                    4 Chapters
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-700 transition-colors text-base">
+                  Water & Aquatic Experiments
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Density columns, buoyancy tests, water evaporation cycles, and ancient stepwell conservation.
+                </p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-600 group-hover:translate-x-1 transition-all mt-1" />
+            </div>
+
+            {/* World 4: Shelter & Earth Expeditions */}
+            <div
+              onClick={() => handleLaunch('/theme/shelter/hub')}
+              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-purple-300 transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200/70 flex items-center justify-center text-purple-600 shrink-0">
+                <Home className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono font-bold text-purple-700 uppercase">
+                    THEME 5 • ARCHITECTURE & EARTH
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded-sm bg-purple-100/70 text-purple-800 text-[9px] font-bold">
+                    5 Chapters
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-purple-700 transition-colors text-base">
+                  Shelter, Earth & High Altitudes
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Everest atmospheric pressure, pashmina microscope scans, and earthquake-resistant Bhunga dampers.
+                </p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all mt-1" />
+            </div>
+          </div>
+        </section>
+      </div>
+    </PersistentAppShell>
   );
 };
-

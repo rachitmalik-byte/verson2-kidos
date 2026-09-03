@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
+import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { SparkyMascot } from '@/components/mascot/SparkyMascot';
@@ -176,21 +177,22 @@ export const DiscoveryBook: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] p-3 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden select-none">
-      {/* ── Top Header (Squircle Card with Diffuse Shadow) ── */}
-      <header className="w-full max-w-7xl squircle-card px-4 sm:px-6 py-3.5 shadow-soft-card flex items-center justify-between gap-4 mb-6 z-20">
-        {/* Left: Navigation Buttons */}
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => {
-              sounds.pop();
-              navigate('/subjects');
-            }}
-            className="pill-btn-secondary p-2 text-[#5A6072]"
-            title="Return to Subjects"
-          >
-            <Home className="w-4 h-4" />
-          </button>
+    <PersistentAppShell activeDestination="journal">
+      <div className="min-h-screen w-full bg-[#F8FAFC] text-[#0F172A] p-4 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden selection:bg-blue-100 selection:text-blue-900">
+        {/* ── Top Header ── */}
+        <header className="w-full max-w-7xl edtech-card px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4 mb-6 z-20 bg-white">
+          {/* Left: Navigation Buttons */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                sounds.pop();
+                navigate('/subjects');
+              }}
+              className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5"
+              title="Return to Subjects"
+            >
+              <Home className="w-3.5 h-3.5" />
+            </button>
 
           <button
             onClick={() => {
@@ -443,5 +445,6 @@ export const DiscoveryBook: React.FC = () => {
         </div>
       </main>
     </div>
+    </PersistentAppShell>
   );
 };

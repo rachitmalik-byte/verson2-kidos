@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { missions } from '@/data/missions';
@@ -11,12 +11,8 @@ import {
   Star,
   Lock,
   CheckCircle2,
-  Gift,
-  Sparkles,
   ArrowRight,
   Play,
-  RotateCcw,
-  Trophy,
   X,
   Compass,
   Zap,
@@ -79,14 +75,14 @@ const MILESTONE_GIFTS = [
   { id: 'gift-3', level: 12.5, x: 91.0, y: 24, rewardStars: 100, title: 'Grand Science Citadel Vault 🏆' },
 ];
 
-export type BiomeTheme = 'savannah' | 'glacier' | 'candy';
+export type BiomeTheme = 'citadel' | 'glacier' | 'savannah';
 
 export const GamifiedAdventureMap: React.FC = () => {
   const navigate = useNavigate();
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
 
-  const [selectedBiome, setSelectedBiome] = useState<BiomeTheme>('savannah');
+  const [selectedBiome, setSelectedBiome] = useState<BiomeTheme>('citadel');
   const [selectedMission, setSelectedMission] = useState<(typeof missions)[0] | null>(null);
   const [openedGifts, setOpenedGifts] = useState<string[]>([]);
   const [claimedReward, setClaimedReward] = useState<{ stars: number; title: string } | null>(null);
@@ -124,9 +120,9 @@ export const GamifiedAdventureMap: React.FC = () => {
       name: gift.title,
       category: 'synthetic',
       icon: '🎁',
-      description: `Unlocked milestone treasure box! Earned +${gift.rewardStars} Science Stars!`,
-      discoveredIn: 'Adventure Map Milestone',
-      funFact: 'Scientists unlock exciting new inventions by mastering each step along the discovery road!',
+      description: `Unlocked milestone research vault! Earned +${gift.rewardStars} Science Stars!`,
+      discoveredIn: 'Adventure Expedition Milestone',
+      funFact: 'Scientists unlock exciting new materials by mastering each step along the discovery road!',
     });
     voiceAssistant.speak(`Hooray! You opened the ${gift.title} and earned ${gift.rewardStars} Science Stars!`);
   };
@@ -143,33 +139,33 @@ export const GamifiedAdventureMap: React.FC = () => {
     }
   };
 
-  // Theme-specific styles
+  // Modern Expedition Theme styles
   const getThemeStyles = () => {
     switch (selectedBiome) {
       case 'glacier':
         return {
-          bgGradient: 'from-[#0284c7] via-[#38bdf8] to-[#e0f2fe]',
-          roadBase: '#0369a1',
-          roadSurface: '#f0f9ff',
-          roadDash: '#0284c7',
+          bgGradient: 'from-[#082f49] via-[#0c4a6e] to-[#082f49]',
+          roadBase: '#075985',
+          roadSurface: '#0284c7',
+          roadDash: '#38bdf8',
           decorIcon: '❄️',
         };
-      case 'candy':
-        return {
-          bgGradient: 'from-[#e11d48] via-[#f43f5e] to-[#ffe4e6]',
-          roadBase: '#881337',
-          roadSurface: '#fbcfe8',
-          roadDash: '#fb7185',
-          decorIcon: '🍭',
-        };
       case 'savannah':
+        return {
+          bgGradient: 'from-[#1c1917] via-[#292524] to-[#1c1917]',
+          roadBase: '#44403c',
+          roadSurface: '#78716c',
+          roadDash: '#f59e0b',
+          decorIcon: '🌿',
+        };
+      case 'citadel':
       default:
         return {
-          bgGradient: 'from-[#d97706] via-[#f59e0b] to-[#fef3c7]',
-          roadBase: '#92400e',
-          roadSurface: '#fef3c7',
-          roadDash: '#d97706',
-          decorIcon: '🌿',
+          bgGradient: 'from-slate-900 via-indigo-950 to-slate-900',
+          roadBase: '#1e1b4b',
+          roadSurface: '#312e81',
+          roadDash: '#6366f1',
+          decorIcon: '🔬',
         };
     }
   };
@@ -191,51 +187,51 @@ export const GamifiedAdventureMap: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center gap-3">
       {/* ── Top Header Controls & Biome Selector ── */}
-      <div className="w-full flex items-center justify-between bg-white/95 backdrop-blur-md p-2.5 sm:p-3 rounded-2xl border-2 border-amber-300 shadow-md flex-wrap gap-2">
-        <div className="flex items-center gap-1.5">
-          <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 ml-1 flex items-center gap-1">
-            <Compass className="w-3.5 h-3.5 text-amber-600" />
-            <span>Map Theme:</span>
+      <div className="w-full flex items-center justify-between bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-slate-200/80 shadow-xs flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-slate-700 ml-1 flex items-center gap-1.5">
+            <Compass className="w-4 h-4 text-blue-600" />
+            <span>Expedition Environment:</span>
           </span>
-          <div className="flex gap-1">
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-xl">
             <button
               onClick={() => {
                 sounds.pop();
-                setSelectedBiome('savannah');
+                setSelectedBiome('citadel');
               }}
-              className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
-                selectedBiome === 'savannah'
-                  ? 'bg-amber-400 text-slate-950 shadow-sm ring-2 ring-amber-300'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                selectedBiome === 'citadel'
+                  ? 'bg-white text-indigo-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span>🌿 Savannah</span>
+              <span>🔬 Research Citadel</span>
             </button>
             <button
               onClick={() => {
                 sounds.pop();
                 setSelectedBiome('glacier');
               }}
-              className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
                 selectedBiome === 'glacier'
-                  ? 'bg-sky-400 text-slate-950 shadow-sm ring-2 ring-sky-300'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-white text-sky-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span>❄️ Glacier</span>
+              <span>❄️ Arctic Glacier</span>
             </button>
             <button
               onClick={() => {
                 sounds.pop();
-                setSelectedBiome('candy');
+                setSelectedBiome('savannah');
               }}
-              className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
-                selectedBiome === 'candy'
-                  ? 'bg-pink-400 text-slate-950 shadow-sm ring-2 ring-pink-300'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                selectedBiome === 'savannah'
+                  ? 'bg-white text-amber-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <span>🍭 Sweet Lab</span>
+              <span>🌿 Earth Geosphere</span>
             </button>
           </div>
         </div>
@@ -254,7 +250,7 @@ export const GamifiedAdventureMap: React.FC = () => {
           </button>
           <button
             onClick={scrollRight}
-            className="p-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 cursor-pointer shadow-xs active:scale-95 transition-all"
+            className="p-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-xs active:scale-95 transition-all"
             title="Scroll Right"
           >
             <ChevronRight className="w-4 h-4 stroke-[3]" />
@@ -265,7 +261,7 @@ export const GamifiedAdventureMap: React.FC = () => {
       {/* ── Horizontally Winding Left-to-Right Level Track Canvas ── */}
       <div
         ref={scrollContainerRef}
-        className="w-full overflow-x-auto rounded-3xl md:rounded-[36px] border-4 border-amber-400 shadow-2xl bg-slate-950 scrollbar-thin scrollbar-thumb-amber-400 scrollbar-track-slate-900 pb-2"
+        className="w-full overflow-x-auto rounded-3xl border border-slate-700/80 shadow-2xl bg-slate-950 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-900 pb-2"
         style={{ scrollBehavior: 'smooth' }}
       >
         <div

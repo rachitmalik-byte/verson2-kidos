@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Pip } from '@/components/pip/Pip';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { ArrowRight, ArrowLeft, Home, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface CourseIntroConfig {
   id: string;
@@ -173,7 +172,10 @@ export const UniversalMascotChapterIntro: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen w-full bg-gradient-to-b ${config.bgGradient} relative overflow-hidden flex flex-col items-center justify-between p-4 sm:p-6 font-sans select-none`}>
+    <div className="min-h-screen w-full bg-[#F8FAFC] text-[#0F172A] relative overflow-hidden flex flex-col items-center justify-between p-4 sm:p-6 font-sans select-none">
+      {/* Subtle ambient lighting */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
+
       {/* ── Top Header Bar ── */}
       <header className="w-full max-w-2xl flex items-center justify-between z-20">
         <button
@@ -182,7 +184,7 @@ export const UniversalMascotChapterIntro: React.FC = () => {
             voiceAssistant.stop();
             navigate('/subjects');
           }}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 hover:bg-white text-slate-700 font-black text-xs border border-slate-200 shadow-xs cursor-pointer active:scale-95"
+          className="edtech-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>All Subjects</span>
@@ -190,77 +192,75 @@ export const UniversalMascotChapterIntro: React.FC = () => {
 
         <button
           onClick={handleSkipDirectly}
-          className="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1 cursor-pointer shadow-xs border border-amber-500 active:scale-95 transition-all"
+          className="edtech-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1 text-slate-500 hover:text-slate-800"
         >
-          <span>⚡ Skip Intro</span>
+          <span>Skip Intro</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </header>
 
-      {/* ── Main Focused Lesson Card (Compact, Clear & Friendly) ── */}
-      <main className="w-full max-w-xl bg-white/95 backdrop-blur-md rounded-[32px] border-4 border-sky-400 shadow-2xl p-6 sm:p-8 flex flex-col items-center text-center gap-4 z-20 my-auto">
+      {/* ── Main Focused Lesson Card (Modern EdTech) ── */}
+      <main className="w-full max-w-xl edtech-card p-6 sm:p-8 flex flex-col items-center text-center gap-5 z-20 my-auto bg-white shadow-xl">
         {/* Step Indicator */}
         <div className="flex items-center justify-between w-full border-b border-slate-100 pb-3">
-          <span className="text-[11px] font-black uppercase text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+          <span className="text-xs font-bold text-blue-800 bg-blue-50 px-3 py-1 rounded-full border border-blue-200/80">
             {config.title}
           </span>
-          <span className="text-xs font-bold text-slate-400">
-            Step {lessonIndex + 1} of {config.pipLessons.length}
+          <span className="text-xs font-mono font-bold text-slate-400">
+            Concept {lessonIndex + 1} of {config.pipLessons.length}
           </span>
         </div>
 
-        {/* Compact Companion Pip (Size 64px) & Bubble */}
-        <div className="w-full flex flex-col sm:flex-row items-center gap-4 bg-sky-50/70 p-4 rounded-2xl border border-sky-200">
+        {/* Companion Pip & Speech Dialogue */}
+        <div className="w-full flex flex-col sm:flex-row items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/80 text-left">
           <div className="shrink-0">
-            <Pip mood={activeLesson.pipMood} size={64} />
+            <Pip mood={activeLesson.pipMood} size={64} interactive={false} />
           </div>
 
-          <div className="text-center sm:text-left flex-1">
-            <h4 className="text-sm font-black text-slate-900 mb-1">
-              💡 {activeLesson.keyTitle}
+          <div className="flex-1">
+            <h4 className="text-sm font-bold text-slate-900 mb-1">
+              {activeLesson.keyTitle}
             </h4>
-            <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed">
+            <p className="text-xs text-slate-600 font-normal leading-relaxed">
               "{activeLesson.dialogue}"
             </p>
           </div>
         </div>
 
-        {/* Key Science Takeaway Badge */}
-        <div className="w-full p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
-          <span className="text-[11px] font-black text-emerald-900 block">
-            ⭐ Science Secret: {activeLesson.keyFact}
+        {/* Takeaway Insight Callout */}
+        <div className="w-full text-left bg-blue-50/70 border-l-4 border-blue-600 p-3.5 rounded-r-xl">
+          <span className="text-[10px] font-mono font-bold text-blue-700 uppercase tracking-wider block mb-0.5">
+            Key Takeaway
           </span>
+          <p className="text-xs font-semibold text-blue-950">
+            {activeLesson.keyFact}
+          </p>
         </div>
 
-        {/* ── GIANT NEXT STEP BUTTON (CANNOT MISS WHAT TO CLICK NEXT) ── */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={handleNext}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-110 text-white font-black text-base sm:text-lg shadow-lg cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-2 border-2 border-emerald-300 ring-4 ring-emerald-100"
-        >
-          <span>{isLastLesson ? '👉 ENTER SCIENCE LAB ➔' : '👉 NEXT STEP ➔'}</span>
-          <ArrowRight className="w-5 h-5 stroke-[3]" />
-        </motion.button>
-
-        {/* Clickable Step Dots */}
-        <div className="flex items-center gap-2 mt-1">
-          {config.pipLessons.map((_, idx) => (
+        {/* Bottom Navigation CTA */}
+        <div className="w-full flex items-center justify-between pt-2">
+          {lessonIndex > 0 ? (
             <button
-              key={idx}
-              onClick={() => setLessonIndex(idx)}
-              className={`h-2.5 rounded-full transition-all cursor-pointer ${
-                idx === lessonIndex ? 'w-8 bg-sky-500 shadow-xs' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
-              }`}
-            />
-          ))}
+              onClick={() => {
+                sounds.pop();
+                setLessonIndex(lessonIndex - 1);
+              }}
+              className="edtech-btn-secondary px-4 py-2 text-xs"
+            >
+              Previous
+            </button>
+          ) : <div />}
+
+          <button
+            onClick={handleNext}
+            className="edtech-btn-primary px-6 py-2.5 text-xs font-bold"
+          >
+            <span>{isLastLesson ? 'Begin Exploration →' : 'Next Concept →'}</span>
+          </button>
         </div>
       </main>
 
-      {/* ── Footer ── */}
-      <footer className="w-full max-w-2xl flex items-center justify-center text-xs font-bold text-slate-500 z-20">
-        <span>Tap the green button above to continue!</span>
-      </footer>
+      <div className="h-6" />
     </div>
   );
 };

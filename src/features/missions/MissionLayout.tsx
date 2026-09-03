@@ -3,12 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { ArrowLeft, ArrowRight, Home, Map } from 'lucide-react';
-import { useProgressStore } from '@/stores/progressStore';
-import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { missions } from '@/data/missions';
 import { MissionAudioControls } from '@/components/navigation/AudioNavBarControls';
 import { AskPipAssistant } from '@/components/pip/AskPipAssistant';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface MissionLayoutProps {
   missionId: string;
@@ -33,12 +31,9 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
   isStepComplete,
   onNext,
   onPrev,
-  onRedo,
   children,
-  themeGradient = 'from-sky-100 via-indigo-50 to-amber-50',
 }) => {
   const navigate = useNavigate();
-  const completedMissions = useProgressStore((state) => state.completedMissions);
   const currentMission = missions.find((m) => m.id === missionId || m.number === missionNumber);
   const derivedNumber = missionNumber ?? currentMission?.number ?? 1;
   const derivedTitle = missionTitle || currentMission?.title || 'Science Mission';
@@ -63,110 +58,108 @@ export const MissionLayout: React.FC<MissionLayoutProps> = ({
   };
 
   return (
-    <div
-      className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between pt-2 sm:pt-3 pb-24 sm:pb-28 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden select-none"
-    >
-      <div className="w-full max-w-5xl mx-auto flex flex-col gap-3 sm:gap-5">
-        {/* ── Compact Top Level Mission Header & Progress Indicator ── */}
-        <header className="w-full squircle-card px-3 py-2 sm:px-4 sm:py-2.5 shadow-soft-card flex flex-col gap-1.5">
-          <div className="flex items-center justify-between gap-2">
-            {/* Left: Navigation Buttons & Mission Title */}
-            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-              <div className="flex items-center gap-1.5 shrink-0">
-                <button
-                  onClick={handleHomeClick}
-                  className="pill-btn-secondary p-2 text-[#5A6072]"
-                  title="Return to Main Home"
-                >
-                  <Home className="w-3.5 h-3.5" />
-                </button>
+    <div className="min-h-screen w-full bg-[#F8FAFC] text-[#0F172A] flex flex-col justify-between pt-3 sm:pt-4 pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden selection:bg-blue-100 selection:text-blue-900">
+      <div className="w-full max-w-5xl mx-auto flex flex-col gap-4">
+        {/* ── Precision Study Desk Top Mission Header & Progress ── */}
+        <header className="w-full edtech-card px-4 py-3 flex flex-col gap-2.5 bg-white shadow-xs">
+          <div className="flex items-center justify-between gap-3">
+            {/* Navigation & Mission Info */}
+            <div className="flex items-center gap-2 min-w-0">
+              <button
+                onClick={handleHomeClick}
+                className="edtech-btn-secondary p-2 text-slate-600"
+                title="Return to Dashboard"
+              >
+                <Home className="w-3.5 h-3.5" />
+              </button>
 
-                <button
-                  onClick={handleReturnToHub}
-                  className="pill-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1"
-                >
-                  <Map className="w-3.5 h-3.5 text-[#EA580C]" />
-                  <span>Map</span>
-                </button>
-              </div>
+              <button
+                onClick={handleReturnToHub}
+                className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5"
+                title="Expedition Trail Map"
+              >
+                <Map className="w-3.5 h-3.5 text-blue-600" />
+                <span className="hidden sm:inline">Map</span>
+              </button>
 
-              <div className="min-w-0 truncate ml-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#7E8494] block sm:inline sm:mr-1.5">
+              <div className="min-w-0 truncate ml-1 flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-800 text-[11px] font-mono font-bold border border-blue-200/60">
                   M{derivedNumber}
                 </span>
-                <h1 className="text-xs sm:text-sm font-extrabold text-[#262930] truncate leading-tight inline">
+                <h1 className="text-xs sm:text-sm font-heading font-bold text-slate-900 truncate leading-tight">
                   {derivedTitle}
                 </h1>
               </div>
             </div>
 
-            {/* Right: Audio Controls */}
+            {/* Audio Controls */}
             <div className="flex items-center gap-1 shrink-0">
               <MissionAudioControls />
             </div>
           </div>
 
-          {/* Step Progress Bar with Step Counter */}
-          <div className="flex items-center gap-2 pt-0.5">
-            <div className="flex-1 bg-[#F1EFEA] rounded-full h-2 p-0.5 border border-slate-200/80">
+          {/* Smooth Step Progress Bar with Phase Counter */}
+          <div className="flex items-center gap-2.5 pt-0.5">
+            <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/80">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${stepProgressPercent}%` }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="bg-gradient-to-r from-[#FDE047] via-[#FDBA74] to-[#86EFAC] h-full rounded-full"
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="bg-gradient-to-r from-blue-600 to-emerald-500 h-full rounded-full"
               />
             </div>
-            <span className="text-[10px] font-extrabold text-[#5A6072] shrink-0">
-              {currentStep}/{totalSteps}
+            <span className="text-[11px] font-mono font-bold text-slate-500 shrink-0">
+              Phase {currentStep}/{totalSteps}
             </span>
           </div>
         </header>
 
-        {/* ── Main Dynamic Activity Stage Area ── */}
+        {/* ── Main Structured Study Desk Stage ── */}
         <main className="w-full flex-1 flex flex-col items-center justify-center min-h-[420px]">
           {children}
         </main>
       </div>
 
-      {/* ── Always-Visible "Stuck / Ask Pip" Confused Self-Advocacy Button ── */}
+      {/* ── Calm Floating Pip Assistant Sidecar ── */}
       <AskPipAssistant
-        currentGoal={`In this step of "${derivedTitle}", we are investigating how physical properties decide everyday uses.`}
-        stepHint="Look closely at the materials on screen. Tap each material or test button to see what happens!"
-        conceptBreakdown="Natural materials come from plants and animals. Synthetic materials are made by science inventors in labs with special superpowers!"
+        currentGoal={`In Phase ${currentStep} of "${derivedTitle}", investigate the physical and structural properties of the specimens.`}
+        stepHint="Inspect the interactive controls on screen. Test each material or parameter to observe results!"
+        conceptBreakdown="What a material is MADE OF determines what it CAN DO. Form follows function in nature and engineering!"
       />
 
-      {/* ── Ergonomic Bottom Nav ── */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-t border-slate-200/80 px-3 sm:px-6 py-2 shadow-soft-float">
+      {/* ── Ergonomic Fixed Bottom Navigation Bar ── */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 sm:px-6 py-2.5 shadow-md">
         <div className="max-w-5xl mx-auto flex items-center justify-between h-9 sm:h-10">
           <button
-            onClick={() => { sounds.pop(); onPrev(); }}
+            onClick={() => {
+              sounds.pop();
+              onPrev();
+            }}
             disabled={currentStep <= 1}
-            className="pill-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="edtech-btn-secondary px-4 py-1.5 text-xs flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Prev</span>
+            <span>Previous Phase</span>
           </button>
 
-          <span className="text-xs font-bold text-[#5A6072]">
-            {!isStepComplete && <span className="text-[#EA580C] mr-1">👆</span>}
-            Step {currentStep} of {totalSteps}
+          <span className="text-xs font-mono font-bold text-slate-500">
+            Phase {currentStep} of {totalSteps}
           </span>
 
           <button
             onClick={handleNextClick}
             disabled={!isStepComplete}
-            className={`px-5 py-2 rounded-full font-extrabold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-5 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
               isStepComplete
-                ? 'pill-btn-primary shadow-soft-pill'
-                : 'bg-[#F1EFEA] text-[#8A90A0] border border-slate-200/80 cursor-not-allowed opacity-60'
+                ? 'edtech-btn-primary shadow-xs'
+                : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60'
             }`}
           >
-            <span>{currentStep >= totalSteps ? 'Done ⭐' : 'Next'}</span>
+            <span>{currentStep >= totalSteps ? 'Complete Mission ⭐' : 'Next Phase'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </footer>
-
     </div>
   );
 };

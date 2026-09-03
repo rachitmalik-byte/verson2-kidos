@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { PipWardrobeShopModal } from '@/components/wardrobe/PipWardrobeShopModal';
-import { SparkyMascot } from '@/components/mascot/SparkyMascot';
 import { VoxelScienceWorldMap } from '@/components/voxel/VoxelScienceWorldMap';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
+import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
+import { Pip } from '@/components/pip/Pip';
 import {
   Sparkles,
   FlaskConical,
-  Zap,
   Leaf,
   Droplets,
   Home,
@@ -18,6 +17,8 @@ import {
   Lock,
   ArrowRight,
   Shirt,
+  Compass,
+  CheckCircle2,
 } from 'lucide-react';
 import { useProgressStore } from '@/stores/progressStore';
 
@@ -26,6 +27,7 @@ interface Subject {
   name: string;
   subtitle: string;
   icon: React.ReactNode;
+  themeColor: string;
   badgeBg: string;
   badgeBorder: string;
   badgeText: string;
@@ -35,96 +37,93 @@ interface Subject {
   unlockedChapters: number;
   path?: string;
   syllabusCode: string;
+  keyConcepts: string[];
 }
 
 const SUBJECTS: Subject[] = [
   {
     id: 'things-we-make',
-    name: 'Things We Make & Do: Materials',
-    subtitle: 'Natural vs Synthetic Materials, Fibres & Plastics (EVS Chapter 3)',
-    icon: <FlaskConical className="w-8 h-8 text-[#EA580C]" />,
-    badgeBg: 'bg-[#FFF7ED]',
-    badgeBorder: 'border-[#FED7AA]',
-    badgeText: 'text-[#9A3412]',
-    iconBg: 'bg-[#FFEDD5]',
+    name: 'Materials, Polymers & Inventions',
+    subtitle: 'Natural vs. Synthetic Fibres, Hydrophobic Tests, Tensile Rig & Circuits',
+    icon: <FlaskConical className="w-6 h-6 text-blue-600" />,
+    themeColor: 'blue',
+    badgeBg: 'bg-blue-50',
+    badgeBorder: 'border-blue-200/80',
+    badgeText: 'text-blue-800',
+    iconBg: 'bg-blue-50 border border-blue-200/60',
     active: true,
     chapterCount: 5,
     unlockedChapters: 13,
-    path: '/intro/materials',
-    syllabusCode: 'CBSE EVS Class 5 • Theme 6',
+    path: '/chapter-hub',
+    syllabusCode: 'CBSE EVS • Theme 6 (Chapter 3)',
+    keyConcepts: ['Hydrophobic Pores', 'Nylon Tensile', 'PVC Insulators', 'Molding'],
   },
   {
     id: 'living-world',
     name: 'Plants & Living World: Super Senses',
-    subtitle: 'Plant Adaptations, Botanical Inventions, Seeds & Sensory Biomes (CBSE EVS)',
-    icon: <Leaf className="w-8 h-8 text-[#10B981]" />,
-    badgeBg: 'bg-[#062014]',
-    badgeBorder: 'border-[#34D399]/40',
-    badgeText: 'text-[#6EE7B7]',
-    iconBg: 'bg-[#0d2a1b]',
+    subtitle: 'Sylva Living Green 3D World, Ant Pheromones, Snake Hearing & Velcro',
+    icon: <Leaf className="w-6 h-6 text-emerald-600" />,
+    themeColor: 'emerald',
+    badgeBg: 'bg-emerald-50',
+    badgeBorder: 'border-emerald-200/80',
+    badgeText: 'text-emerald-800',
+    iconBg: 'bg-emerald-50 border border-emerald-200/60',
     active: true,
     chapterCount: 4,
     unlockedChapters: 4,
     path: '/theme/1/hub',
-    syllabusCode: 'CBSE EVS Class 5 • Theme 1',
+    syllabusCode: 'CBSE EVS • Theme 1',
+    keyConcepts: ['Pheromone Matrix', 'Seismic Jawbone', 'Amylase Starch', 'Velcro Hooks'],
   },
   {
     id: 'water-wonders',
     name: 'Water & Aquatic Experiments',
-    subtitle: 'Floating & Sinking, Water Cycle & Preservation (CBSE EVS)',
-    icon: <Droplets className="w-8 h-8 text-[#0284C7]" />,
-    badgeBg: 'bg-[#F0F9FF]',
-    badgeBorder: 'border-[#BAE6FD]',
-    badgeText: 'text-[#075985]',
-    iconBg: 'bg-[#E0F2FE]',
+    subtitle: 'Floating & Sinking, Density Columns, Water Cycle & Ancient Stepwells',
+    icon: <Droplets className="w-6 h-6 text-cyan-600" />,
+    themeColor: 'cyan',
+    badgeBg: 'bg-cyan-50',
+    badgeBorder: 'border-cyan-200/80',
+    badgeText: 'text-cyan-800',
+    iconBg: 'bg-cyan-50 border border-cyan-200/60',
     active: true,
     chapterCount: 4,
     unlockedChapters: 4,
-    path: '/intro/water',
-    syllabusCode: 'CBSE EVS Class 5 • Theme 2 & 4',
+    path: '/theme/water/hub',
+    syllabusCode: 'CBSE EVS • Theme 2 & 4',
+    keyConcepts: ['Buoyancy Force', 'Evaporation', 'Salinity Density', 'Bawri Wells'],
   },
   {
     id: 'shelter-earth',
     name: 'Shelter, Mountains & Earth',
-    subtitle: 'Habitats, High Altitudes & Travel Expeditions (CBSE EVS)',
-    icon: <Home className="w-8 h-8 text-[#7C3AED]" />,
-    badgeBg: 'bg-[#F5F3FF]',
-    badgeBorder: 'border-[#DDD6FE]',
-    badgeText: 'text-[#5B21B6]',
-    iconBg: 'bg-[#EDE9FE]',
+    subtitle: 'High Altitude Everest Barometers, Pashmina Wool & Earthquake Dampers',
+    icon: <Home className="w-6 h-6 text-purple-600" />,
+    themeColor: 'purple',
+    badgeBg: 'bg-purple-50',
+    badgeBorder: 'border-purple-200/80',
+    badgeText: 'text-purple-800',
+    iconBg: 'bg-purple-50 border border-purple-200/60',
     active: true,
     chapterCount: 5,
     unlockedChapters: 5,
-    path: '/intro/shelter',
-    syllabusCode: 'CBSE EVS Class 5 • Theme 3 & 5',
+    path: '/theme/shelter/hub',
+    syllabusCode: 'CBSE EVS • Theme 3 & 5',
+    keyConcepts: ['Atmospheric Barometer', 'Pashmina Micro-Fibers', 'Bhunga Dampers'],
   },
   {
     id: 'food-nutrition',
     name: 'Food, Seeds & Farming',
-    subtitle: 'Digestion, Spoilage, Crops & Preservation (CBSE EVS)',
-    icon: <Utensils className="w-8 h-8 text-[#D97706]" />,
-    badgeBg: 'bg-[#FEFCE8]',
-    badgeBorder: 'border-[#FEF08A]',
-    badgeText: 'text-[#854D0E]',
-    iconBg: 'bg-[#FEF9C3]',
+    subtitle: 'Digestion Enzymes, Spoilage Chemistry & Seed Germination Mechanics',
+    icon: <Utensils className="w-6 h-6 text-amber-600" />,
+    themeColor: 'amber',
+    badgeBg: 'bg-amber-50',
+    badgeBorder: 'border-amber-200/80',
+    badgeText: 'text-amber-800',
+    iconBg: 'bg-amber-50 border border-amber-200/60',
     active: false,
     chapterCount: 4,
     unlockedChapters: 0,
-    syllabusCode: 'CBSE EVS Class 5 • Theme 2',
-  },
-  {
-    id: 'energy-resources',
-    name: 'Fuels & Clean Energy',
-    subtitle: 'What If It Finishes? Energy, Solar & Conservation (CBSE EVS)',
-    icon: <Zap className="w-8 h-8 text-[#E11D48]" />,
-    badgeBg: 'bg-[#FFF1F2]',
-    badgeBorder: 'border-[#FECDD3]',
-    badgeText: 'text-[#9F1239]',
-    iconBg: 'bg-[#FFE4E6]',
-    active: false,
-    chapterCount: 3,
-    unlockedChapters: 0,
-    syllabusCode: 'CBSE EVS Class 5 • Theme 6',
+    syllabusCode: 'CBSE EVS • Theme 2 (Food)',
+    keyConcepts: ['Digestive Enzymes', 'Spore Preservation', 'Sprouting Seeds'],
   },
 ];
 
@@ -141,182 +140,178 @@ export const SubjectSelection: React.FC = () => {
       navigate(subject.path);
     } else {
       sounds.boing();
-      voiceAssistant.speak(`${subject.name} is aligned with CBSE Class 5 EVS and is launching in the next curriculum update!`);
+      voiceAssistant.speak(
+        `${subject.name} is aligned with CBSE Class 5 EVS and is releasing in the upcoming curriculum expansion!`
+      );
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF8F5] text-[#262930] flex flex-col justify-between pt-5 pb-14 px-4 sm:px-6 md:px-8 font-sans select-none">
-      <div className="w-full max-w-5xl mx-auto flex flex-col gap-5">
-        {/* Top Navbar */}
-        <div className="flex items-center justify-between squircle-card p-3 sm:p-4 shadow-soft-card">
-          <button
-            onClick={() => {
-              sounds.pop();
-              navigate('/chapter-hub');
-            }}
-            className="flex items-center gap-3 cursor-pointer text-left hover:opacity-85 transition-opacity active:scale-98"
-            title="Go to Chapter Hub"
-          >
-            <div className="w-9 h-9 rounded-2xl bg-[#FEF08A] border border-[#FDE047] flex items-center justify-center shadow-xs">
-              <Sparkles className="w-5 h-5 text-[#262930] fill-[#262930]" />
-            </div>
-            <div>
-              <h1 className="font-extrabold text-lg text-[#262930] leading-none">
-                KIDOS <span className="font-normal text-[#7E8494] text-xs">• Class 5 EVS</span>
-              </h1>
-              <span className="text-[10px] font-bold text-[#15803D] uppercase tracking-wider block mt-0.5">
-                Environmental Studies Curriculum
+    <PersistentAppShell activeDestination="subjects">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col gap-6">
+        {/* ── Explorer Portal Header & Calm Pip Mascot Welcome ── */}
+        <section className="edtech-card p-6 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-6 bg-white relative overflow-hidden">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/70 inline-flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-blue-600" />
+                <span>NCERT & CBSE Environmental Studies</span>
               </span>
+              <span className="text-xs text-slate-400 font-medium">Grade 5 Science</span>
             </div>
-          </button>
-
-          <AudioNavBarControls showProfile={true} />
-        </div>
-
-        {/* Mascot Banner (Sparky Warm Welcome) */}
-        <div id="subject-intro-banner" className="squircle-card p-5 sm:p-6 md:p-7 shadow-soft-card flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
-          {/* Subtle warm decorative glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FEF9C3]/40 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="flex flex-col items-center gap-2 relative z-10 shrink-0">
-            <SparkyMascot mood="welcoming" size={120} animate />
-            <button
-              onClick={() => setIsWardrobeOpen(true)}
-              className="pill-btn-secondary px-3.5 py-1.5 text-xs flex items-center gap-1.5"
-            >
-              <Shirt className="w-3.5 h-3.5 text-[#5A6072]" />
-              <span>Wardrobe</span>
-            </button>
-          </div>
-
-          <div className="flex-1 text-center md:text-left relative z-10">
-            <span className="px-3 py-1 bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] rounded-full text-xs font-extrabold uppercase tracking-wide inline-block mb-2">
-              CBSE Class 5 EVS Curriculum Hub 🌿
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#262930] tracking-tight">
-              Class 5 Science Exploration Academy
-            </h2>
-            <p className="text-xs sm:text-sm text-[#5A6072] font-medium mt-1.5 leading-relaxed max-w-xl">
-              Step into interactive storybooks, hands-on digital experiments, and scientific field investigations designed with care to make learning easy, calm, and memorable.
+            <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
+              Science Exploration Academy
+            </h1>
+            <p className="text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
+              Step into interactive virtual laboratories, biophilic 3D ecosystems, and physical inquiry sandboxes 
+              engineered to make scientific concepts intuitive, tactile, and memorable.
             </p>
           </div>
-        </div>
 
-        {/* View Switcher: High-Contrast Pill Toggle */}
-        <div className="flex items-center justify-between flex-wrap gap-3 squircle-card p-2.5 sm:p-3 shadow-soft-card">
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs font-extrabold text-[#262930]">View:</span>
-            <div className="flex items-center gap-1 bg-[#F1EFEA] p-1 rounded-full border border-slate-200/80">
+          {/* Calm Mascot Companion */}
+          <div className="flex items-center gap-4 shrink-0 bg-slate-50 p-3 rounded-2xl border border-slate-200/70">
+            <Pip mood="idle" size="sm" interactive={false} />
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs font-bold text-slate-700">Pip AI Companion</span>
               <button
-                onClick={() => {
-                  sounds.pop();
-                  setViewMode('3d-voxel');
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                  viewMode === '3d-voxel'
-                    ? 'bg-[#262930] text-white shadow-soft-pill'
-                    : 'text-[#5A6072] hover:text-[#262930]'
-                }`}
+                onClick={() => setIsWardrobeOpen(true)}
+                className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5"
               >
-                <span>🏝️ 3D Voxel World</span>
+                <Shirt className="w-3.5 h-3.5 text-slate-500" />
+                <span>Customize</span>
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ── View Switcher: Interactive 3D World vs Grid ── */}
+        <div className="flex items-center justify-between flex-wrap gap-3 py-1">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-bold text-slate-700">Display View:</span>
+            <div className="flex items-center gap-1 bg-slate-200/70 p-1 rounded-xl">
               <button
                 onClick={() => {
                   sounds.pop();
                   setViewMode('grid');
                 }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   viewMode === 'grid'
-                    ? 'bg-[#262930] text-white shadow-soft-pill'
-                    : 'text-[#5A6072] hover:text-[#262930]'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <span>🗂️ Subject Cards Grid</span>
+                <span>Subject Portals Grid</span>
+              </button>
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setViewMode('3d-voxel');
+                }}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  viewMode === '3d-voxel'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <span>3D Voxel World Map</span>
               </button>
             </div>
           </div>
 
-          <span className="text-[11px] font-medium text-[#7E8494] hidden sm:inline">
-            Curriculum aligned with NCERT Environmental Studies
+          <span className="text-xs font-mono text-slate-400 hidden sm:inline">
+            4 ACTIVE SCIENCE BIOMES
           </span>
         </div>
 
-        {/* 3D Voxel World Map or Grid View */}
+        {/* ── 3D Voxel World Map OR Grid View ── */}
         {viewMode === '3d-voxel' ? (
-          <VoxelScienceWorldMap />
+          <div className="edtech-card overflow-hidden p-2">
+            <VoxelScienceWorldMap />
+          </div>
         ) : (
-          <div id="subject-grid-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {SUBJECTS.map((sub) => (
               <motion.div
                 key={sub.id}
-                whileHover={{ y: -3, scale: 1.015 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.99 }}
                 onClick={() => handleSubjectClick(sub)}
-                className={`squircle-card p-5 sm:p-6 flex flex-col justify-between cursor-pointer relative overflow-hidden transition-all ${
-                  sub.id === 'living-world'
-                    ? 'border-[#34D399]/40 shadow-[0_8px_30px_rgba(16,185,129,0.12)] hover:border-[#34D399]'
-                    : sub.active
-                    ? 'hover:border-slate-300 shadow-soft-card'
-                    : 'opacity-70 hover:opacity-85 bg-[#FAF8F5]/80'
+                className={`edtech-card p-6 flex flex-col justify-between transition-all cursor-pointer group ${
+                  sub.active
+                    ? 'hover:border-slate-300'
+                    : 'opacity-65 hover:opacity-80 bg-slate-50/80 cursor-not-allowed'
                 }`}
               >
-                {/* Header: Icon & Pastel Badge */}
                 <div>
+                  {/* Top Bar: Icon + Status Pill */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-2xl ${sub.iconBg} flex items-center justify-center shadow-xs`}>
+                    <div className={`w-11 h-11 rounded-xl ${sub.iconBg} flex items-center justify-center`}>
                       {sub.icon}
                     </div>
+
                     {sub.id === 'living-world' ? (
-                      <span className="sylva-radar-pill text-[10px] py-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
-                        <span>SYLVA LIVING BIOME</span>
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-100/80 text-emerald-900 border border-emerald-300/80 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span>THREEUI LIVING BIOME</span>
                       </span>
                     ) : sub.active ? (
-                      <span className={`px-3 py-1 ${sub.badgeBg} ${sub.badgeBorder} border ${sub.badgeText} rounded-full text-[11px] font-extrabold uppercase tracking-wide flex items-center gap-1`}>
+                      <span className={`px-2.5 py-1 ${sub.badgeBg} ${sub.badgeBorder} border ${sub.badgeText} rounded-full text-[11px] font-bold flex items-center gap-1`}>
                         <Sparkles className="w-3 h-3" />
                         <span>Active Course</span>
                       </span>
                     ) : (
-                      <span className="px-3 py-1 bg-slate-100 border border-slate-200 text-slate-500 rounded-full text-[11px] font-bold uppercase tracking-wide flex items-center gap-1">
+                      <span className="px-2.5 py-1 bg-slate-100 border border-slate-200 text-slate-500 rounded-full text-[11px] font-bold flex items-center gap-1">
                         <Lock className="w-3 h-3 text-slate-400" />
                         <span>Coming Soon</span>
                       </span>
                     )}
                   </div>
 
-                  {/* Subject Title & Subtitle */}
-                  <div className="space-y-1 mb-5">
-                    <span className="text-[10px] font-bold text-[#7E8494] uppercase tracking-wider block">
+                  {/* Syllabus Tag & Title */}
+                  <div className="space-y-1.5 mb-4">
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
                       {sub.syllabusCode}
                     </span>
-                    <h3 className="text-lg sm:text-xl font-extrabold text-[#262930] leading-snug">
+                    <h2 className="text-xl font-heading font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
                       {sub.name}
-                    </h3>
-                    <p className="text-xs text-[#5A6072] font-medium leading-relaxed mt-1">
+                    </h2>
+                    <p className="text-xs text-slate-600 font-normal leading-relaxed">
                       {sub.subtitle}
                     </p>
                   </div>
+
+                  {/* Key Concepts Tags */}
+                  <div className="flex flex-wrap gap-1.5 my-4">
+                    {sub.keyConcepts.map((concept) => (
+                      <span
+                        key={concept}
+                        className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200/60"
+                      >
+                        {concept}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Bottom Footer: Progress & Pill CTA */}
-                <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between">
+                {/* Footer: Progress Count & Launch Button */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                   {sub.active ? (
                     <>
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#262930]">
-                        <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                         <span>
                           {sub.id === 'things-we-make'
-                            ? `${completedMissions.length}/13 Missions Done`
-                            : `${sub.chapterCount} Chapters`}
+                            ? `${completedMissions.length}/13 Missions Completed`
+                            : `${sub.chapterCount} Chapters Available`}
                         </span>
                       </div>
-                      <div className="w-8 h-8 rounded-full bg-[#262930] text-white flex items-center justify-center shadow-soft-pill group-hover:translate-x-0.5 transition-transform">
+                      <span className="text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                        <span>Enter Portal</span>
                         <ArrowRight className="w-4 h-4" />
-                      </div>
+                      </span>
                     </>
                   ) : (
-                    <span className="text-xs font-medium text-[#7E8494]">
+                    <span className="text-xs font-medium text-slate-400">
                       {sub.chapterCount} Chapters Planned
                     </span>
                   )}
@@ -328,7 +323,6 @@ export const SubjectSelection: React.FC = () => {
       </div>
 
       <PipWardrobeShopModal isOpen={isWardrobeOpen} onClose={() => setIsWardrobeOpen(false)} />
-    </div>
+    </PersistentAppShell>
   );
 };
-
