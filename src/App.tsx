@@ -1,25 +1,69 @@
-import { VideoLabPage } from '@/features/video-lab/VideoLabPage';
-import { ThemeWaterHub } from '@/features/theme-water/ThemeWaterHub';
-import { WaterMissionEngine } from '@/features/theme-water/WaterMissionEngine';
-import { TeacherStudio } from '@/features/teacher-studio/TeacherStudio';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { SciencePageLoader } from '@/components/ui/SciencePageLoader';
 import { RoleSelection } from '@/features/role-selection/RoleSelection';
-import { SubjectSelection } from '@/features/subject-selection/SubjectSelection';
-import { ParentSetup } from '@/features/parent/ParentSetup';
-import { ParentPinGate } from '@/features/parent/ParentPinGate';
-import { ParentDashboard } from '@/features/parent/ParentDashboard';
-import { ChapterHub } from '@/features/chapter-hub/ChapterHub';
-import { ChapterIntro } from '@/features/chapter-intro/ChapterIntro';
-import { UniversalMascotChapterIntro } from '@/features/chapter-intro/UniversalMascotChapterIntro';
-import { DigitalGuidebook } from '@/features/guidebook/DigitalGuidebook';
-import { DynamicMissionEngine } from '@/features/missions/universal-mission/DynamicMissionEngine';
-import { Theme1Hub } from '@/features/theme1/Theme1Hub';
-import { SuperSensesMissionEngine } from '@/features/theme1/SuperSensesMissionEngine';
-import { ThemeShelterHub } from '@/features/theme-shelter/ThemeShelterHub';
-import { ShelterMissionEngine } from '@/features/theme-shelter/ShelterMissionEngine';
-import { DiscoveryBook } from '@/features/discovery-book/DiscoveryBook';
-import { MysteryObjectQuiz } from '@/features/mystery-lab/MysteryObjectQuiz';
+
+// ── Lazy-loaded pages for ultra-fast, lightweight initial page loads ──
+const SubjectSelection = lazy(() =>
+  import('@/features/subject-selection/SubjectSelection').then((m) => ({ default: m.SubjectSelection }))
+);
+const ChapterHub = lazy(() =>
+  import('@/features/chapter-hub/ChapterHub').then((m) => ({ default: m.ChapterHub }))
+);
+const ChapterIntro = lazy(() =>
+  import('@/features/chapter-intro/ChapterIntro').then((m) => ({ default: m.ChapterIntro }))
+);
+const UniversalMascotChapterIntro = lazy(() =>
+  import('@/features/chapter-intro/UniversalMascotChapterIntro').then((m) => ({ default: m.UniversalMascotChapterIntro }))
+);
+const DynamicMissionEngine = lazy(() =>
+  import('@/features/missions/universal-mission/DynamicMissionEngine').then((m) => ({ default: m.DynamicMissionEngine }))
+);
+const Theme1Hub = lazy(() =>
+  import('@/features/theme1/Theme1Hub').then((m) => ({ default: m.Theme1Hub }))
+);
+const SuperSensesMissionEngine = lazy(() =>
+  import('@/features/theme1/SuperSensesMissionEngine').then((m) => ({ default: m.SuperSensesMissionEngine }))
+);
+const ThemeWaterHub = lazy(() =>
+  import('@/features/theme-water/ThemeWaterHub').then((m) => ({ default: m.ThemeWaterHub }))
+);
+const WaterMissionEngine = lazy(() =>
+  import('@/features/theme-water/WaterMissionEngine').then((m) => ({ default: m.WaterMissionEngine }))
+);
+const ThemeShelterHub = lazy(() =>
+  import('@/features/theme-shelter/ThemeShelterHub').then((m) => ({ default: m.ThemeShelterHub }))
+);
+const ShelterMissionEngine = lazy(() =>
+  import('@/features/theme-shelter/ShelterMissionEngine').then((m) => ({ default: m.ShelterMissionEngine }))
+);
+const VideoLabPage = lazy(() =>
+  import('@/features/video-lab/VideoLabPage').then((m) => ({ default: m.VideoLabPage }))
+);
+const TeacherStudio = lazy(() =>
+  import('@/features/teacher-studio/TeacherStudio').then((m) => ({ default: m.TeacherStudio }))
+);
+const ParentSetup = lazy(() =>
+  import('@/features/parent/ParentSetup').then((m) => ({ default: m.ParentSetup }))
+);
+const ParentPinGate = lazy(() =>
+  import('@/features/parent/ParentPinGate').then((m) => ({ default: m.ParentPinGate }))
+);
+const ParentDashboard = lazy(() =>
+  import('@/features/parent/ParentDashboard').then((m) => ({ default: m.ParentDashboard }))
+);
+const DiscoveryBook = lazy(() =>
+  import('@/features/discovery-book/DiscoveryBook').then((m) => ({ default: m.DiscoveryBook }))
+);
+const DigitalGuidebook = lazy(() =>
+  import('@/features/guidebook/DigitalGuidebook').then((m) => ({ default: m.DigitalGuidebook }))
+);
+const MysteryObjectQuiz = lazy(() =>
+  import('@/features/mystery-lab/MysteryObjectQuiz').then((m) => ({ default: m.MysteryObjectQuiz }))
+);
+
+// Global Modals and Persistent Controls
 import { DevDrawer } from '@/components/dev/DevDrawer';
 import { GlobalWordExplainer } from '@/components/dictionary/GlobalWordExplainer';
 import { FieldGuideModal } from '@/features/guidebook/FieldGuideModal';
@@ -34,83 +78,89 @@ import { AiScienceVideoPlayerModal } from '@/components/video/AiScienceVideoPlay
 export function App() {
   const isRickrollOpen = useEasterEggStore((s) => s.isRickrollOpen);
   const closeRickroll = useEasterEggStore((s) => s.closeRickroll);
+
   return (
     <ErrorBoundary>
-    <BrowserRouter>
-      <div className="min-h-screen relative selection:bg-amber-300 selection:text-slate-950">
-        <Routes>
-          {/* Entry */}
-          <Route path="/" element={<RoleSelection />} />
+      <BrowserRouter>
+        <div className="min-h-screen relative selection:bg-amber-300 selection:text-slate-950">
+          <Suspense fallback={<SciencePageLoader />}>
+            <Routes>
+              {/* Entry */}
+              <Route path="/" element={<RoleSelection />} />
 
-          {/* Subject Hub */}
-          <Route path="/subjects" element={<SubjectSelection />} />
+              {/* Subject Hub */}
+              <Route path="/subjects" element={<SubjectSelection />} />
 
-          {/* Parent Portal */}
-          <Route path="/parent/setup" element={<ParentSetup />} />
-          <Route path="/parent/pin" element={<ParentPinGate />} />
-          <Route path="/parent/dashboard" element={<ParentDashboard />} />
+              {/* Parent Portal */}
+              <Route path="/parent/setup" element={<ParentSetup />} />
+              <Route path="/parent/pin" element={<ParentPinGate />} />
+              <Route path="/parent/dashboard" element={<ParentDashboard />} />
 
-          {/* Theme 1: Super Senses & Living World (4 Chapters) */}
-          <Route path="/theme/1/hub" element={<Theme1Hub />} />
-          <Route path="/theme/1/chapter/:chapterNum" element={<SuperSensesMissionEngine />} />
+              {/* Theme 1: Super Senses & Living World (4 Chapters) */}
+              <Route path="/theme/1/hub" element={<Theme1Hub />} />
+              <Route path="/theme/1/chapter/:chapterNum" element={<SuperSensesMissionEngine />} />
 
-          {/* Theme 3 & 5: Shelter, Mountains & Earth (5 Chapters) */}
-          <Route path="/theme/water/hub" element={<ThemeWaterHub />} />
-          <Route path="/theme/water/chapter/:chapterNum" element={<WaterMissionEngine />} />
-          <Route path="/theme/shelter/hub" element={<ThemeShelterHub />} />
-          <Route path="/theme/shelter/chapter/:chapterNum" element={<ShelterMissionEngine />} />
+              {/* Theme 2 & 4: Water & Aquatic Experiments */}
+              <Route path="/theme/water/hub" element={<ThemeWaterHub />} />
+              <Route path="/theme/water/chapter/:chapterNum" element={<WaterMissionEngine />} />
 
-          {/* Chapter Hub, Discovery Journal & Mystery Lab */}
-          <Route path="/chapter-hub" element={<ChapterHub />} />
-          <Route path="/video-lab" element={<VideoLabPage />} />
-          <Route path="/teacher-studio" element={<TeacherStudio />} />
-          <Route path="/teacher/studio" element={<TeacherStudio />} />
-          <Route path="/teacher" element={<TeacherStudio />} />
-          <Route path="/discovery-book" element={<DiscoveryBook />} />
-          <Route path="/guidebook" element={<DigitalGuidebook />} />
-          <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
+              {/* Theme 3 & 5: Shelter, Mountains & Earth (5 Chapters) */}
+              <Route path="/theme/shelter/hub" element={<ThemeShelterHub />} />
+              <Route path="/theme/shelter/chapter/:chapterNum" element={<ShelterMissionEngine />} />
 
-                    {/* Dedicated Full-Screen Mascot Chapter Teaching Intros for All 4 Courses */}
-          <Route path="/intro/:courseKey" element={<UniversalMascotChapterIntro />} />
-          <Route path="/theme/1/intro" element={<UniversalMascotChapterIntro />} />
-          <Route path="/theme/water/intro" element={<UniversalMascotChapterIntro />} />
-          <Route path="/theme/shelter/intro" element={<UniversalMascotChapterIntro />} />
-          {/* Chapter 3 Missions — All 13 Missions Dynamic Learning Engine */}
-          <Route path="/chapter/3" element={<ChapterIntro />} />
-          <Route path="/chapter/3/mission/:missionNum" element={<DynamicMissionEngine />} />
+              {/* Chapter Hub, Discovery Journal & Mystery Lab */}
+              <Route path="/chapter-hub" element={<ChapterHub />} />
+              <Route path="/video-lab" element={<VideoLabPage />} />
+              <Route path="/teacher-studio" element={<TeacherStudio />} />
+              <Route path="/teacher/studio" element={<TeacherStudio />} />
+              <Route path="/teacher" element={<TeacherStudio />} />
+              <Route path="/discovery-book" element={<DiscoveryBook />} />
+              <Route path="/guidebook" element={<DigitalGuidebook />} />
+              <Route path="/mystery-lab" element={<MysteryObjectQuiz />} />
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+              {/* Dedicated Full-Screen Mascot Chapter Teaching Intros for All Courses */}
+              <Route path="/intro/:courseKey" element={<UniversalMascotChapterIntro />} />
+              <Route path="/theme/1/intro" element={<UniversalMascotChapterIntro />} />
+              <Route path="/theme/water/intro" element={<UniversalMascotChapterIntro />} />
+              <Route path="/theme/shelter/intro" element={<UniversalMascotChapterIntro />} />
 
-        {/* Global Interactive Science Storybook & Field Guide */}
-        <FieldGuideModal />
+              {/* Chapter 3 Missions — All 13 Missions Dynamic Learning Engine */}
+              <Route path="/chapter/3" element={<ChapterIntro />} />
+              <Route path="/chapter/3/mission/:missionNum" element={<DynamicMissionEngine />} />
 
-        {/* Global "Try It With Me" Limelight Spotlight Engine */}
-        <TryWithMeEngine />
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
 
-        {/* Global Text-Selection Smart Dictionary & Audio Explainer */}
-        <GlobalWordExplainer />
+          {/* Global Interactive Science Storybook & Field Guide */}
+          <FieldGuideModal />
 
-        {/* Global Live Gemini AI Voice & Chat Companion Overlay */}
-        <LivePipVoiceSidecar />
+          {/* Global "Try It With Me" Limelight Spotlight Engine */}
+          <TryWithMeEngine />
 
-        {/* Global AI Page-Scanning Science Cinema & Themed Media Player */}
-        <AiScienceVideoPlayerModal />
+          {/* Global Text-Selection Smart Dictionary & Audio Explainer */}
+          <GlobalWordExplainer />
 
-        {/* Global Full-Screen Interactive Environmental Effects Overlay */}
-        <EnvironmentFXOverlay />
+          {/* Global Live Gemini AI Voice & Chat Companion Overlay */}
+          <LivePipVoiceSidecar />
 
-        {/* Global Atmosphere & Day/Night Mode Switcher */}
-        <AtmosphereControlWidget />
+          {/* Global AI Page-Scanning Science Cinema & Themed Media Player */}
+          <AiScienceVideoPlayerModal />
 
-        {/* Secret 7-Click Mascot Rickroll Easter Egg */}
-        <RickrollModal isOpen={isRickrollOpen} onClose={closeRickroll} />
+          {/* Global Full-Screen Interactive Environmental Effects Overlay */}
+          <EnvironmentFXOverlay />
 
-        {/* Global Developer Super-Hacks Drawer */}
-        <DevDrawer />
-      </div>
-    </BrowserRouter>
+          {/* Global Atmosphere & Day/Night Mode Switcher */}
+          <AtmosphereControlWidget />
+
+          {/* Secret 7-Click Mascot Rickroll Easter Egg */}
+          <RickrollModal isOpen={isRickrollOpen} onClose={closeRickroll} />
+
+          {/* Global Developer Super-Hacks Drawer */}
+          <DevDrawer />
+        </div>
+      </BrowserRouter>
     </ErrorBoundary>
   );
 }
