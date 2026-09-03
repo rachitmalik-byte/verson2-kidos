@@ -37,6 +37,8 @@ import { WhatIfScienceSandboxModal } from '@/components/ai/WhatIfScienceSandboxM
 import { AiScienceLabModal } from '@/components/ai/AiScienceLabModal';
 import { ReadingLevelToggle } from '@/components/accessibility/ReadingLevelToggle';
 
+import { useUiSettingsStore } from '@/stores/uiSettingsStore';
+
 interface AudioNavBarControlsProps {
   className?: string;
   showProfile?: boolean;
@@ -47,6 +49,7 @@ export const MissionAudioControls: React.FC = () => {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showAiLabModal, setShowAiLabModal] = useState(false);
   const { isSfxMuted, isBgmMuted, toggleBgm, toggleSfx } = useAudioStore();
+  const { showAiLabButton } = useUiSettingsStore();
 
   return (
     <>
@@ -55,19 +58,21 @@ export const MissionAudioControls: React.FC = () => {
         <ReadingLevelToggle />
 
         {/* Quick AI Science Lab Trigger */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={() => {
-            sounds.sparkle();
-            setShowAiLabModal(true);
-          }}
-          className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all whitespace-nowrap"
-          title="Open Gemini AI Science Tools"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
-          <span className="hidden sm:inline">AI Lab ✨</span>
-        </motion.button>
+        {showAiLabButton && (
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => {
+              sounds.sparkle();
+              setShowAiLabModal(true);
+            }}
+            className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all whitespace-nowrap"
+            title="Open Gemini AI Science Tools"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+            <span className="hidden sm:inline">AI Lab ✨</span>
+          </motion.button>
+        )}
 
         {/* Quick Music Toggle */}
         <motion.button
@@ -144,6 +149,7 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
   const { isSfxMuted, isBgmMuted, toggleSfx, toggleBgm } = useAudioStore();
   const credits = useProgressStore((state) => state.credits);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
+  const { showWardrobeButton, showArcadeButton, showAiLabButton } = useUiSettingsStore();
 
   if (isMissionMode) {
     return <MissionAudioControls />;
@@ -175,52 +181,58 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
         </motion.button>
 
         {/* 2. AI Science Lab Button */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-          id="navbar-ai-lab-btn"
-          onClick={() => {
-            sounds.sparkle();
-            setShowAiLabHubModal(true);
-          }}
-          className="px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all shrink-0 whitespace-nowrap"
-          title="Open Gemini AI Science Lab"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
-          <span className="hidden sm:inline">AI Lab ✨</span>
-        </motion.button>
+        {showAiLabButton && (
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            id="navbar-ai-lab-btn"
+            onClick={() => {
+              sounds.sparkle();
+              setShowAiLabHubModal(true);
+            }}
+            className="px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all shrink-0 whitespace-nowrap"
+            title="Open Gemini AI Science Lab"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+            <span className="hidden sm:inline">AI Lab ✨</span>
+          </motion.button>
+        )}
 
         {/* 3. Pip's Wardrobe */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-          id="navbar-closet-btn"
-          onClick={() => {
-            sounds.pop();
-            setShowClosetModal(true);
-          }}
-          className="hidden md:flex px-3 py-1.5 rounded-2xl bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 text-pink-900 font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
-          title="Dress Up Pip with Outfits & Accessories"
-        >
-          <Shirt className="w-3.5 h-3.5 text-pink-600" />
-          <span>Wardrobe</span>
-        </motion.button>
+        {showWardrobeButton && (
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            id="navbar-closet-btn"
+            onClick={() => {
+              sounds.pop();
+              setShowClosetModal(true);
+            }}
+            className="hidden md:flex px-3 py-1.5 rounded-2xl bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 text-pink-900 font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+            title="Dress Up Pip with Outfits & Accessories"
+          >
+            <Shirt className="w-3.5 h-3.5 text-pink-600" />
+            <span>Wardrobe</span>
+          </motion.button>
+        )}
 
         {/* 4. Science Arcade */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-          id="navbar-arcade-btn"
-          onClick={() => {
-            sounds.pop();
-            setShowArcadeModal(true);
-          }}
-          className="hidden lg:flex px-3 py-1.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
-          title="Play Mini Games"
-        >
-          <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
-          <span>Arcade</span>
-        </motion.button>
+        {showArcadeButton && (
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            id="navbar-arcade-btn"
+            onClick={() => {
+              sounds.pop();
+              setShowArcadeModal(true);
+            }}
+            className="hidden lg:flex px-3 py-1.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+            title="Play Mini Games"
+          >
+            <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Arcade</span>
+          </motion.button>
+        )}
 
         {/* 5. Sound & Music Icon Buttons */}
         <div className="flex items-center gap-1 shrink-0">

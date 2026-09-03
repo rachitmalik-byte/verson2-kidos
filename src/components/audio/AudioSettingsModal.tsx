@@ -15,8 +15,12 @@ import {
   Gauge,
   Smile,
   Disc,
+  PanelTop,
+  Shirt,
+  Gamepad2,
 } from 'lucide-react';
 import { useAudioStore } from '@/stores/audioStore';
+import { useUiSettingsStore } from '@/stores/uiSettingsStore';
 import { bgmEngine, BGM_TRACKS } from '@/lib/bgmEngine';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { sounds } from '@/lib/sounds';
@@ -45,6 +49,15 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
     setTtsPitch,
     setSelectedVoiceName,
   } = useAudioStore();
+
+  const {
+    showWardrobeButton,
+    showArcadeButton,
+    showAiLabButton,
+    toggleWardrobeButton,
+    toggleArcadeButton,
+    toggleAiLabButton,
+  } = useUiSettingsStore();
 
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
@@ -326,6 +339,74 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Reset</span>
                   </button>
+                </div>
+              </div>
+
+              {/* ════════════════════════════════════════════════════════════════════
+                  SECTION 3: TASKBAR & UI CUSTOMIZATION
+              ════════════════════════════════════════════════════════════════════ */}
+              <div className="bg-white p-5 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                     <PanelTop className="w-5 h-5 text-sky-500" />
+                     <div>
+                       <h4 className="font-black text-sm text-slate-800">Taskbar UI Organization</h4>
+                       <p className="text-[11px] text-slate-500 font-bold">Show or hide buttons on your top navigation bar</p>
+                     </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Toggle Wardrobe */}
+                  <label className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <Shirt className="w-4 h-4 text-pink-600" />
+                      <span className="text-xs font-black text-slate-700">Show Wardrobe</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                      checked={showWardrobeButton}
+                      onChange={() => {
+                        sounds.pop();
+                        toggleWardrobeButton();
+                      }}
+                    />
+                  </label>
+
+                  {/* Toggle Arcade */}
+                  <label className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <Gamepad2 className="w-4 h-4 text-indigo-600" />
+                      <span className="text-xs font-black text-slate-700">Show Arcade</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                      checked={showArcadeButton}
+                      onChange={() => {
+                        sounds.pop();
+                        toggleArcadeButton();
+                      }}
+                    />
+                  </label>
+
+                  {/* Toggle AI Lab */}
+                  <label className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-violet-600" />
+                      <span className="text-xs font-black text-slate-700">Show AI Lab ✨</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                      checked={showAiLabButton}
+                      onChange={() => {
+                        sounds.pop();
+                        toggleAiLabButton();
+                      }}
+                    />
+                  </label>
                 </div>
               </div>
             </div>

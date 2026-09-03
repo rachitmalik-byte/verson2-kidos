@@ -141,7 +141,14 @@ export const SubjectSelection: React.FC = () => {
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
         {/* Top Navbar */}
         <div className="flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-200 shadow-md">
-          <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => {
+              sounds.pop();
+              navigate('/chapter-hub');
+            }}
+            className="flex items-center gap-2.5 cursor-pointer text-left hover:opacity-80 transition-opacity active:scale-95"
+            title="Go to Chapter Hub"
+          >
             <div className="p-2 bg-amber-400 rounded-2xl shadow-xs">
               <Sparkles className="w-5 h-5 text-slate-950 fill-slate-950" />
             </div>
@@ -151,7 +158,7 @@ export const SubjectSelection: React.FC = () => {
                 CBSE Class 5 EVS • Environmental Studies
               </span>
             </div>
-          </div>
+          </button>
 
           <AudioNavBarControls showProfile={true} />
         </div>
