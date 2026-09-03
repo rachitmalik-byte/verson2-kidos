@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEnvironmentStore, TimeOfDay } from '@/stores/environmentStore';
+import { useUiSettingsStore } from '@/stores/uiSettingsStore';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { Sun, Moon, Sunset, CloudRain, Sparkles } from 'lucide-react';
@@ -16,6 +17,7 @@ export const AtmosphereControlWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
   const setTimeOfDay = useEnvironmentStore((state) => state.setTimeOfDay);
+  const isLivePipOpen = useUiSettingsStore((state) => state.isLivePipOpen);
 
   const currentModeObj = ATMOSPHERE_MODES.find((m) => m.id === timeOfDay) || ATMOSPHERE_MODES[0];
 
@@ -40,14 +42,23 @@ export const AtmosphereControlWidget: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[999990] flex items-center gap-2 select-none font-sans">
+    <motion.div
+      animate={{
+        x: isLivePipOpen ? (typeof window !== 'undefined' && window.innerWidth < 640 ? -70 : -395) : 0,
+        scale: isLivePipOpen ? 0.92 : 1,
+      }}
+      transition={{ type: 'spring', damping: 24, stiffness: 260 }}
+      className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[999990] flex items-center gap-2 select-none font-sans"
+    >
       <div className="relative">
         <button
           onClick={() => {
             sounds.pop();
             setIsOpen(!isOpen);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-md border-2 border-slate-300 shadow-md text-slate-800 text-xs font-black cursor-pointer active:scale-95 transition-all"
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 hover:bg-white backdrop-blur-md border-2 shadow-md text-slate-800 text-xs font-black cursor-pointer active:scale-95 transition-all ${
+            isLivePipOpen ? 'border-violet-400 ring-2 ring-violet-300/50 shadow-violet-200' : 'border-slate-300'
+          }`}
           title="Change Atmosphere (Day / Night / Sunset / Rain)"
         >
           <span className="text-base">{currentModeObj.icon}</span>
@@ -97,6 +108,6 @@ export const AtmosphereControlWidget: React.FC = () => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };

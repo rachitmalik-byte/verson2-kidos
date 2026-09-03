@@ -22,6 +22,7 @@ import { voiceAssistant } from '@/lib/voiceAssistant';
 import { geminiService } from '@/lib/geminiService';
 import { useLocation } from 'react-router-dom';
 import { useAiVideoStore } from '@/stores/aiVideoStore';
+import { useUiSettingsStore } from '@/stores/uiSettingsStore';
 
 interface ChatMessage {
   id: string;
@@ -42,7 +43,11 @@ const QUICK_PROMPTS = [
 export const LivePipVoiceSidecar: React.FC = () => {
   const location = useLocation();
   const { openVideoByContext } = useAiVideoStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const isLivePipOpen = useUiSettingsStore((state) => state.isLivePipOpen);
+  const setIsLivePipOpen = useUiSettingsStore((state) => state.setIsLivePipOpen);
+  const isOpen = isLivePipOpen;
+  const setIsOpen = setIsLivePipOpen;
+
   const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [inputVal, setInputVal] = useState('');
@@ -215,8 +220,8 @@ export const LivePipVoiceSidecar: React.FC = () => {
 
   return (
     <>
-      {/* Floating Action Button for Pip */}
-      <div className="fixed bottom-24 left-4 sm:left-6 z-[99900] flex items-center">
+      {/* Floating Action Button for Pip (Right Side) */}
+      <div className="fixed bottom-12 sm:bottom-14 right-3 sm:right-6 z-[99900] flex items-center">
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
@@ -224,7 +229,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
             sounds.sparkle();
             setIsOpen(!isOpen);
           }}
-          className="flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 text-white font-black text-xs sm:text-sm shadow-[0_8px_30px_rgba(79,70,229,0.5)] border-3 border-white cursor-pointer active:scale-95 transition-all group"
+          className="flex items-center gap-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 text-white font-black text-xs sm:text-sm shadow-[0_8px_30px_rgba(79,70,229,0.5)] border-2 sm:border-3 border-white cursor-pointer active:scale-95 transition-all group"
           title="Open Live Pip AI Science Companion"
         >
           <span className="text-xl animate-bounce">🤖</span>
@@ -235,7 +240,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
         </motion.button>
       </div>
 
-      {/* ── Slide-Out Live AI Sidecar Drawer ── */}
+      {/* ── Compact Floating Live AI Dialog (Right Side) ── */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -248,13 +253,13 @@ export const LivePipVoiceSidecar: React.FC = () => {
               className="fixed inset-0 bg-black/40 backdrop-blur-xs z-[999994] sm:hidden"
             />
 
-            {/* Side Drawer Panel */}
+            {/* Compact Floating Dialog on Right */}
             <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 260 }}
-              className="fixed top-0 left-0 bottom-0 w-full sm:w-[420px] bg-slate-950/95 backdrop-blur-xl border-r-4 border-indigo-500/50 shadow-2xl z-[999995] flex flex-col justify-between text-white overflow-hidden"
+              initial={{ opacity: 0, scale: 0.88, y: 25, x: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+              exit={{ opacity: 0, scale: 0.88, y: 25, x: 20 }}
+              transition={{ type: 'spring', damping: 24, stiffness: 280 }}
+              className="fixed bottom-24 right-3 sm:right-6 w-[calc(100vw-1.5rem)] sm:w-[380px] max-h-[540px] h-[72vh] bg-slate-950/95 backdrop-blur-xl border-2 border-indigo-500/50 rounded-3xl shadow-2xl z-[999995] flex flex-col justify-between text-white overflow-hidden ring-4 ring-indigo-500/10"
             >
               {/* Header */}
               <div className="p-4 sm:p-5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-3">

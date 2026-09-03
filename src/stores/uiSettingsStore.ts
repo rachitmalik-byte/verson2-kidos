@@ -8,6 +8,7 @@ interface UiSettingsState {
   pipMode: 'inline' | 'floating' | 'hidden';
   showPipText: boolean;
   playPipSpeech: boolean;
+  isLivePipOpen: boolean;
   
   toggleWardrobeButton: () => void;
   toggleArcadeButton: () => void;
@@ -15,6 +16,8 @@ interface UiSettingsState {
   setPipMode: (mode: 'inline' | 'floating' | 'hidden') => void;
   togglePipText: () => void;
   togglePipSpeech: () => void;
+  setIsLivePipOpen: (open: boolean) => void;
+  toggleLivePip: () => void;
 }
 
 export const useUiSettingsStore = create<UiSettingsState>()(
@@ -26,6 +29,7 @@ export const useUiSettingsStore = create<UiSettingsState>()(
       pipMode: 'floating', // Defaulting to floating on the left side
       showPipText: true,
       playPipSpeech: true,
+      isLivePipOpen: false,
 
       toggleWardrobeButton: () => set((state) => ({ showWardrobeButton: !state.showWardrobeButton })),
       toggleArcadeButton: () => set((state) => ({ showArcadeButton: !state.showArcadeButton })),
@@ -33,7 +37,19 @@ export const useUiSettingsStore = create<UiSettingsState>()(
       setPipMode: (mode) => set({ pipMode: mode }),
       togglePipText: () => set((state) => ({ showPipText: !state.showPipText })),
       togglePipSpeech: () => set((state) => ({ playPipSpeech: !state.playPipSpeech })),
+      setIsLivePipOpen: (open) => set({ isLivePipOpen: open }),
+      toggleLivePip: () => set((state) => ({ isLivePipOpen: !state.isLivePipOpen })),
     }),
-    { name: 'polyquest-ui-settings' }
+    { 
+      name: 'polyquest-ui-settings',
+      partialize: (state) => ({
+        showWardrobeButton: state.showWardrobeButton,
+        showArcadeButton: state.showArcadeButton,
+        showAiLabButton: state.showAiLabButton,
+        pipMode: state.pipMode,
+        showPipText: state.showPipText,
+        playPipSpeech: state.playPipSpeech,
+      }),
+    }
   )
 );
