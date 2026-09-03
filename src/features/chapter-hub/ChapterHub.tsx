@@ -3,7 +3,6 @@ import { InteractiveChapterVideoLab } from './InteractiveChapterVideoLab';
 import { MaterialsAnimatedLabBackground } from '@/components/effects/MaterialsAnimatedLabBackground';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useParentStore } from '@/stores/parentStore';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { missions } from '@/data/missions';
@@ -19,7 +18,6 @@ import {
   ArrowLeft,
   Lock,
   CheckCircle2,
-  Star,
   Play,
   Compass,
   GraduationCap,
@@ -70,12 +68,11 @@ import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 
 export function ChapterHub() {
   const navigate = useNavigate();
-  const child = useParentStore((state) => state.child);
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
-  const [activeTab, setActiveTab] = useState<'missions' | 'video' | 'guidebook'>('missions');
+  const [activeTab, setActiveTab] = useState<'map' | 'missions' | 'video' | 'guidebook'>('map');
   const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
   const [showRecallModal, setShowRecallModal] = useState(false);
   const shouldPromptRecall = useSpacedRecallStore((s) => s.shouldPromptRecall);
@@ -87,7 +84,6 @@ export function ChapterHub() {
     }
   }, [completedMissions.length]);
 
-  const totalStars = completedMissions.length * 3 + discoveries.length * 2;
   const isAllComplete = completedMissions.length === missions.length;
   const progressPercent = Math.round((completedMissions.length / missions.length) * 100);
 
@@ -149,60 +145,59 @@ export function ChapterHub() {
             </div>
           </div>
 
-        {/* ── Compact Chapter Hero Banner (Muted Pastels & Sparky Micro-Branding) ── */}
-        <div id="chapter-hero-banner" className="squircle-card p-5 sm:p-6 shadow-soft-card flex flex-col md:flex-row items-center gap-5 relative overflow-hidden font-sans">
-          {/* Sparky Mascot in Line-Art Style */}
-          <div className="relative shrink-0 flex items-center justify-center">
-            <SparkyMascot mood={isAllComplete ? 'celebrating' : 'thinking'} size={88} animate />
-          </div>
+        {/* ── Cinematic Materials Lab World Hero Stage ── */}
+        <div id="chapter-hero-banner" className="portal-hero p-6 sm:p-8 bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 border border-white/15 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden font-sans">
+          {/* Ambient Glow */}
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Banner Text & All Actions */}
-          <div className="flex-1 text-center md:text-left">
-            {/* Badges Row */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mb-2">
-              <span className="px-3 py-1 bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] rounded-full text-[11px] font-extrabold uppercase tracking-wide">
-                CBSE Class 5 EVS • Chapter 3
-              </span>
-              <span className="px-3 py-1 bg-[#FEFCE8] border border-[#FEF08A] text-[#854D0E] rounded-full text-[11px] font-extrabold uppercase tracking-wide flex items-center gap-1">
-                <Star className="w-3 h-3 fill-[#EAB308] text-[#EAB308]" />
-                <span>{totalStars} Science Stars</span>
-              </span>
-              <span className="px-3 py-1 bg-[#F0F9FF] border border-[#BAE6FD] text-[#075985] rounded-full text-[11px] font-extrabold uppercase tracking-wide">
-                {progressPercent}% Mastered
-              </span>
+          {/* Left Column: World Identity & Science Objective */}
+          <div className="flex-1 text-center md:text-left z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-mono font-bold tracking-wide mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+              <span>THEME 6 • MATERIALS & INVENTIONS</span>
             </div>
 
-            {/* Title */}
-            <h1 className="text-xl md:text-2xl font-extrabold text-[#262930] tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight leading-tight">
               The World of Natural & Synthetic Materials 🧪
             </h1>
-            <p className="text-xs font-medium text-[#5A6072] mt-1 max-w-2xl leading-relaxed">
-              Welcome back, {child?.name || 'Aarav'} (Grade 5)! Explore hands-on science missions with real materials, interactive simulations, and audio-guided discovery.
+            <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed font-normal">
+              Investigate the molecular properties of matter. Crumple cotton vs. polyester in the hydraulic press,
+              test tensile cord breaking points, and inspect micro-weave fibers under the electron lens.
             </p>
 
-            {/* Progress Bar */}
-            <div className="w-full max-w-md mt-2.5 bg-[#F1EFEA] rounded-full h-2 p-0.5 border border-slate-200/80 mx-auto md:mx-0">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-                className="bg-gradient-to-r from-[#FDE047] via-[#FDBA74] to-[#86EFAC] h-full rounded-full"
-              />
+            {/* Visual Progression Meter */}
+            <div className="w-full max-w-md mt-4 flex flex-col gap-1.5 mx-auto md:mx-0">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+                <span>Expedition Mastery</span>
+                <span className="font-mono text-cyan-400">{progressPercent}% Mastered • {completedMissions.length}/13 Missions</span>
+              </div>
+              <div className="w-full bg-white/15 rounded-full h-2 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full"
+                />
+              </div>
             </div>
 
-            {/* All 6 Action Buttons (Pill Affordances) */}
-            <div className="flex flex-wrap gap-2 mt-3.5 justify-center md:justify-start">
+            {/* Interactive Mode Switcher Tabs */}
+            <div className="flex flex-wrap gap-2.5 mt-5 justify-center md:justify-start">
               <button
-                id="chapter-story-intro-btn"
+                id="tab-map-btn"
                 onClick={() => {
                   sounds.pop();
                   voiceAssistant.stop();
-                  navigate('/intro/materials');
+                  setActiveTab('map');
                 }}
-                className="pill-btn-primary px-3.5 py-1.5 text-xs flex items-center gap-1.5 shadow-soft-pill"
+                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'map'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
+                }`}
               >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Story Intro</span>
+                <Map className="w-3.5 h-3.5" />
+                <span>Expedition Trail Map</span>
               </button>
 
               <button
@@ -212,14 +207,27 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   setActiveTab('missions');
                 }}
-                className={`px-3.5 py-1.5 rounded-full font-extrabold text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
+                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'missions'
-                    ? 'bg-[#262930] text-white shadow-soft-pill'
-                    : 'pill-btn-secondary'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
-                <Compass className="w-3.5 h-3.5" />
-                <span>13 Missions</span>
+                <Grid className="w-3.5 h-3.5" />
+                <span>Mission Grid</span>
+              </button>
+
+              <button
+                id="chapter-story-intro-btn"
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  navigate('/intro/materials');
+                }}
+                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Story Intro</span>
               </button>
 
               <button
@@ -229,13 +237,13 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   setActiveTab('video');
                 }}
-                className={`px-3.5 py-1.5 rounded-full font-extrabold text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
+                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'video'
-                    ? 'bg-[#262930] text-white shadow-soft-pill'
-                    : 'pill-btn-secondary'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
+                <Play className="w-3.5 h-3.5 fill-current text-violet-400" />
                 <span>Video Lab</span>
               </button>
 
@@ -246,27 +254,14 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   setActiveTab('guidebook');
                 }}
-                className={`px-3.5 py-1.5 rounded-full font-extrabold text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
+                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'guidebook'
-                    ? 'bg-[#262930] text-white shadow-soft-pill'
-                    : 'pill-btn-secondary'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Guidebook</span>
-              </button>
-
-              <button
-                id="chapter-mystery-quiz-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  navigate('/mystery-lab');
-                }}
-                className="px-3.5 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#9A3412] font-extrabold text-xs flex items-center gap-1.5 cursor-pointer hover:bg-[#FFEDD5] transition-all"
-              >
-                <Sparkles className="w-3.5 h-3.5 fill-[#EA580C] text-[#EA580C]" />
-                <span>Mystery Quiz (+25🪙)</span>
+                <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                <span>Field Guide</span>
               </button>
 
               <button
@@ -276,16 +271,30 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   navigate('/discovery-book');
                 }}
-                className="px-3.5 py-1.5 rounded-full bg-[#F5F3FF] border border-[#DDD6FE] text-[#5B21B6] font-extrabold text-xs flex items-center gap-1.5 cursor-pointer hover:bg-[#EDE9FE] transition-all"
+                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
               >
-                <BookOpen className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                 <span>Field Journal ({discoveries.length})</span>
               </button>
             </div>
           </div>
+
+          {/* Right Column: Pip Companion */}
+          <div className="relative z-10 shrink-0 flex flex-col items-center bg-slate-900/80 p-4 rounded-2xl border border-white/15 backdrop-blur-md">
+            <SparkyMascot mood={isAllComplete ? 'celebrating' : 'thinking'} size={80} animate />
+            <span className="text-[11px] font-bold text-slate-300 mt-2">
+              {isAllComplete ? 'Citadel Mastered! 🏆' : 'Laboratory Active 🔬'}
+            </span>
+          </div>
         </div>
 
         {/* ── Dynamic Tab Content View ── */}
+        {activeTab === 'map' && (
+          <div className="w-full">
+            <GamifiedAdventureMap />
+          </div>
+        )}
+
         {activeTab === 'video' && <InteractiveChapterVideoLab />}
 
         {activeTab === 'guidebook' && <IntegratedGuidebook />}

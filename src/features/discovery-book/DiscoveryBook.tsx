@@ -178,96 +178,98 @@ export const DiscoveryBook: React.FC = () => {
 
   return (
     <PersistentAppShell activeDestination="journal">
-      <div className="min-h-screen w-full bg-[#F8FAFC] text-[#0F172A] p-4 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden selection:bg-blue-100 selection:text-blue-900">
-        {/* ── Top Header ── */}
-        <header className="w-full max-w-7xl edtech-card px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4 mb-6 z-20 bg-white">
-          {/* Left: Navigation Buttons */}
+      <div className="min-h-screen w-full bg-[#0b0f19] text-slate-100 p-4 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden selection:bg-blue-600 selection:text-white">
+        {/* ── Top Field Journal Header ── */}
+        <header className="w-full max-w-7xl world-glass-dock px-5 py-3.5 flex items-center justify-between gap-4 mb-6 z-20 rounded-2xl text-white">
+          {/* Left: Navigation */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => {
                 sounds.pop();
                 navigate('/subjects');
               }}
-              className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
               title="Return to Subjects"
             >
               <Home className="w-3.5 h-3.5" />
+              <span>Worlds</span>
             </button>
 
-          <button
-            onClick={() => {
-              sounds.pop();
-              navigate(-1);
-            }}
-            className="pill-btn-secondary px-3.5 py-2 text-xs flex items-center gap-1.5"
-          >
-            <ArrowLeft className="w-4 h-4 shrink-0" />
-            <span>Go Back</span>
-          </button>
-        </div>
-
-        {/* Center: Title & Subtitle */}
-        <div className="text-center min-w-0 flex-1 px-2 hidden sm:block">
-          <div className="flex items-center justify-center gap-2">
-            <BookOpen className="w-5 h-5 text-[#262930] shrink-0" />
-            <h1 className="text-base sm:text-lg md:text-xl font-extrabold text-[#262930] whitespace-nowrap truncate">
-              Master Science Field Journal 📖
-            </h1>
-          </div>
-          <p className="text-[10px] md:text-[11px] font-medium text-[#7E8494] whitespace-nowrap truncate">
-            CBSE Class 5 EVS • Dedicated Chapter Field Logs, Practical Micro-Scans & DIY Labs
-          </p>
-        </div>
-
-        {/* Right: Status & Compact Audio Controls */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden xl:flex items-center gap-1 px-3 py-1.5 bg-[#FEFCE8] border border-[#FEF08A] rounded-full text-[#854D0E] font-bold text-xs shadow-xs whitespace-nowrap">
-            <Star className="w-3.5 h-3.5 text-[#EAB308] fill-[#EAB308] shrink-0" />
-            <span>{discoveries.length} Discovered</span>
-          </div>
-          <AudioNavBarControls showProfile={false} />
-        </div>
-      </header>
-
-      {/* ── 4 Course Selector Tabs (Soft Pastel Squircle Tints) ── */}
-      <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 z-10">
-        {ALL_COURSES_CATALOG.map((course, idx) => {
-          const isSelected = idx === selectedCourseIdx;
-          const coursePastels = [
-            { bg: 'bg-[#F0FDF4]', border: 'border-[#BBF7D0]', text: 'text-[#166534]', iconBg: 'bg-[#DCFCE7]' },
-            { bg: 'bg-[#FFF7ED]', border: 'border-[#FED7AA]', text: 'text-[#9A3412]', iconBg: 'bg-[#FFEDD5]' },
-            { bg: 'bg-[#F0F9FF]', border: 'border-[#BAE6FD]', text: 'text-[#075985]', iconBg: 'bg-[#E0F2FE]' },
-            { bg: 'bg-[#F5F3FF]', border: 'border-[#DDD6FE]', text: 'text-[#5B21B6]', iconBg: 'bg-[#EDE9FE]' },
-          ][idx % 4];
-
-          return (
             <button
-              key={course.courseId}
               onClick={() => {
                 sounds.pop();
-                setSelectedCourseIdx(idx);
-                setSelectedChapterIdx(0);
+                navigate(-1);
               }}
-              className={`p-3.5 squircle-card text-left transition-all cursor-pointer flex items-center gap-3 ${
-                isSelected
-                  ? 'border-[#262930] shadow-soft-card ring-2 ring-[#262930]/20'
-                  : 'border-slate-200/80 hover:border-slate-300'
-              }`}
+              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs flex items-center gap-1 cursor-pointer transition-all"
             >
-              <div className={`w-10 h-10 rounded-2xl ${coursePastels.iconBg} flex items-center justify-center ${coursePastels.text} shadow-xs shrink-0`}>
-                {course.courseId === 'theme-senses' && <Leaf className="w-5 h-5" />}
-                {course.courseId === 'theme-materials' && <Layers className="w-5 h-5" />}
-                {course.courseId === 'theme-water' && <Droplets className="w-5 h-5" />}
-                {course.courseId === 'theme-shelter' && <Mountain className="w-5 h-5" />}
-              </div>
-              <div className="min-w-0">
-                <span className={`text-[10px] font-extrabold ${coursePastels.text} block uppercase`}>Course {idx + 1}</span>
-                <span className="text-xs font-extrabold text-[#262930] truncate block leading-tight">{course.courseName}</span>
-              </div>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
             </button>
-          );
-        })}
-      </div>
+          </div>
+
+          {/* Center: Title & Subtitle */}
+          <div className="text-center min-w-0 flex-1 px-2 hidden sm:block">
+            <div className="flex items-center justify-center gap-2">
+              <BookOpen className="w-4 h-4 text-cyan-400 shrink-0" />
+              <h1 className="text-base sm:text-lg font-display font-extrabold text-white truncate">
+                Master Science Field Journal
+              </h1>
+            </div>
+            <p className="text-[11px] font-mono text-slate-400 truncate">
+              Calibrated Microscopic Scans, Specimen Notes & Hands-on Lab Protocols
+            </p>
+          </div>
+
+          {/* Right: Status */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/15 border border-amber-400/30 rounded-full text-amber-300 font-bold text-xs">
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
+              <span>{discoveries.length} Logged</span>
+            </div>
+          </div>
+        </header>
+
+        {/* ── 4 Course Selector Tabs ── */}
+        <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 z-10">
+          {ALL_COURSES_CATALOG.map((course, idx) => {
+            const isSelected = idx === selectedCourseIdx;
+            const courseGradients = [
+              'from-emerald-950/80 to-teal-950/80 border-emerald-500/30',
+              'from-indigo-950/80 to-blue-950/80 border-blue-500/30',
+              'from-cyan-950/80 to-sky-950/80 border-cyan-500/30',
+              'from-violet-950/80 to-purple-950/80 border-violet-500/30',
+            ][idx % 4];
+
+            return (
+              <button
+                key={course.courseId}
+                onClick={() => {
+                  sounds.pop();
+                  setSelectedCourseIdx(idx);
+                  setSelectedChapterIdx(0);
+                }}
+                className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                  isSelected
+                    ? `bg-gradient-to-br ${courseGradients} border-white/30 shadow-xl ring-2 ring-cyan-400/40 text-white`
+                    : 'bg-slate-900/80 hover:bg-slate-800/80 border-white/10 text-slate-400'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xl">{course.icon || '🔬'}</span>
+                  <span className="text-[10px] font-mono uppercase font-bold text-cyan-400">
+                    Realm 0{idx + 1}
+                  </span>
+                </div>
+                <span className="text-xs font-bold text-white block truncate">
+                  {course.courseName}
+                </span>
+                <span className="text-[10px] text-slate-400 block mt-0.5">
+                  {course.chapters.length} Investigation Logs
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
       {/* ── Dedicated Chapter Field Journal Workspace ── */}
       <main className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 mb-12">

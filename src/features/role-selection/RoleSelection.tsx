@@ -1,33 +1,27 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useProgressStore } from '@/stores/progressStore';
-import { useDiscoveryStore } from '@/stores/discoveryStore';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
+import { SylvaLivingGreenCanvas } from '@/components/effects/SylvaLivingGreenCanvas';
+import { Pip } from '@/components/pip/Pip';
 import {
   ArrowRight,
-  Compass,
   Sparkles,
+  Layers,
   FlaskConical,
-  Leaf,
-  Droplets,
-  Home,
-  Clock,
-  Flame,
+  Microscope,
+  Zap,
 } from 'lucide-react';
 
-// Macro Specimen Imagery
+// Hero & World Imagery
+import polyquestHeroBanner from '@/assets/images/showcase/polyquest_hero_banner.jpg';
+import kaykitForestBiome from '@/assets/images/nature/kaykit_forest_biome_sample.png';
 import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
 
 export const RoleSelection: React.FC = () => {
   const navigate = useNavigate();
-  const completedMissions = useProgressStore((state) => state.completedMissions);
-  const discoveries = useDiscoveryStore((state) => state.discoveries);
-
-  const totalXP = completedMissions.length * 40 + discoveries.length * 25 + 120;
-  const streakDays = 3 + Math.min(completedMissions.length, 7);
+  const [activeTab, setActiveTab] = useState<'all' | 'unlocked'>('all');
 
   const handleLaunch = (path: string) => {
     sounds.pop();
@@ -35,384 +29,352 @@ export const RoleSelection: React.FC = () => {
     navigate(path);
   };
 
+  const scienceWorlds = [
+    {
+      id: 'living-world',
+      title: 'Super Senses & Biosphere',
+      subtitle: 'Animal Superpowers & Biomimicry',
+      themeNumber: 1,
+      route: '/theme/1/hub',
+      accentColor: 'from-emerald-950 via-slate-900 to-teal-950',
+      borderColor: 'border-emerald-500/30',
+      glowColor: 'group-hover:border-emerald-400/60 shadow-emerald-950/50',
+      icon: '🌿',
+      image: kaykitForestBiome,
+      curiosityHook: 'How do ants communicate using invisible scent trails?',
+      keyConcepts: ['Pheromone Trails', 'Snake Ground Vibrations', 'Burdock Seed Velcro'],
+      unlocked: true,
+    },
+    {
+      id: 'materials-science',
+      title: 'Materials Science & Polymers',
+      subtitle: 'Molecular Lattices & Inventions',
+      themeNumber: 6,
+      route: '/chapter-hub',
+      accentColor: 'from-indigo-950 via-slate-900 to-blue-950',
+      borderColor: 'border-indigo-500/30',
+      glowColor: 'group-hover:border-indigo-400/60 shadow-indigo-950/50',
+      icon: '🧪',
+      image: polyquestHeroBanner,
+      curiosityHook: 'What gives synthetic polymers their super tensile strength?',
+      keyConcepts: ['Natural Fibers', 'Synthetic Polymers', 'Cross-Linked Rubber'],
+      unlocked: true,
+    },
+    {
+      id: 'hydrosphere',
+      title: 'Oceans & Hydrosphere',
+      subtitle: 'Water Physics & Atmosphere',
+      themeNumber: 2,
+      route: '/theme/2/hub',
+      accentColor: 'from-cyan-950 via-slate-900 to-sky-950',
+      borderColor: 'border-cyan-500/30',
+      glowColor: 'group-hover:border-cyan-400/60 shadow-cyan-950/50',
+      icon: '💧',
+      image: burdockVelcroImg,
+      curiosityHook: 'Why do heavy steel ships float while small pebbles sink?',
+      keyConcepts: ['Water Cycle', 'Buoyancy & Salinity', 'Desert Stepwells'],
+      unlocked: true,
+    },
+    {
+      id: 'shelter-space',
+      title: 'Shelter & Space Habitats',
+      subtitle: 'Architecture & Extreme Climates',
+      themeNumber: 5,
+      route: '/theme/3/hub',
+      accentColor: 'from-violet-950 via-slate-900 to-purple-950',
+      borderColor: 'border-violet-500/30',
+      glowColor: 'group-hover:border-violet-400/60 shadow-violet-950/50',
+      icon: '🏔️',
+      image: kaykitForestBiome,
+      curiosityHook: 'How do round Bhunga walls withstand severe earthquakes?',
+      keyConcepts: ['Yak Wool Tents', 'Earthquake Resistance', 'Orbital Living'],
+      unlocked: true,
+    },
+  ];
+
   return (
     <PersistentAppShell activeDestination="home">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col gap-8">
-        {/* ── Top Explorer Greeting & Summary Bar ── */}
-        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/70 inline-flex items-center gap-1.5">
-                <Compass className="w-3.5 h-3.5 text-blue-600" />
-                <span>Late Elementary STEM • Grade 5</span>
-              </span>
-              <span className="text-xs text-slate-400 font-medium">CBSE & NCERT Aligned</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
-              Welcome back, Young Explorer 👋
-            </h1>
-            <p className="text-sm text-slate-600 mt-1">
-              Your science universe is active. Ready to continue today’s inquiry journey?
-            </p>
-          </div>
+      {/* ── Ambient 3D Particle WebGL Atmosphere ── */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-40">
+        <SylvaLivingGreenCanvas enableButterfly={false} />
+      </div>
 
-          {/* Quick Metrics */}
-          <div className="flex items-center gap-3">
-            <div className="edtech-card px-4 py-2.5 flex items-center gap-3 bg-white">
-              <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
-                <Flame className="w-5 h-5 fill-amber-500 text-amber-500" />
-              </div>
-              <div>
-                <span className="text-xs text-slate-400 font-semibold block leading-tight">Streak</span>
-                <span className="text-sm font-extrabold text-slate-800">{streakDays} Days</span>
-              </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col gap-12 pt-2 md:pt-4">
+        {/* ── CINEMATIC EXPEDITION HERO STAGE ── */}
+        <section className="portal-hero w-full bg-gradient-to-r from-slate-950 via-indigo-950/80 to-slate-950 border border-white/15 p-6 sm:p-10 md:p-12 text-white relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
+          {/* Subtle radial light beam */}
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Left Column: Explorer Identity & Story Hook */}
+          <div className="max-w-2xl flex flex-col gap-5 z-10 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-mono font-bold tracking-wide w-fit">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+              <span>ACTIVE EXPLORATION EXPEDITION</span>
             </div>
 
-            <div className="edtech-card px-4 py-2.5 flex items-center gap-3 bg-white">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-xs text-slate-400 font-semibold block leading-tight">Total XP</span>
-                <span className="text-sm font-extrabold text-slate-800">{totalXP}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Hero Stage: Continue Your Journey ── */}
-        <section className="w-full edtech-card overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white shadow-xl relative">
-          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#34D399_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-          
-          <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div className="max-w-xl flex flex-col gap-4">
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold tracking-wide uppercase border border-emerald-400/30 inline-flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  Active Expedition
-                </span>
-                <span className="text-xs text-slate-400 font-medium">Theme 1 • Super Senses</span>
-              </div>
-
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
-                  Plants & Living World: Super Senses
-                </h2>
-                <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-                  Discover how ant pheromone highways guide trails, how snake jawbones detect ground acoustics, 
-                  and how burdock seed hooks inspired the invention of Velcro.
-                </p>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="flex flex-col gap-1.5 pt-1">
-                <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
-                  <span>Expedition Progress</span>
-                  <span className="font-mono text-emerald-400">4 of 4 Chapters Unlocked</span>
-                </div>
-                <div className="w-full h-2.5 bg-white/15 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full w-3/4 transition-all duration-700" />
-                </div>
-              </div>
-
-              {/* Primary Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <button
-                  onClick={() => handleLaunch('/theme/1/hub')}
-                  className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all transform active:scale-98 cursor-pointer"
-                >
-                  <span>Continue Expedition</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => handleLaunch('/subjects')}
-                  className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 transition-all cursor-pointer"
-                >
-                  <span>Explore All Subjects</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Specimen Visual Artwork Thumbnail */}
-            <div className="w-full md:w-72 shrink-0 flex flex-col gap-3">
-              <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black/40 aspect-4/3">
-                <img
-                  src={burdockVelcroImg}
-                  alt="Burdock Velcro Macro Specimen"
-                  className="w-full h-full object-cover brightness-90 hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
-                  <span className="font-mono text-emerald-300 font-bold text-[11px]">
-                    HOOK RETENTION // 450 N/m
-                  </span>
-                  <span className="px-2 py-0.5 rounded-md bg-black/60 text-white/90 text-[10px] font-mono">
-                    3D Lab
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Today's Missions (4 Meaningful Educational Quests) ── */}
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-heading font-bold text-slate-900 tracking-tight">
-                Today’s Exploration Quests
-              </h2>
-              <p className="text-xs text-slate-500">
-                Four bite-sized inquiries designed for deep comprehension today.
+              <h1 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
+                Where shall we explore today, Explorer?
+              </h1>
+              <p className="text-base sm:text-lg text-slate-300 mt-3 font-normal leading-relaxed">
+                Ants build chemical superhighways without GPS, and snakes "hear" footsteps through their jawbones.
+                Step inside the living universe to unlock nature's secrets.
               </p>
             </div>
-            <span className="text-xs font-mono text-slate-400">EST. TIME: ~20 MIN</span>
+
+            {/* Launch CTA */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <button
+                onClick={() => handleLaunch('/theme/1/hub')}
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-600 hover:brightness-110 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-emerald-950/50 flex items-center gap-2.5 transition-all transform hover:-translate-y-0.5 cursor-pointer active:scale-95"
+              >
+                <span>Continue Living World Expedition</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              </button>
+
+              <button
+                onClick={() => handleLaunch('/subjects')}
+                className="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 font-bold text-sm flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <Layers className="w-4 h-4 text-cyan-400" />
+                <span>Explore All 4 Worlds</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: Visual World Focal Specimen */}
+          <div className="relative z-10 w-full max-w-sm lg:max-w-md shrink-0">
+            <div className="specimen-lens relative aspect-video rounded-2xl overflow-hidden border border-white/20 shadow-2xl group">
+              <img
+                src={polyquestHeroBanner}
+                alt="Living World Expedition Preview"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+              
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 block">
+                    Interactive World 01
+                  </span>
+                  <span className="text-xs font-bold text-white">
+                    Plants & Animal Super Senses
+                  </span>
+                </div>
+                <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── TODAY'S DISCOVERY WAYPOINTS (TACTILE WORLD NODES) ── */}
+        <section className="flex flex-col gap-5 text-left">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+                Today's Expedition Waypoints
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+                Hands-on discoveries waiting for you to investigate today
+              </p>
+            </div>
+
+            <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-full border border-white/10 text-xs">
+              <button
+                onClick={() => setActiveTab('all')}
+                className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+                  activeTab === 'all'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Active Quests
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Quest 1: Learn */}
-            <motion.div
-              whileHover={{ y: -3 }}
-              onClick={() => handleLaunch('/theme/1/chapter/1')}
-              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-emerald-300 transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-bold tracking-wider uppercase border border-emerald-200/60">
-                    Learn
-                  </span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> 8 min
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors text-base leading-snug">
-                  Ant Pheromone Trails
-                </h3>
-                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
-                  Simulate sugar trail navigation and test scent path blockage.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
-                <span>Launch Lab</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </motion.div>
-
-            {/* Quest 2: Explore */}
-            <motion.div
-              whileHover={{ y: -3 }}
-              onClick={() => handleLaunch('/chapter/3/mission/3')}
-              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-blue-300 transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-[10px] font-bold tracking-wider uppercase border border-blue-200/60">
-                    Explore
-                  </span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> 5 min
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors text-base leading-snug">
-                  Tensile Strength Rig
-                </h3>
-                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
-                  Pull test cotton fibers vs nylon ropes under heavy weights.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
-                <span>Start Simulation</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </motion.div>
-
-            {/* Quest 3: Practice */}
-            <motion.div
-              whileHover={{ y: -3 }}
-              onClick={() => handleLaunch('/mystery-lab')}
-              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-violet-300 transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-violet-50 text-violet-700 text-[10px] font-bold tracking-wider uppercase border border-violet-200/60">
-                    Practice
-                  </span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> 4 min
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-violet-700 transition-colors text-base leading-snug">
-                  Mystery Object Scan
-                </h3>
-                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
-                  Analyze microscopic fiber structures and identify hidden materials.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-violet-600">
-                <span>Open Quiz</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </motion.div>
-
-            {/* Quest 4: Recall */}
-            <motion.div
-              whileHover={{ y: -3 }}
+            {/* Waypoint 1: Microscopic Zoom Scan */}
+            <div
               onClick={() => handleLaunch('/discovery-book')}
-              className="edtech-card p-5 cursor-pointer group flex flex-col justify-between hover:border-amber-300 transition-all"
+              className="world-gateway-card bg-slate-900/90 backdrop-blur-md p-5 border border-white/10 hover:border-blue-500/50 flex flex-col justify-between cursor-pointer group shadow-lg text-left"
             >
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 text-[10px] font-bold tracking-wider uppercase border border-amber-200/60">
-                    Recall
-                  </span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> 3 min
-                  </span>
+                <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-400/30 flex items-center justify-center text-blue-400 mb-4 group-hover:scale-110 transition-transform">
+                  <Microscope className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-amber-800 transition-colors text-base leading-snug">
-                  Field Discovery Journal
+                <span className="text-[10px] font-mono text-blue-400 font-bold uppercase tracking-wider block mb-1">
+                  Investigation
+                </span>
+                <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
+                  Burdock Seed Hooks
                 </h3>
-                <p className="text-xs text-slate-600 mt-1.5 line-clamp-2">
-                  Review specimen badges and retrieve key scientific definitions.
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                  Zoom into tiny plant hooks that inspired the invention of Velcro fasteners.
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-700">
-                <span>Review Notes</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+
+              <div className="flex items-center justify-between pt-4 mt-4 border-t border-white/10 text-xs font-bold text-slate-300 group-hover:text-blue-400">
+                <span>Inspect Micrograph</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </div>
-            </motion.div>
+            </div>
+
+            {/* Waypoint 2: Hands-on Tensile Rig */}
+            <div
+              onClick={() => handleLaunch('/chapter/3/mission/4')}
+              className="world-gateway-card bg-slate-900/90 backdrop-blur-md p-5 border border-white/10 hover:border-emerald-500/50 flex flex-col justify-between cursor-pointer group shadow-lg text-left"
+            >
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
+                  <FlaskConical className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+                  Laboratory Test
+                </span>
+                <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  Fabric Crumple Rig
+                </h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                  Squeeze cotton and synthetic polyester in the press to compare wrinkle memory.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 mt-4 border-t border-white/10 text-xs font-bold text-slate-300 group-hover:text-emerald-400">
+                <span>Enter Laboratory</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Waypoint 3: Spaced Recall Check */}
+            <div
+              onClick={() => handleLaunch('/chapter-hub')}
+              className="world-gateway-card bg-slate-900/90 backdrop-blur-md p-5 border border-white/10 hover:border-amber-500/50 flex flex-col justify-between cursor-pointer group shadow-lg text-left"
+            >
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-110 transition-transform">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider block mb-1">
+                  Memory Spark
+                </span>
+                <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                  Pheromone Highway
+                </h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                  Recall how worker ants establish food trails when obstacles appear.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 mt-4 border-t border-white/10 text-xs font-bold text-slate-300 group-hover:text-amber-400">
+                <span>Take Challenge</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Waypoint 4: Pip AI Science Coach */}
+            <div className="world-gateway-card bg-slate-900/90 backdrop-blur-md p-5 border border-white/10 flex flex-col justify-between shadow-lg text-left">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <Pip mood="curious" size={44} interactive={false} />
+                  <div>
+                    <span className="text-[10px] font-mono text-violet-400 font-bold uppercase tracking-wider block">
+                      Pip's Inquiry
+                    </span>
+                    <span className="text-xs font-bold text-white">Daily Mystery</span>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed italic">
+                  "Why does ice float on liquid water when most solids sink in their own liquids?"
+                </p>
+              </div>
+
+              <button
+                onClick={() => handleLaunch('/chapter-hub')}
+                className="w-full mt-4 py-2 px-3 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-400/30 text-xs font-bold text-center transition-all cursor-pointer"
+              >
+                Discuss with Pip →
+              </button>
+            </div>
           </div>
         </section>
 
-        {/* ── Curriculum Thematic Portals (All 4 Subject Worlds) ── */}
-        <section className="flex flex-col gap-4">
+        {/* ── THEMATIC REALM PORTALS (EXPANSIVE VISUAL WORLDS) ── */}
+        <section className="flex flex-col gap-6 text-left">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-heading font-bold text-slate-900 tracking-tight">
-                Curriculum Exploration Worlds
+              <h2 className="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+                Thematic Learning Realms
               </h2>
-              <p className="text-xs text-slate-500">
-                Choose a domain to start or continue your themed learning expedition.
+              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+                Explore nature, chemistry, atmosphere, and space across dedicated realms
               </p>
             </div>
+
             <button
               onClick={() => handleLaunch('/subjects')}
-              className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
             >
-              <span>View All</span>
+              <span>View All Portals</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* World 1: Plants & Living World */}
-            <div
-              onClick={() => handleLaunch('/theme/1/hub')}
-              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-emerald-300 transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-emerald-600 shrink-0">
-                <Leaf className="w-6 h-6" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono font-bold text-emerald-700 uppercase">
-                    THEME 1 • LIVING SYSTEMS
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded-sm bg-emerald-100/70 text-emerald-800 text-[9px] font-bold">
-                    4 Chapters
-                  </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {scienceWorlds.map((world) => (
+              <div
+                key={world.id}
+                onClick={() => handleLaunch(world.route)}
+                className={`world-gateway-card bg-gradient-to-br ${world.accentColor} border ${world.borderColor} hover:shadow-2xl transition-all cursor-pointer group p-6 sm:p-7 flex flex-col justify-between min-h-[240px] relative overflow-hidden`}
+              >
+                {/* Background Specimen Image Tint */}
+                <div className="absolute right-0 bottom-0 w-1/2 h-full opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none overflow-hidden">
+                  <img src={world.image} alt={world.title} className="w-full h-full object-cover" />
                 </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors text-base">
-                  Plants & Living World: Super Senses
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                  ThreeUI Sylva moss canopy, ant scent trails, snake seismic vibration, and Velcro biomimicry.
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all mt-1" />
-            </div>
 
-            {/* World 2: Synthetic Materials & Inventions */}
-            <div
-              onClick={() => handleLaunch('/chapter-hub')}
-              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-blue-300 transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200/70 flex items-center justify-center text-blue-600 shrink-0">
-                <FlaskConical className="w-6 h-6" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono font-bold text-blue-700 uppercase">
-                    THEME 6 • MATERIALS SCIENCE
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded-sm bg-blue-100/70 text-blue-800 text-[9px] font-bold">
-                    13 Missions
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors text-base">
-                  Materials, Polymers & Inventions
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                  Hydrophobic raincoat tests, nylon tensile pulling, electric circuits, and plastic molding.
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all mt-1" />
-            </div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-3xl p-2 bg-white/10 rounded-2xl backdrop-blur-md">
+                      {world.icon}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-slate-400 uppercase">
+                      World 0{world.themeNumber}
+                    </span>
+                  </div>
 
-            {/* World 3: Water & Aquatic Wonders */}
-            <div
-              onClick={() => handleLaunch('/theme/water/hub')}
-              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-cyan-300 transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200/70 flex items-center justify-center text-cyan-600 shrink-0">
-                <Droplets className="w-6 h-6" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono font-bold text-cyan-700 uppercase">
-                    THEME 2 • HYDROLOGY
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded-sm bg-cyan-100/70 text-cyan-800 text-[9px] font-bold">
-                    4 Chapters
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-700 transition-colors text-base">
-                  Water & Aquatic Experiments
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                  Density columns, buoyancy tests, water evaporation cycles, and ancient stepwell conservation.
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-600 group-hover:translate-x-1 transition-all mt-1" />
-            </div>
+                  <h3 className="text-xl font-display font-extrabold text-white group-hover:text-cyan-200 transition-colors">
+                    {world.title}
+                  </h3>
+                  <p className="text-xs text-slate-300 mt-1 font-medium">
+                    {world.subtitle}
+                  </p>
 
-            {/* World 4: Shelter & Earth Expeditions */}
-            <div
-              onClick={() => handleLaunch('/theme/shelter/hub')}
-              className="edtech-card p-5 cursor-pointer group flex items-start gap-4 hover:border-purple-300 transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200/70 flex items-center justify-center text-purple-600 shrink-0">
-                <Home className="w-6 h-6" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono font-bold text-purple-700 uppercase">
-                    THEME 5 • ARCHITECTURE & EARTH
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded-sm bg-purple-100/70 text-purple-800 text-[9px] font-bold">
-                    5 Chapters
-                  </span>
+                  <p className="text-xs text-slate-400 mt-3 italic">
+                    "{world.curiosityHook}"
+                  </p>
                 </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-purple-700 transition-colors text-base">
-                  Shelter, Earth & High Altitudes
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                  Everest atmospheric pressure, pashmina microscope scans, and earthquake-resistant Bhunga dampers.
-                </p>
+
+                <div className="relative z-10 flex items-center justify-between pt-5 mt-4 border-t border-white/10">
+                  <div className="flex flex-wrap gap-1.5">
+                    {world.keyConcepts.map((c) => (
+                      <span
+                        key={c}
+                        className="px-2 py-0.5 rounded-md bg-white/10 text-slate-300 text-[10px] font-medium"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-blue-600 flex items-center justify-center text-white transition-colors shrink-0 ml-3">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all mt-1" />
-            </div>
+            ))}
           </div>
         </section>
       </div>

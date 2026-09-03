@@ -102,7 +102,7 @@ export function Theme1Hub() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34D399] opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#34D399]" />
             </span>
-            <span>NCERT CLASS 5 EVS • LIVING WORLD & PLANTS BIOME</span>
+            <span>Living Biosphere & Super Senses</span>
           </div>
         </div>
 
