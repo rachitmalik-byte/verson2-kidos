@@ -73,6 +73,7 @@ type Phase = 'HOOK' | 'EXPERIMENT' | 'MICROSCOPE' | 'SCIENCE_LAW' | 'SPEECH_COAC
 
 interface QuizQuestion {
   question: string;
+  img?: string;
   options: string[];
   correctIndex: number;
   explanation: string;
@@ -82,6 +83,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
   1: [
     {
       question: 'How do ants find their way back to food in a neat, straight line?',
+      img: antsSugarImg,
       options: [
         'They leave behind invisible chemical scents called pheromones',
         'They use Google Maps on tiny phones',
@@ -92,6 +94,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'How much sharper is an eagle’s eyesight compared to a human?',
+      img: eagleMouseImg,
       options: [
         '4 times sharper (can spot a mouse 2 km away)',
         'Exactly the same as humans',
@@ -102,6 +105,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'How does a male silkworm moth locate a female moth from kilometers away?',
+      img: ant1x,
       options: [
         'Large feathery antennae that detect her airborne scent',
         'By listening to high-pitched songs',
@@ -114,6 +118,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
   2: [
     {
       question: 'How do snakes hear footsteps when they have NO external ears?',
+      img: snakeVibrationImg,
       options: [
         'They feel ground compression vibrations through their lower jaw',
         'They read human lips',
@@ -124,6 +129,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'How many types of poisonous snakes live in India (CBSE Class 5)?',
+      img: fourSnakesImg,
       options: [
         'Only 4 types (Cobra, Common Krait, Russell’s Viper, Saw-scaled Viper)',
         'All 300 snake species are deadly poisonous',
@@ -134,6 +140,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'What is medical antivenom serum made from?',
+      img: snake100x,
       options: [
         'The venom (poison) of the snake itself!',
         'Boiled tree bark',
@@ -146,6 +153,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
   3: [
     {
       question: 'Which zone of the human tongue detects Sweet taste first?',
+      img: tonguePapillaeImg,
       options: [
         'The front tip of the tongue 🍯',
         'The deep back of the tongue',
@@ -156,6 +164,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'Why does plain roti or bread taste sweet after chewing it for 30 seconds?',
+      img: tongue100x,
       options: [
         'Saliva amylase enzymes break plain starch into sweet maltose sugar',
         'Sugar magically teleports into your mouth',
@@ -166,6 +175,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'What did Dr. William Beaumont discover from his stomach experiment?',
+      img: drBeaumontImg,
       options: [
         'Food digests much faster inside the warm acidic stomach than in a cold glass beaker',
         'The stomach doesn’t digest food at all',
@@ -178,6 +188,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
   4: [
     {
       question: 'How do Dandelion seeds travel long distances across fields?',
+      img: dandelionSeedImg,
       options: [
         'Feathery parachute bristles (pappus) that glide on wind breezes 🌬️',
         'They roll on wheels',
@@ -188,6 +199,7 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'In 1948, Swiss engineer George de Mestral invented Velcro by examining what under a microscope?',
+      img: burdockVelcroImg,
       options: [
         'Tiny microscopic hooks on Burdock seeds stuck to dog fur 🪝',
         'A piece of metal chainmail',
@@ -198,13 +210,14 @@ const THEME_1_QUIZZES: Record<number, QuizQuestion[]> = {
     },
     {
       question: 'Why can a coconut seed float across whole oceans without drowning?',
+      img: burdock100x,
       options: [
-        'Its thick, fibrous outer husk is filled with trapped air pockets 🥥',
-        'It has an engine inside',
-        'It is made of solid stone',
+        'It has a thick, waterproof fibrous husk filled with trapped air',
+        'It uses a tiny motorboat engine',
+        'It is as light as a feather',
       ],
       correctIndex: 0,
-      explanation: 'The fibrous husk of a coconut traps air, making it buoyant and waterproof during ocean journeys!',
+      explanation: 'The fibrous husk of a coconut traps air, making it incredibly buoyant so it can travel thousands of miles on ocean currents!',
     },
   ],
 };
@@ -645,10 +658,17 @@ export function SuperSensesMissionEngine() {
 
                     return (
                       <div key={qIdx} className="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200">
-                        <span className="text-xs font-black uppercase text-emerald-700 mb-1 block">
+                        <span className="text-xs font-black uppercase text-emerald-700 mb-2 block">
                           Question {qIdx + 1}
                         </span>
-                        <h4 className="font-black text-slate-900 text-sm sm:text-base mb-3">
+                        
+                        {q.img && (
+                          <div className="w-full h-40 sm:h-48 mb-4 rounded-xl overflow-hidden border-2 border-slate-300 relative shadow-inner">
+                            <img src={q.img} alt={`Visual reference for question ${qIdx + 1}`} className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        
+                        <h4 className="font-black text-slate-900 text-sm sm:text-base mb-4">
                           {q.question}
                         </h4>
 
