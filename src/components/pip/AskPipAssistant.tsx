@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { HelpCircle, X, Volume2, Sparkles, Lightbulb, ChevronRight } from 'lucide-react';
+import { HelpCircle, X, Volume2, Sparkles, Lightbulb, ChevronRight, Tv } from 'lucide-react';
 import { Pip } from './Pip';
+import { useLocation } from 'react-router-dom';
+import { useAiVideoStore } from '@/stores/aiVideoStore';
 
 interface Props {
   currentGoal: string;
@@ -12,6 +14,8 @@ interface Props {
 }
 
 export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, conceptBreakdown }) => {
+  const location = useLocation();
+  const { openVideoByContext } = useAiVideoStore();
   const [isOpen, setIsOpen] = useState(false);
   const [hintTier, setHintTier] = useState<1 | 2 | 3>(1);
 
@@ -108,8 +112,21 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                 </p>
               </div>
 
+              {/* Contextual Video Quick Button */}
+              <button
+                onClick={() => {
+                  sounds.sparkle();
+                  setIsOpen(false);
+                  openVideoByContext(location.pathname);
+                }}
+                className="w-full py-2.5 px-4 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-950 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 shadow-xs"
+              >
+                <Tv className="w-4 h-4 text-indigo-600" />
+                <span>Watch Video Explanation 🍿</span>
+              </button>
+
               {/* Progressive Hint Escalator */}
-              <div className="flex items-center justify-between gap-3 pt-2">
+              <div className="flex items-center justify-between gap-3 pt-1">
                 {hintTier < 3 ? (
                   <button
                     onClick={handleNextHintTier}

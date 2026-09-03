@@ -13,12 +13,15 @@ import {
   Lightbulb,
   Smile,
   Zap,
+  Tv,
+  Film,
 } from 'lucide-react';
 import { Pip } from '@/components/pip/Pip';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { geminiService } from '@/lib/geminiService';
 import { useLocation } from 'react-router-dom';
+import { useAiVideoStore } from '@/stores/aiVideoStore';
 
 interface ChatMessage {
   id: string;
@@ -28,6 +31,7 @@ interface ChatMessage {
 }
 
 const QUICK_PROMPTS = [
+  '🎬 Find video for this experiment!',
   '🔬 What is a polymer?',
   '🛞 Why do car tires need sulfur?',
   '🔥 Why do synthetic clothes melt?',
@@ -37,6 +41,7 @@ const QUICK_PROMPTS = [
 
 export const LivePipVoiceSidecar: React.FC = () => {
   const location = useLocation();
+  const { openVideoByContext } = useAiVideoStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
@@ -46,7 +51,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
     {
       id: 'init-1',
       sender: 'pip',
-      text: "Hi there, Master Scientist! 🤖 I'm Pip, your live AI buddy! Ask me anything about materials, chemistry, or what you're testing right now!",
+      text: "Hi there, Master Scientist! 🤖 I'm Pip, your live AI buddy! Ask me anything about materials, chemistry, or tap 'Play Video' to watch a cool science clip about what you're testing right now!",
       timestamp: Date.now(),
     },
   ]);
@@ -145,6 +150,35 @@ export const LivePipVoiceSidecar: React.FC = () => {
     setMessages((prev) => [...prev, userMsg]);
     setIsThinking(true);
     sounds.pop();
+
+    // Smart Video Query Detection
+    const lower = userText.toLowerCase();
+    const isAskingVideo =
+      lower.includes('video') ||
+      lower.includes('watch') ||
+      lower.includes('youtube') ||
+      lower.includes('show me') ||
+      lower.includes('clip');
+
+    if (isAskingVideo) {
+      const videoAnswer = "I scanned what you're doing and found the perfect science video! Opening Pip's AI Cinema for you right now... 🍿🎬";
+      const pipMsg: ChatMessage = {
+        id: `pip-${Date.now()}`,
+        sender: 'pip',
+        text: videoAnswer,
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, pipMsg]);
+      sounds.sparkle();
+      if (autoSpeak) {
+        voiceAssistant.speak(videoAnswer);
+      }
+      setIsThinking(false);
+      setTimeout(() => {
+        openVideoByContext(location.pathname, userText);
+      }, 700);
+      return;
+    }
 
     try {
       const pageContext = `User is currently viewing path: ${location.pathname}`;
@@ -271,7 +305,32 @@ export const LivePipVoiceSidecar: React.FC = () => {
                 </div>
               </div>
 
-              {/* Chat Message Scroll View */}
+                {/* Contextual Video Quick Launcher Banner */}
+                <div className="px-4 py-2.5 bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-violet-500/20 border-b border-slate-800 flex items-center justify-between gap-2 shrink-0">
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <span className="text-lg shrink-0">🎬</span>
+                    <div className="flex flex-col truncate">
+                      <span className="text-xs font-black text-amber-300 truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                        Need a visual explanation?
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-400 truncate">
+                        Pip scans screen & finds YouTube video
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      sounds.sparkle();
+                      openVideoByContext(location.pathname);
+                    }}
+                    className="px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 shrink-0"
+                  >
+                    <Tv className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>Play Video 🍿</span>
+                  </button>
+                </div>
+
+                {/* Chat Message Scroll View */}
               <div className="flex-1 p-4 overflow-y-auto space-y-3.5">
                 {messages.map((m) => (
                   <motion.div

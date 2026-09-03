@@ -29,6 +29,7 @@ import { AtmosphereControlWidget } from '@/components/effects/AtmosphereControlW
 import { RickrollModal } from '@/components/easter-egg/RickrollModal';
 import { useEasterEggStore } from '@/stores/easterEggStore';
 import { LivePipVoiceSidecar } from '@/components/ai/LivePipVoiceSidecar';
+import { AiScienceVideoPlayerModal } from '@/components/video/AiScienceVideoPlayerModal';
 
 export function App() {
   const isRickrollOpen = useEasterEggStore((s) => s.isRickrollOpen);
@@ -93,6 +94,9 @@ export function App() {
 
         {/* Global Live Gemini AI Voice & Chat Companion Overlay */}
         <LivePipVoiceSidecar />
+
+        {/* Global AI Page-Scanning Science Cinema & Themed Media Player */}
+        <AiScienceVideoPlayerModal />
 
         {/* Global Full-Screen Interactive Environmental Effects Overlay */}
         <EnvironmentFXOverlay />
