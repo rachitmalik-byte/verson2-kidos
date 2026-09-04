@@ -72,8 +72,8 @@ export function ChapterHub() {
   const discoveries = useDiscoveryStore((state) => state.discoveries);
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
-  const [activeTab, setActiveTab] = useState<'map' | 'missions' | 'video' | 'guidebook'>('map');
-  const [viewMode, setViewMode] = useState<'map' | 'grid'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'missions' | 'video' | 'guidebook'>('missions');
+  const [viewMode, setViewMode] = useState<'map' | 'grid'>('grid');
   const [showRecallModal, setShowRecallModal] = useState(false);
   const shouldPromptRecall = useSpacedRecallStore((s) => s.shouldPromptRecall);
 
@@ -184,6 +184,24 @@ export function ChapterHub() {
             {/* Interactive Mode Switcher Tabs */}
             <div className="flex flex-wrap gap-2.5 mt-5 justify-center md:justify-start">
               <button
+                id="tab-missions-btn"
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  setActiveTab('missions');
+                  setViewMode('grid');
+                }}
+                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'missions' && viewMode === 'grid'
+                    ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-700/25'
+                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
+                }`}
+              >
+                <Grid className="w-3.5 h-3.5" />
+                <span>Mission Grid</span>
+              </button>
+
+              <button
                 id="tab-map-btn"
                 onClick={() => {
                   sounds.pop();
@@ -197,24 +215,7 @@ export function ChapterHub() {
                 }`}
               >
                 <Map className="w-3.5 h-3.5" />
-                <span>Expedition Trail Map</span>
-              </button>
-
-              <button
-                id="tab-missions-btn"
-                onClick={() => {
-                  sounds.pop();
-                  voiceAssistant.stop();
-                  setActiveTab('missions');
-                }}
-                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
-                  activeTab === 'missions'
-                    ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-700/25'
-                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
-                }`}
-              >
-                <Grid className="w-3.5 h-3.5" />
-                <span>Mission Grid</span>
+                <span>Expedition Road Map</span>
               </button>
 
               <button
@@ -301,22 +302,22 @@ export function ChapterHub() {
 
         {activeTab === 'missions' && (
           <>
-            {/* First-Time Start Banner (Warm Butter-Yellow with Sparky) */}
+            {/* First-Time Start Banner */}
             {completedMissions.length === 0 && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="squircle-card p-4 sm:p-5 bg-[#FEFCE8] border border-[#FEF08A] shadow-soft-card flex flex-col sm:flex-row items-center justify-between gap-4"
+                className="p-4 sm:p-5 bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3.5 text-center sm:text-left">
-                  <div className="w-11 h-11 rounded-2xl bg-[#FEF9C3] flex items-center justify-center text-2xl shrink-0">
+                  <div className="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-900/60 border border-amber-200 dark:border-amber-700/60 flex items-center justify-center text-2xl shrink-0">
                     🔬
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-[#262930] text-sm sm:text-base">
+                    <h3 className="font-heading font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
                       Ready to begin your Science Journey?
                     </h3>
-                    <p className="text-xs font-medium text-[#5A6072] mt-0.5">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                       Start with <strong>Mission 1: The Raincoat Mystery</strong> below to unlock the rest! 🗺️
                     </p>
                   </div>
@@ -327,7 +328,7 @@ export function ChapterHub() {
                     voiceAssistant.stop();
                     navigate('/chapter/3/mission/1');
                   }}
-                  className="shrink-0 pill-btn-primary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2 shadow-soft-pill"
+                  className="shrink-0 px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                 >
                   <span>Start Mission 1</span>
                   <ArrowRight className="w-4 h-4" />
@@ -338,49 +339,51 @@ export function ChapterHub() {
             {/* ── Daily Curiosity Quest Riddle Widget ── */}
             <DailyCuriosityQuest />
 
-            {/* ── Winding Adventure Map vs Grid View Controls ── */}
-            <div className="flex items-center justify-between squircle-card p-3 sm:p-3.5 shadow-soft-card flex-wrap gap-2">
-              <div className="flex items-center gap-2.5">
-                <Compass className="w-5 h-5 text-[#EA580C]" />
+            {/* ── Mission Grid Controls & View Switcher ── */}
+            <div className="flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-700/40 flex items-center justify-center text-teal-600">
+                  <Compass className="w-4 h-4" />
+                </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-extrabold text-[#262930] leading-none">
-                    Chapter 3 Science Level Trail 🗺️
+                  <h3 className="text-sm sm:text-base font-display font-extrabold text-slate-900 dark:text-white leading-none">
+                    Materials Science Expeditions 🧪
                   </h3>
-                  <span className="text-[11px] font-medium text-[#7E8494]">
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5 inline-block">
                     {completedMissions.length} of {missions.length} Missions Completed
                   </span>
                 </div>
               </div>
 
               {/* View Switcher Toggle */}
-              <div className="flex items-center gap-1 bg-[#F1EFEA] p-1 rounded-full border border-slate-200/80">
-                <button
-                  onClick={() => {
-                    sounds.pop();
-                    setViewMode('map');
-                  }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition-all ${
-                    viewMode === 'map'
-                      ? 'bg-[#262930] text-white shadow-soft-pill'
-                      : 'text-[#5A6072] hover:text-[#262930]'
-                  }`}
-                >
-                  <Map className="w-3.5 h-3.5" />
-                  <span>Road Map</span>
-                </button>
+              <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-200/80 dark:border-slate-700/60">
                 <button
                   onClick={() => {
                     sounds.pop();
                     setViewMode('grid');
                   }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                     viewMode === 'grid'
-                      ? 'bg-[#262930] text-white shadow-soft-pill'
-                      : 'text-[#5A6072] hover:text-[#262930]'
+                      ? 'bg-teal-600 text-white shadow-xs'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <Grid className="w-3.5 h-3.5" />
                   <span>Mission Cards</span>
+                </button>
+                <button
+                  onClick={() => {
+                    sounds.pop();
+                    setViewMode('map');
+                  }}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                    viewMode === 'map'
+                      ? 'bg-teal-600 text-white shadow-xs'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <Map className="w-3.5 h-3.5" />
+                  <span>Road Map</span>
                 </button>
               </div>
             </div>
@@ -408,49 +411,49 @@ export function ChapterHub() {
                         whileHover={isUnlocked ? { scale: 1.015, y: -3 } : {}}
                         whileTap={isUnlocked ? { scale: 0.98 } : {}}
                         onClick={() => handleMissionClick(m, isUnlocked)}
-                        className={`squircle-card p-0 overflow-hidden transition-all flex flex-col justify-between cursor-pointer relative ${
+                        className={`bg-white dark:bg-slate-900/90 rounded-2xl md:rounded-3xl border overflow-hidden transition-all flex flex-col justify-between cursor-pointer relative group ${
                           isCompleted
-                            ? 'hover:border-[#BBF7D0] shadow-soft-card'
+                            ? 'border-emerald-200 dark:border-emerald-800 shadow-xs hover:border-emerald-400 hover:shadow-md'
                             : isNextMission
-                            ? 'border-[#FED7AA] shadow-soft-float ring-2 ring-[#FED7AA]/60'
+                            ? 'border-amber-400 dark:border-amber-500 shadow-md ring-2 ring-amber-400/40'
                             : isUnlocked
-                            ? 'shadow-soft-card hover:border-slate-300'
-                            : 'opacity-60 bg-[#FAF8F5]/80 cursor-not-allowed border-dashed'
+                            ? 'border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:border-teal-500 hover:shadow-lg hover:shadow-teal-500/10'
+                            : 'border-slate-200/60 dark:border-slate-800 opacity-60 bg-slate-50/80 dark:bg-slate-950/60 cursor-not-allowed border-dashed'
                         }`}
                       >
                         {/* Visual Image Banner Header */}
-                        <div className="relative w-full h-36 md:h-40 overflow-hidden bg-[#FAF8F5]">
+                        <div className="relative w-full h-36 md:h-40 overflow-hidden bg-slate-100 dark:bg-slate-800">
                           <img
                             src={thumbnail}
                             alt={m.title}
                             className={`w-full h-full object-cover transition-transform duration-500 ${
-                              isUnlocked ? 'hover:scale-105' : 'grayscale contrast-75'
+                              isUnlocked ? 'group-hover:scale-105' : 'grayscale contrast-75'
                             }`}
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#262930]/80 via-[#262930]/20 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
 
                           {/* Top Overlay Badges */}
                           <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                            <span className="px-2.5 py-1 bg-white/90 backdrop-blur-md text-[#262930] rounded-full text-[10px] font-extrabold tracking-wider uppercase shadow-xs">
+                            <span className="px-2.5 py-1 bg-white/95 backdrop-blur-md text-slate-900 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase shadow-xs border border-slate-200/60">
                               Mission {m.number}
                             </span>
 
                             {isCompleted ? (
-                              <span className="flex items-center gap-1 bg-[#DCFCE7] text-[#166534] border border-[#BBF7D0] px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow-xs">
-                                <CheckCircle2 className="w-3 h-3 text-[#16A34A]" />
+                              <span className="flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                                 <span>Completed ⭐</span>
                               </span>
                             ) : isNextMission ? (
-                              <span className="flex items-center gap-1 bg-[#262930] text-white px-3 py-1 rounded-full text-[10px] font-extrabold shadow-soft-pill">
-                                <Zap className="w-3 h-3 text-[#FDE047]" />
+                              <span className="flex items-center gap-1 bg-amber-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-xs">
+                                <Zap className="w-3 h-3 text-white" />
                                 <span>Start Next</span>
                               </span>
                             ) : isUnlocked ? (
-                              <span className="flex items-center gap-1 bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A] px-2.5 py-1 rounded-full text-[10px] font-extrabold">
+                              <span className="flex items-center gap-1 bg-teal-50 text-teal-800 border border-teal-200 px-2.5 py-1 rounded-full text-[10px] font-bold">
                                 <span>Unlocked</span>
                               </span>
                             ) : (
-                              <span className="flex items-center gap-1 bg-white/80 backdrop-blur-sm text-[#7E8494] px-2.5 py-1 rounded-full text-[10px] font-bold">
+                              <span className="flex items-center gap-1 bg-white/85 backdrop-blur-sm text-slate-600 px-2.5 py-1 rounded-full text-[10px] font-bold">
                                 <Lock className="w-3 h-3" />
                                 <span>Locked</span>
                               </span>
@@ -460,7 +463,7 @@ export function ChapterHub() {
                           {/* Bottom Title on Image */}
                           <div className="absolute bottom-2.5 left-3 right-3 flex items-center gap-2 text-white">
                             <span className="text-2xl filter drop-shadow-sm">{m.icon}</span>
-                            <h4 className="text-base md:text-lg font-extrabold leading-tight tracking-tight truncate">
+                            <h4 className="text-base md:text-lg font-heading font-extrabold leading-tight tracking-tight truncate">
                               {m.title}
                             </h4>
                           </div>
@@ -469,16 +472,16 @@ export function ChapterHub() {
                         {/* Card Content Body */}
                         <div className="p-4 flex-1 flex flex-col justify-between">
                           <div>
-                            <p className="text-xs font-medium text-[#5A6072] line-clamp-2 leading-relaxed mb-3">
+                            <p className="text-xs font-sans text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed mb-3">
                               {m.subtitle}
                             </p>
 
-                            {/* Concept Tags (Muted Pastels) */}
+                            {/* Concept Tags */}
                             <div className="flex flex-wrap gap-1.5 mb-3">
                               {m.concepts.slice(0, 3).map((c) => (
                                 <span
                                   key={c}
-                                  className="text-[9px] font-bold uppercase tracking-wider bg-[#F1EFEA] text-[#5A6072] px-2 py-0.5 rounded-full border border-slate-200/80"
+                                  className="text-[9px] font-mono font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-md border border-slate-200/70 dark:border-slate-700/60"
                                 >
                                   #{c}
                                 </span>
@@ -487,22 +490,22 @@ export function ChapterHub() {
                           </div>
 
                           {/* Footer Action Button */}
-                          <div className="pt-2.5 border-t border-slate-100">
+                          <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800">
                             {isCompleted ? (
-                              <div className="w-full py-2 px-3.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] font-bold text-xs flex items-center justify-between">
+                              <div className="w-full py-2 px-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center justify-between">
                                 <span className="flex items-center gap-1.5">
-                                  <RotateCcw className="w-3.5 h-3.5 text-[#16A34A]" />
+                                  <RotateCcw className="w-3.5 h-3.5 text-emerald-600" />
                                   Replay Lab
                                 </span>
                                 <ArrowRight className="w-3.5 h-3.5" />
                               </div>
                             ) : isUnlocked ? (
-                              <div className="w-full py-2 px-3.5 rounded-full bg-[#262930] text-white font-bold text-xs flex items-center justify-between shadow-soft-pill">
+                              <div className="w-full py-2 px-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-between shadow-xs transition-colors">
                                 <span>Start Experiment 🔬</span>
                                 <ArrowRight className="w-3.5 h-3.5" />
                               </div>
                             ) : (
-                              <div className="w-full py-2 px-3.5 rounded-full bg-[#F1EFEA] text-[#8A90A0] font-medium text-xs flex items-center justify-between">
+                              <div className="w-full py-2 px-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 font-medium text-xs flex items-center justify-between">
                                 <span>Locked</span>
                                 <Lock className="w-3.5 h-3.5" />
                               </div>
