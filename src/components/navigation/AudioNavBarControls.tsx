@@ -189,81 +189,86 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
 
   return (
     <>
-      <div className={`flex items-center gap-2 shrink-0 select-none ${className}`}>
-        {/* Reading Level Accessibility Switcher */}
-        <div className="hidden sm:block">
-          <ReadingLevelToggle />
-        </div>
+      <div className={`flex items-center gap-1.5 shrink-0 select-none ${className}`}>
+        {/* Profile & Action Tools (Only rendered when showProfile is true) */}
+        {showProfile && (
+          <>
+            {/* Reading Level Accessibility Switcher */}
+            <div className="hidden sm:block">
+              <ReadingLevelToggle />
+            </div>
 
-        {/* 1. PolyCredits Balance Badge */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.96 }}
-          id="navbar-credits-btn"
-          onClick={() => {
-            sounds.pop();
-            setShowClosetModal(true);
-          }}
-          className="px-3 py-1.5 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 text-amber-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
-          title="PolyCredits • Click to open Wardrobe"
-        >
-          <Coins className="w-3.5 h-3.5 text-amber-500 animate-bounce" />
-          <span className="font-mono">{credits}</span>
-          <span className="text-[10px] text-amber-700">🪙</span>
-        </motion.button>
+            {/* 1. PolyCredits Balance Badge */}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.96 }}
+              id="navbar-credits-btn"
+              onClick={() => {
+                sounds.pop();
+                setShowClosetModal(true);
+              }}
+              className="px-2.5 py-1 rounded-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-yellow-900 font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+              title="PolyCredits • Click to open Wardrobe"
+            >
+              <Coins className="w-3.5 h-3.5 text-yellow-600 animate-bounce" />
+              <span className="font-mono">{credits}</span>
+              <span className="text-[10px] text-yellow-700">🪙</span>
+            </motion.button>
 
-        {/* 2. AI Science Lab Button */}
-        {showAiLabButton && (
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
-            id="navbar-ai-lab-btn"
-            onClick={() => {
-              sounds.sparkle();
-              setShowAiLabHubModal(true);
-            }}
-            className="px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all shrink-0 whitespace-nowrap"
-            title="Open Gemini AI Science Lab"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
-            <span className="hidden sm:inline">AI Lab ✨</span>
-          </motion.button>
-        )}
+            {/* 2. AI Science Lab Button */}
+            {showAiLabButton && (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.96 }}
+                id="navbar-ai-lab-btn"
+                onClick={() => {
+                  sounds.sparkle();
+                  setShowAiLabHubModal(true);
+                }}
+                className="px-3 py-1 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+                title="Open Gemini AI Science Lab"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+                <span className="hidden sm:inline">AI Lab ✨</span>
+              </motion.button>
+            )}
 
-        {/* 3. Pip's Wardrobe */}
-        {showWardrobeButton && (
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
-            id="navbar-closet-btn"
-            onClick={() => {
-              sounds.pop();
-              setShowClosetModal(true);
-            }}
-            className="hidden md:flex px-3 py-1.5 rounded-2xl bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 text-pink-900 font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
-            title="Dress Up Pip with Outfits & Accessories"
-          >
-            <Shirt className="w-3.5 h-3.5 text-pink-600" />
-            <span>Wardrobe</span>
-          </motion.button>
-        )}
+            {/* 3. Pip's Wardrobe */}
+            {showWardrobeButton && (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.96 }}
+                id="navbar-closet-btn"
+                onClick={() => {
+                  sounds.pop();
+                  setShowClosetModal(true);
+                }}
+                className="hidden md:flex px-3 py-1 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-900 font-bold text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+                title="Dress Up Pip with Outfits & Accessories"
+              >
+                <Shirt className="w-3.5 h-3.5 text-pink-600" />
+                <span>Wardrobe</span>
+              </motion.button>
+            )}
 
-        {/* 4. Science Arcade */}
-        {showArcadeButton && (
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
-            id="navbar-arcade-btn"
-            onClick={() => {
-              sounds.pop();
-              setShowArcadeModal(true);
-            }}
-            className="hidden lg:flex px-3 py-1.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-900 font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
-            title="Play Mini Games"
-          >
-            <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Arcade</span>
-          </motion.button>
+            {/* 4. Science Arcade */}
+            {showArcadeButton && (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.96 }}
+                id="navbar-arcade-btn"
+                onClick={() => {
+                  sounds.pop();
+                  setShowArcadeModal(true);
+                }}
+                className="hidden lg:flex px-3 py-1 rounded-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-bold text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+                title="Play Mini Games"
+              >
+                <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Arcade</span>
+              </motion.button>
+            )}
+          </>
         )}
 
         {/* 5. Sound & Music Icon Buttons */}
@@ -275,8 +280,10 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
               sounds.pop();
               toggleBgm();
             }}
-            className={`p-1.5 rounded-xl border-2 flex items-center justify-center transition-all cursor-pointer ${
-              !isBgmMuted ? 'bg-rose-100 border-rose-300 text-rose-800' : 'bg-slate-100 border-slate-300 text-slate-400'
+            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center transition-all cursor-pointer ${
+              !isBgmMuted
+                ? 'bg-rose-50 border-rose-200 text-rose-700'
+                : 'bg-slate-100 border-slate-200 text-slate-400'
             }`}
             title="Toggle Music"
           >
@@ -290,8 +297,10 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
               sounds.pop();
               toggleSfx();
             }}
-            className={`p-1.5 rounded-xl border-2 flex items-center justify-center transition-all cursor-pointer ${
-              !isSfxMuted ? 'bg-amber-100 border-amber-300 text-amber-800' : 'bg-slate-100 border-slate-300 text-slate-400'
+            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center transition-all cursor-pointer ${
+              !isSfxMuted
+                ? 'bg-amber-50 border-amber-200 text-amber-700'
+                : 'bg-slate-100 border-slate-200 text-slate-400'
             }`}
             title="Toggle Sound Effects"
           >
@@ -310,13 +319,14 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
               sounds.pop();
               setShowSettingsModal(true);
             }}
-            className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-600 flex items-center justify-center transition-all cursor-pointer"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 flex items-center justify-center transition-all cursor-pointer"
             title="Open Audio & Speech Settings"
           >
             <Settings className="w-3.5 h-3.5" />
           </motion.button>
         </div>
       </div>
+
 
       <AudioSettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <PipClosetModal isOpen={showClosetModal} onClose={() => setShowClosetModal(false)} />

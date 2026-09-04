@@ -5,7 +5,6 @@ import { VoxelScienceWorldMap } from '@/components/voxel/VoxelScienceWorldMap';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
-import { SylvaLivingGreenCanvas } from '@/components/effects/SylvaLivingGreenCanvas';
 import { Pip } from '@/components/pip/Pip';
 import {
   Sparkles,
@@ -47,10 +46,10 @@ const SCIENCE_WORLDS: ScienceWorldPortal[] = [
     name: 'Living Biosphere & Super Senses',
     tagline: 'Animal Radar, Sensory Organs & Biomimetic Inventions',
     missionBrief: 'Follow invisible ant pheromone superhighways, investigate snake seismic jawbone acoustics, and discover how burdock plant hooks inspired Velcro.',
-    icon: <Leaf className="w-6 h-6 text-emerald-400" />,
-    accentGradient: 'from-emerald-950 via-slate-900 to-teal-950',
-    borderColor: 'border-emerald-500/30',
-    glowHover: 'hover:border-emerald-400/60 shadow-emerald-950/40',
+    icon: <Leaf className="w-6 h-6 text-emerald-200" />,
+    accentGradient: 'from-emerald-600 via-teal-600 to-emerald-700',
+    borderColor: 'border-emerald-400/30',
+    glowHover: 'hover:border-emerald-300/80 shadow-emerald-600/20',
     path: '/theme/1/hub',
     image: kaykitForestBiome,
     unlockedMissions: 4,
@@ -63,10 +62,10 @@ const SCIENCE_WORLDS: ScienceWorldPortal[] = [
     name: 'Materials Science & Polymers',
     tagline: 'Natural vs. Synthetic Fibres, Molecular Lattices & Hydraulic Rigs',
     missionBrief: 'Step into the material testing laboratory. Crumple cotton versus polyester in the hydraulic press, stretch nylon cords to failure, and inspect microstructures under the electron lens.',
-    icon: <FlaskConical className="w-6 h-6 text-blue-400" />,
-    accentGradient: 'from-indigo-950 via-slate-900 to-blue-950',
-    borderColor: 'border-indigo-500/30',
-    glowHover: 'hover:border-blue-400/60 shadow-indigo-950/40',
+    icon: <FlaskConical className="w-6 h-6 text-blue-200" />,
+    accentGradient: 'from-indigo-600 via-blue-600 to-indigo-700',
+    borderColor: 'border-indigo-400/30',
+    glowHover: 'hover:border-indigo-300/80 shadow-indigo-600/20',
     path: '/chapter-hub',
     image: polyquestHeroBanner,
     unlockedMissions: 13,
@@ -79,10 +78,10 @@ const SCIENCE_WORLDS: ScienceWorldPortal[] = [
     name: 'Oceans, Density & Hydrosphere',
     tagline: 'Buoyancy Forces, Salinity Gradients & Desert Water Architecture',
     missionBrief: 'Investigate why massive 50,000-ton cargo ships float effortlessly while small iron nails sink. Explore ancient Jaisalmer stepwells and watch water behave without gravity in space.',
-    icon: <Droplets className="w-6 h-6 text-cyan-400" />,
-    accentGradient: 'from-cyan-950 via-slate-900 to-sky-950',
-    borderColor: 'border-cyan-500/30',
-    glowHover: 'hover:border-cyan-400/60 shadow-cyan-950/40',
+    icon: <Droplets className="w-6 h-6 text-cyan-200" />,
+    accentGradient: 'from-cyan-600 via-sky-600 to-blue-600',
+    borderColor: 'border-cyan-400/30',
+    glowHover: 'hover:border-cyan-300/80 shadow-cyan-600/20',
     path: '/theme/water/hub',
     image: burdockVelcroImg,
     unlockedMissions: 4,
@@ -95,10 +94,10 @@ const SCIENCE_WORLDS: ScienceWorldPortal[] = [
     name: 'Extreme Shelters & Habitats',
     tagline: 'High-Altitude Everest Expeditions, Yak Wool & Round Architecture',
     missionBrief: 'Travel with Changpa nomads across freezing Himalayan plateaus at 5,000 meters. Test round Bhunga earthquake dampers and design thermal habitats for outer space.',
-    icon: <Home className="w-6 h-6 text-purple-400" />,
-    accentGradient: 'from-violet-950 via-slate-900 to-purple-950',
-    borderColor: 'border-violet-500/30',
-    glowHover: 'hover:border-purple-400/60 shadow-violet-950/40',
+    icon: <Home className="w-6 h-6 text-purple-200" />,
+    accentGradient: 'from-violet-600 via-purple-600 to-indigo-700',
+    borderColor: 'border-violet-400/30',
+    glowHover: 'hover:border-violet-300/80 shadow-violet-600/20',
     path: '/theme/shelter/hub',
     image: kaykitForestBiome,
     unlockedMissions: 4,
@@ -121,14 +120,16 @@ export const SubjectSelection: React.FC = () => {
 
   return (
     <PersistentAppShell activeDestination="subjects">
-      {/* ── Ambient WebGL Particle Canvas ── */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-30">
-        <SylvaLivingGreenCanvas enableButterfly={false} />
+      {/* ── Soft Ambient CSS Light Diffusion (Clean & Airy, No Particles) ── */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-[550px] h-[550px] bg-blue-200/25 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-purple-200/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-1/3 w-[450px] h-[450px] bg-emerald-100/30 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col gap-10 pt-2 md:pt-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col gap-10 pt-1 sm:pt-2">
         {/* ── CINEMATIC SCIENCE UNIVERSE PORTAL HERO ── */}
-        <section className="portal-hero w-full bg-gradient-to-r from-slate-950 via-indigo-950/90 to-slate-950 border border-white/15 p-6 sm:p-10 md:p-12 text-white relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
+        <section className="portal-hero w-full bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 border border-slate-700/50 p-6 sm:p-10 md:p-12 text-white relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 rounded-3xl shadow-xl shadow-blue-950/10">
           {/* Radial Atmospheric Lighting */}
           <div className="absolute -top-32 left-1/4 w-[500px] h-[500px] bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -154,9 +155,9 @@ export const SubjectSelection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={() => setShowVoxelWorld(!showVoxelWorld)}
-                className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/15 text-slate-100 border border-white/20 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md"
+                className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/15 text-slate-100 border border-white/20 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-xs"
               >
-                <Box className="w-4 h-4 text-cyan-400" />
+                <Box className="w-4 h-4 text-cyan-300" />
                 <span>{showVoxelWorld ? 'Hide 3D Voxel World' : 'View 3D Voxel World Model'}</span>
               </button>
 
@@ -165,9 +166,9 @@ export const SubjectSelection: React.FC = () => {
                   sounds.pop();
                   setIsWardrobeOpen(true);
                 }}
-                className="px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 text-slate-200 border border-white/20 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
+                className="px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 text-slate-200 border border-white/20 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-xs"
               >
-                <Shirt className="w-4 h-4 text-violet-400" />
+                <Shirt className="w-4 h-4 text-violet-300" />
                 <span>Pip's Outfits</span>
               </button>
             </div>
@@ -175,7 +176,7 @@ export const SubjectSelection: React.FC = () => {
 
           {/* Right: Pip Research Mentor Terminal */}
           <div className="relative z-10 w-full max-w-sm shrink-0">
-            <div className="world-gateway-card bg-slate-900/90 backdrop-blur-md p-6 border border-white/15 flex flex-col items-center text-center gap-3 shadow-2xl">
+            <div className="bg-slate-900/90 backdrop-blur-md p-6 border border-white/15 flex flex-col items-center text-center gap-3 rounded-2xl shadow-xl">
               <Pip mood="celebrating" size={72} interactive={true} />
               
               <div>
@@ -198,7 +199,7 @@ export const SubjectSelection: React.FC = () => {
 
         {/* Optional 3D Voxel World Preview Canvas */}
         {showVoxelWorld && (
-          <section className="w-full rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-slate-950 p-4">
+          <section className="w-full rounded-2xl overflow-hidden border border-slate-200 shadow-xl bg-slate-950 p-4">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
               <span className="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider">
                 Interactive 3D Voxel Exploration World
@@ -218,10 +219,10 @@ export const SubjectSelection: React.FC = () => {
         <section className="flex flex-col gap-6">
           <div className="flex items-center justify-between text-left">
             <div>
-              <h2 className="text-2xl font-display font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl font-display font-black text-slate-900 tracking-tight">
                 Select Your Learning Realm
               </h2>
-              <p className="text-sm text-slate-400 mt-0.5">
+              <p className="text-sm text-slate-500 mt-0.5">
                 Each realm contains dedicated simulators, chapter expedition maps, and specimen field logs
               </p>
             </div>

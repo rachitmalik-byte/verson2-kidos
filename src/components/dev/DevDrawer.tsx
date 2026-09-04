@@ -22,8 +22,6 @@ export const DevDrawer: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (location.pathname === '/teacher-studio') return null;
-
   const pipStoreState = usePipStore((s) => s.state);
   const setPipState = usePipStore((s) => s.setState);
   const pipSpeak = usePipStore((s) => s.speak);
@@ -48,6 +46,9 @@ export const DevDrawer: React.FC = () => {
   const { discoveries, addDiscovery, resetDiscoveries } = useDiscoveryStore();
   const { child, setChild, pin, setPin, isSetUp, completeSetup, reset: resetParent } = useParentStore();
   const { isSfxMuted, isTtsMuted, toggleSfx, toggleTts } = useAudioStore();
+
+  if (location.pathname === '/teacher-studio') return null;
+
 
   const handleUnlockAllCurriculum = () => {
     sounds.fanfare();
