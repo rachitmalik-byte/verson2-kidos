@@ -111,6 +111,10 @@ import woolMicrograph100xImg from '@/assets/images/microscope/wool_micrograph_10
 import silkMicrograph100xImg from '@/assets/images/microscope/silk_micrograph_100x.jpg';
 import steelWireSampleImg from '@/assets/images/experiments/steel_wire_sample.jpg';
 import summerComfortEvaporationImg from '@/assets/images/experiments/summer_comfort_evaporation_test.jpg';
+import formalWeddingDressMannequinImg from '@/assets/images/experiments/formal_wedding_dress_mannequin.jpg';
+import rayonArtificialSilkMacroImg from '@/assets/images/experiments/rayon_artificial_silk_macro.jpg';
+import coarseNaturalJuteSackImg from '@/assets/images/experiments/coarse_natural_jute_sack.jpg';
+import summerSweatCottonShirtImg from '@/assets/images/experiments/summer_sweat_cotton_shirt.jpg';
 
 
 const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ missionNumber }) => {
@@ -446,6 +450,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'acrylic',
                     label: 'Acrylic (Artificial Wool)',
                     icon: '🧶❄️',
+                    image: syntheticAcrylicYarnImg,
                     isCorrect: true,
                     explanation: 'Acrylic fibres trap air pockets just like natural sheep wool, but are much lighter, cheaper, and immune to moth damage!',
                     hint: 'Which synthetic fibre is known as Artificial Wool?',
@@ -454,6 +459,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'rayon',
                     label: 'Rayon (Artificial Silk)',
                     icon: '✨👗',
+                    image: rayonArtificialSilkMacroImg,
                     isCorrect: false,
                     explanation: '',
                     hint: 'Rayon mimics silky cool party dresses, not warm winter sweaters!',
@@ -468,6 +474,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 title="Formal Wedding Party Dress"
                 question="A fashion designer needs a shiny, lustrous dress fabric with the elegant sheen of silk, but affordable and durable. Which fabric fits?"
                 scenarioEmoji="👗✨"
+                scenarioImage={formalWeddingDressMannequinImg}
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
@@ -475,17 +482,19 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'rayon',
                     label: 'Rayon (Artificial Silk from Wood Pulp)',
                     icon: '✨👗',
+                    image: rayonArtificialSilkMacroImg,
                     isCorrect: true,
-                    explanation: 'Rayon has a luxurious silk-like gloss and drape, made by chemically regenerating plant plant fiber!',
+                    explanation: 'Rayon has a luxurious silk-like gloss and drape, made by chemically regenerating plant cellulose fiber!',
                     hint: 'Look for the regenerated fiber historically called "artificial silk"!',
                   },
                   {
                     id: 'jute',
                     label: 'Coarse Natural Jute Sack Cloth',
                     icon: '🌾🥔',
+                    image: coarseNaturalJuteSackImg,
                     isCorrect: false,
                     explanation: '',
-                    hint: 'Jute is rough and stiff, used for potato sacks rather than formal dresses.',
+                    hint: 'Jute is rough, stiff, and scratchy like potato sacks, not silky for formal evening wear.',
                   },
                 ]}
               />
@@ -631,6 +640,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'cotton-apron',
                     label: '100% Thick Cotton Canvas Apron',
                     icon: '🌿👨‍🍳',
+                    image: cottonBurningAshImg,
                     isCorrect: true,
                     explanation: 'Cotton canvas does not melt when exposed to sparks, preventing severe melted plastic burns!',
                     hint: 'Choose the natural fibre that chars into ash rather than melting into sticky liquid!',
@@ -639,6 +649,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'nylon-apron',
                     label: 'Thin Synthetic Nylon Windbreaker Apron',
                     icon: '🧥🔥',
+                    image: polyesterMeltingBeadImg,
                     isCorrect: false,
                     explanation: '',
                     hint: 'Thin nylon catches heat in seconds and melts directly onto the skin.',
@@ -660,6 +671,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'cotton-kurta',
                     label: '100% Natural Cotton Kurta / Dress',
                     icon: '🌿✨',
+                    image: cottonBurningAshImg,
                     isCorrect: true,
                     explanation: 'Cotton does not melt when exposed to heat, preventing severe plastic adhesion burns!',
                     hint: 'Which material burns to harmless ash without melting into hot sticky beads?',
@@ -668,6 +680,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'nylon-kurta',
                     label: 'Synthetic Polyester / Nylon Party Outfit',
                     icon: '👗🔥',
+                    image: polyesterMeltingBeadImg,
                     isCorrect: false,
                     explanation: '',
                     hint: 'Synthetics melt in a split second and stick tightly to skin. Never wear near fire!',
@@ -791,6 +804,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'cotton',
                     label: '100% Breathable Cotton Jersey',
                     icon: '🌿👕',
+                    image: summerSweatCottonShirtImg,
                     isCorrect: true,
                     explanation: 'Cotton absorbs sweat immediately and lets air circulate, preventing heat exhaustion!',
                     hint: 'Choose the natural fibre with microscopic pores for sweat evaporation!',
@@ -799,6 +813,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'poly',
                     label: 'Synthetic Plastic Rain Jacket',
                     icon: '🧥⚠️',
+                    image: polyesterSportShirtImg,
                     isCorrect: false,
                     explanation: '',
                     hint: 'Non-porous synthetics trap hot sweat against your skin, causing overheating.',
@@ -944,6 +959,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                 title="Chemical Storage Bottle Selector"
                 question="A chemistry lab needs containers to store acidic liquids for 5 years. Why do they pick plastic bottles instead of iron cans?"
                 scenarioEmoji="🧴🧪"
+                scenarioImage={petWaterBottleMoldingImg}
                 isCompleted={interactiveState[`step_${currentStepIndex}`] === true}
                 onSuccess={() => setInteractiveState({ [`step_${currentStepIndex}`]: true })}
                 options={[
@@ -951,6 +967,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'non-reactive',
                     label: 'Plastic is Chemically Non-Reactive & Non-Rusting',
                     icon: '🛡️🧪',
+                    image: petWaterBottleMoldingImg,
                     isCorrect: true,
                     explanation: 'Plastics do not react with water, air, or acids, making them perfect for safe chemical storage!',
                     hint: 'Which property prevents plastic from corroding or rusting over time?',
@@ -1106,6 +1123,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'plastic-handle',
                     label: 'Screwdriver with Plastic-Moulded Grip',
                     icon: '🪛🛡️',
+                    image: pvcInsulatedCableImg,
                     isCorrect: true,
                     explanation: 'Plastic is an electrical insulator! It completely blocks high-voltage electric current from entering the hands.',
                     hint: 'Look for the material that blocks electricity from passing through!',
@@ -1114,6 +1132,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'metal-handle',
                     label: 'Screwdriver with Solid Steel Metal Grip',
                     icon: '🔪⚡',
+                    image: steelKeyMacroImg,
                     isCorrect: false,
                     explanation: '',
                     hint: 'Steel is a metal conductor! Electricity would travel directly through the handle into the body.',
@@ -1339,6 +1358,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'bakelite-grip',
                     label: 'Moulded Bakelite Insulator Grip',
                     icon: '🛡️👨‍🍳',
+                    image: bakeliteHandleCleanImg,
                     isCorrect: true,
                     explanation: 'Bakelite prevents heat conduction, keeping the chef safe even when cooking over high flames!',
                     hint: 'Which material blocks heat transfer into the chef’s fingers?',
@@ -1347,6 +1367,7 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
                     id: 'copper-grip',
                     label: 'Bare Copper Metal Grip',
                     icon: '🔥🍳',
+                    image: metalHandleScorchingImg,
                     isCorrect: false,
                     explanation: '',
                     hint: 'Copper is one of the fastest heat conductors and will cause serious burns!',
