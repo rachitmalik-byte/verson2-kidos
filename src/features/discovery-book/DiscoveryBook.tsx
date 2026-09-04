@@ -160,11 +160,12 @@ export const DiscoveryBook: React.FC = () => {
   const [selectedChapterIdx, setSelectedChapterIdx] = useState<number>(initialChapterIdx);
 
   const activeCourse = ALL_COURSES_CATALOG[selectedCourseIdx] || ALL_COURSES_CATALOG[0];
-  const chapters: CourseChapter[] = activeCourse.chapters;
+  const chapters: CourseChapter[] = activeCourse?.chapters || [];
   const activeChapter: CourseChapter = chapters[selectedChapterIdx] || chapters[0];
-  const journal = activeChapter.fieldJournal;
+  const journal = activeChapter?.fieldJournal;
+  const facts = journal?.specimenFacts || (journal as any)?.itemFacts || [];
 
-  const currentAsset: ChapterAsset = CHAPTER_PRACTICAL_ASSET_MAP[activeChapter.chapterId] || {
+  const currentAsset: ChapterAsset = (activeChapter && CHAPTER_PRACTICAL_ASSET_MAP[activeChapter.chapterId]) || {
     type: 'gif',
     src: cottonZoomGif,
     badge: '🔬 Microscopic Item Scan',
@@ -173,14 +174,20 @@ export const DiscoveryBook: React.FC = () => {
 
   const handlePronounceChapter = () => {
     sounds.pop();
-    voiceAssistant.speak(`${activeChapter.chapterTitle}. ${journal.fieldBrief}. Key Law: ${activeChapter.chapterIntro.goldenLaw}`);
+    if (!activeChapter) return;
+    const parts = [
+      activeChapter.chapterTitle,
+      journal?.fieldBrief,
+      activeChapter.chapterIntro?.goldenLaw ? `Key Law: ${activeChapter.chapterIntro.goldenLaw}` : '',
+    ].filter(Boolean);
+    voiceAssistant.speak(parts.join('. '));
   };
 
   return (
     <PersistentAppShell activeDestination="journal">
-      <div className="min-h-screen w-full bg-[#0b0f19] text-slate-100 p-4 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden selection:bg-blue-600 selection:text-white">
+      <div className="min-h-screen w-full bg-[#F8FAFC] text-slate-900 p-4 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden selection:bg-teal-500 selection:text-white">
         {/* ── Top Field Journal Header ── */}
-        <header className="w-full max-w-7xl world-glass-dock px-5 py-3.5 flex items-center justify-between gap-4 mb-6 z-20 rounded-2xl text-white">
+        <header className="w-full max-w-7xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-soft-card px-5 py-3.5 flex items-center justify-between gap-4 mb-6 z-20 rounded-2xl">
           {/* Left: Navigation */}
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -188,10 +195,10 @@ export const DiscoveryBook: React.FC = () => {
                 sounds.pop();
                 navigate('/subjects');
               }}
-              className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
               title="Return to Subjects"
             >
-              <Home className="w-3.5 h-3.5" />
+              <Home className="w-3.5 h-3.5 text-teal-600" />
               <span>Worlds</span>
             </button>
 
@@ -200,7 +207,7 @@ export const DiscoveryBook: React.FC = () => {
                 sounds.pop();
                 navigate(-1);
               }}
-              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs flex items-center gap-1 cursor-pointer transition-all"
+              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold flex items-center gap-1 cursor-pointer transition-all"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back</span>
@@ -210,21 +217,21 @@ export const DiscoveryBook: React.FC = () => {
           {/* Center: Title & Subtitle */}
           <div className="text-center min-w-0 flex-1 px-2 hidden sm:block">
             <div className="flex items-center justify-center gap-2">
-              <BookOpen className="w-4 h-4 text-cyan-400 shrink-0" />
-              <h1 className="text-base sm:text-lg font-display font-extrabold text-white truncate">
+              <BookOpen className="w-4 h-4 text-teal-600 shrink-0" />
+              <h1 className="text-base sm:text-lg font-display font-extrabold text-slate-900 truncate">
                 Master Science Field Journal
               </h1>
             </div>
-            <p className="text-[11px] font-mono text-slate-400 truncate">
+            <p className="text-[11px] font-sans font-medium text-slate-500 truncate">
               Calibrated Microscopic Scans, Specimen Notes & Hands-on Lab Protocols
             </p>
           </div>
 
           {/* Right: Status */}
           <div className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/15 border border-amber-400/30 rounded-full text-amber-300 font-bold text-xs">
-              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
-              <span>{discoveries.length} Logged</span>
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-amber-800 font-bold text-xs">
+              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400 shrink-0" />
+              <span>{discoveries?.length || 0} Logged</span>
             </div>
           </div>
         </header>
@@ -233,12 +240,6 @@ export const DiscoveryBook: React.FC = () => {
         <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 z-10">
           {ALL_COURSES_CATALOG.map((course, idx) => {
             const isSelected = idx === selectedCourseIdx;
-            const courseGradients = [
-              'from-emerald-950/80 to-teal-950/80 border-emerald-500/30',
-              'from-indigo-950/80 to-blue-950/80 border-blue-500/30',
-              'from-cyan-950/80 to-sky-950/80 border-cyan-500/30',
-              'from-violet-950/80 to-purple-950/80 border-violet-500/30',
-            ][idx % 4];
 
             return (
               <button
@@ -250,21 +251,21 @@ export const DiscoveryBook: React.FC = () => {
                 }}
                 className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   isSelected
-                    ? `bg-gradient-to-br ${courseGradients} border-white/30 shadow-xl ring-2 ring-cyan-400/40 text-white`
-                    : 'bg-slate-900/80 hover:bg-slate-800/80 border-white/10 text-slate-400'
+                    ? 'bg-white border-teal-500 shadow-md ring-2 ring-teal-500/20 text-slate-900'
+                    : 'bg-white/80 hover:bg-white border-slate-200/80 text-slate-600 hover:border-slate-300 shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xl">{course.icon || '🔬'}</span>
-                  <span className="text-[10px] font-mono uppercase font-bold text-cyan-400">
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-teal-600' : 'text-slate-400'}`}>
                     Realm 0{idx + 1}
                   </span>
                 </div>
-                <span className="text-xs font-bold text-white block truncate">
+                <span className="text-xs font-bold text-slate-900 block truncate">
                   {course.courseName}
                 </span>
-                <span className="text-[10px] text-slate-400 block mt-0.5">
-                  {course.chapters.length} Investigation Logs
+                <span className="text-[10px] text-slate-500 block mt-0.5">
+                  {course.chapters?.length || 0} Investigation Logs
                 </span>
               </button>
             );
@@ -274,12 +275,12 @@ export const DiscoveryBook: React.FC = () => {
       {/* ── Dedicated Chapter Field Journal Workspace ── */}
       <main className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 z-10 mb-12">
         {/* Left Column: Chapter Navigator (4 cols) */}
-        <div className="lg:col-span-4 squircle-card p-4 shadow-soft-card bg-white flex flex-col gap-2 h-fit">
+        <div className="lg:col-span-4 squircle-card p-4 shadow-soft-card bg-white flex flex-col gap-2 h-fit border border-slate-200/80">
           <div className="flex items-center justify-between px-2 py-1">
             <span className="text-xs font-black uppercase tracking-wider text-slate-500">
-              {activeCourse.courseName}:
+              {activeCourse?.courseName || 'Curriculum'}:
             </span>
-            <span className="text-[11px] font-bold text-indigo-600 font-mono">
+            <span className="text-[11px] font-bold text-teal-600 font-mono">
               {chapters.length} Chapters
             </span>
           </div>
@@ -296,21 +297,21 @@ export const DiscoveryBook: React.FC = () => {
                     sounds.pop();
                     setSelectedChapterIdx(cIdx);
                   }}
-                  className={`p-3 rounded-2xl border-2 text-left font-black text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                  className={`p-3 rounded-2xl border text-left font-bold text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${
                     isSelected
-                      ? 'bg-indigo-50 border-indigo-600 text-indigo-950 shadow-xs ring-2 ring-indigo-200'
-                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      ? 'bg-teal-50/80 border-teal-500 text-teal-950 shadow-xs ring-2 ring-teal-500/20'
+                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100/80'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span className="text-xl shrink-0">{ch.icon}</span>
                     <div className="min-w-0">
-                      <span className="text-[10px] text-slate-400 block font-mono">Chapter {ch.chapterNumber}</span>
+                      <span className="text-[10px] text-slate-400 block font-medium">Chapter {ch.chapterNumber}</span>
                       <span className="truncate block font-bold text-slate-800 text-xs">{ch.chapterTitle}</span>
                     </div>
                   </div>
                   {chAsset && (
-                    <span className="text-[9px] font-black uppercase text-indigo-700 bg-white px-2 py-0.5 rounded-full border border-indigo-200 shrink-0">
+                    <span className="text-[9px] font-black uppercase text-teal-700 bg-white px-2 py-0.5 rounded-full border border-teal-200 shrink-0">
                       {chAsset.type === 'gif' ? '🎬 Live Zoom' : '📷 Macro'}
                     </span>
                   )}
@@ -325,15 +326,15 @@ export const DiscoveryBook: React.FC = () => {
           {/* Chapter Header */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b border-slate-100 pb-4">
             <div className="flex items-center gap-3">
-              <span className="text-3xl sm:text-4xl p-2.5 rounded-2xl bg-[#FEF9C3] border border-[#FEF08A] shadow-xs shrink-0">
-                {activeChapter.icon}
+              <span className="text-3xl sm:text-4xl p-2.5 rounded-2xl bg-amber-50 border border-amber-200 shadow-xs shrink-0">
+                {activeChapter?.icon || '🔬'}
               </span>
               <div>
-                <span className="text-xs font-extrabold uppercase tracking-wide text-[#7C3AED] bg-[#F5F3FF] border border-[#DDD6FE] px-3 py-1 rounded-full inline-block mb-1">
-                  {activeCourse.courseName} • Chapter {activeChapter.chapterNumber}
+                <span className="text-xs font-bold uppercase tracking-wide text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full inline-block mb-1">
+                  {activeCourse?.courseName} • Chapter {activeChapter?.chapterNumber}
                 </span>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#262930] tracking-tight">
-                  {journal.journalTitle}
+                  {journal?.journalTitle || activeChapter?.chapterTitle || 'Field Journal'}
                 </h2>
               </div>
             </div>
@@ -352,7 +353,7 @@ export const DiscoveryBook: React.FC = () => {
             <div className="w-full h-64 sm:h-72 md:h-80 relative overflow-hidden flex items-center justify-center">
               <img
                 src={currentAsset.src}
-                alt={journal.journalTitle}
+                alt={journal?.journalTitle || activeChapter?.chapterTitle || 'Field Specimen'}
                 className="w-full h-full object-cover"
               />
 
@@ -380,14 +381,16 @@ export const DiscoveryBook: React.FC = () => {
           </div>
 
           {/* Field Brief */}
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block mb-1">
-              Field Investigation Brief:
-            </span>
-            <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed">
-              {journal.fieldBrief}
-            </p>
-          </div>
+          {journal?.fieldBrief && (
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block mb-1">
+                Field Investigation Brief:
+              </span>
+              <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed">
+                {journal.fieldBrief}
+              </p>
+            </div>
+          )}
 
           {/* Golden Science Law */}
           {activeChapter.chapterIntro?.goldenLaw && (
@@ -404,46 +407,58 @@ export const DiscoveryBook: React.FC = () => {
             </div>
           )}
 
-          {/* Core Item Discoveries (3-Card Matrix) */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Chapter Item Discoveries ({journal.itemFacts.length} Observations)</span>
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {journal.itemFacts.map((f, fIdx) => (
-                <div key={fIdx} className="p-4 bg-gradient-to-tr from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 flex flex-col gap-1 shadow-xs">
-                  <span className="text-2xl">{f.icon}</span>
-                  <span className="text-xs font-black text-amber-950">{f.title}</span>
-                  <p className="text-[11px] font-bold text-slate-600 leading-snug mt-0.5">{f.detail}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Hands-On DIY Science Experiment */}
-          <div className="p-5 bg-indigo-50/90 rounded-3xl border-3 border-indigo-200 flex flex-col gap-3 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
-                <FlaskConical className="w-4 h-4 text-indigo-600" />
-                <span>Hands-On Mini Experiment: {journal.handsOnExperiment.title}</span>
+          {/* Core Item Discoveries (Specimen Facts Matrix) */}
+          {facts.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Chapter Item Discoveries ({facts.length} Observations)</span>
               </span>
-            </div>
-
-            <div className="text-xs font-bold text-slate-700 flex flex-col gap-2">
-              <p>
-                <span className="text-indigo-950 font-black">🧪 Materials Needed: </span>
-                {journal.handsOnExperiment.materialsNeeded.join(', ')}
-              </p>
-              <p>
-                <span className="text-indigo-950 font-black">📋 Step-by-Step Procedure: </span>
-                {journal.handsOnExperiment.procedure}
-              </p>
-              <div className="p-3 bg-emerald-100 rounded-2xl text-xs font-black text-emerald-950 border border-emerald-300">
-                ✅ Expected Observation: {journal.handsOnExperiment.expectedObservation}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {facts.map((f, fIdx) => (
+                  <div key={fIdx} className="p-4 bg-gradient-to-tr from-amber-50 to-orange-50 rounded-2xl border border-amber-200 flex flex-col gap-1 shadow-xs">
+                    <span className="text-2xl">{f.icon}</span>
+                    <span className="text-xs font-black text-amber-950">{f.title}</span>
+                    <p className="text-[11px] font-bold text-slate-600 leading-snug mt-0.5">{f.detail}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Hands-On DIY Science Experiment */}
+          {journal?.handsOnExperiment && (
+            <div className="p-5 bg-teal-50/70 rounded-3xl border border-teal-200 flex flex-col gap-3 shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-teal-900 flex items-center gap-1.5">
+                  <FlaskConical className="w-4 h-4 text-teal-600" />
+                  <span>Hands-On Mini Experiment: {journal.handsOnExperiment.title}</span>
+                </span>
+              </div>
+
+              <div className="text-xs font-bold text-slate-700 flex flex-col gap-2">
+                {journal.handsOnExperiment.materialsNeeded && (
+                  <p>
+                    <span className="text-teal-950 font-black">🧪 Materials Needed: </span>
+                    {Array.isArray(journal.handsOnExperiment.materialsNeeded)
+                      ? journal.handsOnExperiment.materialsNeeded.join(', ')
+                      : String(journal.handsOnExperiment.materialsNeeded)}
+                  </p>
+                )}
+                {journal.handsOnExperiment.procedure && (
+                  <p>
+                    <span className="text-teal-950 font-black">📋 Step-by-Step Procedure: </span>
+                    {journal.handsOnExperiment.procedure}
+                  </p>
+                )}
+                {journal.handsOnExperiment.expectedObservation && (
+                  <div className="p-3 bg-emerald-100 rounded-2xl text-xs font-black text-emerald-950 border border-emerald-300">
+                    ✅ Expected Observation: {journal.handsOnExperiment.expectedObservation}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
