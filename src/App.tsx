@@ -107,11 +107,17 @@ export function App() {
 
               {/* Theme 2 & 4: Water & Aquatic Experiments */}
               <Route path="/theme/water/hub" element={<ThemeWaterHub />} />
+              <Route path="/theme/2/hub" element={<ThemeWaterHub />} />
               <Route path="/theme/water/chapter/:chapterNum" element={<WaterMissionEngine />} />
+              <Route path="/theme/2/chapter/:chapterNum" element={<WaterMissionEngine />} />
 
               {/* Theme 3 & 5: Shelter, Mountains & Earth (5 Chapters) */}
               <Route path="/theme/shelter/hub" element={<ThemeShelterHub />} />
+              <Route path="/theme/3/hub" element={<ThemeShelterHub />} />
+              <Route path="/theme/5/hub" element={<ThemeShelterHub />} />
               <Route path="/theme/shelter/chapter/:chapterNum" element={<ShelterMissionEngine />} />
+              <Route path="/theme/3/chapter/:chapterNum" element={<ShelterMissionEngine />} />
+              <Route path="/theme/5/chapter/:chapterNum" element={<ShelterMissionEngine />} />
 
               {/* Chapter Hub, Discovery Journal & Mystery Lab */}
               <Route path="/chapter-hub" element={<ChapterHub />} />

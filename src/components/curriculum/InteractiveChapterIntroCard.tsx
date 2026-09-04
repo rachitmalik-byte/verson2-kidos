@@ -11,10 +11,6 @@ import {
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
-  HelpCircle,
-  Eye,
-  Lightbulb,
-  ChevronRight,
   Layers,
   ZoomIn,
   X,
@@ -44,7 +40,7 @@ interface Props {
 export const InteractiveChapterIntroCard: React.FC<Props> = ({
   chapterData,
   onStartLab,
-  accentBorderColor = 'border-sky-400',
+  accentBorderColor = 'border-blue-500/40',
 }) => {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [userPrediction, setUserPrediction] = useState<number | null>(null);
@@ -76,7 +72,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
       sounds.bubble();
     }
     voiceAssistant.speak(
-      `You predicted: ${opt.text}. Let's enter the lab and see if your hypothesis is correct!`
+      `You predicted: ${opt.text}. Let's enter the lab and test your hypothesis!`
     );
   };
 
@@ -104,20 +100,20 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col gap-6 select-none font-sans">
-      {/* ── 1. Top Hook Banner (Relatable Everyday Question) ── */}
-      <div className={`w-full bg-white/98 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 ${accentBorderColor} shadow-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden`}>
+    <div className="w-full max-w-4xl mx-auto flex flex-col gap-6 select-none font-sans text-white">
+      {/* ── 1. Top Hook Banner ── */}
+      <div className={`portal-hero w-full bg-slate-900/90 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border ${accentBorderColor} shadow-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden`}>
         <div className="shrink-0 flex flex-col items-center">
-          <Pip mood="curious" size="lg" />
-          <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full mt-1">
-            Pip • Science Guide
+          <Pip mood="curious" size={72} interactive={false} />
+          <span className="text-[10px] font-mono font-bold text-cyan-300 bg-cyan-950/80 px-2.5 py-0.5 rounded-full mt-2 border border-cyan-500/30">
+            Pip • Research Mentor
           </span>
         </div>
 
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <span className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-950 font-black text-xs">
-              {chapterData?.syllabusRef || 'CBSE Class 5 EVS'} • Chapter {chapterData?.chapterNumber || 1}
+            <span className="px-3 py-1 rounded-full bg-blue-500/20 text-cyan-300 font-mono font-bold text-xs border border-cyan-400/30">
+              Chapter {chapterData?.chapterNumber || 1} • Science Investigation
             </span>
 
             {/* Direct Quick Skip Button */}
@@ -127,41 +123,41 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                 voiceAssistant.stop();
                 onStartLab();
               }}
-              className="px-4 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all border border-amber-500"
+              className="px-4 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-cyan-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer border border-cyan-400/30 transition-all"
               title="Skip introduction and jump straight into the interactive lab"
             >
-              <span>⚡ Skip Intro</span>
-              <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+              <span>Skip to Lab</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl font-display font-extrabold text-white leading-tight">
             {intro?.title || chapterData?.chapterTitle || 'Chapter Science Quest'} {chapterData?.icon || '🔬'}
           </h1>
 
-          <p className="text-sm sm:text-base font-bold text-slate-700 mt-2 leading-relaxed">
+          <p className="text-xs sm:text-sm font-normal text-slate-300 mt-2 leading-relaxed">
             {intro?.hookScene || 'Explore the secrets of the living and material world!'}
           </p>
 
-          <div className="mt-3 p-3 bg-amber-50 rounded-2xl border-2 border-amber-300 text-xs sm:text-sm font-black text-amber-950 flex items-start gap-2">
-            <span className="text-lg">🔎</span>
+          <div className="mt-3 p-3 bg-white/5 rounded-xl border border-white/10 text-xs text-slate-200 flex items-start gap-2 backdrop-blur-sm">
+            <span className="text-base">🔎</span>
             <div>
-              <span className="text-amber-800 uppercase tracking-wider text-[10px] block font-black">Guiding Curiosity Question</span>
-              <span className="font-bold">{intro?.bigGuidingQuestion || 'Why does nature use such different materials and adaptations?'}</span>
+              <span className="text-amber-400 uppercase tracking-wider text-[10px] block font-mono font-bold">Guiding Curiosity Question</span>
+              <span className="font-semibold text-slate-100">{intro?.bigGuidingQuestion || 'Why does nature use such different materials and adaptations?'}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── 2. Visual Concept Card with Topic-Named Tab Switchers ── */}
+      {/* ── 2. Visual Concept Card with Topic Switchers ── */}
       {activeStep && (
-        <div className="w-full bg-white rounded-[36px] p-6 sm:p-8 border-4 border-slate-200 shadow-xl flex flex-col gap-5">
+        <div className="w-full bg-slate-900/90 rounded-2xl p-6 sm:p-8 border border-white/15 shadow-xl flex flex-col gap-5">
           {/* Topic Switcher Pills */}
           {conceptSteps.length > 1 && (
-            <div className="flex flex-wrap items-center gap-2 pb-3 border-b-2 border-slate-100">
-              <span className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1 mr-1">
-                <Layers className="w-3.5 h-3.5" />
-                <span>Science Secrets:</span>
+            <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-white/10">
+              <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mr-1">
+                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Investigation Steps:</span>
               </span>
               {conceptSteps.map((step: any, idx: number) => {
                 const isCurrent = activeStepIndex === idx;
@@ -172,13 +168,13 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                       sounds.pop();
                       setActiveStepIndex(idx);
                     }}
-                    className={`px-3.5 py-2 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all ${
+                    className={`px-3.5 py-1.5 rounded-xl font-bold text-xs flex items-center gap-2 cursor-pointer transition-all ${
                       isCurrent
-                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 scale-102 ring-2 ring-indigo-300'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 border border-slate-200'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30 border border-cyan-400/40'
+                        : 'bg-white/10 text-slate-300 hover:bg-white/15 border border-white/10'
                     }`}
                   >
-                    <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+                    <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
                       {idx + 1}
                     </span>
                     <span className="truncate max-w-[180px] sm:max-w-xs">{step.conceptTitle}</span>
@@ -190,75 +186,75 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
 
           {/* Main Card Content */}
           <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Real Photo / Specimen View (Click to Zoom Preview Modal) */}
+            {/* Real Photo / Specimen View */}
             <div
               onClick={() => {
                 sounds.pop();
                 setIsImageZoomed(true);
               }}
-              className="relative w-full md:w-80 h-56 sm:h-64 rounded-3xl overflow-hidden bg-slate-900 shadow-inner border-4 border-slate-100 shrink-0 flex items-center justify-center cursor-zoom-in group"
-              title="Click to view full-size expanded specimen"
+              className="relative w-full md:w-80 h-56 sm:h-64 rounded-2xl overflow-hidden bg-slate-950 border border-white/15 shrink-0 flex items-center justify-center cursor-zoom-in group shadow-lg"
+              title="Click to zoom specimen"
             >
               {stepImageSrc ? (
                 <img
                   src={stepImageSrc}
                   alt={activeStep.conceptTitle}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
                 <div className="text-center p-4">
                   <span className="text-6xl block mb-2">{chapterData?.icon || '🔬'}</span>
-                  <span className="text-xs font-black text-white">{activeStep.conceptTitle}</span>
+                  <span className="text-xs font-bold text-white">{activeStep.conceptTitle}</span>
                 </div>
               )}
 
-              <div className="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-amber-400 border border-slate-700 shadow-sm">
+              <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono font-bold text-cyan-300 border border-white/15">
                 Card {activeStepIndex + 1} of {conceptSteps.length}
               </div>
 
               {/* Zoom Inspect Badge */}
-              <div className="absolute bottom-3 right-3 bg-slate-950/85 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 border border-slate-700 group-hover:bg-indigo-600 group-hover:border-indigo-400 transition-all">
-                <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-                <span>Zoom Photo</span>
+              <div className="absolute bottom-3 right-3 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 border border-white/15 group-hover:bg-blue-600 transition-all">
+                <ZoomIn className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Zoom Micrograph</span>
               </div>
             </div>
 
             {/* Pip's Dialogue & Science Observation */}
-            <div className="flex-1 flex flex-col justify-between h-full">
+            <div className="flex-1 flex flex-col justify-between h-full text-left">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg sm:text-xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h3 className="text-lg sm:text-xl font-display font-extrabold text-white">
                     {activeStep.conceptTitle}
                   </h3>
                   <button
                     onClick={handleReadStep}
-                    className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer shadow-xs"
+                    className="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-cyan-300 border border-white/10 cursor-pointer"
                     title="Listen to Pip"
                   >
-                    <Volume2 className="w-4 h-4 text-indigo-600" />
+                    <Volume2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed mb-4">
-                  {activeStep.pipDialogue}
+                <p className="text-xs sm:text-sm font-normal text-slate-300 leading-relaxed mb-4">
+                  "{activeStep.pipDialogue}"
                 </p>
               </div>
 
               {/* Key Takeaway Badge */}
-              <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-300 text-xs font-black text-emerald-950 flex items-center gap-2 mb-4">
-                <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="p-3 bg-cyan-950/50 rounded-xl border border-cyan-500/30 text-xs font-semibold text-cyan-200 flex items-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>{activeStep.keyTakeaway}</span>
               </div>
 
               {/* Prominent Next Card / Previous Buttons */}
-              <div className="flex items-center justify-between gap-3 pt-2 border-t border-slate-100">
+              <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/10">
                 {activeStepIndex > 0 ? (
                   <button
                     onClick={handlePrevCard}
-                    className="px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer border border-slate-200 transition-all active:scale-95"
+                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs flex items-center gap-1.5 cursor-pointer border border-white/10 transition-all"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Previous Card</span>
+                    <span>Previous</span>
                   </button>
                 ) : (
                   <div />
@@ -270,26 +266,26 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                     voiceAssistant.stop();
                     onStartLab();
                   }}
-                  className="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer transition-all border border-slate-300"
+                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer border border-white/10 transition-all"
                 >
-                  <FastForward className="w-4 h-4 text-amber-500" />
+                  <FastForward className="w-3.5 h-3.5 text-amber-400" />
                   <span>Skip to Lab</span>
                 </button>
 
                 {activeStepIndex < conceptSteps.length - 1 ? (
                   <button
                     onClick={handleNextCard}
-                    className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md active:scale-95 transition-all"
+                    className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-blue-500/30 transition-all"
                   >
-                    <span>Next Secret (Card {activeStepIndex + 2}/{conceptSteps.length})</span>
+                    <span>Next Card ({activeStepIndex + 2}/{conceptSteps.length})</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
                     onClick={handleNextCard}
-                    className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md active:scale-95 transition-all"
+                    className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center gap-2 cursor-pointer shadow-md transition-all"
                   >
-                    <span>Make Your Prediction Below ⬇️</span>
+                    <span>Hypothesis Challenge ⬇️</span>
                   </button>
                 )}
               </div>
@@ -298,7 +294,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         </div>
       )}
 
-      {/* ── 3. High-Resolution Zoomed Specimen Modal (Lightbox) ── */}
+      {/* ── 3. High-Resolution Zoomed Lightbox Modal ── */}
       <AnimatePresence>
         {isImageZoomed && (
           <motion.div
@@ -306,44 +302,41 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsImageZoomed(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-slate-950/85 backdrop-blur-md cursor-pointer"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-slate-950/90 backdrop-blur-md cursor-pointer"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-4xl max-h-[90vh] bg-slate-900 rounded-[32px] border-4 border-indigo-500/80 shadow-2xl p-4 sm:p-6 flex flex-col items-center gap-4 cursor-default overflow-hidden"
+              className="relative max-w-4xl max-h-[90vh] bg-slate-900 rounded-2xl border border-white/20 shadow-2xl p-4 sm:p-6 flex flex-col items-center gap-4 cursor-default overflow-hidden"
             >
-              {/* Close Button */}
               <button
                 onClick={() => {
                   sounds.pop();
                   setIsImageZoomed(false);
                 }}
-                className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-slate-950/80 hover:bg-slate-800 text-white cursor-pointer transition-all border border-slate-700 shadow-lg"
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white cursor-pointer border border-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Full-Size Specimen Image */}
-              <div className="w-full max-h-[65vh] rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border-2 border-slate-800">
+              <div className="w-full max-h-[65vh] rounded-xl overflow-hidden bg-slate-950 flex items-center justify-center border border-white/10">
                 {stepImageSrc && (
                   <img
                     src={stepImageSrc}
                     alt={activeStep?.conceptTitle}
-                    className="w-full h-full max-h-[65vh] object-contain rounded-2xl"
+                    className="w-full h-full max-h-[65vh] object-contain"
                   />
                 )}
               </div>
 
-              {/* Zoom Modal Caption */}
               <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-white">
                 <div>
-                  <h4 className="text-base sm:text-lg font-black text-amber-400">
+                  <h4 className="text-base sm:text-lg font-bold text-amber-400">
                     🔬 {activeStep?.conceptTitle}
                   </h4>
-                  <p className="text-xs text-slate-300 font-bold max-w-xl mt-0.5">
+                  <p className="text-xs text-slate-300 font-normal max-w-xl mt-0.5">
                     {activeStep?.keyTakeaway}
                   </p>
                 </div>
@@ -353,9 +346,9 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
                     sounds.pop();
                     setIsImageZoomed(false);
                   }}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl cursor-pointer shadow-md shrink-0"
+                  className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl cursor-pointer shadow-md shrink-0"
                 >
-                  Done Inspecting
+                  Close Inspection
                 </button>
               </div>
             </motion.div>
@@ -363,40 +356,40 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
         )}
       </AnimatePresence>
 
-      {/* ── 4. Prediction Step: Think Fast Before Entering the Lab! ── */}
-      <div id="chapter-prediction-challenge" className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 p-6 sm:p-7 rounded-[36px] shadow-2xl text-white flex flex-col gap-4">
+      {/* ── 4. Prediction Step ── */}
+      <div id="chapter-prediction-challenge" className="w-full bg-slate-900/90 border border-amber-500/40 p-6 rounded-2xl shadow-2xl text-white flex flex-col gap-4 text-left">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm text-2xl">
+          <div className="p-3 bg-amber-500/20 border border-amber-400/30 rounded-xl text-2xl">
             🔮
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-amber-200 bg-black/20 px-2.5 py-0.5 rounded-full inline-block mb-1">
-              Step 2: Make Your Prediction
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 block mb-1">
+              Hypothesis Test Before Entering Lab
             </span>
-            <h3 className="text-base sm:text-lg font-black text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <h3 className="text-base sm:text-lg font-display font-bold text-white">
               {predictionChallenge.question}
             </h3>
           </div>
         </div>
 
-        {/* Clickable Prediction Option Cards */}
+        {/* Clickable Prediction Options */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {predictionChallenge.options.map((opt: any, idx: number) => {
             const isSelected = userPrediction === idx;
             return (
               <motion.button
                 key={idx}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 onClick={() => handleSelectPrediction(idx)}
-                className={`p-4 rounded-2xl border-3 text-left font-black text-xs sm:text-sm cursor-pointer transition-all flex items-center justify-between gap-3 ${
+                className={`p-4 rounded-xl border text-left font-semibold text-xs sm:text-sm cursor-pointer transition-all flex items-center justify-between gap-3 ${
                   isSelected
-                    ? 'bg-slate-950 text-amber-400 border-white shadow-xl scale-102 ring-4 ring-white/30'
-                    : 'bg-white/95 text-slate-900 border-white/60 hover:bg-white'
+                    ? 'bg-blue-600 text-white border-cyan-400 shadow-xl ring-2 ring-cyan-400/40'
+                    : 'bg-white/5 text-slate-200 border-white/10 hover:bg-white/10'
                 }`}
               >
                 <span>{opt.text}</span>
-                {isSelected && <CheckCircle2 className="w-5 h-5 text-amber-400 shrink-0" />}
+                {isSelected && <CheckCircle2 className="w-5 h-5 text-cyan-300 shrink-0" />}
               </motion.button>
             );
           })}
@@ -406,7 +399,7 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-3 bg-black/30 backdrop-blur-md rounded-2xl text-xs font-bold text-white text-center border border-white/20"
+            className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-xs font-medium text-emerald-200 text-center"
           >
             🎯 {predictionChallenge.explanation}
           </motion.div>
@@ -420,10 +413,10 @@ export const InteractiveChapterIntroCard: React.FC<Props> = ({
             sounds.fanfare();
             onStartLab();
           }}
-          className="px-8 py-4 rounded-3xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-base sm:text-lg shadow-2xl active:scale-95 transition-all flex items-center gap-3 cursor-pointer border-2 border-emerald-300"
+          className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:brightness-110 text-white font-bold text-sm sm:text-base shadow-xl shadow-blue-600/30 active:scale-95 transition-all flex items-center gap-3 cursor-pointer"
         >
-          <span>🔬 Enter Interactive Lab</span>
-          <ArrowRight className="w-5 h-5 stroke-[3]" />
+          <span>Enter Interactive Lab</span>
+          <ArrowRight className="w-5 h-5" />
         </button>
       </div>
     </div>

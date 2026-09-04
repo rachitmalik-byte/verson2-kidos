@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
+import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import {
   GUIDEBOOK_CHAPTERS,
   GuidebookChapter,
@@ -25,7 +24,6 @@ import {
   Home,
   ExternalLink,
   ChevronRight,
-  Layers,
 } from 'lucide-react';
 
 // Specimen image asset imports
@@ -175,73 +173,14 @@ export const DigitalGuidebook: React.FC = () => {
     }
   };
 
-  return (
-    <div className={`min-h-screen w-full font-sans select-none ${
-      isStudyPrintMode
-        ? 'bg-white text-slate-900 p-6'
-        : 'bg-gradient-to-b from-indigo-200 via-sky-100 to-amber-100 p-3 sm:p-6 md:p-8 flex flex-col items-center'
-    }`}>
-      {/* ── Top App Header Bar ── */}
-      {!isStudyPrintMode && (
-        <header className="w-full max-w-6xl bg-white/95 backdrop-blur-md rounded-3xl border-4 border-slate-200/80 p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 z-20">
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
-            <button
-              onClick={() => {
-                sounds.pop();
-                voiceAssistant.stop();
-                navigate('/subjects');
-              }}
-              className="p-2.5 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl text-slate-700 shadow-xs cursor-pointer active:scale-95 transition-all"
-              title="Return to All Subjects"
-            >
-              <Home className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={() => {
-                sounds.pop();
-                voiceAssistant.stop();
-                navigate(-1);
-              }}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-400 border-2 border-amber-600 shadow-[0_4px_0_#D97706] active:translate-y-1 text-slate-950 font-black text-xs sm:text-sm cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back</span>
-            </button>
-          </div>
-
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2">
-              <BookOpen className="w-6 h-6 text-indigo-600" />
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Digital Science Guidebook 📖
-              </h1>
-            </div>
-            <p className="text-[11px] sm:text-xs font-bold text-slate-500">
-              CBSE Class 5 EVS • Comprehensive Concepts, Verified Micrographs & Case Studies
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setIsStudyPrintMode(true)}
-              className="p-2.5 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl text-slate-700 font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
-              title="Switch to Print / PDF Study Mode"
-            >
-              <Printer className="w-4 h-4 text-indigo-600" />
-              <span className="hidden md:inline">Print Notes</span>
-            </button>
-            <AudioNavBarControls showProfile={false} />
-          </div>
-        </header>
-      )}
-
+  const renderContent = () => (
+    <div className={`w-full max-w-6xl flex flex-col gap-6 relative z-10 ${isStudyPrintMode ? 'text-slate-900' : 'text-white'}`}>
       {/* Print Mode Header */}
       {isStudyPrintMode && (
         <div className="w-full flex items-center justify-between pb-4 border-b-2 border-slate-300 mb-6 print:hidden">
           <div className="flex items-center gap-2">
             <BookOpen className="w-6 h-6 text-indigo-600" />
-            <h1 className="text-xl font-black text-slate-900">PolyQuest Digital Guidebook — Printable Study Mode</h1>
+            <h1 className="text-xl font-black text-slate-900">Kidos Digital Guidebook — Printable Study Mode</h1>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -261,381 +200,435 @@ export const DigitalGuidebook: React.FC = () => {
         </div>
       )}
 
-      <div className="w-full max-w-6xl flex flex-col gap-6 relative z-10">
-        {/* ── Search & Course Filter Controls ── */}
-        {!isStudyPrintMode && (
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white/90 backdrop-blur-md p-4 rounded-3xl border-3 border-slate-200 shadow-md">
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search across all 19 chapters, scientific laws, case studies, or vocabulary..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border-2 border-slate-200 text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:border-indigo-500 transition-colors"
-              />
-              {searchQuery && (
+      {/* ── Sub-Navigation & Header Bar ── */}
+      {!isStudyPrintMode && (
+        <header className="w-full world-glass-dock p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 z-20">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+            <button
+              onClick={() => {
+                sounds.pop();
+                voiceAssistant.stop();
+                navigate('/subjects');
+              }}
+              className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+              title="Return to Subjects"
+            >
+              <Home className="w-4 h-4" />
+              <span>Worlds</span>
+            </button>
+
+            <button
+              onClick={() => {
+                sounds.pop();
+                voiceAssistant.stop();
+                navigate(-1);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs font-bold flex items-center gap-1 cursor-pointer transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back</span>
+            </button>
+          </div>
+
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-2">
+              <BookOpen className="w-5 h-5 text-cyan-400" />
+              <h1 className="text-lg sm:text-xl font-display font-extrabold text-white">
+                Digital Science Guidebook
+              </h1>
+            </div>
+            <p className="text-[11px] font-mono text-slate-400">
+              Verified Micrographs, Scientific Laws & Case Studies
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsStudyPrintMode(true)}
+              className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-slate-200 font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all"
+              title="Switch to Print / PDF Study Mode"
+            >
+              <Printer className="w-4 h-4 text-cyan-400" />
+              <span className="hidden md:inline">Print Notes</span>
+            </button>
+          </div>
+        </header>
+      )}
+
+      {/* ── Search & Course Filter Controls ── */}
+      {!isStudyPrintMode && (
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-white/15 shadow-xl">
+          {/* Search Input */}
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search across 19 chapters, scientific laws, or vocabulary..."
+              className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* Course Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+            {[
+              { id: 'all', label: 'All (19)', icon: '📚' },
+              { id: 'materials', label: 'Materials (6)', icon: '🧪' },
+              { id: 'senses', label: 'Super Senses (4)', icon: '🐾' },
+              { id: 'water', label: 'Water (4)', icon: '🌊' },
+              { id: 'shelter', label: 'Shelter (5)', icon: '🏔️' },
+            ].map((pill) => {
+              const isSelected = selectedCourseFilter === pill.id;
+              return (
                 <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400 hover:text-slate-600"
+                  key={pill.id}
+                  onClick={() => {
+                    sounds.pop();
+                    setSelectedCourseFilter(pill.id as any);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30 border border-cyan-400/40'
+                      : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
+                  }`}
                 >
-                  ✕
+                  <span>{pill.icon}</span>
+                  <span>{pill.label}</span>
                 </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Two-Column Main Guidebook Layout ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Navigation Sidebar */}
+        {!isStudyPrintMode && (
+          <div className="lg:col-span-4 bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-white/15 shadow-xl flex flex-col gap-2 max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-2 pb-2 border-b border-white/10">
+              <span className="text-[11px] font-mono font-bold uppercase text-slate-400">
+                Chapter Directory ({filteredChapters.length})
+              </span>
+              {bookmarkedIds.length > 0 && (
+                <span className="text-[10px] font-bold text-amber-400 flex items-center gap-1">
+                  <Bookmark className="w-3 h-3 fill-amber-400" />
+                  <span>{bookmarkedIds.length} Saved</span>
+                </span>
               )}
             </div>
 
-            {/* Course Filter Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-              {[
-                { id: 'all', label: 'All (19)', icon: '📚' },
-                { id: 'materials', label: 'Materials (6)', icon: '🧪' },
-                { id: 'senses', label: 'Super Senses (4)', icon: '🐾' },
-                { id: 'water', label: 'Water (4)', icon: '🌊' },
-                { id: 'shelter', label: 'Shelter (5)', icon: '🏔️' },
-              ].map((pill) => {
-                const isSelected = selectedCourseFilter === pill.id;
+            {filteredChapters.length === 0 ? (
+              <div className="p-6 text-center text-xs text-slate-400">
+                No chapters match "{searchQuery}".
+              </div>
+            ) : (
+              filteredChapters.map((ch) => {
+                const isSelected = activeChapter.id === ch.id;
+                const isBookmarked = bookmarkedIds.includes(ch.id);
+
                 return (
                   <button
-                    key={pill.id}
+                    key={ch.id}
                     onClick={() => {
                       sounds.pop();
-                      setSelectedCourseFilter(pill.id as any);
+                      setSelectedChapterId(ch.id);
+                      voiceAssistant.stop();
                     }}
-                    className={`px-3 py-2 rounded-2xl text-xs font-black shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                    className={`p-3 rounded-xl text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
                       isSelected
-                        ? 'bg-indigo-600 text-white shadow-md'
-                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold shadow-lg shadow-blue-600/30 border border-cyan-300'
+                        : 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5'
                     }`}
                   >
-                    <span>{pill.icon}</span>
-                    <span>{pill.label}</span>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-xl shrink-0">{ch.icon}</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-bold line-clamp-1">{ch.title}</span>
+                        <span className="text-[10px] opacity-75 truncate">{ch.courseName} • Ch {ch.chapterNumber}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      {isBookmarked && (
+                        <Bookmark className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                      )}
+                      <ChevronRight className="w-4 h-4 opacity-50" />
+                    </div>
                   </button>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        {/* Right Main Panel: Comprehensive Chapter Study Guide */}
+        <div className={`${isStudyPrintMode ? 'col-span-12' : 'lg:col-span-8'} ${isStudyPrintMode ? 'bg-white text-slate-900 border border-slate-300' : 'bg-slate-900/90 border border-white/15 text-white'} backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col gap-6`}>
+          {/* Chapter Header */}
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-white/10 pb-5">
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="px-3 py-1 bg-blue-500/20 text-cyan-300 border border-cyan-400/30 rounded-full text-xs font-mono font-bold">
+                  Chapter {activeChapter.chapterNumber}
+                </span>
+                <span className="text-xs text-slate-400">
+                  {activeChapter.courseName}
+                </span>
+              </div>
+
+              <h1 className="text-xl sm:text-2xl font-display font-extrabold text-white leading-tight">
+                {activeChapter.title} {activeChapter.icon}
+              </h1>
+            </div>
+
+            <div className="flex items-center gap-2 self-start">
+              <button
+                onClick={() => toggleBookmark(activeChapter.id)}
+                className={`p-2 rounded-xl border cursor-pointer transition-all ${
+                  bookmarkedIds.includes(activeChapter.id)
+                    ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+                    : 'bg-white/10 border-white/10 text-slate-300 hover:bg-white/15'
+                }`}
+                title={bookmarkedIds.includes(activeChapter.id) ? 'Bookmarked' : 'Bookmark Chapter'}
+              >
+                <Bookmark className={`w-4 h-4 ${bookmarkedIds.includes(activeChapter.id) ? 'fill-amber-400' : ''}`} />
+              </button>
+
+              <button
+                onClick={() => handleReadAloud(`${activeChapter.title}. Big question: ${activeChapter.bigQuestion}`)}
+                className="p-2 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl text-cyan-300 cursor-pointer transition-all"
+                title="Listen to Chapter Overview"
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Big Guiding Question Box */}
+          <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-400/30 text-xs sm:text-sm text-amber-200 flex items-start gap-3">
+            <HelpCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="block text-[10px] font-mono font-bold uppercase text-amber-400 tracking-wider mb-0.5">
+                The Big Science Question
+              </span>
+              <span className="font-semibold text-slate-100">{activeChapter.bigQuestion}</span>
+            </div>
+          </div>
+
+          {/* ── Verified Photographic Specimen Visuals (2 Cards) ── */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4" />
+              <span>Verified Micrographs & Macro Specimens</span>
+            </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {activeChapter.images.map((img, iIdx) => {
+                const imgSrc = LOCAL_ASSET_MAP[img.assetKey] || img.webFallbackUrl;
+                return (
+                  <div
+                    key={iIdx}
+                    className="rounded-xl border border-white/15 overflow-hidden bg-slate-950 flex flex-col shadow-md group"
+                  >
+                    <div className="w-full aspect-video relative overflow-hidden">
+                      <img
+                        src={imgSrc}
+                        alt={img.caption}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-slate-950/80 text-[10px] font-mono text-cyan-300 border border-white/10">
+                        {img.magnificationOrType}
+                      </div>
+                    </div>
+                    <div className="p-3 bg-slate-900/90 text-[11px] text-slate-300 leading-snug border-t border-white/10">
+                      {img.caption}
+                    </div>
+                  </div>
                 );
               })}
             </div>
           </div>
-        )}
 
-        {/* ── Two-Column Main Guidebook Layout ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Navigation Sidebar */}
-          {!isStudyPrintMode && (
-            <div className="lg:col-span-4 bg-white/95 backdrop-blur-md p-4 rounded-3xl border-3 border-slate-200 shadow-md flex flex-col gap-2 max-h-[85vh] overflow-y-auto">
-              <div className="flex items-center justify-between px-2 pb-1 border-b border-slate-100">
-                <span className="text-[11px] font-black uppercase text-slate-500">
-                  Chapter Directory ({filteredChapters.length})
-                </span>
-                {bookmarkedIds.length > 0 && (
-                  <span className="text-[10px] font-black text-amber-600 flex items-center gap-1">
-                    <Bookmark className="w-3 h-3 fill-amber-400" />
-                    <span>{bookmarkedIds.length} Saved</span>
-                  </span>
-                )}
-              </div>
+          {/* ── Core Conceptual Deep-Dive ── */}
+          <div className="flex flex-col gap-3">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4" />
+              <span>Core Scientific Concepts</span>
+            </span>
 
-              {filteredChapters.length === 0 ? (
-                <div className="p-6 text-center text-xs font-bold text-slate-500">
-                  No chapters match "{searchQuery}". Try searching for another topic like "polyester", "ants", or "stepwells"!
-                </div>
-              ) : (
-                filteredChapters.map((ch) => {
-                  const isSelected = activeChapter.id === ch.id;
-                  const isBookmarked = bookmarkedIds.includes(ch.id);
-
-                  return (
-                    <button
-                      key={ch.id}
-                      onClick={() => {
-                        sounds.pop();
-                        setSelectedChapterId(ch.id);
-                        voiceAssistant.stop();
-                      }}
-                      className={`p-3.5 rounded-2xl text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
-                        isSelected
-                          ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black shadow-md border-2 border-amber-600 ring-2 ring-amber-200'
-                          : 'bg-slate-50 hover:bg-indigo-50 text-slate-700 border border-slate-200'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="text-xl shrink-0">{ch.icon}</span>
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-xs font-black line-clamp-1">{ch.title}</span>
-                          <span className="text-[10px] font-bold opacity-75 truncate">{ch.courseName} • Ch {ch.chapterNumber}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-1 shrink-0">
-                        {isBookmarked && (
-                          <Bookmark className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-                        )}
-                        <ChevronRight className="w-4 h-4 opacity-50" />
-                      </div>
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          )}
-
-          {/* Right Main Panel: Comprehensive Chapter Study Guide */}
-          <div className={`${isStudyPrintMode ? 'col-span-12' : 'lg:col-span-8'} bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-[36px] border-4 border-indigo-200 shadow-2xl flex flex-col gap-6`}>
-            {/* Chapter Header */}
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b-2 border-slate-100 pb-5">
-              <div>
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="px-3 py-1 bg-indigo-100 text-indigo-950 rounded-full text-xs font-black uppercase">
-                    {activeChapter.syllabusRef} • Chapter {activeChapter.chapterNumber}
-                  </span>
-                  <span className="text-xs font-bold text-slate-500">
-                    {activeChapter.courseName}
-                  </span>
-                </div>
-
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  {activeChapter.title} {activeChapter.icon}
-                </h1>
-              </div>
-
-              <div className="flex items-center gap-2 self-start">
-                <button
-                  onClick={() => toggleBookmark(activeChapter.id)}
-                  className={`p-2.5 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 ${
-                    bookmarkedIds.includes(activeChapter.id)
-                      ? 'bg-amber-100 border-amber-400 text-amber-800'
-                      : 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200'
-                  }`}
-                  title={bookmarkedIds.includes(activeChapter.id) ? 'Bookmarked' : 'Bookmark Chapter'}
-                >
-                  <Bookmark className={`w-4 h-4 ${bookmarkedIds.includes(activeChapter.id) ? 'fill-amber-500' : ''}`} />
-                </button>
-
-                <button
-                  onClick={() => handleReadAloud(`${activeChapter.title}. Big question: ${activeChapter.bigQuestion}`)}
-                  className="p-2.5 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl text-slate-700 cursor-pointer active:scale-95 transition-all"
-                  title="Listen to Chapter Overview"
-                >
-                  <Volume2 className="w-4 h-4 text-indigo-600" />
-                </button>
-              </div>
-            </div>
-
-            {/* Big Guiding Question Box */}
-            <div className="p-4 bg-amber-50 rounded-2xl border-2 border-amber-300 text-xs sm:text-sm font-black text-amber-950 flex items-start gap-3 shadow-2xs">
-              <HelpCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <span className="block text-[10px] font-black uppercase text-amber-700 tracking-wider mb-0.5">
-                  The Big Science Question
-                </span>
-                <span>{activeChapter.bigQuestion}</span>
-              </div>
-            </div>
-
-            {/* ── Verified Photographic Specimen Visuals (2 Cards) ── */}
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <span>Verified Visual Specimens & Micrographs</span>
-              </span>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {activeChapter.images.map((img, iIdx) => {
-                  const imgSrc = LOCAL_ASSET_MAP[img.assetKey] || img.webFallbackUrl;
-                  return (
-                    <div
-                      key={iIdx}
-                      className="rounded-3xl border-2 border-slate-200 overflow-hidden bg-slate-950 flex flex-col shadow-md group"
-                    >
-                      <div className="w-full aspect-video relative overflow-hidden">
-                        <img
-                          src={imgSrc}
-                          alt={img.caption}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <span className="absolute top-2 left-2 px-2.5 py-1 bg-slate-950/80 text-white rounded-lg text-[10px] font-mono font-bold backdrop-blur-xs">
-                          {img.magnificationOrType}
-                        </span>
-                      </div>
-                      <div className="p-3 bg-white border-t border-slate-100 flex-1">
-                        <p className="text-[11px] font-bold text-slate-700 leading-snug">
-                          {img.caption}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* ── Core Conceptual Deep-Dive ── */}
             <div className="flex flex-col gap-3">
-              <span className="text-xs font-black uppercase tracking-wider text-indigo-950 flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-indigo-600" />
-                <span>Conceptual Knowledge Foundation</span>
-              </span>
-
-              <div className="flex flex-col gap-3">
-                {activeChapter.coreConcepts.map((concept, cIdx) => (
-                  <div
-                    key={cIdx}
-                    className="p-5 rounded-3xl bg-slate-50 border-2 border-slate-200 shadow-xs flex flex-col gap-2"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm sm:text-base font-black text-slate-900">
-                        {concept.heading}
-                      </h3>
-                      <button
-                        onClick={() => handleReadAloud(`${concept.heading}. ${concept.explanation}`)}
-                        className="p-1 rounded-lg hover:bg-slate-200 text-slate-500 cursor-pointer"
-                        title="Listen to Section"
-                      >
-                        <Volume2 className="w-3.5 h-3.5 text-indigo-600" />
-                      </button>
-                    </div>
-
-                    <p className="text-xs font-bold text-slate-600 leading-relaxed">
-                      {concept.explanation}
-                    </p>
-
-                    <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-300 text-[11px] font-black text-emerald-950 flex items-start gap-1.5 shadow-2xs mt-1">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>{concept.keyTakeaway}</span>
-                    </div>
+              {activeChapter.coreConcepts.map((concept, cIdx) => (
+                <div
+                  key={cIdx}
+                  className="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-white">
+                      {concept.heading}
+                    </h3>
+                    <button
+                      onClick={() => handleReadAloud(`${concept.heading}. ${concept.explanation}`)}
+                      className="p-1 rounded-lg hover:bg-white/10 text-cyan-300 cursor-pointer"
+                      title="Listen to Section"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                ))}
-              </div>
+
+                  <p className="text-xs text-slate-300 font-normal leading-relaxed">
+                    {concept.explanation}
+                  </p>
+
+                  <div className="p-2 bg-emerald-950/40 rounded-lg border border-emerald-500/30 text-[11px] font-semibold text-emerald-200 flex items-start gap-1.5 mt-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span>{concept.keyTakeaway}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Real-World Historical Case Study ── */}
+          <div className="p-5 rounded-xl bg-gradient-to-br from-indigo-950/80 to-slate-950 border border-indigo-500/30 text-white shadow-xl flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 flex items-center gap-1.5">
+                <History className="w-3.5 h-3.5" />
+                <span>Discovery Case Study ({activeChapter.caseStudy.yearOrEra})</span>
+              </span>
+              <span className="text-[10px] font-mono bg-indigo-500/20 px-2 py-0.5 rounded-md text-indigo-300 border border-indigo-400/30">
+                {activeChapter.caseStudy.discoverer}
+              </span>
             </div>
 
-            {/* ── Real-World Historical Case Study ── */}
-            <div className="p-5 rounded-3xl bg-gradient-to-br from-indigo-900 to-slate-900 text-white shadow-xl flex flex-col gap-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300 flex items-center gap-1.5">
-                  <History className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Real-World Discovery Case Study ({activeChapter.caseStudy.yearOrEra})</span>
-                </span>
-                <span className="text-[10px] font-mono bg-indigo-800/80 px-2 py-0.5 rounded-md text-indigo-200">
-                  {activeChapter.caseStudy.discoverer}
-                </span>
-              </div>
+            <h3 className="text-sm font-display font-bold text-amber-300">
+              {activeChapter.caseStudy.title}
+            </h3>
 
-              <h3 className="text-sm sm:text-base font-black text-amber-300">
-                {activeChapter.caseStudy.title}
-              </h3>
+            <p className="text-xs text-slate-300 font-normal leading-relaxed">
+              {activeChapter.caseStudy.narrative}
+            </p>
 
-              <p className="text-xs font-bold text-slate-200 leading-relaxed">
-                {activeChapter.caseStudy.narrative}
+            <div className="p-2 bg-indigo-950/60 rounded-lg border border-indigo-500/30 text-[11px] font-semibold text-cyan-200 mt-1">
+              ⭐ Scientific Impact: {activeChapter.caseStudy.significance}
+            </div>
+          </div>
+
+          {/* ── Scientific Vocabulary & Glossary ── */}
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+              <Compass className="w-4 h-4" />
+              <span>Scientific Vocabulary</span>
+            </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {activeChapter.vocabulary.map((vocab, vIdx) => (
+                <div
+                  key={vIdx}
+                  className="p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-500/30 flex flex-col gap-1"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-cyan-300">{vocab.term}</span>
+                    {vocab.pronunciation && (
+                      <span className="text-[9px] font-mono text-slate-400">/{vocab.pronunciation}/</span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-snug">{vocab.definition}</p>
+                  <span className="text-[10px] text-cyan-400 italic mt-0.5">"{vocab.example}"</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Quick Revision Flashcard ── */}
+          <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex flex-col gap-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+              <Zap className="w-4 h-4 text-amber-400" />
+              <span>Memory Sheet & Quick Revision</span>
+            </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+              {activeChapter.quickRevisionPoints.map((point, pIdx) => (
+                <div key={pIdx} className="flex items-start gap-2 text-xs text-slate-200">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                  <span>{point}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── "Try This at Home!" Safe Science Mini-Lab ── */}
+          <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+                <FlaskConical className="w-4 h-4 text-emerald-400" />
+                <span>Try This at Home! Safe Mini-Lab</span>
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-md">
+                {activeChapter.miniLab.difficulty}
+              </span>
+            </div>
+
+            <h4 className="text-xs sm:text-sm font-bold text-white">
+              {activeChapter.miniLab.title}
+            </h4>
+
+            <div className="text-xs text-slate-300 flex flex-col gap-1.5">
+              <p>
+                <span className="text-emerald-300 font-bold">Materials Needed: </span>
+                {activeChapter.miniLab.materials.join(', ')}
               </p>
-
-              <div className="p-2.5 bg-indigo-950/80 rounded-xl border border-indigo-700/60 text-[11px] font-black text-indigo-200 mt-1">
-                ⭐ Scientific Impact: {activeChapter.caseStudy.significance}
-              </div>
-            </div>
-
-            {/* ── Scientific Vocabulary & Glossary ── */}
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <Compass className="w-4 h-4 text-indigo-600" />
-                <span>Key Scientific Vocabulary & Terms</span>
-              </span>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {activeChapter.vocabulary.map((vocab, vIdx) => (
-                  <div
-                    key={vIdx}
-                    className="p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-200 flex flex-col gap-1 shadow-2xs"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-indigo-950">{vocab.term}</span>
-                      {vocab.pronunciation && (
-                        <span className="text-[9px] font-mono text-slate-500">/{vocab.pronunciation}/</span>
-                      )}
-                    </div>
-                    <p className="text-[11px] font-bold text-slate-600 leading-snug">{vocab.definition}</p>
-                    <span className="text-[10px] font-bold text-indigo-800 italic mt-0.5">"{vocab.example}"</span>
+              <div className="flex flex-col gap-1 mt-1">
+                <span className="text-emerald-300 font-bold">Step-by-Step:</span>
+                {activeChapter.miniLab.instructions.map((ins, iIdx) => (
+                  <div key={iIdx} className="flex items-start gap-1.5">
+                    <span className="text-emerald-400 font-mono font-bold">{iIdx + 1}.</span>
+                    <span>{ins}</span>
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* ── Quick Revision Flashcard & Memory Sheet ── */}
-            <div className="p-5 rounded-3xl bg-amber-50/80 border-2 border-amber-300 flex flex-col gap-2 shadow-xs">
-              <span className="text-xs font-black uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-amber-600" />
-                <span>Memory Sheet & Quick Revision Flashcard</span>
-              </span>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-                {activeChapter.quickRevisionPoints.map((point, pIdx) => (
-                  <div key={pIdx} className="flex items-start gap-2 text-xs font-bold text-slate-800">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                    <span>{point}</span>
-                  </div>
-                ))}
+              <div className="p-2 bg-emerald-950/50 rounded-lg border border-emerald-500/30 text-[11px] text-emerald-200 mt-1">
+                🔬 Scientific Principle: {activeChapter.miniLab.scientificPrinciple}
               </div>
             </div>
+          </div>
 
-            {/* ── "Try This at Home!" Safe Science Mini-Lab ── */}
-            <div className="p-5 rounded-3xl bg-emerald-50/80 border-2 border-emerald-300 flex flex-col gap-3 shadow-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-wider text-emerald-950 flex items-center gap-1.5">
-                  <FlaskConical className="w-4 h-4 text-emerald-600" />
-                  <span>Try This at Home! Safe Science Mini-Lab</span>
-                </span>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded-md">
-                  Difficulty: {activeChapter.miniLab.difficulty}
-                </span>
-              </div>
-
-              <h4 className="text-xs sm:text-sm font-black text-slate-900">
-                {activeChapter.miniLab.title}
-              </h4>
-
-              <div className="text-xs font-bold text-slate-700 flex flex-col gap-1.5">
-                <p>
-                  <span className="text-emerald-950 font-black">🧪 Materials Needed: </span>
-                  {activeChapter.miniLab.materials.join(', ')}
-                </p>
-                <div className="flex flex-col gap-1 mt-1">
-                  <span className="text-emerald-950 font-black">📋 Step-by-Step Instructions:</span>
-                  {activeChapter.miniLab.instructions.map((ins, iIdx) => (
-                    <div key={iIdx} className="flex items-start gap-1.5">
-                      <span className="text-emerald-700 font-mono font-bold">{iIdx + 1}.</span>
-                      <span>{ins}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="p-2.5 bg-white rounded-xl border border-emerald-300 text-[11px] font-black text-emerald-950 mt-1">
-                  🔬 Scientific Principle: {activeChapter.miniLab.scientificPrinciple}
-                </div>
-              </div>
-            </div>
-
-            {/* ── Pip's Golden Exam Tip ── */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 border-2 border-amber-500 shadow-md flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-slate-950 shrink-0 mt-0.5" />
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider block mb-0.5">
-                  ⭐ Pip's Golden Exam Tip for CBSE Class 5
-                </span>
-                <p className="text-xs font-black leading-snug">
-                  {activeChapter.pipExamTip}
-                </p>
-              </div>
-            </div>
-
-            {/* ── Launch Interactive Mission Lab Action Button ── */}
-            <div className="flex justify-center pt-2 print:hidden">
-              <button
-                onClick={() => handleLaunchLab(activeChapter)}
-                className="px-10 py-4 bg-gradient-to-r from-indigo-600 via-blue-600 to-teal-600 hover:from-indigo-500 hover:to-teal-500 text-white font-black text-sm sm:text-base rounded-2xl shadow-xl cursor-pointer active:scale-95 transition-all flex items-center gap-2.5"
-              >
-                <span>🚀 Launch Interactive {activeChapter.title} Lab ➔</span>
-                <ExternalLink className="w-4 h-4" />
-              </button>
-            </div>
+          {/* ── Launch Interactive Mission Lab Action Button ── */}
+          <div className="flex justify-center pt-2 print:hidden">
+            <button
+              onClick={() => handleLaunchLab(activeChapter)}
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:brightness-110 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-blue-500/30 cursor-pointer active:scale-95 transition-all flex items-center gap-2"
+            >
+              <span>Launch Interactive {activeChapter.title} Lab ➔</span>
+              <ExternalLink className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
     </div>
+  );
+
+  if (isStudyPrintMode) {
+    return (
+      <div className="min-h-screen w-full bg-white text-slate-900 p-6 font-sans">
+        {renderContent()}
+      </div>
+    );
+  }
+
+  return (
+    <PersistentAppShell activeDestination="journal">
+      <div className="min-h-screen w-full bg-[#0b0f19] text-slate-100 p-4 sm:p-6 md:p-8 flex flex-col items-center font-sans relative overflow-x-hidden">
+        {renderContent()}
+      </div>
+    </PersistentAppShell>
   );
 };

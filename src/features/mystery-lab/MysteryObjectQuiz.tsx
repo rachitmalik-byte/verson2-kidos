@@ -1,27 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Pip } from '@/components/pip/Pip';
-import { PipSpeechBubble } from '@/components/pip/PipSpeechBubble';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useProgressStore } from '@/stores/progressStore';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
-import { AudioNavBarControls } from '@/components/navigation/AudioNavBarControls';
+import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import {
   Sparkles,
   ArrowLeft,
-  CheckCircle2,
-  HelpCircle,
   RotateCcw,
   Search,
-  Zap,
-  Award,
-  Layers,
-  Flame,
-  Droplet,
-  Shield,
-  Coins,
   ZoomIn,
   Trophy,
   Check,
@@ -345,47 +335,46 @@ export const MysteryObjectQuiz: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white flex flex-col justify-between pt-4 sm:pt-6 pb-16 px-3 sm:px-6 md:px-8 font-sans">
-      <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
-        {/* Top Navbar */}
-        <div className="flex items-center justify-between bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl border-2 border-slate-700 shadow-xl">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => {
-                sounds.pop();
-                voiceAssistant.stop();
-                navigate('/chapter-hub');
-              }}
-              className="px-3.5 py-2 rounded-2xl bg-slate-700 hover:bg-slate-600 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-md"
-            >
-              <ArrowLeft className="w-4 h-4 stroke-[3]" />
-              <span className="hidden sm:inline">Chapter Hub</span>
-            </button>
+    <PersistentAppShell activeDestination="map">
+      <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white flex flex-col justify-between pt-2 pb-20 px-3 sm:px-6 md:px-8 font-sans">
+        <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
+          {/* Top Sub-Navigation */}
+          <div className="flex items-center justify-between world-glass-dock p-3 sm:p-4 rounded-2xl">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  voiceAssistant.stop();
+                  navigate('/chapter-hub');
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Expedition Hub</span>
+              </button>
 
-            <div className="flex items-center gap-2">
-              <Search className="w-5 h-5 text-amber-400" />
-              <span className="font-black text-sm text-white hidden md:inline">
-                Object Mystery Quiz Lab 🔬
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-2xl border border-amber-400/40">
-              <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <span className="font-mono font-black text-amber-300 text-xs sm:text-sm">
-                {score} PTS
-              </span>
-              {streak >= 2 && (
-                <span className="px-2 py-0.5 bg-amber-500 text-slate-950 text-[10px] font-black rounded-md animate-bounce ml-1">
-                  {streak}x STREAK! 🔥
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-cyan-400" />
+                <span className="font-display font-bold text-sm text-white hidden md:inline">
+                  Object Mystery Quiz Lab 🔬
                 </span>
-              )}
+              </div>
             </div>
 
-            <AudioNavBarControls showProfile={false} />
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-amber-500/15 border border-amber-400/30 px-3 py-1 rounded-full">
+                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                <span className="font-mono font-bold text-amber-300 text-xs sm:text-sm">
+                  {score} PTS
+                </span>
+                {streak >= 2 && (
+                  <span className="px-2 py-0.5 bg-amber-500 text-slate-950 text-[10px] font-bold rounded-md ml-1">
+                    {streak}x STREAK! 🔥
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
 
         {/* Quiz Progress Gauge */}
         <div className="w-full bg-slate-800/80 p-3 rounded-2xl border border-slate-700 flex items-center justify-between gap-4">
@@ -626,5 +615,6 @@ export const MysteryObjectQuiz: React.FC = () => {
         )}
       </div>
     </div>
-  );
+  </PersistentAppShell>
+);
 };

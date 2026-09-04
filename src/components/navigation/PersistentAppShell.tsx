@@ -52,14 +52,14 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
       label: 'Expedition',
       icon: Map,
       path: '/chapter-hub',
-      active: activeDestination === 'map' || location.pathname === '/chapter-hub',
+      active: activeDestination === 'map' || location.pathname === '/chapter-hub' || location.pathname.startsWith('/theme') || location.pathname.startsWith('/chapter'),
     },
     {
       id: 'journal',
       label: 'Journal',
       icon: BookOpen,
       path: '/discovery-book',
-      active: activeDestination === 'journal' || location.pathname === '/discovery-book',
+      active: activeDestination === 'journal' || location.pathname === '/discovery-book' || location.pathname === '/guidebook',
     },
   ];
 
