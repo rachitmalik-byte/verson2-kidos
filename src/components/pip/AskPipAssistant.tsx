@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import { X, Volume2, ChevronRight, Tv } from 'lucide-react';
+import { X, Volume2, ChevronRight, Tv, HelpCircle } from 'lucide-react';
 import { SparkyMascot } from '@/components/mascot/SparkyMascot';
 import { useLocation } from 'react-router-dom';
 import { useAiVideoStore } from '@/stores/aiVideoStore';
@@ -47,9 +47,9 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
         whileHover={{ scale: 1.03, y: -1 }}
         whileTap={{ scale: 0.97 }}
         onClick={handleOpen}
-        className="fixed bottom-14 left-3 sm:bottom-16 sm:left-6 z-30 px-3.5 py-2 bg-white text-slate-800 border border-slate-200/90 rounded-xl font-bold text-xs shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer transition-all"
+        className="fixed bottom-3 left-3 sm:bottom-4 sm:left-6 z-30 px-3 py-1.5 bg-white/95 backdrop-blur-md text-slate-700 border border-slate-200/90 rounded-xl font-bold text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 cursor-pointer transition-all"
       >
-        <span className="text-sm">💡</span>
+        <HelpCircle className="w-3.5 h-3.5 text-teal-600" />
         <span className="hidden sm:inline">Stuck? Ask Pip</span>
         <span className="sm:hidden">Hint</span>
       </motion.button>

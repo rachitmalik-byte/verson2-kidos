@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
+import { MessageSquare } from 'lucide-react';
 import { Pip } from './Pip';
 import { PipSpeechBubble } from './PipSpeechBubble';
 import { useUiSettingsStore } from '@/stores/uiSettingsStore';
@@ -64,8 +65,8 @@ export const FloatingMissionPip: React.FC<FloatingMissionPipProps> = ({ mood, me
             className="group relative"
           >
             {/* Small collapsed indicator */}
-            <div className="w-12 h-12 bg-white/95 backdrop-blur-md rounded-2xl border-2 border-teal-300 shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
-              <span className="text-lg">💬</span>
+            <div className="w-11 h-11 bg-white/95 backdrop-blur-md rounded-2xl border border-teal-200/80 shadow-md flex items-center justify-center cursor-pointer hover:scale-105 transition-transform text-teal-600">
+              <MessageSquare className="w-4 h-4" />
             </div>
 
             {/* Expanded speech bubble — appears on hover, positioned to the RIGHT so it doesn't cover activity */}
