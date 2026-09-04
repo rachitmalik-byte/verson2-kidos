@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Cloud, Snowflake, Wind, Sparkles, Compass } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
+import { useEnvironmentStore } from '@/stores/environmentStore';
 
 export const ShelterAnimatedMountainBackground: React.FC = () => {
   const [weatherMode, setWeatherMode] = useState<'sunny' | 'snowing' | 'windy'>('sunny');
+  const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
 
   const handleToggleWeather = () => {
     sounds.pop();
@@ -13,35 +15,60 @@ export const ShelterAnimatedMountainBackground: React.FC = () => {
     else setWeatherMode('sunny');
   };
 
+  // Determine dynamic mountain sky gradient based on global atmosphere timeOfDay
+  const getSkyGradient = () => {
+    if (timeOfDay === 'night') {
+      return 'bg-gradient-to-b from-[#090D16] via-[#111827] to-[#1e1b4b]';
+    }
+    if (timeOfDay === 'sunset') {
+      return 'bg-gradient-to-b from-amber-600 via-rose-500 to-indigo-900';
+    }
+    if (timeOfDay === 'rain') {
+      return 'bg-gradient-to-b from-slate-700 via-slate-600 to-cyan-950';
+    }
+    // Day mode with local weather modifier
+    if (weatherMode === 'snowing') {
+      return 'bg-gradient-to-b from-slate-700 via-sky-300 to-indigo-100';
+    }
+    if (weatherMode === 'windy') {
+      return 'bg-gradient-to-b from-sky-400 via-teal-100 to-amber-50';
+    }
+    return 'bg-gradient-to-b from-sky-300 via-indigo-100 to-amber-50';
+  };
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none">
       {/* ── Dynamic Sky Gradient ── */}
-      <div
-        className={`absolute inset-0 transition-colors duration-1000 ${
-          weatherMode === 'snowing'
-            ? 'bg-gradient-to-b from-slate-700 via-sky-300 to-indigo-100'
-            : weatherMode === 'windy'
-            ? 'bg-gradient-to-b from-sky-400 via-teal-100 to-amber-50'
-            : 'bg-gradient-to-b from-sky-300 via-indigo-100 to-amber-50'
-        }`}
-      />
+      <div className={`absolute inset-0 transition-colors duration-1000 ${getSkyGradient()}`} />
 
-      {/* ── 1. Animated High-Altitude Sun / Glare ── */}
-      <div className="absolute top-6 right-10 sm:right-24 z-0">
-        <motion.div
-          animate={{
-            rotate: [0, 360],
-            scale: weatherMode === 'sunny' ? [1, 1.08, 1] : [0.9, 0.95, 0.9],
-          }}
-          transition={{
-            rotate: { duration: 30, repeat: Infinity, ease: 'linear' },
-            scale: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
-          }}
-          className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-r from-amber-300 via-yellow-200 to-orange-300 opacity-85 shadow-[0_0_60px_rgba(251,191,36,0.7)] flex items-center justify-center"
-        >
-          <div className="w-full h-full rounded-full border-4 border-dashed border-amber-200/50 animate-spin" />
-        </motion.div>
-      </div>
+      {/* ── 1. Animated High-Altitude Sun or Night Moon ── */}
+      {timeOfDay !== 'night' ? (
+        <div className="absolute top-6 right-10 sm:right-24 z-0">
+          <motion.div
+            animate={{
+              rotate: [0, 360],
+              scale: weatherMode === 'sunny' ? [1, 1.08, 1] : [0.9, 0.95, 0.9],
+            }}
+            transition={{
+              rotate: { duration: 30, repeat: Infinity, ease: 'linear' },
+              scale: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-r from-amber-300 via-yellow-200 to-orange-300 opacity-85 shadow-[0_0_60px_rgba(251,191,36,0.7)] flex items-center justify-center"
+          >
+            <div className="w-full h-full rounded-full border-4 border-dashed border-amber-200/50 animate-spin" />
+          </motion.div>
+        </div>
+      ) : (
+        <div className="absolute top-8 right-12 sm:right-28 z-0">
+          <motion.div
+            animate={{ scale: [1, 1.04, 1], y: [0, -4, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-slate-100 to-slate-300 shadow-[0_0_45px_rgba(224,242,254,0.6)] flex items-center justify-center text-3xl"
+          >
+            🌙
+          </motion.div>
+        </div>
+      )}
 
       {/* ── 2. Floating High-Altitude Clouds ── */}
       <motion.div

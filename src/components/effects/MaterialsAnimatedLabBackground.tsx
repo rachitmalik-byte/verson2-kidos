@@ -13,12 +13,12 @@ export const MaterialsAnimatedLabBackground: React.FC = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none">
-      {/* ── Dynamic Lab Warm Light Cream Gradient ── */}
+      {/* ── Dynamic Lab Subtle Tint ── */}
       <div
         className={`absolute inset-0 transition-colors duration-1000 ${
           labMode === 'atomic_reaction'
-            ? 'bg-gradient-to-b from-[#FAF8F5] via-[#FFFBEB]/30 to-[#F5F3FF]/40'
-            : 'bg-gradient-to-b from-[#FAF8F5] via-[#FFF7ED]/30 to-[#F0FDF4]/30'
+            ? 'bg-gradient-to-b from-teal-500/5 via-amber-500/5 to-purple-500/5'
+            : 'bg-gradient-to-b from-teal-500/5 via-orange-500/5 to-emerald-500/5'
         }`}
       />
 

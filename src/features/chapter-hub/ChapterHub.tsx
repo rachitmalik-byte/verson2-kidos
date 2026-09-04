@@ -100,7 +100,7 @@ export function ChapterHub() {
 
   return (
     <PersistentAppShell activeDestination="map">
-      <div className="min-h-screen w-full bg-[#F8FAFC] text-[#0F172A] flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-4 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
+      <div className="min-h-screen w-full flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-4 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
         <MaterialsAnimatedLabBackground />
         <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 relative z-10">
           {/* ── Expedition Header Bar ── */}

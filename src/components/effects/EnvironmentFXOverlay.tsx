@@ -2,26 +2,32 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFXStore } from '@/stores/fxStore';
+import { useEnvironmentStore } from '@/stores/environmentStore';
 
 export const EnvironmentFXOverlay: React.FC = () => {
   const activeFX = useFXStore((state) => state.activeFX);
+  const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
 
   if (typeof document === 'undefined') return null;
 
+  const isRainActive = activeFX === 'rain' || (!activeFX && timeOfDay === 'rain');
+  const isSunsetActive = !activeFX && timeOfDay === 'sunset';
+  const hasAnyFX = Boolean(activeFX || isRainActive || isSunsetActive);
+
   return createPortal(
     <AnimatePresence>
-      {activeFX && (
+      {hasAnyFX && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.3 }}
           className="fixed inset-0 pointer-events-none z-[999998] overflow-hidden"
         >
           {/* ═══════════════════════════════════════════════════════════
               1. 🌧️ RAIN — Thin realistic streaks, subtle blue tint
           ═══════════════════════════════════════════════════════════ */}
-          {activeFX === 'rain' && (
+          {isRainActive && (
             <div className="absolute inset-0 bg-sky-900/10">
               {Array.from({ length: 35 }).map((_, i) => {
                 const leftPos = `${(i / 35) * 100 + (Math.random() * 2 - 1)}%`;
@@ -145,6 +151,36 @@ export const EnvironmentFXOverlay: React.FC = () => {
             </div>
           )}
 
+          {/* ═══════════════════════════════════════════════════════════
+              5. 🌅 SUNSET MOTES — Soft floating golden twilight particles
+          ═══════════════════════════════════════════════════════════ */}
+          {isSunsetActive && (
+            <div className="absolute inset-0 pointer-events-none">
+              {Array.from({ length: 22 }).map((_, i) => {
+                const left = `${(i / 22) * 100 + (Math.random() * 2 - 1)}%`;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ y: '105vh', opacity: 0, scale: 0.8 }}
+                    animate={{
+                      y: '-10vh',
+                      opacity: [0, 0.75, 0],
+                      scale: [0.8, 1.4, 0.8],
+                      x: Math.sin(i * 1.5) * 40,
+                    }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 7 + (i % 5),
+                      delay: (i % 6) * 0.7,
+                      ease: 'linear',
+                    }}
+                    style={{ left }}
+                    className="absolute w-2 h-2 rounded-full bg-gradient-to-tr from-amber-300 via-orange-300 to-rose-300 blur-[0.5px] shadow-[0_0_8px_#f59e0b]"
+                  />
+                );
+              })}
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>,
