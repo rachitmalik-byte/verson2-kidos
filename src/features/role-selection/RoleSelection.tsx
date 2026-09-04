@@ -50,9 +50,9 @@ export const RoleSelection: React.FC = () => {
       subtitle: 'Molecular Lattices & Inventions',
       themeNumber: 6,
       route: '/chapter-hub',
-      accentColor: 'from-indigo-600 via-blue-600 to-indigo-700',
-      borderColor: 'border-indigo-400/40',
-      glowColor: 'group-hover:border-indigo-300/80 shadow-indigo-600/20',
+      accentColor: 'from-amber-600 via-orange-600 to-amber-700',
+      borderColor: 'border-amber-400/40',
+      glowColor: 'group-hover:border-amber-300/80 shadow-amber-600/20',
       icon: '🧪',
       image: polyquestHeroBanner,
       curiosityHook: 'What gives synthetic polymers their super tensile strength?',
@@ -65,9 +65,9 @@ export const RoleSelection: React.FC = () => {
       subtitle: 'Water Physics & Atmosphere',
       themeNumber: 2,
       route: '/theme/water/hub',
-      accentColor: 'from-cyan-600 via-sky-600 to-blue-600',
-      borderColor: 'border-cyan-400/40',
-      glowColor: 'group-hover:border-cyan-300/80 shadow-cyan-600/20',
+      accentColor: 'from-teal-600 via-cyan-600 to-teal-700',
+      borderColor: 'border-teal-400/40',
+      glowColor: 'group-hover:border-teal-300/80 shadow-teal-600/20',
       icon: '💧',
       image: burdockVelcroImg,
       curiosityHook: 'Why do heavy steel ships float while small pebbles sink?',
@@ -80,9 +80,9 @@ export const RoleSelection: React.FC = () => {
       subtitle: 'Architecture & Extreme Climates',
       themeNumber: 5,
       route: '/theme/shelter/hub',
-      accentColor: 'from-violet-600 via-purple-600 to-indigo-700',
-      borderColor: 'border-violet-400/40',
-      glowColor: 'group-hover:border-violet-300/80 shadow-violet-600/20',
+      accentColor: 'from-stone-700 via-teal-800 to-stone-800',
+      borderColor: 'border-teal-400/30',
+      glowColor: 'group-hover:border-teal-300/60 shadow-teal-900/20',
       icon: '🏔️',
       image: kaykitForestBiome,
       curiosityHook: 'How do round Bhunga walls withstand severe earthquakes?',
@@ -102,15 +102,15 @@ export const RoleSelection: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col gap-10 pt-1 sm:pt-2">
         {/* ── EXPEDITION HERO STAGE ── */}
-        <section className="portal-hero w-full bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 border border-slate-700/50 p-6 sm:p-10 md:p-12 text-white relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 rounded-3xl shadow-xl shadow-blue-950/10">
+        <section className="portal-hero w-full bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 border border-teal-500/20 p-6 sm:p-10 md:p-12 text-white relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 rounded-3xl shadow-xl shadow-teal-950/10">
           {/* Subtle luminous highlights */}
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
 
           {/* Left Column: Explorer Identity & Story Hook */}
           <div className="max-w-2xl flex flex-col gap-5 z-10 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-mono font-bold tracking-wide w-fit">
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-200 text-xs font-mono font-bold tracking-wide w-fit">
+              <Sparkles className="w-3.5 h-3.5 text-teal-300" />
               <span>ACTIVE EXPLORATION EXPEDITION</span>
             </div>
 
@@ -128,7 +128,7 @@ export const RoleSelection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={() => handleLaunch('/theme/1/hub')}
-                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-600 hover:brightness-110 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-emerald-950/30 flex items-center gap-2.5 transition-all transform hover:-translate-y-0.5 cursor-pointer active:scale-95"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-700 hover:from-teal-500 hover:to-emerald-600 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-teal-950/30 flex items-center gap-2.5 transition-all transform hover:-translate-y-0.5 cursor-pointer active:scale-95"
               >
                 <span>Continue Living World Expedition</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -138,7 +138,7 @@ export const RoleSelection: React.FC = () => {
                 onClick={() => handleLaunch('/subjects')}
                 className="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-slate-100 border border-white/20 font-bold text-sm flex items-center gap-2 transition-all cursor-pointer shadow-xs"
               >
-                <Layers className="w-4 h-4 text-cyan-300" />
+                <Layers className="w-4 h-4 text-emerald-300" />
                 <span>Explore All 4 Worlds</span>
               </button>
             </div>
@@ -188,7 +188,7 @@ export const RoleSelection: React.FC = () => {
                 onClick={() => setActiveTab('all')}
                 className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
                   activeTab === 'all'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-teal-700 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -201,16 +201,16 @@ export const RoleSelection: React.FC = () => {
             {/* Waypoint 1: Microscopic Zoom Scan */}
             <div
               onClick={() => handleLaunch('/discovery-book')}
-              className="bg-white border border-slate-200/90 hover:border-blue-400/80 hover:shadow-xl hover:shadow-blue-500/5 rounded-2xl p-5 text-slate-800 transition-all cursor-pointer group shadow-xs flex flex-col justify-between"
+              className="bg-white border border-slate-200/90 hover:border-teal-400/80 hover:shadow-xl hover:shadow-teal-500/5 rounded-2xl p-5 text-slate-800 transition-all cursor-pointer group shadow-xs flex flex-col justify-between"
             >
               <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-700 mb-4 group-hover:scale-110 transition-transform">
                   <Microscope className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-mono text-blue-600 font-bold uppercase tracking-wider block mb-1">
+                <span className="text-[10px] font-mono text-teal-700 font-bold uppercase tracking-wider block mb-1">
                   Investigation
                 </span>
-                <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors">
                   Burdock Seed Hooks
                 </h3>
                 <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
@@ -218,7 +218,7 @@ export const RoleSelection: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between pt-4 mt-4 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-blue-600">
+              <div className="flex items-center justify-between pt-4 mt-4 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-teal-700">
                 <span>Inspect Micrograph</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -282,7 +282,7 @@ export const RoleSelection: React.FC = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <Pip mood="curious" size={44} interactive={false} />
                   <div>
-                    <span className="text-[10px] font-mono text-violet-600 font-bold uppercase tracking-wider block">
+                    <span className="text-[10px] font-mono text-amber-800 font-bold uppercase tracking-wider block">
                       Pip's Inquiry
                     </span>
                     <span className="text-xs font-bold text-slate-900">Daily Mystery</span>
@@ -295,7 +295,7 @@ export const RoleSelection: React.FC = () => {
 
               <button
                 onClick={() => handleLaunch('/chapter-hub')}
-                className="w-full mt-4 py-2 px-3 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200 text-xs font-bold text-center transition-all cursor-pointer active:scale-95"
+                className="w-full mt-4 py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold text-center transition-all cursor-pointer active:scale-95"
               >
                 Discuss with Pip →
               </button>
@@ -317,7 +317,7 @@ export const RoleSelection: React.FC = () => {
 
             <button
               onClick={() => handleLaunch('/subjects')}
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-teal-700 hover:text-teal-800 flex items-center gap-1 cursor-pointer"
             >
               <span>View All Portals</span>
               <ArrowRight className="w-3.5 h-3.5" />

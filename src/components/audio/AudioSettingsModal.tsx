@@ -110,19 +110,19 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative z-10 bg-white rounded-3xl md:rounded-[36px] border-4 md:border-6 border-violet-400 shadow-2xl flex flex-col max-w-2xl w-full max-h-[90vh] overflow-hidden font-sans"
+            className="relative z-10 bg-white rounded-3xl md:rounded-[36px] border-4 md:border-6 border-teal-500 shadow-2xl flex flex-col max-w-2xl w-full max-h-[90vh] overflow-hidden font-sans"
           >
             {/* Header */}
-            <div className="p-4 md:p-5 bg-gradient-to-r from-violet-600 to-indigo-700 text-white flex items-center justify-between shadow-md">
+            <div className="p-4 md:p-5 bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 text-white flex items-center justify-between shadow-md">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-white/20 rounded-2xl backdrop-blur-xs border border-white/30">
                   <Sliders className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h3 className="text-xl font-bold tracking-tight font-heading">
                     Audio & Voice Studio 🎧
                   </h3>
-                  <p className="text-xs text-violet-200 font-bold">
+                  <p className="text-xs text-teal-200 font-bold">
                     Customize Background Music, Voice Pace & Pitch
                   </p>
                 </div>
@@ -235,7 +235,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               <div className="bg-white p-5 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
                   <div className="flex items-center gap-2">
-                    <Mic className="w-5 h-5 text-violet-600" />
+                    <Mic className="w-5 h-5 text-teal-600" />
                     <div>
                       <h4 className="font-black text-sm text-slate-800">Pip Voice & Speech Settings</h4>
                       <p className="text-[11px] text-slate-500 font-bold">Speed, Pitch & Natural Voice Selector</p>
@@ -249,11 +249,11 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                     }}
                     className={`px-3 py-1.5 rounded-2xl font-black text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
                       !isTtsMuted
-                        ? 'bg-violet-100 border-2 border-violet-300 text-violet-900'
+                        ? 'bg-teal-50 border-2 border-teal-300 text-teal-900'
                         : 'bg-slate-100 border-2 border-slate-300 text-slate-400'
                     }`}
                   >
-                    {!isTtsMuted ? <Mic className="w-4 h-4 text-violet-600" /> : <MicOff className="w-4 h-4" />}
+                    {!isTtsMuted ? <Mic className="w-4 h-4 text-teal-600" /> : <MicOff className="w-4 h-4 text-slate-400" />}
                     <span>{!isTtsMuted ? 'Voice ON' : 'Voice OFF'}</span>
                   </button>
                 </div>
@@ -262,10 +262,10 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-black text-slate-700">
                     <span className="flex items-center gap-1.5">
-                      <Gauge className="w-4 h-4 text-violet-500" />
+                      <Gauge className="w-4 h-4 text-teal-600" />
                       <span>Speaking Speed (Pace):</span>
                     </span>
-                    <span className="font-mono text-violet-700">{ttsSpeed.toFixed(2)}x</span>
+                    <span className="font-mono text-teal-700">{ttsSpeed.toFixed(2)}x</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold text-slate-400">🐢 Slow</span>
@@ -276,7 +276,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                       step="0.03"
                       value={ttsSpeed}
                       onChange={(e) => setTtsSpeed(parseFloat(e.target.value))}
-                      className="flex-1 accent-violet-600 cursor-pointer"
+                      className="flex-1 accent-teal-600 cursor-pointer"
                     />
                     <span className="text-xs font-bold text-slate-400">Fast 🚀</span>
                   </div>
@@ -286,10 +286,10 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-black text-slate-700">
                     <span className="flex items-center gap-1.5">
-                      <Smile className="w-4 h-4 text-fuchsia-500" />
+                      <Smile className="w-4 h-4 text-amber-500" />
                       <span>Voice Pitch (Tone):</span>
                     </span>
-                    <span className="font-mono text-fuchsia-700">{ttsPitch.toFixed(2)}x</span>
+                    <span className="font-mono text-amber-700">{ttsPitch.toFixed(2)}x</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold text-slate-400">Deeper</span>
@@ -300,7 +300,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                       step="0.03"
                       value={ttsPitch}
                       onChange={(e) => setTtsPitch(parseFloat(e.target.value))}
-                      className="flex-1 accent-fuchsia-600 cursor-pointer"
+                      className="flex-1 accent-amber-500 cursor-pointer"
                     />
                     <span className="text-xs font-bold text-slate-400">Playful / Higher</span>
                   </div>
@@ -313,7 +313,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                     <select
                       value={selectedVoiceName}
                       onChange={(e) => setSelectedVoiceName(e.target.value)}
-                      className="w-full p-2.5 rounded-2xl border-2 border-slate-300 font-bold text-xs text-slate-800 bg-slate-50 focus:border-violet-500 outline-none"
+                      className="w-full p-2.5 rounded-2xl border-2 border-slate-300 font-bold text-xs text-slate-800 bg-slate-50 focus:border-teal-500 outline-none"
                     >
                       <option value="">✨ Auto (Best Child-Friendly Natural Neural Voice)</option>
                       {availableVoices.map((v) => (
@@ -329,7 +329,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                 <div className="pt-2 flex gap-3">
                   <button
                     onClick={handleTestVoice}
-                    className="flex-1 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
+                    className="flex-1 py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
                   >
                     <Volume2 className="w-4 h-4" />
                     <span>Test Voice 🔊</span>
@@ -352,7 +352,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               <div className="bg-white p-5 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
                   <div className="flex items-center gap-2">
-                     <PanelTop className="w-5 h-5 text-sky-500" />
+                     <PanelTop className="w-5 h-5 text-teal-600" />
                      <div>
                        <h4 className="font-black text-sm text-slate-800">Taskbar UI Organization</h4>
                        <p className="text-[11px] text-slate-500 font-bold">Show or hide buttons on your top navigation bar</p>
@@ -369,7 +369,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                     </div>
                     <input
                       type="checkbox"
-                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                      className="w-4 h-4 accent-teal-600 rounded cursor-pointer"
                       checked={showWardrobeButton}
                       onChange={() => {
                         sounds.pop();
@@ -381,12 +381,12 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                   {/* Toggle Arcade */}
                   <label className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
                     <div className="flex items-center gap-2">
-                      <Gamepad2 className="w-4 h-4 text-indigo-600" />
+                      <Gamepad2 className="w-4 h-4 text-teal-600" />
                       <span className="text-xs font-black text-slate-700">Show Arcade</span>
                     </div>
                     <input
                       type="checkbox"
-                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                      className="w-4 h-4 accent-teal-600 rounded cursor-pointer"
                       checked={showArcadeButton}
                       onChange={() => {
                         sounds.pop();
@@ -398,12 +398,12 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                   {/* Toggle AI Lab */}
                   <label className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-violet-600" />
+                      <Sparkles className="w-4 h-4 text-amber-600" />
                       <span className="text-xs font-black text-slate-700">Show AI Lab ✨</span>
                     </div>
                     <input
                       type="checkbox"
-                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                      className="w-4 h-4 accent-teal-600 rounded cursor-pointer"
                       checked={showAiLabButton}
                       onChange={() => {
                         sounds.pop();

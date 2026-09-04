@@ -87,7 +87,7 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-[#F8FAFC] text-slate-900 selection:bg-blue-600 selection:text-white relative">
+    <div className="min-h-screen w-full flex flex-col bg-[#F8FAFC] text-slate-900 selection:bg-teal-500 selection:text-white relative">
       {/* ── Unified Floating Light-Glass Taskbar (Desktop & Tablet) ── */}
       <header className="fixed top-3 inset-x-0 mx-auto max-w-7xl z-50 px-3 sm:px-6 pointer-events-none">
         <div className="pointer-events-auto bg-white/90 backdrop-blur-xl border border-slate-200/90 shadow-md shadow-slate-200/40 rounded-2xl md:rounded-full px-4 sm:px-5 py-2 flex items-center justify-between transition-all gap-2 text-slate-800">
@@ -97,14 +97,14 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
             className="flex items-center gap-2.5 group cursor-pointer focus:outline-none shrink-0"
             title="Kidos Universe Dashboard"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 via-emerald-600 to-amber-500 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
               <Compass className="w-4 h-4 stroke-[2.5]" />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="font-display text-base tracking-tight font-black text-slate-900">
                 KIDOS
               </span>
-              <span className="text-[10px] font-mono tracking-wider text-blue-600 bg-blue-50 border border-blue-200/60 px-2 py-0.5 rounded-full font-bold uppercase">
+              <span className="text-[10px] font-mono tracking-wider text-teal-700 bg-teal-50 border border-teal-200/60 px-2 py-0.5 rounded-full font-bold uppercase">
                 Universe
               </span>
             </div>
@@ -120,7 +120,7 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
                   onClick={() => handleNav(item.path)}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     item.active
-                      ? 'bg-white text-blue-600 shadow-xs'
+                      ? 'bg-white text-teal-700 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                   }`}
                 >
@@ -144,10 +144,10 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
 
             {/* Science XP */}
             <div
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-900 text-xs font-bold shrink-0"
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-900 text-xs font-bold shrink-0"
               title={`${totalXP} Science XP`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
               <span>{totalXP}</span>
             </div>
 
@@ -181,10 +181,10 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
                   sounds.sparkle();
                   setShowAiLabModal(true);
                 }}
-                className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white text-xs font-bold shadow-xs cursor-pointer active:scale-95 transition-all shrink-0"
+                className="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white text-xs font-bold shadow-xs cursor-pointer active:scale-95 transition-all shrink-0"
                 title="Open Gemini AI Science Lab"
               >
-                <Sparkles className="w-3 h-3 text-amber-300 animate-spin" />
+                <Sparkles className="w-3 h-3 text-amber-200 animate-spin" />
                 <span>AI Lab ✨</span>
               </button>
             )}
@@ -210,7 +210,7 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
               onClick={() => handleNav(item.path)}
               className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl transition-all cursor-pointer ${
                 item.active
-                  ? 'bg-blue-600 text-white shadow-xs font-bold'
+                  ? 'bg-teal-600 text-white shadow-xs font-bold'
                   : 'text-slate-500 hover:text-slate-900'
               }`}
             >

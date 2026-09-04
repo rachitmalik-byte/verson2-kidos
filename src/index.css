@@ -3,8 +3,8 @@
 
 @layer base {
   :root {
-    --font-heading: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Outfit', -apple-system, sans-serif;
+    --font-body: 'Lexend', system-ui, -apple-system, sans-serif;
     --bg-cream: #F8FAFC;
     --text-charcoal: #0F172A;
     --text-muted: #475569;
@@ -202,22 +202,22 @@
 }
 
 .btn-3d-indigo {
-  background-color: #2563EB;
-  border: 1px solid #1D4ED8;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+  background-color: #0D9488;
+  border: 1px solid #0F766E;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
   border-radius: 0.75rem;
   color: #FFFFFF;
   font-weight: 700;
   transition: all 0.15s ease;
 }
 .btn-3d-indigo:hover {
-  background-color: #1D4ED8;
+  background-color: #0F766E;
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.35);
 }
 .btn-3d-indigo:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 1px 3px rgba(13, 148, 136, 0.2);
 }
 
 .btn-3d-slate {

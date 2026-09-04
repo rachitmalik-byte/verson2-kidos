@@ -47,10 +47,10 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', damping: 24, stiffness: 300 }}
-            className="relative z-10 bg-white w-full max-w-2xl rounded-3xl md:rounded-[36px] border-4 border-indigo-400 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+            className="relative z-10 bg-white w-full max-w-2xl rounded-3xl md:rounded-[36px] border-4 border-teal-500 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
           >
             {/* Header */}
-            <div className="p-4 sm:p-5 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 flex items-center justify-between text-white border-b-2 border-indigo-500 shrink-0">
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 flex items-center justify-between text-white border-b-2 border-teal-600 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-white/20 p-1 flex items-center justify-center shadow-inner">
                   <Pip mood="celebrating" size="sm" />
@@ -59,7 +59,7 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
                   <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950/40 text-amber-300 px-2.5 py-0.5 rounded-full">
                     Gemini 2.5 Multimodal AI
                   </span>
-                  <h3 className="text-lg font-black text-white tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h3 className="text-lg font-bold text-white tracking-tight font-heading">
                     Pip's AI Science Superpowers 🚀✨
                   </h3>
                 </div>
@@ -107,7 +107,7 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
                           <Star className="w-3 h-3 fill-amber-300 text-amber-400" /> +25 Stars
                         </span>
                       </div>
-                      <h4 className="text-base sm:text-lg font-black tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      <h4 className="text-base sm:text-lg font-bold tracking-tight font-heading">
                         Scan My World • Material Detective 📷
                       </h4>
                       <p className="text-xs font-bold text-emerald-100 leading-snug">
@@ -129,25 +129,25 @@ export const AiScienceLabModal: React.FC<AiScienceLabModalProps> = ({
                     onClose();
                     onOpenWhatIf();
                   }}
-                  className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-purple-500 via-fuchsia-600 to-indigo-600 text-white shadow-lg cursor-pointer border-3 border-purple-300 flex items-center justify-between gap-4 transition-all"
+                  className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white shadow-lg cursor-pointer border-3 border-amber-300 flex items-center justify-between gap-4 transition-all"
                 >
                   <div className="flex items-center gap-3.5">
                     <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center shrink-0 shadow-inner">
-                      <FlaskConical className="w-8 h-8 text-amber-300" />
+                      <FlaskConical className="w-8 h-8 text-amber-200" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950/30 text-purple-100 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-black uppercase tracking-wider bg-slate-950/30 text-amber-100 px-2.5 py-0.5 rounded-full">
                           Physics Reaction Lab
                         </span>
                         <span className="text-xs font-black text-amber-300 flex items-center gap-1">
                           <Zap className="w-3.5 h-3.5 fill-current" /> Generative Sim
                         </span>
                       </div>
-                      <h4 className="text-base sm:text-lg font-black tracking-tight" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      <h4 className="text-base sm:text-lg font-bold tracking-tight font-heading">
                         "What If?" Science Sandbox 🧪
                       </h4>
-                      <p className="text-xs font-bold text-purple-100 leading-snug">
+                      <p className="text-xs font-bold text-amber-100 leading-snug">
                         Mix materials with boiling water, fire, or freezing cold to predict reactions!
                       </p>
                     </div>

@@ -67,7 +67,7 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200/70 flex items-center justify-center text-blue-600">
+                  <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/70 flex items-center justify-center text-teal-700">
                     <SparkyMascot mood="thinking" size={40} animate={false} />
                   </div>
                   <div>
@@ -107,7 +107,7 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                   onClick={() => setHintTier(1)}
                   className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     hintTier === 1
-                      ? 'bg-white text-blue-700 shadow-xs'
+                      ? 'bg-white text-teal-800 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -117,7 +117,7 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                   onClick={() => setHintTier(2)}
                   className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     hintTier === 2
-                      ? 'bg-white text-blue-700 shadow-xs'
+                      ? 'bg-white text-teal-800 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -127,7 +127,7 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                   onClick={() => setHintTier(3)}
                   className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     hintTier === 3
-                      ? 'bg-white text-blue-700 shadow-xs'
+                      ? 'bg-white text-teal-800 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -153,9 +153,9 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
                   setIsOpen(false);
                   openVideoByContext(location.pathname);
                 }}
-                className="w-full py-2.5 px-4 rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-800 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
+                className="w-full py-2.5 px-4 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
               >
-                <Tv className="w-4 h-4 text-violet-600" />
+                <Tv className="w-4 h-4 text-amber-700" />
                 <span>Watch Video Explanation</span>
               </button>
 

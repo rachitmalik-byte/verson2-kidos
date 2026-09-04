@@ -21,7 +21,7 @@ export const ReadingLevelToggle: React.FC<{ compact?: boolean; className?: strin
       className={`px-2.5 py-1 rounded-full font-bold text-xs flex items-center gap-1.5 border transition-all cursor-pointer shadow-xs shrink-0 active:scale-95 ${
         readingLevel === 'junior'
           ? 'bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100'
-          : 'bg-indigo-50 border-indigo-200 text-indigo-900 hover:bg-indigo-100'
+          : 'bg-teal-50 border-teal-200 text-teal-900 hover:bg-teal-100'
       } ${className}`}
       title={`Reading Level: ${readingLevel === 'junior' ? 'Junior Explorer (Grades 4-5)' : 'Senior Scientist (Grades 6-8)'} - Tap to toggle`}
     >

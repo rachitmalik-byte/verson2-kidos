@@ -141,15 +141,15 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 8 }}
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          className={`relative bg-white p-5 md:p-6 rounded-3xl border-3 border-violet-400 shadow-xl max-w-lg w-full ${className}`}
+          className={`relative bg-white p-5 md:p-6 rounded-3xl border-3 border-teal-400 shadow-xl max-w-lg w-full ${className}`}
         >
           {/* Speech bubble tail */}
-          <div className="absolute -left-3 top-7 w-5 h-5 bg-white border-l-3 border-b-3 border-violet-400 transform rotate-45" />
+          <div className="absolute -left-3 top-7 w-5 h-5 bg-white border-l-3 border-b-3 border-teal-400 transform rotate-45" />
 
           {/* Top Bar: Speaker Badge + Voice Equalizer + Controls */}
           <div className="flex items-center justify-between mb-3 border-b-2 border-slate-100 pb-2.5">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-violet-700 bg-violet-100 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-teal-800 bg-teal-50 border border-teal-200/80 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
                 <span>{speakerName} the Science Guide</span>
               </span>
@@ -162,7 +162,7 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
                       key={i}
                       animate={{ height: ['4px', `${h * 16}px`, '4px'] }}
                       transition={{ duration: 0.45, repeat: Infinity, delay: i * 0.08 }}
-                      className="w-1 bg-violet-600 rounded-full"
+                      className="w-1 bg-teal-600 rounded-full"
                     />
                   ))}
                 </div>
@@ -172,10 +172,10 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
             {/* Single Clean Audio Replay & Listen Button */}
             <button
               onClick={handleReplay}
-              className="px-2.5 py-1 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-800 border border-violet-300 transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
+              className="px-2.5 py-1 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
               title="Listen to Pip read aloud"
             >
-              <Volume2 className="w-3.5 h-3.5 text-violet-700" />
+              <Volume2 className="w-3.5 h-3.5 text-teal-700" />
               <span className="text-[11px] font-black">Listen 🔊</span>
             </button>
           </div>
@@ -225,7 +225,7 @@ export const PipSpeechBubble: React.FC<PipSpeechBubbleProps> = ({
                 {isLong && (
                   <button
                     onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}
-                    className="ml-1 text-[11px] font-black text-violet-600 hover:text-violet-800 underline underline-offset-2 cursor-pointer"
+                    className="ml-1 text-[11px] font-black text-teal-700 hover:text-teal-900 underline underline-offset-2 cursor-pointer"
                   >
                     {isExpanded ? 'Show less ▲' : 'Read more ▼'}
                   </button>

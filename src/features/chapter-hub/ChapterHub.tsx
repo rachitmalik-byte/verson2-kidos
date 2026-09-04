@@ -120,7 +120,7 @@ export function ChapterHub() {
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md bg-blue-50 text-blue-800 text-xs font-mono font-bold border border-blue-200/70">
+                <span className="px-2.5 py-1 rounded-md bg-teal-50 text-teal-800 text-xs font-mono font-bold border border-teal-200/70">
                   THEME 6
                 </span>
                 <span className="font-heading font-bold text-sm sm:text-base text-slate-900">
@@ -146,14 +146,14 @@ export function ChapterHub() {
           </div>
 
         {/* ── Cinematic Materials Lab World Hero Stage ── */}
-        <div id="chapter-hero-banner" className="portal-hero p-6 sm:p-8 bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 border border-white/15 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden font-sans">
+        <div id="chapter-hero-banner" className="portal-hero p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 border border-teal-500/20 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden font-sans">
           {/* Ambient Glow */}
-          <div className="absolute -top-24 -left-24 w-80 h-80 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
 
           {/* Left Column: World Identity & Science Objective */}
           <div className="flex-1 text-center md:text-left z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-mono font-bold tracking-wide mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-200 text-xs font-mono font-bold tracking-wide mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-teal-300" />
               <span>THEME 6 • MATERIALS & INVENTIONS</span>
             </div>
 
@@ -169,14 +169,14 @@ export function ChapterHub() {
             <div className="w-full max-w-md mt-4 flex flex-col gap-1.5 mx-auto md:mx-0">
               <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
                 <span>Expedition Mastery</span>
-                <span className="font-mono text-cyan-400">{progressPercent}% Mastered • {completedMissions.length}/13 Missions</span>
+                <span className="font-mono text-emerald-300">{progressPercent}% Mastered • {completedMissions.length}/13 Missions</span>
               </div>
               <div className="w-full bg-white/15 rounded-full h-2 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
-                  className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full"
+                  className="bg-gradient-to-r from-teal-400 to-emerald-300 h-full rounded-full"
                 />
               </div>
             </div>
@@ -192,7 +192,7 @@ export function ChapterHub() {
                 }}
                 className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'map'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-700/25'
                     : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
@@ -209,7 +209,7 @@ export function ChapterHub() {
                 }}
                 className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'missions'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-700/25'
                     : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
@@ -226,7 +226,7 @@ export function ChapterHub() {
                 }}
                 className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
               >
-                <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                <BookOpen className="w-3.5 h-3.5 text-emerald-300" />
                 <span>Story Intro</span>
               </button>
 
@@ -239,11 +239,11 @@ export function ChapterHub() {
                 }}
                 className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'video'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-700/25'
                     : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
-                <Play className="w-3.5 h-3.5 fill-current text-violet-400" />
+                <Play className="w-3.5 h-3.5 fill-current text-amber-400" />
                 <span>Video Lab</span>
               </button>
 
@@ -256,7 +256,7 @@ export function ChapterHub() {
                 }}
                 className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'guidebook'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-700/25'
                     : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
                 }`}
               >
@@ -273,7 +273,7 @@ export function ChapterHub() {
                 }}
                 className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
               >
-                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
                 <span>Field Journal ({discoveries.length})</span>
               </button>
             </div>

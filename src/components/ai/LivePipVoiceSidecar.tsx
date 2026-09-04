@@ -229,7 +229,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
             sounds.sparkle();
             setIsOpen(!isOpen);
           }}
-          className="flex items-center gap-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 text-white font-black text-xs sm:text-sm shadow-[0_8px_30px_rgba(79,70,229,0.5)] border-2 sm:border-3 border-white cursor-pointer active:scale-95 transition-all group"
+          className="flex items-center gap-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-teal-600 via-emerald-600 to-amber-500 hover:from-teal-500 hover:to-amber-400 text-white font-black text-xs sm:text-sm shadow-[0_8px_30px_rgba(13,148,136,0.35)] border-2 sm:border-3 border-white cursor-pointer active:scale-95 transition-all group"
           title="Open Live Pip AI Science Companion"
         >
           <span className="text-xl animate-bounce">🤖</span>
@@ -259,17 +259,17 @@ export const LivePipVoiceSidecar: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
               exit={{ opacity: 0, scale: 0.88, y: 25, x: 20 }}
               transition={{ type: 'spring', damping: 24, stiffness: 280 }}
-              className="fixed bottom-24 right-3 sm:right-6 w-[calc(100vw-1.5rem)] sm:w-[380px] max-h-[540px] h-[72vh] bg-slate-950/95 backdrop-blur-xl border-2 border-indigo-500/50 rounded-3xl shadow-2xl z-[999995] flex flex-col justify-between text-white overflow-hidden ring-4 ring-indigo-500/10"
+              className="fixed bottom-24 right-3 sm:right-6 w-[calc(100vw-1.5rem)] sm:w-[380px] max-h-[540px] h-[72vh] bg-slate-950/95 backdrop-blur-xl border-2 border-teal-500/40 rounded-3xl shadow-2xl z-[999995] flex flex-col justify-between text-white overflow-hidden ring-4 ring-teal-500/10"
             >
               {/* Header */}
               <div className="p-4 sm:p-5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-violet-500 to-indigo-600 p-1 flex items-center justify-center shadow-md">
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-600 p-1 flex items-center justify-center shadow-md">
                     <Pip mood={isThinking ? 'thinking' : isListening ? 'curious' : 'happy'} size="sm" />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <h3 className="font-black text-base text-white" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      <h3 className="font-black text-base text-white font-heading">
                         Live Pip AI
                       </h3>
                       <span className="px-2 py-0.2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-[10px] font-black">
@@ -289,7 +289,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
                     }}
                     className={`p-2 rounded-xl border transition-all cursor-pointer ${
                       autoSpeak
-                        ? 'bg-violet-950/60 border-violet-500/50 text-violet-300'
+                        ? 'bg-teal-950/60 border-teal-500/50 text-teal-300'
                         : 'bg-slate-800 border-slate-700 text-slate-500'
                     }`}
                     title={autoSpeak ? 'Voice Replies ON' : 'Voice Replies MUTED'}
@@ -311,11 +311,11 @@ export const LivePipVoiceSidecar: React.FC = () => {
               </div>
 
                 {/* Contextual Video Quick Launcher Banner */}
-                <div className="px-4 py-2.5 bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-violet-500/20 border-b border-slate-800 flex items-center justify-between gap-2 shrink-0">
+                <div className="px-4 py-2.5 bg-gradient-to-r from-amber-500/20 via-teal-500/20 to-emerald-500/20 border-b border-slate-800 flex items-center justify-between gap-2 shrink-0">
                   <div className="flex items-center gap-2 overflow-hidden">
                     <span className="text-lg shrink-0">🎬</span>
                     <div className="flex flex-col truncate">
-                      <span className="text-xs font-black text-amber-300 truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                      <span className="text-xs font-black text-amber-300 truncate font-heading">
                         Need a visual explanation?
                       </span>
                       <span className="text-[10px] font-bold text-slate-400 truncate">
@@ -345,7 +345,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
                     className={`flex gap-2.5 ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.sender === 'pip' && (
-                      <div className="w-8 h-8 rounded-full bg-violet-600 text-white flex items-center justify-center text-sm shrink-0 mt-1 shadow-xs">
+                      <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-sm shrink-0 mt-1 shadow-xs">
                         🤖
                       </div>
                     )}
@@ -353,7 +353,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
                     <div
                       className={`p-3.5 rounded-2xl max-w-[85%] text-xs sm:text-sm font-bold leading-relaxed shadow-sm ${
                         m.sender === 'user'
-                          ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-br-none'
+                          ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-br-none'
                           : 'bg-slate-900 border border-slate-800 text-slate-100 rounded-bl-none'
                       }`}
                     >
@@ -364,7 +364,7 @@ export const LivePipVoiceSidecar: React.FC = () => {
                             sounds.sparkle();
                             voiceAssistant.speak(m.text);
                           }}
-                          className="mt-2 text-[10px] text-violet-400 hover:text-violet-300 font-bold flex items-center gap-1 cursor-pointer"
+                          className="mt-2 text-[10px] text-teal-400 hover:text-teal-300 font-bold flex items-center gap-1 cursor-pointer"
                         >
                           <Volume2 className="w-3 h-3" />
                           <span>Speak aloud</span>
@@ -380,10 +380,10 @@ export const LivePipVoiceSidecar: React.FC = () => {
                     animate={{ opacity: 1 }}
                     className="flex items-center gap-2 p-3 bg-slate-900/80 rounded-2xl border border-slate-800 max-w-[70%]"
                   >
-                    <div className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-xs animate-spin">
+                    <div className="w-6 h-6 rounded-full bg-teal-600 flex items-center justify-center text-xs animate-spin">
                       ✨
                     </div>
-                    <span className="text-xs font-bold text-violet-300">Pip is thinking with Gemini...</span>
+                    <span className="text-xs font-bold text-teal-300">Pip is thinking with Gemini...</span>
                   </motion.div>
                 )}
 
@@ -433,14 +433,14 @@ export const LivePipVoiceSidecar: React.FC = () => {
                     if (e.key === 'Enter') sendMessage(inputVal);
                   }}
                   placeholder={isListening ? 'Listening to your voice...' : 'Ask Pip any science question...'}
-                  className="flex-1 bg-slate-950 border border-slate-700 rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                  className="flex-1 bg-slate-950 border border-slate-700 rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
                 />
 
                 {/* Send Button */}
                 <button
                   onClick={() => sendMessage(inputVal)}
                   disabled={!inputVal.trim() || isThinking}
-                  className="p-3 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-black cursor-pointer disabled:opacity-40 transition-all active:scale-95"
+                  className="p-3 rounded-2xl bg-teal-600 hover:bg-teal-500 text-white font-black cursor-pointer disabled:opacity-40 transition-all active:scale-95"
                 >
                   <Send className="w-4 h-4" />
                 </button>

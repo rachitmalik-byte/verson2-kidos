@@ -64,15 +64,15 @@ export const FloatingMissionPip: React.FC<FloatingMissionPipProps> = ({ mood, me
             className="group relative"
           >
             {/* Small collapsed indicator */}
-            <div className="w-12 h-12 bg-white/95 backdrop-blur-md rounded-2xl border-2 border-violet-300 shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+            <div className="w-12 h-12 bg-white/95 backdrop-blur-md rounded-2xl border-2 border-teal-300 shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
               <span className="text-lg">💬</span>
             </div>
 
             {/* Expanded speech bubble — appears on hover, positioned to the RIGHT so it doesn't cover activity */}
             <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-64 sm:w-80 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200 z-[1000]">
-              <div className="bg-white p-4 rounded-2xl border-2 border-violet-300 shadow-xl relative">
+              <div className="bg-white p-4 rounded-2xl border-2 border-teal-300 shadow-xl relative">
                 {/* Tail arrow pointing left */}
-                <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-l-2 border-b-2 border-violet-300 transform rotate-45" />
+                <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-l-2 border-b-2 border-teal-300 transform rotate-45" />
                 <p className="text-xs font-bold text-slate-700 leading-relaxed">
                   {message}
                 </p>

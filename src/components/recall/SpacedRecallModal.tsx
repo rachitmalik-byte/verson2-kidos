@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
@@ -122,10 +122,10 @@ export const SpacedRecallModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3.5 bg-blue-50/80 rounded-xl border border-blue-200 text-left flex flex-col gap-1"
+              className="p-3.5 bg-teal-50/80 rounded-xl border border-teal-200 text-left flex flex-col gap-1"
             >
-              <div className="flex items-center gap-1.5 text-xs font-bold text-blue-800">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-teal-900">
+                <Sparkles className="w-3.5 h-3.5 text-teal-600" />
                 <span>Science Explanation:</span>
               </div>
               <p className="text-xs text-slate-700 leading-relaxed">

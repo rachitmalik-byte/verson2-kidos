@@ -19,32 +19,34 @@
   --text-subtle: #94A3B8;
 
   /* ── Purposeful Semantic Educational Accents (1 Dominant + 1-2 Supporting) ── */
-  --ed-blue: #2563EB;
-  --ed-blue-hover: #1D4ED8;
-  --ed-blue-subtle: #EFF6FF;
-  --ed-blue-border: #BFDBFE;
+  /* Primary Accent: Deep Alpine Teal (Replaces generic AI electric blue) */
+  --ed-blue: #0D9488;
+  --ed-blue-hover: #0F766E;
+  --ed-blue-subtle: #F0FDFA;
+  --ed-blue-border: #99F6E4;
 
   --ed-emerald: #059669;
   --ed-emerald-hover: #047857;
   --ed-emerald-subtle: #ECFDF5;
   --ed-emerald-border: #A7F3D0;
 
-  --ed-violet: #7C3AED;
-  --ed-violet-hover: #6D28D9;
-  --ed-violet-subtle: #F5F3FF;
-  --ed-violet-border: #DDD6FE;
+  /* Warm Accent: Warm Terracotta / Coral Ember (Replaces generic AI purple/violet) */
+  --ed-violet: #D95D39;
+  --ed-violet-hover: #C2410C;
+  --ed-violet-subtle: #FFF7ED;
+  --ed-violet-border: #FED7AA;
 
   --ed-amber: #D97706;
   --ed-amber-hover: #B45309;
   --ed-amber-subtle: #FFFBEB;
   --ed-amber-border: #FDE68A;
 
-  --ed-cyan: #0284C7;
-  --ed-cyan-hover: #0369A1;
-  --ed-cyan-subtle: #F0F9FF;
-  --ed-cyan-border: #BAE6FD;
+  --ed-cyan: #0D9488;
+  --ed-cyan-hover: #0F766E;
+  --ed-cyan-subtle: #F0FDFA;
+  --ed-cyan-border: #99F6E4;
 
-  --ed-coral: #EA580C;
+  --ed-coral: #D95D39;
   --ed-coral-hover: #C2410C;
   --ed-coral-subtle: #FFF7ED;
   --ed-coral-border: #FED7AA;
@@ -63,19 +65,19 @@
 
 /* ── Typography Scale ── */
 .font-display {
-  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  font-family: 'Outfit', -apple-system, sans-serif;
   letter-spacing: -0.025em;
   font-weight: 800;
 }
 
 .font-heading {
-  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  font-family: 'Outfit', -apple-system, sans-serif;
   letter-spacing: -0.015em;
   font-weight: 700;
 }
 
 .font-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Lexend', system-ui, -apple-system, sans-serif;
   line-height: 1.6;
 }
 

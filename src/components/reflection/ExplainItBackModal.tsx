@@ -84,17 +84,17 @@ export const ExplainItBackModal: React.FC<Props> = ({ isOpen, missionTitle, onCl
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-md bg-white rounded-[36px] border-4 border-indigo-400 p-6 sm:p-8 shadow-2xl flex flex-col gap-4 relative overflow-hidden"
+        className="w-full max-w-md bg-white rounded-[36px] border-4 border-teal-500 p-6 sm:p-8 shadow-2xl flex flex-col gap-4 relative overflow-hidden"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-3xl p-2 bg-indigo-50 rounded-2xl border border-indigo-200">🎙️</span>
+            <span className="text-3xl p-2 bg-teal-50 rounded-2xl border border-teal-200">🎙️</span>
             <div>
-              <h3 className="text-lg font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <h3 className="text-lg font-black text-slate-900 font-heading">
                 Explain It In Your Own Words!
               </h3>
-              <span className="text-[11px] font-bold text-indigo-700">Saved for your Parent Dashboard 👨‍👩‍👧</span>
+              <span className="text-[11px] font-bold text-teal-700">Saved for your Parent Dashboard 👨‍👩‍👧</span>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ export const ExplainItBackModal: React.FC<Props> = ({ isOpen, missionTitle, onCl
         </div>
 
         <p className="text-xs font-bold text-slate-600 leading-relaxed">
-          How would you explain <span className="font-black text-indigo-900">"{missionTitle}"</span> to a friend or parent? Tap the mic or type below:
+          How would you explain <span className="font-black text-teal-900">"{missionTitle}"</span> to a friend or parent? Tap the mic or type below:
         </p>
 
         {/* Input & Voice Controls */}
@@ -120,7 +120,7 @@ export const ExplainItBackModal: React.FC<Props> = ({ isOpen, missionTitle, onCl
             onChange={(e) => setInputText(e.target.value)}
             placeholder="e.g. Cotton absorbs water because of its hollow fibers, while polyester repels water so it beads right off!"
             rows={3}
-            className="w-full p-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl text-xs sm:text-sm font-bold text-slate-800 focus:border-indigo-500 focus:bg-white outline-none resize-none"
+            className="w-full p-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl text-xs sm:text-sm font-bold text-slate-800 focus:border-teal-500 focus:bg-white outline-none resize-none"
           />
 
           <div className="flex items-center justify-between gap-2">
@@ -132,14 +132,14 @@ export const ExplainItBackModal: React.FC<Props> = ({ isOpen, missionTitle, onCl
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
               }`}
             >
-              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-indigo-600" />}
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-teal-600" />}
               <span>{isListening ? 'Listening...' : 'Speak Voice Note 🎤'}</span>
             </button>
 
             <button
               onClick={handleSave}
               disabled={!inputText.trim() || isSaved}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-black text-xs rounded-2xl flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+              className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-black text-xs rounded-2xl flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
             >
               <Send className="w-3.5 h-3.5" />
               <span>{isSaved ? 'Saved! ✨' : 'Save Note'}</span>

@@ -79,10 +79,10 @@ export const MissionAudioControls: React.FC = () => {
               sounds.sparkle();
               setShowAiLabModal(true);
             }}
-            className="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all whitespace-nowrap"
+            className="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white font-black text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all whitespace-nowrap"
             title="Open Gemini AI Science Tools"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-200 animate-spin" />
             <span className="hidden md:inline">AI Lab ✨</span>
           </motion.button>
         )}
@@ -225,10 +225,10 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
                   sounds.sparkle();
                   setShowAiLabHubModal(true);
                 }}
-                className="px-3 py-1 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+                className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
                 title="Open Gemini AI Science Lab"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-200 animate-spin" />
                 <span className="hidden sm:inline">AI Lab ✨</span>
               </motion.button>
             )}
@@ -261,10 +261,10 @@ export const AudioNavBarControls: React.FC<AudioNavBarControlsProps> = ({
                   sounds.pop();
                   setShowArcadeModal(true);
                 }}
-                className="hidden lg:flex px-3 py-1 rounded-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-bold text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
+                className="hidden lg:flex px-3 py-1 rounded-full bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-900 font-bold text-xs items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all shrink-0 whitespace-nowrap"
                 title="Play Mini Games"
               >
-                <Gamepad2 className="w-3.5 h-3.5 text-indigo-600" />
+                <Gamepad2 className="w-3.5 h-3.5 text-teal-600" />
                 <span>Arcade</span>
               </motion.button>
             )}
