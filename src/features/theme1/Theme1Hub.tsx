@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { SylvaHero } from '@designcodeio/threeui';
-import '@designcodeio/threeui/style.css';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import { THEME_1_CHAPTERS } from '@/data/theme1Missions';
-import { ArrowLeft, BookOpen, ArrowRight, Compass, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowLeft, BookOpen, ArrowRight, Compass, Sparkles } from 'lucide-react';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
+import { Pip } from '@/components/pip/Pip';
+import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';
 
 // Specimen Photography & 3D Artwork
 import voxelForestImg from '@/assets/images/nature/kaykit_forest_biome_sample.png';
@@ -58,31 +58,12 @@ export function Theme1Hub() {
     navigate(`/theme/1/chapter/${chapterNum}`);
   };
 
-  const scrollToCurriculum = () => {
-    sounds.pop();
-    document.getElementById('curriculum-chapters')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // ── Curriculum Communication Bridge with ThreeUI Sylva Iframe ──
-  useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (!e.data || typeof e.data !== 'object') return;
-      if (e.data.type === 'THREEUI_EXPLORE' || e.data.type === 'THREEUI_SCROLL_DOWN') {
-        scrollToCurriculum();
-      } else if (e.data.type === 'THREEUI_LAUNCH_CHAPTER') {
-        handleChapterClick(e.data.chapter || 1);
-      } else if (e.data.type === 'THREEUI_JOURNAL') {
-        sounds.pop();
-        navigate('/discovery-book');
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
   return (
     <PersistentAppShell activeDestination="map">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pt-2 pb-20 flex flex-col gap-8 relative z-10 font-sans">
+        {/* ── Forest Background FX ── */}
+        <LivingWorldAnimatedForestBackground />
+
         {/* ── Sub-Navigation Breadcrumb Bar ── */}
         <div className="flex items-center justify-between">
           <button
@@ -103,28 +84,54 @@ export function Theme1Hub() {
           </span>
         </div>
 
-        {/* ── Official ThreeUI Sylva Living Green Hero Stage ── */}
-        <div className="w-full h-[460px] sm:h-[520px] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-white/15 shadow-soft-float relative bg-[#4a4d44]">
-          <SylvaHero
-            className="w-full h-full"
-            headingFont="lexend"
-            bodyFont="lexend"
-            headingWeight="300"
-            bodyWeight="300"
-            primaryColor="#ffffff"
-            headingSize={63}
-            bodySize={16.5}
-            headingLetterSpacing={-0.006}
-          />
+        {/* ── Cinematic Living World Hero Stage ── */}
+        <div className="portal-hero w-full bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-950 border border-emerald-500/30 p-6 sm:p-10 rounded-3xl shadow-soft-float flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden text-white">
+          {/* Ambient Lighting */}
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Floating Scroll-Down Prompt to Curriculum */}
-          <button
-            onClick={scrollToCurriculum}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20 text-[11px] font-mono tracking-widest text-emerald-300 flex items-center gap-1.5 uppercase cursor-pointer transition-all shadow-md"
-          >
-            <span>Explore 4 Bio-Chapters</span>
-            <ChevronDown className="w-3.5 h-3.5 animate-bounce" />
-          </button>
+          <div className="flex-1 text-center md:text-left z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-mono font-bold tracking-wide mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <span>REALM 01 • LIVING SYSTEMS & SUPER SENSES</span>
+            </div>
+
+            <h1 className="text-2xl md:text-4xl font-display font-extrabold text-white tracking-tight leading-tight">
+              Super Senses & Living Systems 🐾🌿
+            </h1>
+            <p className="text-xs md:text-sm text-slate-200 mt-2 max-w-xl leading-relaxed font-normal">
+              Explore 4 interactive chapters spanning ant chemical scent trails, snake seismic vibration detection, 
+              tongue papillae micro-receptors, and burdock seed biomimicry.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
+              <button
+                onClick={() => handleChapterClick(1)}
+                className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-md cursor-pointer transition-all active:scale-98"
+              >
+                <Compass className="w-4 h-4" />
+                <span>Start Chapter 1: Scent Trails</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  navigate('/discovery-book');
+                }}
+                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all active:scale-98"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-emerald-300" />
+                <span>Field Journal ({discoveries.length})</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Pip Companion Terminal */}
+          <div className="relative z-10 shrink-0 flex flex-col items-center bg-slate-950/60 p-4 rounded-2xl border border-white/15 backdrop-blur-md">
+            <Pip mood="curious" size={72} interactive={false} />
+            <span className="text-[11px] font-bold text-emerald-200 mt-2">
+              "Ants smell through their antennae!"
+            </span>
+          </div>
         </div>
 
         {/* ── Living World Curriculum Chapters & Interactive Bio-Labs ── */}

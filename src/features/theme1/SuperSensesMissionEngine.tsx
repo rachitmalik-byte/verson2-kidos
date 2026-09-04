@@ -26,8 +26,7 @@ import dandelionSeedImg from '@/assets/images/specimens/dandelion_seed_dispersal
 import burdockVelcroImg from '@/assets/images/specimens/burdock_velcro_macro.jpg';
 import { MultiTierMicroscopeStudio } from '@/components/microscope/MultiTierMicroscopeStudio';
 import { InteractiveChapterIntroCard } from '@/components/curriculum/InteractiveChapterIntroCard';
-import { SUPER_SENSES_COURSE_CHAPTERS } from '@/data/masterCurriculum';
-import { SylvaLivingGreenCanvas } from '@/components/effects/SylvaLivingGreenCanvas';
+import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -299,7 +298,7 @@ export function SuperSensesMissionEngine() {
 
   return (
     <div className="min-h-screen w-full sylva-canvas text-[#ECFDF5] flex flex-col justify-between pt-4 sm:pt-6 pb-20 px-3 sm:px-6 md:px-8 font-sans relative overflow-x-hidden">
-      <SylvaLivingGreenCanvas enableButterfly={true} />
+      <LivingWorldAnimatedForestBackground />
       <CelebrationOverlay
         isVisible={showCelebration}
         type="mission-complete"
