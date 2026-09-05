@@ -45,13 +45,18 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
   const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
 
   useEffect(() => {
+    if (location.pathname.startsWith('/teacher') || location.pathname.startsWith('/parent')) {
+      document.documentElement.removeAttribute('data-atmosphere');
+      document.documentElement.classList.remove('dark');
+      return;
+    }
     document.documentElement.setAttribute('data-atmosphere', timeOfDay);
     if (timeOfDay === 'day') {
       document.documentElement.classList.remove('dark');
     } else {
       document.documentElement.classList.add('dark');
     }
-  }, [timeOfDay]);
+  }, [timeOfDay, location.pathname]);
 
   // Deterministic stable starfield for night atmosphere
   const nightStars = useMemo(() => {

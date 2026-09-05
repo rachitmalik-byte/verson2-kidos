@@ -10,7 +10,7 @@ export interface TeacherTheme {
   grade: number;
   curriculumStandard: 'NCERT' | 'CBSE' | 'ICSE' | 'Cambridge' | 'NGSS';
   colorTheme: 'emerald' | 'cyan' | 'indigo' | 'amber' | 'rose' | 'stone';
-  atmosphere: 'day' | 'sunset' | 'night' | 'rain';
+  atmosphere?: 'day' | 'sunset' | 'night' | 'rain';
   learningObjectives: string[];
   chaptersCount: number;
   createdAt: string;
@@ -108,7 +108,6 @@ const INITIAL_THEMES: TeacherTheme[] = [
     grade: 5,
     curriculumStandard: 'NCERT',
     colorTheme: 'emerald',
-    atmosphere: 'day',
     learningObjectives: ['Sensory organs', 'Ground vibrations', 'Chemical trail communication', 'Biomimicry'],
     chaptersCount: 4,
     createdAt: '2026-09-01',
@@ -121,7 +120,6 @@ const INITIAL_THEMES: TeacherTheme[] = [
     grade: 5,
     curriculumStandard: 'CBSE',
     colorTheme: 'cyan',
-    atmosphere: 'day',
     learningObjectives: ['Buoyant force', 'Salinity density', 'Evaporation cycles', 'Hydraulic storage'],
     chaptersCount: 4,
     createdAt: '2026-09-02',
@@ -134,7 +132,6 @@ const INITIAL_THEMES: TeacherTheme[] = [
     grade: 5,
     curriculumStandard: 'NCERT',
     colorTheme: 'amber',
-    atmosphere: 'sunset',
     learningObjectives: ['Thermal insulation', 'Atmospheric pressure', 'Earthquake damping', 'Nomadic structures'],
     chaptersCount: 5,
     createdAt: '2026-09-03',
@@ -147,7 +144,6 @@ const INITIAL_THEMES: TeacherTheme[] = [
     grade: 5,
     curriculumStandard: 'NCERT',
     colorTheme: 'emerald',
-    atmosphere: 'night',
     learningObjectives: ['Hydrophobic pores', 'Tensile yield strength', 'Polymer chains', 'Recyclability'],
     chaptersCount: 13,
     createdAt: '2026-09-04',

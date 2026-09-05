@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import type {
@@ -12,6 +12,7 @@ import { generateLessonFromPrompt, generateFallbackLessonConfig } from '@/lib/ge
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
 import { useTeacherStore, TeacherTheme, Assignment, StudentSubmission } from '@/stores/teacherStore';
+import { useFXStore } from '@/stores/fxStore';
 import {
   Sparkles,
   ArrowLeft,
@@ -349,6 +350,13 @@ const ACTIVITY_TEMPLATES: {
 export function TeacherStudio() {
   const navigate = useNavigate();
 
+  // Ensure Teacher Studio is strictly clean, simple, light, and isolated from global atmosphere modes
+  useEffect(() => {
+    useFXStore.getState().clearFX();
+    document.documentElement.removeAttribute('data-atmosphere');
+    document.documentElement.classList.remove('dark');
+  }, []);
+
   // Navigation Tabs: 'builder' | 'assignments' | 'approvals' | 'themes' | 'roster' | 'templates'
   const [activeTab, setActiveTab] = useState<'builder' | 'assignments' | 'approvals' | 'themes' | 'roster' | 'templates'>('builder');
 
@@ -400,7 +408,6 @@ export function TeacherStudio() {
   const [newThemeIcon, setNewThemeIcon] = useState('🧪');
   const [newThemeGrade, setNewThemeGrade] = useState(5);
   const [newThemeStandard, setNewThemeStandard] = useState<'NCERT' | 'CBSE' | 'ICSE' | 'Cambridge' | 'NGSS'>('NCERT');
-  const [newThemeAtmosphere, setNewThemeAtmosphere] = useState<'day' | 'sunset' | 'night' | 'rain'>('day');
   const [newThemeColor, setNewThemeColor] = useState<'emerald' | 'cyan' | 'indigo' | 'amber' | 'rose' | 'stone'>('emerald');
 
   // Approvals Filter
@@ -550,7 +557,6 @@ export function TeacherStudio() {
       grade: newThemeGrade,
       curriculumStandard: newThemeStandard,
       colorTheme: newThemeColor,
-      atmosphere: newThemeAtmosphere,
       learningObjectives: ['Inquiry exploration', 'Empirical data analysis'],
       chaptersCount: 1,
       createdAt: new Date().toISOString().split('T')[0],
@@ -1163,7 +1169,7 @@ export function TeacherStudio() {
                 Curriculum Themes & Science Realms 🌐
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Configure curriculum standards, grade levels, and atmospheric lighting environments for each world.
+                Configure curriculum subjects, grade levels, and inquiry learning goals for your class.
               </p>
             </div>
             <button
@@ -1192,8 +1198,8 @@ export function TeacherStudio() {
                         {theme.curriculumStandard} • Grade {theme.grade}
                       </span>
                     </div>
-                    <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full capitalize">
-                      {theme.atmosphere} Sky ☀️
+                    <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">
+                      Active Theme
                     </span>
                   </div>
 
@@ -1681,17 +1687,17 @@ export function TeacherStudio() {
 
                   <div>
                     <label className="text-[11px] font-black uppercase text-slate-500 block mb-1">
-                      Atmosphere Lighting
+                      Target Grade
                     </label>
                     <select
-                      value={newThemeAtmosphere}
-                      onChange={(e) => setNewThemeAtmosphere(e.target.value as any)}
+                      value={newThemeGrade}
+                      onChange={(e) => setNewThemeGrade(Number(e.target.value))}
                       className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 outline-none cursor-pointer"
                     >
-                      <option value="day">☀️ Radiant Day Sky</option>
-                      <option value="sunset">🌅 Warm Sunset Dusk</option>
-                      <option value="night">🌙 Bioluminescent Night</option>
-                      <option value="rain">🌧️ Overcast Rainstorm</option>
+                      <option value={3}>Grade 3 (Foundational)</option>
+                      <option value={4}>Grade 4 (Preparatory)</option>
+                      <option value={5}>Grade 5 (Intermediate)</option>
+                      <option value={6}>Grade 6 (Middle School)</option>
                     </select>
                   </div>
                 </div>

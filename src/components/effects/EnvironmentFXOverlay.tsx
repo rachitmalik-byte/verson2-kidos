@@ -1,14 +1,24 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { useFXStore } from '@/stores/fxStore';
 import { useEnvironmentStore } from '@/stores/environmentStore';
 
 export const EnvironmentFXOverlay: React.FC = () => {
+  const location = useLocation();
   const activeFX = useFXStore((state) => state.activeFX);
   const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
 
   if (typeof document === 'undefined') return null;
+
+  // Never render rain or atmospheric overlays on teacher routes, teacher studio, or parent portal
+  if (
+    location.pathname.startsWith('/teacher') ||
+    location.pathname.startsWith('/parent')
+  ) {
+    return null;
+  }
 
   const isRainActive = activeFX === 'rain' || (!activeFX && timeOfDay === 'rain');
   const isSunsetActive = !activeFX && timeOfDay === 'sunset';

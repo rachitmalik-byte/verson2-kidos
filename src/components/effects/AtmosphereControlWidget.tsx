@@ -26,9 +26,19 @@ const ALLOWED_ATMOSPHERE_PATHS = [
 ];
 
 export const AtmosphereHeaderPill: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
   const setTimeOfDay = useEnvironmentStore((state) => state.setTimeOfDay);
+
+  // Never display atmosphere widget on teacher routes or pages outside exploration hubs
+  if (
+    location.pathname.startsWith('/teacher') ||
+    location.pathname.startsWith('/parent') ||
+    !ALLOWED_ATMOSPHERE_PATHS.includes(location.pathname)
+  ) {
+    return null;
+  }
 
   const currentModeObj = ATMOSPHERE_MODES.find((m) => m.id === timeOfDay) || ATMOSPHERE_MODES[0];
 
