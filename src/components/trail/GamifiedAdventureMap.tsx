@@ -77,10 +77,13 @@ const MILESTONE_GIFTS = [
 
 export type BiomeTheme = 'citadel' | 'glacier' | 'savannah';
 
+import { useParentStore } from '@/stores/parentStore';
+
 export const GamifiedAdventureMap: React.FC = () => {
   const navigate = useNavigate();
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const addDiscovery = useDiscoveryStore((state) => state.addDiscovery);
+  const isLessonAllowed = useParentStore((state) => state.isLessonAllowed);
 
   const [selectedBiome, setSelectedBiome] = useState<BiomeTheme>('citadel');
   const [selectedMission, setSelectedMission] = useState<(typeof missions)[0] | null>(null);
@@ -99,8 +102,13 @@ export const GamifiedAdventureMap: React.FC = () => {
     }
   }, []);
 
-  const handleNodeClick = (mission: (typeof missions)[0], isUnlocked: boolean) => {
+  const handleNodeClick = (mission: (typeof missions)[0], isUnlocked: boolean, isParentLocked: boolean) => {
     sounds.pop();
+    if (isParentLocked) {
+      sounds.boing();
+      voiceAssistant.speak(`This mission is paused by your parent. Ask them to enable it in the Parent Dashboard!`);
+      return;
+    }
     if (isUnlocked) {
       setSelectedMission(mission);
       voiceAssistant.speak(`Mission ${mission.number}: ${mission.title}. ${mission.subtitle}`);
@@ -372,7 +380,10 @@ export const GamifiedAdventureMap: React.FC = () => {
           {missions.map((mission, index) => {
             const coords = HORIZONTAL_LEVEL_COORDINATES[index];
             const isCompleted = completedMissions.includes(mission.id);
-            const isUnlocked = index === 0 || completedMissions.includes(missions[index - 1]?.id);
+            const isParentAllowed = isLessonAllowed(mission.id);
+            const isProgressionUnlocked = index === 0 || completedMissions.includes(missions[index - 1]?.id);
+            const isUnlocked = isParentAllowed && isProgressionUnlocked;
+            const isParentLocked = !isParentAllowed;
             const isCurrent = isUnlocked && !isCompleted;
             const thumbnail = missionThumbnails[mission.id] || raincoatWaterproofImg;
 
@@ -413,10 +424,12 @@ export const GamifiedAdventureMap: React.FC = () => {
                 <motion.button
                   whileHover={isUnlocked ? { scale: 1.14, y: -4 } : {}}
                   whileTap={isUnlocked ? { scale: 0.94 } : {}}
-                  onClick={() => handleNodeClick(mission, isUnlocked)}
+                  onClick={() => handleNodeClick(mission, isUnlocked, isParentLocked)}
                   className={`relative w-20 h-20 sm:w-22 sm:h-22 rounded-3xl p-1.5 flex flex-col items-center justify-between cursor-pointer transition-all shadow-2xl overflow-hidden ${
                     isCompleted
                       ? 'bg-gradient-to-b from-emerald-400 via-emerald-500 to-teal-700 border-3 border-emerald-200 ring-4 ring-emerald-400/40'
+                      : isParentLocked
+                      ? 'bg-gradient-to-b from-rose-900 to-slate-950 border-3 border-rose-500/60 opacity-80 shadow-md'
                       : isCurrent
                       ? 'bg-gradient-to-b from-amber-300 via-amber-400 to-orange-600 border-4 border-white ring-6 ring-amber-400 animate-pulse'
                       : 'bg-gradient-to-b from-slate-600 to-slate-800 border-3 border-slate-400 opacity-75 cursor-not-allowed'
@@ -442,6 +455,8 @@ export const GamifiedAdventureMap: React.FC = () => {
                     <div className="absolute top-1 right-1">
                       {isCompleted ? (
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-slate-950" />
+                      ) : isParentLocked ? (
+                        <Lock className="w-3.5 h-3.5 text-rose-400" />
                       ) : isUnlocked ? (
                         <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400 animate-pulse" />
                       ) : (

@@ -29,6 +29,9 @@ import {
   Award,
   Lightbulb,
   MessageCircleQuestion,
+  Lock,
+  Unlock,
+  Sliders,
 } from 'lucide-react';
 
 interface AIAnalyticsReport {
@@ -43,6 +46,10 @@ export const ParentDashboard = () => {
   const navigate = useNavigate();
   const child = useParentStore((state) => state.child);
   const childExplanations = useParentStore((state) => state.childExplanations) || [];
+  const toggleLessonAccess = useParentStore((state) => state.toggleLessonAccess);
+  const allowAllLessons = useParentStore((state) => state.allowAllLessons);
+  const setFocusedPace = useParentStore((state) => state.setFocusedPace);
+  const isLessonAllowed = useParentStore((state) => state.isLessonAllowed);
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
 
@@ -332,8 +339,114 @@ export const ParentDashboard = () => {
           )}
         </div>
 
+        {/* ── 🛡️ PARENTAL LESSON ACCESS & CURATION CONTROLS ── */}
+        <div className="w-full bg-white rounded-3xl border-4 border-teal-200 shadow-xl p-6 sm:p-8 md:p-10 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <span className="p-3 bg-teal-50 rounded-2xl border-2 border-teal-200 text-2xl">🛡️</span>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  Lesson Access & Pacing Controls
+                </h3>
+                <p className="text-xs sm:text-sm font-bold text-slate-500 mt-0.5">
+                  Give or pause access to specific lessons for {child?.name || 'your child'} to guide their learning path.
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Bulk Actions */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => {
+                  sounds.fanfare();
+                  allowAllLessons();
+                }}
+                className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all shadow-xs"
+              >
+                <Unlock className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Allow All Lessons</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  setFocusedPace(3, missions);
+                }}
+                className="px-3.5 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all shadow-xs"
+              >
+                <Sliders className="w-3.5 h-3.5 text-sky-600" />
+                <span>Focused Pace (M1–M3 Only)</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Mission Access List Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {missions.map((m) => {
+              const allowed = isLessonAllowed(m.id);
+              const isDone = completedMissions.includes(m.id);
+
+              return (
+                <div
+                  key={m.id}
+                  className={`p-4 rounded-2xl border-2 transition-all flex items-center justify-between gap-3 ${
+                    allowed
+                      ? 'bg-slate-50/80 border-slate-200/90'
+                      : 'bg-rose-50/50 border-rose-200 opacity-80'
+                  }`}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-700">
+                        M0{m.number}
+                      </span>
+                      {isDone && (
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Done</span>
+                        </span>
+                      )}
+                    </div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                      {m.title}
+                    </h4>
+                    <p className="text-[11px] font-medium text-slate-500 truncate mt-0.5">
+                      {m.subtitle || 'Hands-on scientific inquiry'}
+                    </p>
+                  </div>
+
+                  {/* Toggle Button */}
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      toggleLessonAccess(m.id);
+                    }}
+                    className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all shrink-0 ${
+                      allowed
+                        ? 'bg-teal-600 text-white shadow-xs hover:bg-teal-700'
+                        : 'bg-rose-100 text-rose-800 border border-rose-300 hover:bg-rose-200'
+                    }`}
+                  >
+                    {allowed ? (
+                      <>
+                        <Unlock className="w-3 h-3" />
+                        <span>Allowed</span>
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="w-3 h-3" />
+                        <span>Paused</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* ── Chapter Mastery Progress Card ── */}
-        <div className="w-full bg-white rounded-3xl border-4 border-slate-200 shadow-xl p-8 md:p-10">
+        <div className="w-full bg-white rounded-3xl border-4 border-slate-200 shadow-xl p-8 md:p-10 mb-8">
           <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-3">
             <div>
               <span className="text-xs font-black uppercase tracking-wider bg-sky-100 text-sky-800 px-3 py-1 rounded-full">

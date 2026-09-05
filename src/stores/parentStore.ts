@@ -14,6 +14,7 @@ interface ParentState {
   child: ChildProfile | null;
   role: 'child' | 'parent' | null;
   childExplanations: ChildExplanation[];
+  lessonAccess: Record<string, boolean>;
   
   setRole: (role: 'child' | 'parent') => void;
   setPin: (pin: string) => void;
@@ -21,6 +22,11 @@ interface ParentState {
   verifyPin: (pin: string) => boolean;
   completeSetup: () => void;
   saveExplanation: (explanation: ChildExplanation) => void;
+  toggleLessonAccess: (lessonId: string) => void;
+  setLessonAccess: (lessonId: string, allowed: boolean) => void;
+  isLessonAllowed: (lessonId: string) => boolean;
+  allowAllLessons: () => void;
+  setFocusedPace: (maxMissionNum: number, allMissions: { id: string; number: number }[]) => void;
   reset: () => void;
 }
 
@@ -38,6 +44,7 @@ export const useParentStore = create<ParentState>()(
           timestamp: Date.now() - 86400000,
         },
       ],
+      lessonAccess: {},
 
       setRole: (role) => set({ role }),
       
@@ -53,8 +60,34 @@ export const useParentStore = create<ParentState>()(
         const { childExplanations } = get();
         set({ childExplanations: [explanation, ...childExplanations] });
       },
+
+      toggleLessonAccess: (lessonId: string) => {
+        const current = get().lessonAccess || {};
+        const isCurrentlyAllowed = current[lessonId] !== false; // default true
+        set({ lessonAccess: { ...current, [lessonId]: !isCurrentlyAllowed } });
+      },
+
+      setLessonAccess: (lessonId: string, allowed: boolean) => {
+        const current = get().lessonAccess || {};
+        set({ lessonAccess: { ...current, [lessonId]: allowed } });
+      },
+
+      isLessonAllowed: (lessonId: string) => {
+        const current = get().lessonAccess || {};
+        return current[lessonId] !== false;
+      },
+
+      allowAllLessons: () => set({ lessonAccess: {} }),
+
+      setFocusedPace: (maxMissionNum: number, allMissions: { id: string; number: number }[]) => {
+        const newMap: Record<string, boolean> = {};
+        allMissions.forEach((m) => {
+          newMap[m.id] = m.number <= maxMissionNum;
+        });
+        set({ lessonAccess: newMap });
+      },
       
-      reset: () => set({ isSetUp: false, pin: '', child: null, role: null, childExplanations: [] }),
+      reset: () => set({ isSetUp: false, pin: '', child: null, role: null, childExplanations: [], lessonAccess: {} }),
     }),
     { name: 'polyquest-parent' }
   )

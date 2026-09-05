@@ -66,11 +66,14 @@ const missionThumbnails: Record<string, string> = {
 
 import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 
+import { useParentStore } from '@/stores/parentStore';
+
 export function ChapterHub() {
   const navigate = useNavigate();
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const discoveries = useDiscoveryStore((state) => state.discoveries);
   const hasSeenTutorial = useProgressStore((state) => state.hasSeenTutorial);
+  const isLessonAllowed = useParentStore((state) => state.isLessonAllowed);
   const [showTutorial, setShowTutorial] = useState(!hasSeenTutorial);
   const [activeTab, setActiveTab] = useState<'map' | 'missions' | 'video' | 'guidebook'>('missions');
   const [viewMode, setViewMode] = useState<'map' | 'grid'>('grid');
@@ -87,8 +90,13 @@ export function ChapterHub() {
   const isAllComplete = completedMissions.length === missions.length;
   const progressPercent = Math.round((completedMissions.length / missions.length) * 100);
 
-  const handleMissionClick = (mission: (typeof missions)[0], isUnlocked: boolean) => {
+  const handleMissionClick = (mission: (typeof missions)[0], isUnlocked: boolean, isParentLocked: boolean) => {
     sounds.pop();
+    if (isParentLocked) {
+      sounds.boing();
+      voiceAssistant.speak(`This mission is paused by your parent. Ask them to enable it in the Parent Dashboard!`);
+      return;
+    }
     if (isUnlocked) {
       voiceAssistant.stop();
       navigate(`/chapter/3/mission/${mission.number}`);
@@ -401,7 +409,10 @@ export function ChapterHub() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {missions.map((m, index) => {
                     const isCompleted = completedMissions.includes(m.id);
-                    const isUnlocked = index === 0 || completedMissions.includes(missions[index - 1]?.id);
+                    const isParentAllowed = isLessonAllowed(m.id);
+                    const isProgressionUnlocked = index === 0 || completedMissions.includes(missions[index - 1]?.id);
+                    const isUnlocked = isParentAllowed && isProgressionUnlocked;
+                    const isParentLocked = !isParentAllowed;
                     const isNextMission = !isCompleted && isUnlocked && index === completedMissions.length;
                     const thumbnail = missionThumbnails[m.id] || raincoatWaterproofImg;
 
@@ -410,10 +421,12 @@ export function ChapterHub() {
                         key={m.id}
                         whileHover={isUnlocked ? { scale: 1.015, y: -3 } : {}}
                         whileTap={isUnlocked ? { scale: 0.98 } : {}}
-                        onClick={() => handleMissionClick(m, isUnlocked)}
+                        onClick={() => handleMissionClick(m, isUnlocked, isParentLocked)}
                         className={`bg-white dark:bg-slate-900/90 rounded-2xl md:rounded-3xl border overflow-hidden transition-all flex flex-col justify-between cursor-pointer relative group ${
                           isCompleted
                             ? 'border-emerald-200 dark:border-emerald-800 shadow-xs hover:border-emerald-400 hover:shadow-md'
+                            : isParentLocked
+                            ? 'border-rose-200/80 dark:border-rose-900/40 bg-rose-50/30 opacity-75 shadow-xs'
                             : isNextMission
                             ? 'border-amber-400 dark:border-amber-500 shadow-md ring-2 ring-amber-400/40'
                             : isUnlocked
@@ -438,7 +451,12 @@ export function ChapterHub() {
                               Mission {m.number}
                             </span>
 
-                            {isCompleted ? (
+                            {isParentLocked ? (
+                              <span className="flex items-center gap-1 bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">
+                                <Lock className="w-3 h-3 text-rose-500" />
+                                <span>Paused by Parent</span>
+                              </span>
+                            ) : isCompleted ? (
                               <span className="flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                                 <span>Completed ⭐</span>
@@ -498,6 +516,11 @@ export function ChapterHub() {
                                   Replay Lab
                                 </span>
                                 <ArrowRight className="w-3.5 h-3.5" />
+                              </div>
+                            ) : isParentLocked ? (
+                              <div className="w-full py-2 px-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60 font-bold text-xs flex items-center justify-between">
+                                <span>Paused by Parent</span>
+                                <Lock className="w-3.5 h-3.5 text-rose-500" />
                               </div>
                             ) : isUnlocked ? (
                               <div className="w-full py-2 px-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-between shadow-xs transition-colors">
