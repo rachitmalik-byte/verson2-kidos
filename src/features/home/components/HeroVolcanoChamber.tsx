@@ -228,107 +228,84 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                   />
                 )}
 
-                {/* ── STATE TRANSITION PILL BAR (Top-Right: allows previewing both video frames) ── */}
-                <div className="absolute top-3.5 right-3.5 z-20 flex items-center gap-1 bg-slate-950/80 backdrop-blur-md border border-white/20 rounded-full p-1 shadow-lg">
-                  <button
-                    onClick={() => {
-                      sounds.pop();
-                      setIsErupting(false);
-                    }}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
-                      !isErupting
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-slate-300 hover:text-white'
-                    }`}
-                  >
-                    1. Loading
-                  </button>
-                  <button
-                    onClick={() => {
-                      sounds.sparkle();
-                      setIsErupting(true);
-                      setChamberPressure(88.4);
-                      setProgress(100);
-                    }}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
-                      isErupting
-                        ? 'bg-orange-600 text-white shadow-sm'
-                        : 'text-slate-300 hover:text-white'
-                    }`}
-                  >
-                    2. Done (Erupted)
-                  </button>
-                </div>
-
-                {/* ── INTERACTIVE TELEMETRY OVERLAY (Top-Left) ── */}
-                <div className="absolute top-3.5 left-3.5 z-20 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white rounded-2xl p-3 sm:p-3.5 shadow-xl max-w-[220px]">
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="text-[10px] font-mono font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${isErupting ? 'bg-orange-400 animate-ping' : isPlaying ? 'bg-emerald-400 animate-ping' : 'bg-slate-500'}`} />
-                      {isErupting ? 'VENT ERUPTION ACTIVE' : 'VOLCANO EXPERIMENT'}
-                    </span>
-                    <button
-                      onClick={toggleSimulation}
-                      title={isPlaying ? 'Pause Simulation' : 'Resume Simulation'}
-                      className="w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white cursor-pointer transition-colors"
-                    >
-                      {isPlaying ? <Pause className="w-3 h-3 fill-white" /> : <Play className="w-3 h-3 fill-white ml-0.5" />}
-                    </button>
-                  </div>
-
-                  <div className="text-[11px] font-bold text-slate-300 flex items-center justify-between">
-                    <span>
-                      {isErupting
-                        ? '💥 Eruption Achieved!'
-                        : isPlaying
-                        ? 'Simulating ascent'
-                        : 'Simulation paused'}
-                    </span>
-                    <span className={`font-mono font-bold ${isErupting ? 'text-orange-400' : 'text-emerald-400'}`}>
-                      {isErupting ? '100%' : `${progress}%`}
-                    </span>
-                  </div>
-
-                  {/* Telemetry Progress Bar */}
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mt-1.5">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        isErupting
-                          ? 'bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 w-full'
-                          : 'bg-gradient-to-r from-emerald-400 to-amber-400'
-                      }`}
-                      style={{ width: isErupting ? '100%' : `${progress}%` }}
-                    />
-                  </div>
-
-                  {/* Micro Telemetry Metrics */}
-                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/10 text-[10px]">
-                    <div>
-                      <span className="text-slate-400 block">Pressure</span>
-                      <span className={`font-mono font-bold ${isErupting ? 'text-orange-400 animate-pulse' : 'text-amber-300'}`}>
-                        {chamberPressure} MPa
+                {/* ── UNIFIED RESPONSIVE HUD TOP BAR (Never collides on Android or small screens) ── */}
+                <div className="absolute top-2.5 sm:top-3.5 inset-x-2.5 sm:inset-x-3.5 z-20 flex flex-col gap-1.5 pointer-events-none">
+                  <div className="flex items-center justify-between gap-1.5 w-full">
+                    {/* Status Pill & Simulation Toggle */}
+                    <div className="pointer-events-auto bg-slate-950/85 backdrop-blur-md border border-white/20 text-white rounded-full px-2.5 sm:px-3 py-1 flex items-center gap-1.5 sm:gap-2 shadow-lg">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${isErupting ? 'bg-orange-400 animate-ping' : isPlaying ? 'bg-emerald-400 animate-ping' : 'bg-slate-500'}`} />
+                      <span className="text-[9px] sm:text-[10px] font-mono font-black uppercase tracking-wider text-amber-300 truncate">
+                        {isErupting ? 'ERUPTION ACTIVE' : 'VOLCANO SIM'}
                       </span>
+                      <button
+                        onClick={toggleSimulation}
+                        title={isPlaying ? 'Pause Simulation' : 'Resume Simulation'}
+                        className="w-5 h-5 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white cursor-pointer transition-colors shrink-0"
+                      >
+                        {isPlaying ? <Pause className="w-2.5 h-2.5 fill-white" /> : <Play className="w-2.5 h-2.5 fill-white ml-0.5" />}
+                      </button>
                     </div>
-                    <div>
-                      <span className="text-slate-400 block">Viscosity</span>
+
+                    {/* State Switcher Pills (Frame 1 vs Frame 2) */}
+                    <div className="pointer-events-auto flex items-center gap-0.5 bg-slate-950/85 backdrop-blur-md border border-white/20 rounded-full p-0.5 sm:p-1 shadow-lg shrink-0">
                       <button
                         onClick={() => {
                           sounds.pop();
-                          setViscosity(viscosity === 'high' ? 'low' : 'high');
+                          setIsErupting(false);
                         }}
-                        className="font-mono font-bold text-cyan-300 hover:underline cursor-pointer"
+                        className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                          !isErupting
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'text-slate-300 hover:text-white'
+                        }`}
                       >
-                        {viscosity.toUpperCase()} ↺
+                        1. Loading
                       </button>
+                      <button
+                        onClick={() => {
+                          sounds.sparkle();
+                          setIsErupting(true);
+                          setChamberPressure(88.4);
+                          setProgress(100);
+                        }}
+                        className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                          isErupting
+                            ? 'bg-orange-600 text-white shadow-sm'
+                            : 'text-slate-300 hover:text-white'
+                        }`}
+                      >
+                        2. Done
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Telemetry Micro Dashboard (Compact & clean) */}
+                  <div className="pointer-events-auto bg-slate-950/80 backdrop-blur-md border border-white/15 text-white rounded-xl p-2 shadow-md w-fit max-w-[210px] sm:max-w-[240px]">
+                    <div className="flex items-center justify-between gap-3 text-[10px] font-bold text-slate-300">
+                      <span className="truncate">{isErupting ? 'Peak Vent Release' : 'Ascent Pressure'}</span>
+                      <span className={`font-mono font-black ${isErupting ? 'text-orange-400' : 'text-emerald-400'}`}>
+                        {isErupting ? '88.4 MPa' : `${chamberPressure} MPa`}
+                      </span>
+                    </div>
+                    {/* Progress Bar */}
+                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mt-1">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          isErupting
+                            ? 'bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 w-full'
+                            : 'bg-gradient-to-r from-emerald-400 to-amber-400'
+                        }`}
+                        style={{ width: isErupting ? '100%' : `${progress}%` }}
+                      />
                     </div>
                   </div>
                 </div>
 
-                {/* Eruption Pulse Button (Bottom-Left) */}
-                <div className="absolute bottom-3.5 left-3.5 z-20">
+                {/* Eruption Pulse Button (Bottom: Responsive Thumb Button) */}
+                <div className="absolute bottom-2.5 sm:bottom-3.5 left-2.5 sm:left-3.5 right-2.5 sm:right-auto z-20">
                   <button
                     onClick={triggerEruption}
-                    className={`px-3.5 py-1.5 rounded-xl font-mono font-bold text-xs backdrop-blur-md border shadow-lg flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                    className={`w-full sm:w-auto min-h-[42px] px-4 py-2 rounded-xl font-mono font-bold text-xs backdrop-blur-md border shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-all touch-manipulation ${
                       isErupting
                         ? 'bg-amber-600/95 hover:bg-amber-600 text-white border-amber-300/60 shadow-orange-500/30'
                         : 'bg-orange-500/90 hover:bg-orange-500 text-white border-orange-300/40 shadow-lg'
@@ -336,12 +313,12 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                   >
                     {isErupting ? (
                       <>
-                        <RotateCcw className="w-3.5 h-3.5 text-amber-200" />
+                        <RotateCcw className="w-3.5 h-3.5 text-amber-200 shrink-0" />
                         <span>↺ COOL DOWN CHAMBER</span>
                       </>
                     ) : (
                       <>
-                        <Activity className="w-3.5 h-3.5 text-amber-200 animate-pulse" />
+                        <Activity className="w-3.5 h-3.5 text-amber-200 animate-pulse shrink-0" />
                         <span>TRIGGER ERUPTION PULSE ▶</span>
                       </>
                     )}
@@ -350,12 +327,12 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
               </div>
             </motion.div>
 
-            {/* ── AI SCIENCE ASSISTANT: PIP'S SCIENCE CORNER ── */}
+            {/* ── AI SCIENCE ASSISTANT: PIP'S SCIENCE CORNER (Clean below chamber on mobile, floating on desktop) ── */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className={`absolute -bottom-6 right-2 sm:right-6 bg-white/95 backdrop-blur-md border-2 shadow-xl rounded-2xl p-3 sm:p-4 max-w-xs text-left z-20 flex items-start gap-3 transition-colors ${
+              className={`mt-3 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-4 md:right-6 w-full sm:max-w-xs bg-white/95 backdrop-blur-md border-2 shadow-xl rounded-2xl p-3 sm:p-4 text-left z-20 flex items-start gap-3 transition-colors ${
                 isErupting ? 'border-orange-300 shadow-orange-500/10' : 'border-slate-200'
               }`}
             >
@@ -376,7 +353,7 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1 mb-0.5">
                   <span
-                    className={`text-[10px] font-mono font-black uppercase tracking-wider ${
+                    className={`text-[10px] font-mono font-black uppercase tracking-wider truncate ${
                       isErupting ? 'text-orange-600' : 'text-purple-700'
                     }`}
                   >
@@ -385,7 +362,7 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                   <button
                     onClick={handlePipAudio}
                     title={isSpeaking ? 'Stop Audio' : 'Listen to Explanation'}
-                    className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                    className={`min-w-[32px] min-h-[32px] w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer touch-manipulation ${
                       isSpeaking
                         ? isErupting
                           ? 'bg-orange-600 text-white animate-pulse'
@@ -393,7 +370,7 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                         : 'bg-slate-100 hover:bg-purple-100 text-slate-700'
                     }`}
                   >
-                    {isSpeaking ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                    {isSpeaking ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                   </button>
                 </div>
                 <p className="text-xs font-bold text-slate-800 leading-snug">

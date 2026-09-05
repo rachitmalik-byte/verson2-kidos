@@ -166,7 +166,7 @@ export function FireSafetyMission() {
               </p>
 
               {/* Clean Swatch Pair Preview */}
-              <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md mb-8">
                 <div className="bg-white p-4 rounded-3xl border-3 border-amber-300 shadow-md flex flex-col items-center text-center">
                   <div className="w-32 h-32 rounded-2xl overflow-hidden mb-2 bg-slate-50 border border-slate-100 p-1">
                     <img src={cottonSwatchCleanImg} alt="Clean Cotton Swatch" className="w-full h-full object-cover rounded-xl" />

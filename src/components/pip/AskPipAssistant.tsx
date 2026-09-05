@@ -47,7 +47,7 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
         whileHover={{ scale: 1.03, y: -1 }}
         whileTap={{ scale: 0.97 }}
         onClick={handleOpen}
-        className="fixed bottom-3 left-3 sm:bottom-4 sm:left-6 z-30 px-3 py-1.5 bg-white/95 backdrop-blur-md text-slate-700 border border-slate-200/90 rounded-xl font-bold text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 cursor-pointer transition-all"
+        className="fixed bottom-16 sm:bottom-4 left-3 sm:left-6 z-30 px-3 py-2 bg-white/95 backdrop-blur-md text-slate-700 border border-slate-200/90 rounded-xl font-bold text-xs shadow-md hover:shadow-lg flex items-center gap-1.5 cursor-pointer transition-all touch-manipulation"
       >
         <HelpCircle className="w-3.5 h-3.5 text-teal-600" />
         <span className="hidden sm:inline">Stuck? Ask Pip</span>
@@ -57,12 +57,12 @@ export const AskPipAssistant: React.FC<Props> = ({ currentGoal, stepHint, concep
       {/* Modern Socratic Help Modal */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs">
             <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 8 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 8 }}
-              className="w-full max-w-lg bg-white rounded-2xl border border-slate-200/90 p-6 shadow-2xl flex flex-col gap-4 relative overflow-hidden"
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-2xl flex flex-col gap-3.5 sm:gap-4 relative"
             >
               {/* Header */}
               <div className="flex items-center justify-between">

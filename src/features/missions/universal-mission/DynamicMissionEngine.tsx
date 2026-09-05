@@ -240,13 +240,13 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
 
             {/* Step 1: Tangible Crumple Sandbox with Real Macro Fabric Photography */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-sky-400 shadow-xl">
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Interactive Fabric Crumple Rig</h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
+              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-4 sm:p-6 md:p-8 rounded-3xl border-4 border-sky-400 shadow-xl">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2 text-center">Interactive Fabric Crumple Rig</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-5 sm:mb-6 text-center">
                   Tap 'Squeeze & Crumple Fabrics' to crush both fabric swatches tightly in the press, then release to inspect the wrinkle memory!
                 </p>
 
-                <div className="grid grid-cols-2 gap-6 w-full mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full mb-6">
                   {/* Cotton Swatch */}
                   <div className="p-5 rounded-2xl bg-amber-50/70 border-3 border-amber-300 flex flex-col items-center text-center">
                     <div className="flex items-center gap-1.5 mb-2">
@@ -531,13 +531,13 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
 
             {/* Step 1: Controlled Burner Reaction Simulator with Real Photos */}
             {currentStepIndex === 1 && (
-              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-rose-400 shadow-xl">
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Controlled Flame Burner Chamber</h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
+              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-4 sm:p-6 md:p-8 rounded-3xl border-4 border-rose-400 shadow-xl">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2 text-center">Controlled Flame Burner Chamber</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-5 sm:mb-6 text-center">
                   Tap 'Apply Flame' to test how Natural Cotton vs Synthetic Polyester react when touched by a flame!
                 </p>
 
-                <div className="grid grid-cols-2 gap-6 w-full mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full mb-6">
                   {/* Cotton Burn Test */}
                   <div className="p-5 bg-emerald-50/70 border-3 border-emerald-300 rounded-2xl flex flex-col items-center text-center">
                     <span className="font-black text-slate-900 mb-2">1. 100% Natural Cotton</span>
@@ -1673,12 +1673,12 @@ const GenericDynamicMissionEngine: React.FC<{ missionNumber: number }> = ({ miss
 
             {/* Step 3: The 4 R's Circular Economy Challenge */}
             {currentStepIndex === 3 && (
-              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-6 md:p-8 rounded-3xl border-4 border-teal-400 shadow-xl">
-                <h3 className="text-2xl font-black text-slate-900 mb-2">The 4 R's Circular Economy Challenge!</h3>
-                <p className="text-xs md:text-sm text-slate-600 font-bold mb-6 text-center">
+              <div className="w-full max-w-3xl flex flex-col items-center bg-white p-4 sm:p-6 md:p-8 rounded-3xl border-4 border-teal-400 shadow-xl">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2 text-center">The 4 R's Circular Economy Challenge!</h3>
+                <p className="text-xs md:text-sm text-slate-600 font-bold mb-5 sm:mb-6 text-center">
                   Tap each action to master the 4 R's that protect Earth's soil and oceans:
                 </p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full mb-6">
                   {[
                     { id: 'reduce', title: '1. REDUCE', desc: 'Use less single-use plastic packaging', icon: '📉' },
                     { id: 'reuse', title: '2. REUSE', desc: 'Carry reusable bottles and cloth totes', icon: '🔄' },

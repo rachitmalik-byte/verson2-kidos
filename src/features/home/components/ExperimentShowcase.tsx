@@ -151,14 +151,14 @@ export const ExperimentShowcase: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-3xl border-2 border-slate-200 shadow-2xl max-w-xl w-full p-6 sm:p-8 text-left relative overflow-hidden"
+              className="bg-white rounded-3xl border-2 border-slate-200 shadow-2xl max-w-xl w-full p-4 sm:p-8 text-left relative overflow-y-auto max-h-[90vh]"
             >
               <button
                 onClick={() => {
                   sounds.pop();
                   setActiveModalSim(null);
                 }}
-                className="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center cursor-pointer transition-colors"
+                className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center cursor-pointer transition-colors z-10 touch-manipulation"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -169,7 +169,7 @@ export const ExperimentShowcase: React.FC = () => {
                   <span className="text-[10px] font-mono font-black uppercase tracking-wider text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200 mb-2 inline-block">
                     LIVE SANDBOX • VOLCANO LAB
                   </span>
-                  <h3 className="text-2xl font-display font-black text-slate-900 mb-2">
+                  <h3 className="text-xl sm:text-2xl font-display font-black text-slate-900 mb-2">
                     Magma Chamber Pressure Test
                   </h3>
                   <p className="text-xs text-slate-600 mb-4 font-medium">
@@ -209,7 +209,7 @@ export const ExperimentShowcase: React.FC = () => {
                       max="100"
                       value={simPressure}
                       onChange={(e) => setSimPressure(Number(e.target.value))}
-                      className="w-full accent-amber-500 cursor-pointer"
+                      className="w-full h-3 accent-amber-500 cursor-pointer touch-manipulation"
                     />
 
                     <div className="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
@@ -219,14 +219,14 @@ export const ExperimentShowcase: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
                     <button
                       onClick={() => {
                         sounds.sparkle();
                         setIsEruptingSim(true);
                         setTimeout(() => setIsEruptingSim(false), 1500);
                       }}
-                      className="flex-1 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md active:scale-98"
+                      className="flex-1 min-h-[44px] py-3 px-4 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md active:scale-98 touch-manipulation"
                     >
                       <Activity className="w-4 h-4" />
                       <span>{isEruptingSim ? 'ERUPTION IN PROGRESS! 🌋' : 'Trigger Chamber Eruption'}</span>
@@ -237,7 +237,7 @@ export const ExperimentShowcase: React.FC = () => {
                         sounds.success();
                         navigate('/chapter/3/mission/4');
                       }}
-                      className="py-3.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer"
+                      className="min-h-[44px] py-3 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center cursor-pointer touch-manipulation"
                     >
                       Open Full Lab →
                     </button>

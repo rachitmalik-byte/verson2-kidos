@@ -1108,7 +1108,7 @@ export function RaincoatMission() {
                 </motion.div>
               )}
 
-              <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 w-full">
                 {[
                   {
                     id: 'wood',

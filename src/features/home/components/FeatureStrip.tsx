@@ -53,25 +53,28 @@ export const FeatureStrip: React.FC = () => {
 
   return (
     <section className="w-full py-4 border-y border-slate-200/90 bg-white/70 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 items-center">
-          {features.map((f) => {
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
+          {features.map((f, index) => {
             const Icon = f.icon;
+            const isLastOdd = index === features.length - 1 && features.length % 2 !== 0;
             return (
               <div
                 key={f.id}
-                className="flex items-center gap-3 p-3 rounded-2xl transition-all hover:bg-white hover:shadow-sm"
+                className={`flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 rounded-2xl transition-all hover:bg-white hover:shadow-sm border border-slate-200/60 bg-white/50 ${
+                  isLastOdd ? 'col-span-2 md:col-span-1 justify-center sm:justify-start' : ''
+                }`}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${f.bgColor} ${f.iconColor}`}
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl border flex items-center justify-center shrink-0 ${f.bgColor} ${f.iconColor}`}
                 >
-                  <Icon className="w-5 h-5 stroke-[2]" />
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2]" />
                 </div>
                 <div className="text-left min-w-0">
                   <span className="font-extrabold text-xs sm:text-sm text-slate-900 block truncate">
                     {f.title}
                   </span>
-                  <span className="text-[11px] font-medium text-slate-500 block truncate">
+                  <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 block truncate">
                     {f.subtitle}
                   </span>
                 </div>

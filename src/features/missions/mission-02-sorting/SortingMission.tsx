@@ -599,7 +599,7 @@ export function SortingMission() {
                 A scientist creates a brand new unbreakable plastic bottle inside a laboratory. Is this material Natural or Synthetic?
               </p>
 
-              <div className="grid grid-cols-2 gap-4 w-full mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 w-full mb-6">
                 <button
                   onClick={() => sounds.boing()}
                   className="p-5 rounded-3xl border-3 border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-black text-base transition-all cursor-pointer flex flex-col items-center gap-2"
