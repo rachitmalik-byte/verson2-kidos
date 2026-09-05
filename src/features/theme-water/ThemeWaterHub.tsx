@@ -139,89 +139,83 @@ export function ThemeWaterHub() {
           </div>
         </div>
 
-        {/* ── 4 Curriculum Cards Grid with Balanced Layout & Hover-Reveal ── */}
+        {/* ── 4 Curriculum Cards Grid with Minimal, Premium Architecture ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
           {WATER_CHAPTERS.map((ch, idx) => {
             const art = WATER_ARTWORK[ch.chapterNumber] || WATER_ARTWORK[1];
             return (
               <motion.div
                 key={ch.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                whileHover={{ scale: 1.015, y: -5 }}
-                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.35, delay: idx * 0.06 }}
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.985 }}
                 onClick={() => handleChapterClick(ch.chapterNumber)}
-                className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-teal-500/30 p-5 sm:p-6 rounded-3xl shadow-soft-card hover:shadow-[0_20px_45px_-12px_rgba(14,165,233,0.28)] hover:border-teal-400/60 text-left cursor-pointer transition-all flex flex-col justify-between group relative overflow-hidden"
+                className="bg-white dark:bg-[#0C1017] border border-slate-200/80 dark:border-white/[0.08] rounded-2xl sm:rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:border-cyan-500/40 dark:hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between group cursor-pointer text-left relative"
               >
                 <div>
-                  {/* Visual Specimen Thumbnail */}
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-slate-200/70 dark:border-white/10 shadow-md mb-4 bg-slate-950">
+                  {/* Visual Media Canvas */}
+                  <div className="relative aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-900 mb-4">
                     <img
                       src={art.imageSrc}
                       alt={ch.title}
-                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out brightness-95 group-hover:brightness-100"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
 
-                    {/* Top Badges */}
+                    {/* Top Minimal Pill */}
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                      <span className="px-3 py-1 bg-black/75 backdrop-blur-md text-teal-300 text-[11px] font-mono font-extrabold rounded-full border border-teal-400/40 uppercase tracking-wider shadow-md flex items-center gap-1.5">
-                        <span>Chapter {ch.chapterNumber}</span>
-                        <span>•</span>
-                        <span>{art.badgeTitle}</span>
+                      <span className="px-2.5 py-1 bg-black/40 backdrop-blur-md text-white/95 text-[11px] font-semibold tracking-wide rounded-lg border border-white/15">
+                        Chapter 0{ch.chapterNumber}
                       </span>
 
-                      <span className="text-xl filter drop-shadow-md">{ch.icon}</span>
+                      <span className="text-lg filter drop-shadow-sm">{ch.icon}</span>
                     </div>
 
-                    {/* Bottom Image Facts */}
-                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white">
-                      <span className="text-[11px] font-mono font-bold text-teal-200 drop-shadow-md flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-teal-500/30">
-                        <Sparkles className="w-3 h-3 text-teal-400" />
-                        <span>{art.quickFact}</span>
+                    {/* Bottom Media Subtle Label */}
+                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-cyan-200/90 drop-shadow-sm tracking-tight">
+                        {art.quickFact}
                       </span>
-
-                      <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-teal-950/80 backdrop-blur-md text-teal-300 border border-teal-400/40 shadow-xs">
-                        {art.stageCount} Lab Stages 🔬
+                      <span className="text-[10px] font-medium text-white/80 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/10">
+                        {art.stageCount} Stages
                       </span>
                     </div>
                   </div>
 
-                  <h3 className="text-lg sm:text-xl font-display font-extrabold text-slate-900 dark:text-white leading-snug group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                    {ch.title}
-                  </h3>
-                  <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-1.5 line-clamp-2 leading-relaxed">
-                    {ch.subtitle}
-                  </p>
+                  {/* Content Section */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-semibold tracking-wider uppercase text-cyan-600 dark:text-cyan-400 font-sans block">
+                      {art.badgeTitle}
+                    </span>
+                    <h3 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-200">
+                      {ch.title}
+                    </h3>
+                    <p className="text-xs sm:text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                      {ch.subtitle}
+                    </p>
+                  </div>
 
-                  {/* ── Hover-and-Reveal Pip Mystery Inquiry Box ── */}
-                  <div className="mt-4 p-3 rounded-2xl bg-teal-50/70 dark:bg-teal-950/40 border border-teal-200/80 dark:border-teal-500/25 transition-all duration-300 group-hover:border-teal-400/60 group-hover:bg-teal-100/70 dark:group-hover:bg-teal-900/40">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300 flex items-center gap-1.5">
-                        <Pip mood="curious" size={18} interactive={false} />
-                        <span>Pip's Mystery Question</span>
-                      </span>
-                      <span className="text-[10px] font-bold text-teal-600 dark:text-teal-400 opacity-75 group-hover:opacity-100 transition-opacity">
-                        Water Secret 💧
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-700 dark:text-slate-200 italic font-medium leading-relaxed">
+                  {/* Minimal Inquiry Quote Accent */}
+                  <div className="mt-3.5 pl-3 border-l-2 border-slate-200 dark:border-white/10 group-hover:border-cyan-500/60 dark:group-hover:border-cyan-400/60 transition-colors">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 italic font-normal leading-relaxed line-clamp-2">
                       "{art.mysteryQuestion}"
                     </p>
                   </div>
                 </div>
 
-                {/* Action Launch Bar */}
-                <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-teal-700 dark:text-teal-400 flex items-center gap-1.5 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                    <span>Enter Laboratory Experiment</span>
-                    <ArrowRight className="w-3.5 h-3.5 stroke-[2.5] group-hover:translate-x-1 transition-transform" />
+                {/* Minimal Footer Row */}
+                <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between">
+                  <span className="text-xs font-medium text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                    <span>Water Lab</span>
                   </span>
 
-                  <span className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 group-hover:bg-teal-600 group-hover:text-white flex items-center justify-center transition-all shadow-xs group-hover:scale-105">
-                    <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-                  </span>
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400 group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors">
+                    <span>Start Mission</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                  </div>
                 </div>
               </motion.div>
             );

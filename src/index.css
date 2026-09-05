@@ -3,8 +3,8 @@
 
 @layer base {
   :root {
-    --font-heading: 'Outfit', -apple-system, sans-serif;
-    --font-body: 'Lexend', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Plus Jakarta Sans', 'Outfit', -apple-system, sans-serif;
+    --font-body: 'Plus Jakarta Sans', 'Lexend', system-ui, -apple-system, sans-serif;
     --bg-cream: #F8FAFC;
     --text-charcoal: #0F172A;
     --text-muted: #475569;
