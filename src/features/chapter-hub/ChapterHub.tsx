@@ -112,7 +112,7 @@ export function ChapterHub() {
         <MaterialsAnimatedLabBackground />
         <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 relative z-10">
           {/* ── Expedition Header Bar ── */}
-          <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+          <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 dark:border-white/10 pb-4">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => {
@@ -120,7 +120,7 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   navigate('/subjects');
                 }}
-                className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all bg-white/90 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-white/10 shadow-xs"
                 title="Return to Subjects"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -128,10 +128,10 @@ export function ChapterHub() {
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md bg-teal-50 text-teal-800 text-xs font-mono font-bold border border-teal-200/70">
+                <span className="px-2.5 py-1 rounded-md bg-teal-50 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 text-xs font-mono font-bold border border-teal-200/70 dark:border-teal-500/30">
                   THEME 6
                 </span>
-                <span className="font-heading font-bold text-sm sm:text-base text-slate-900">
+                <span className="font-heading font-bold text-sm sm:text-base text-slate-900 dark:text-white">
                   Materials Science & Inventions
                 </span>
               </div>
@@ -144,7 +144,7 @@ export function ChapterHub() {
                   voiceAssistant.stop();
                   navigate('/teacher-studio');
                 }}
-                className="edtech-btn-secondary px-3 py-1.5 text-xs flex items-center gap-1 text-slate-600"
+                className="px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 text-slate-600 dark:text-slate-300 bg-white/90 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700/80 border-slate-200 dark:border-white/10 shadow-xs"
                 title="Open Teacher Studio"
               >
                 <GraduationCap className="w-3.5 h-3.5" />

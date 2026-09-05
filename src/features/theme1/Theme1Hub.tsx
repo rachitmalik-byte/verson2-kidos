@@ -7,6 +7,7 @@ import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import { THEME_1_CHAPTERS } from '@/data/theme1Missions';
 import { ArrowLeft, BookOpen, ArrowRight, Compass, Sparkles } from 'lucide-react';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
+import { useEnvironmentStore } from '@/stores/environmentStore';
 import { Pip } from '@/components/pip/Pip';
 import { LivingWorldAnimatedForestBackground } from '@/components/effects/LivingWorldAnimatedForestBackground';
 
@@ -56,6 +57,8 @@ const CHAPTER_ARTWORK: Record<number, {
 export function Theme1Hub() {
   const navigate = useNavigate();
   const discoveries = useDiscoveryStore((state) => state.discoveries);
+  const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
+  const isDay = timeOfDay === 'day';
 
   const handleChapterClick = (chapterNum: number) => {
     sounds.pop();
@@ -77,14 +80,22 @@ export function Theme1Hub() {
               voiceAssistant.stop();
               navigate('/subjects');
             }}
-            className="px-4 py-2 rounded-xl bg-white/80 hover:bg-white text-slate-700 border border-slate-200 shadow-xs text-xs font-bold flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all"
+            className={`px-4 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all ${
+              isDay
+                ? 'bg-white/90 hover:bg-white text-slate-700 border-slate-200 shadow-xs'
+                : 'bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 border-white/15 shadow-md'
+            }`}
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-teal-600" />
+            <ArrowLeft className="w-3.5 h-3.5 text-teal-500" />
             <span>All Science Worlds</span>
           </button>
 
-          <span className="text-xs font-mono font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-500/40 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-            <Compass className="w-3.5 h-3.5 text-emerald-600" />
+          <span className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 border backdrop-blur-md ${
+            isDay
+              ? 'text-emerald-800 bg-emerald-50 border-emerald-200'
+              : 'text-emerald-300 bg-emerald-950/80 border-emerald-500/40'
+          }`}>
+            <Compass className="w-3.5 h-3.5 text-emerald-500" />
             <span>Living Biosphere & Super Senses Realm</span>
           </span>
         </div>
@@ -140,18 +151,30 @@ export function Theme1Hub() {
         </div>
 
         {/* ── Living World Curriculum Chapters & Interactive Bio-Labs ── */}
-        <main id="curriculum-chapters" className="w-full pt-6 flex flex-col gap-8">
-          {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200/60 dark:border-white/10 pb-6">
+        <main id="curriculum-chapters" className="w-full pt-4 flex flex-col gap-6">
+          {/* Section Header with High-Contrast Frosted Panel */}
+          <div className={`p-6 sm:p-7 rounded-3xl backdrop-blur-xl border transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 ${
+            isDay 
+              ? 'bg-white/90 border-slate-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.03)]' 
+              : 'bg-slate-950/80 border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.3)]'
+          }`}>
             <div>
-              <span className="px-3.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-[11px] font-mono font-bold tracking-wider uppercase inline-flex items-center gap-2 mb-2">
-                <Compass className="w-3.5 h-3.5 text-emerald-600" />
+              <span className={`px-3.5 py-1 rounded-full border text-[11px] font-mono font-bold tracking-wider uppercase inline-flex items-center gap-2 mb-2 ${
+                isDay
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                  : 'bg-emerald-950/80 border-emerald-500/30 text-emerald-300'
+              }`}>
+                <Compass className="w-3.5 h-3.5 text-emerald-500" />
                 <span>NCERT Class 5 EVS • Living Systems</span>
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight ${
+                isDay ? 'text-slate-900' : 'text-white'
+              }`}>
                 Super Senses & Living Systems 🌿
               </h2>
-              <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              <p className={`text-xs sm:text-sm font-medium mt-1 max-w-2xl leading-relaxed ${
+                isDay ? 'text-slate-600' : 'text-slate-300'
+              }`}>
                 Explore 4 interactive chapters spanning ant scent trails, snake seismic hearing, 
                 taste papillae biochemistry, and burdock seed biomimicry.
               </p>
@@ -163,9 +186,13 @@ export function Theme1Hub() {
                   sounds.pop();
                   navigate('/discovery-book');
                 }}
-                className="px-4 py-2.5 rounded-xl bg-white/90 hover:bg-white text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 shadow-xs text-xs font-bold flex items-center gap-2 cursor-pointer transition-all"
+                className={`px-4 py-2.5 rounded-xl border shadow-xs text-xs font-bold flex items-center gap-2 cursor-pointer transition-all ${
+                  isDay
+                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200'
+                    : 'bg-white/10 hover:bg-white/20 text-white border-white/15 backdrop-blur-md'
+                }`}
               >
-                <BookOpen className="w-4 h-4 text-emerald-600" />
+                <BookOpen className="w-4 h-4 text-emerald-500" />
                 <span>Field Journal ({discoveries.length} Notes)</span>
               </button>
             </div>
@@ -184,7 +211,11 @@ export function Theme1Hub() {
                   whileHover={{ y: -4 }}
                   whileTap={{ scale: 0.985 }}
                   onClick={() => handleChapterClick(ch.chapterNumber)}
-                  className="bg-white dark:bg-[#0C1017] border border-slate-200/80 dark:border-white/[0.08] rounded-2xl sm:rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:border-emerald-500/40 dark:hover:border-emerald-500/30 transition-all duration-300 flex flex-col justify-between group cursor-pointer text-left relative"
+                  className={`rounded-2xl sm:rounded-3xl p-5 transition-all duration-300 flex flex-col justify-between group cursor-pointer text-left relative ${
+                    isDay
+                      ? 'bg-white border border-slate-200/90 text-slate-900 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-emerald-500/50'
+                      : 'bg-[#0C1017] border border-white/[0.08] text-white shadow-[0_2px_12px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6)] hover:border-emerald-500/30'
+                  }`}
                 >
                   <div>
                     {/* Visual Media Canvas */}
@@ -218,33 +249,55 @@ export function Theme1Hub() {
 
                     {/* Content Section */}
                     <div className="space-y-1.5">
-                      <span className="text-[11px] font-semibold tracking-wider uppercase text-emerald-600 dark:text-emerald-400 font-sans block">
+                      <span className={`text-[11px] font-semibold tracking-wider uppercase font-sans block ${
+                        isDay ? 'text-emerald-600' : 'text-emerald-400'
+                      }`}>
                         {art.badgeTitle}
                       </span>
-                      <h3 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
+                      <h3 className={`text-lg sm:text-xl font-bold tracking-tight transition-colors duration-200 ${
+                        isDay
+                          ? 'text-slate-900 group-hover:text-emerald-600'
+                          : 'text-white group-hover:text-emerald-400'
+                      }`}>
                         {ch.title}
                       </h3>
-                      <p className="text-xs sm:text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                      <p className={`text-xs sm:text-[13px] leading-relaxed mt-1 line-clamp-2 ${
+                        isDay ? 'text-slate-600' : 'text-slate-400'
+                      }`}>
                         {ch.subtitle}
                       </p>
                     </div>
 
                     {/* Minimal Inquiry Quote Accent */}
-                    <div className="mt-3.5 pl-3 border-l-2 border-slate-200 dark:border-white/10 group-hover:border-emerald-500/60 dark:group-hover:border-emerald-400/60 transition-colors">
-                      <p className="text-xs text-slate-600 dark:text-slate-300 italic font-normal leading-relaxed line-clamp-2">
+                    <div className={`mt-3.5 pl-3 border-l-2 transition-colors ${
+                      isDay
+                        ? 'border-slate-200 group-hover:border-emerald-500/60'
+                        : 'border-white/10 group-hover:border-emerald-400/60'
+                    }`}>
+                      <p className={`text-xs italic font-normal leading-relaxed line-clamp-2 ${
+                        isDay ? 'text-slate-600' : 'text-slate-300'
+                      }`}>
                         "{art.mysteryQuestion}"
                       </p>
                     </div>
                   </div>
 
                   {/* Minimal Footer Row */}
-                  <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                  <div className={`mt-5 pt-3.5 border-t flex items-center justify-between ${
+                    isDay ? 'border-slate-100' : 'border-white/[0.06]'
+                  }`}>
+                    <span className={`text-xs font-medium flex items-center gap-1.5 ${
+                      isDay ? 'text-slate-500' : 'text-slate-400'
+                    }`}>
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       <span>Interactive Lab</span>
                     </span>
 
-                    <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
+                    <div className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-colors ${
+                      isDay
+                        ? 'text-emerald-600 group-hover:text-emerald-700'
+                        : 'text-emerald-400 group-hover:text-emerald-300'
+                    }`}>
                       <span>Start Mission</span>
                       <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                     </div>

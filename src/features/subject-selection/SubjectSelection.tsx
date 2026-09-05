@@ -219,10 +219,10 @@ export const SubjectSelection: React.FC = () => {
         <section className="flex flex-col gap-6">
           <div className="flex items-center justify-between text-left">
             <div>
-              <h2 className="text-2xl font-display font-black text-slate-900 tracking-tight">
+              <h2 className="text-2xl font-display font-black text-slate-900 dark:text-white tracking-tight">
                 Select Your Learning Realm
               </h2>
-              <p className="text-sm text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-slate-300 mt-0.5">
                 Each realm contains dedicated simulators, chapter expedition maps, and specimen field logs
               </p>
             </div>

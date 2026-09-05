@@ -46,6 +46,11 @@ export const PersistentAppShell: React.FC<PersistentAppShellProps> = ({
 
   useEffect(() => {
     document.documentElement.setAttribute('data-atmosphere', timeOfDay);
+    if (timeOfDay === 'day') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
   }, [timeOfDay]);
 
   // Deterministic stable starfield for night atmosphere

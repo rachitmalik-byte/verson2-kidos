@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./styles/designSystem.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-heading: 'Plus Jakarta Sans', 'Outfit', -apple-system, sans-serif;

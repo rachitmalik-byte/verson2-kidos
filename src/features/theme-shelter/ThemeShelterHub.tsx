@@ -8,6 +8,7 @@ import { PersistentAppShell } from '@/components/navigation/PersistentAppShell';
 import { SHELTER_CHAPTERS } from '@/data/themeShelterMissions';
 import { ArrowLeft, BookOpen, ArrowRight, Mountain, Sparkles, Compass } from 'lucide-react';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
+import { useEnvironmentStore } from '@/stores/environmentStore';
 import { ShelterAnimatedMountainBackground } from '@/components/effects/ShelterAnimatedMountainBackground';
 
 // High-Altitude & Habitat Specimen Assets
@@ -64,6 +65,8 @@ const SHELTER_ARTWORK: Record<number, {
 export function ThemeShelterHub() {
   const navigate = useNavigate();
   const discoveries = useDiscoveryStore((state) => state.discoveries);
+  const timeOfDay = useEnvironmentStore((state) => state.timeOfDay);
+  const isDay = timeOfDay === 'day';
 
   const handleChapterClick = (chapterNum: number) => {
     sounds.pop();
@@ -85,14 +88,22 @@ export function ThemeShelterHub() {
               voiceAssistant.stop();
               navigate('/subjects');
             }}
-            className="px-4 py-2 rounded-xl bg-white/80 hover:bg-white text-slate-700 border border-slate-200 shadow-xs text-xs font-bold flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all"
+            className={`px-4 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all ${
+              isDay
+                ? 'bg-white/90 hover:bg-white text-slate-700 border-slate-200 shadow-xs'
+                : 'bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 border-white/15 shadow-md'
+            }`}
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-teal-600" />
+            <ArrowLeft className="w-3.5 h-3.5 text-teal-500" />
             <span>All Science Worlds</span>
           </button>
 
-          <span className="text-xs font-mono font-bold text-stone-800 dark:text-stone-200 bg-stone-100 dark:bg-stone-900/80 border border-stone-300 dark:border-stone-700 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-            <Mountain className="w-3.5 h-3.5 text-stone-600 dark:text-stone-300" />
+          <span className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 border backdrop-blur-md ${
+            isDay
+              ? 'text-stone-800 bg-stone-100 border-stone-300'
+              : 'text-stone-200 bg-stone-900/80 border-stone-700'
+          }`}>
+            <Mountain className="w-3.5 h-3.5 text-stone-500" />
             <span>Extreme Shelters & Habitats Realm</span>
           </span>
         </div>
@@ -147,88 +158,162 @@ export function ThemeShelterHub() {
           </div>
         </div>
 
-        {/* ── 5 Curriculum Cards Grid with Minimal, Premium Architecture ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {SHELTER_CHAPTERS.map((ch, idx) => {
-            const art = SHELTER_ARTWORK[ch.chapterNumber] || SHELTER_ARTWORK[1];
-            return (
-              <motion.div
-                key={ch.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: idx * 0.06 }}
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.985 }}
-                onClick={() => handleChapterClick(ch.chapterNumber)}
-                className="bg-white dark:bg-[#0C1017] border border-slate-200/80 dark:border-white/[0.08] rounded-2xl sm:rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:border-amber-500/40 dark:hover:border-amber-500/30 transition-all duration-300 flex flex-col justify-between group cursor-pointer text-left relative"
+        {/* ── Shelter World Curriculum Chapters & Interactive Habitat-Labs ── */}
+        <main id="curriculum-chapters" className="w-full pt-4 flex flex-col gap-6">
+          {/* Section Header with High-Contrast Frosted Panel */}
+          <div className={`p-6 sm:p-7 rounded-3xl backdrop-blur-xl border transition-all duration-300 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 ${
+            isDay 
+              ? 'bg-white/90 border-slate-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.03)]' 
+              : 'bg-slate-950/80 border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.3)]'
+          }`}>
+            <div>
+              <span className={`px-3.5 py-1 rounded-full border text-[11px] font-mono font-bold tracking-wider uppercase inline-flex items-center gap-2 mb-2 ${
+                isDay
+                  ? 'bg-amber-50 border-amber-200 text-amber-900'
+                  : 'bg-amber-950/80 border-amber-500/30 text-amber-300'
+              }`}>
+                <Compass className="w-3.5 h-3.5 text-amber-500" />
+                <span>NCERT Class 5 EVS • Shelters & Architecture</span>
+              </span>
+              <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight ${
+                isDay ? 'text-slate-900' : 'text-white'
+              }`}>
+                High-Altitude Shelters & Space Habitats 🏔️
+              </h2>
+              <p className={`text-xs sm:text-sm font-medium mt-1 max-w-2xl leading-relaxed ${
+                isDay ? 'text-slate-600' : 'text-slate-300'
+              }`}>
+                Explore 5 interactive chapters spanning Changpa yak-hair Rebo tents, mountaineering survival gear, Golconda Fort hydraulics, and earthquake-proof Kutch Bhunga architecture.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  sounds.pop();
+                  navigate('/discovery-book');
+                }}
+                className={`px-4 py-2.5 rounded-xl border shadow-xs text-xs font-bold flex items-center gap-2 cursor-pointer transition-all ${
+                  isDay
+                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200'
+                    : 'bg-white/10 hover:bg-white/20 text-white border-white/15 backdrop-blur-md'
+                }`}
               >
-                <div>
-                  {/* Visual Media Canvas */}
-                  <div className="relative aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-900 mb-4">
-                    <img
-                      src={art.imageSrc}
-                      alt={ch.title}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                <BookOpen className="w-4 h-4 text-amber-500" />
+                <span>Field Journal ({discoveries.length} Notes)</span>
+              </button>
+            </div>
+          </div>
 
-                    {/* Top Minimal Pill */}
-                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                      <span className="px-2.5 py-1 bg-black/40 backdrop-blur-md text-white/95 text-[11px] font-semibold tracking-wide rounded-lg border border-white/15">
-                        Chapter 0{ch.chapterNumber}
-                      </span>
+          {/* 5 Curriculum Cards Grid with Minimal, Premium Architecture */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {SHELTER_CHAPTERS.map((ch, idx) => {
+              const art = SHELTER_ARTWORK[ch.chapterNumber] || SHELTER_ARTWORK[1];
+              return (
+                <motion.div
+                  key={ch.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: idx * 0.06 }}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.985 }}
+                  onClick={() => handleChapterClick(ch.chapterNumber)}
+                  className={`rounded-2xl sm:rounded-3xl p-5 transition-all duration-300 flex flex-col justify-between group cursor-pointer text-left relative ${
+                    isDay
+                      ? 'bg-white border border-slate-200/90 text-slate-900 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-amber-500/50'
+                      : 'bg-[#0C1017] border border-white/[0.08] text-white shadow-[0_2px_12px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6)] hover:border-amber-500/30'
+                  }`}
+                >
+                  <div>
+                    {/* Visual Media Canvas */}
+                    <div className="relative aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-900 mb-4">
+                      <img
+                        src={art.imageSrc}
+                        alt={ch.title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
 
-                      <span className="text-lg filter drop-shadow-sm">{ch.icon}</span>
+                      {/* Top Minimal Pill */}
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                        <span className="px-2.5 py-1 bg-black/40 backdrop-blur-md text-white/95 text-[11px] font-semibold tracking-wide rounded-lg border border-white/15">
+                          Chapter 0{ch.chapterNumber}
+                        </span>
+
+                        <span className="text-lg filter drop-shadow-sm">{ch.icon}</span>
+                      </div>
+
+                      {/* Bottom Media Subtle Label */}
+                      <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
+                        <span className="text-[11px] font-medium text-amber-200/90 drop-shadow-sm tracking-tight">
+                          {art.quickFact}
+                        </span>
+                        <span className="text-[10px] font-medium text-white/80 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/10">
+                          {art.stageCount} Stages
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Bottom Media Subtle Label */}
-                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
-                      <span className="text-[11px] font-medium text-amber-200/90 drop-shadow-sm tracking-tight">
-                        {art.quickFact}
+                    {/* Content Section */}
+                    <div className="space-y-1.5">
+                      <span className={`text-[11px] font-semibold tracking-wider uppercase font-sans block ${
+                        isDay ? 'text-amber-600' : 'text-amber-400'
+                      }`}>
+                        {art.badgeTitle}
                       </span>
-                      <span className="text-[10px] font-medium text-white/80 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/10">
-                        {art.stageCount} Stages
-                      </span>
+                      <h3 className={`text-lg sm:text-xl font-bold tracking-tight transition-colors duration-200 ${
+                        isDay
+                          ? 'text-slate-900 group-hover:text-amber-600'
+                          : 'text-white group-hover:text-amber-400'
+                      }`}>
+                        {ch.title}
+                      </h3>
+                      <p className={`text-xs sm:text-[13px] leading-relaxed mt-1 line-clamp-2 ${
+                        isDay ? 'text-slate-600' : 'text-slate-400'
+                      }`}>
+                        {ch.subtitle}
+                      </p>
+                    </div>
+
+                    {/* Minimal Inquiry Quote Accent */}
+                    <div className={`mt-3.5 pl-3 border-l-2 transition-colors ${
+                      isDay
+                        ? 'border-slate-200 group-hover:border-amber-500/60'
+                        : 'border-white/10 group-hover:border-amber-400/60'
+                    }`}>
+                      <p className={`text-xs italic font-normal leading-relaxed line-clamp-2 ${
+                        isDay ? 'text-slate-600' : 'text-slate-300'
+                      }`}>
+                        "{art.mysteryQuestion}"
+                      </p>
                     </div>
                   </div>
 
-                  {/* Content Section */}
-                  <div className="space-y-1.5">
-                    <span className="text-[11px] font-semibold tracking-wider uppercase text-amber-600 dark:text-amber-400 font-sans block">
-                      {art.badgeTitle}
+                  {/* Minimal Footer Row */}
+                  <div className={`mt-5 pt-3.5 border-t flex items-center justify-between ${
+                    isDay ? 'border-slate-100' : 'border-white/[0.06]'
+                  }`}>
+                    <span className={`text-xs font-medium flex items-center gap-1.5 ${
+                      isDay ? 'text-slate-500' : 'text-slate-400'
+                    }`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      <span>Expedition</span>
                     </span>
-                    <h3 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-200">
-                      {ch.title}
-                    </h3>
-                    <p className="text-xs sm:text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                      {ch.subtitle}
-                    </p>
-                  </div>
 
-                  {/* Minimal Inquiry Quote Accent */}
-                  <div className="mt-3.5 pl-3 border-l-2 border-slate-200 dark:border-white/10 group-hover:border-amber-500/60 dark:group-hover:border-amber-400/60 transition-colors">
-                    <p className="text-xs text-slate-600 dark:text-slate-300 italic font-normal leading-relaxed line-clamp-2">
-                      "{art.mysteryQuestion}"
-                    </p>
+                    <div className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-colors ${
+                      isDay
+                        ? 'text-amber-600 group-hover:text-amber-700'
+                        : 'text-amber-400 group-hover:text-amber-300'
+                    }`}>
+                      <span>Start Mission</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                    </div>
                   </div>
-                </div>
-
-                {/* Minimal Footer Row */}
-                <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                    <span>Expedition</span>
-                  </span>
-
-                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
-                    <span>Start Mission</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </main>
       </div>
     </PersistentAppShell>
   );
