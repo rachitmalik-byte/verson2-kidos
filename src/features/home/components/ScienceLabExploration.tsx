@@ -6,7 +6,7 @@ import { sounds } from '@/lib/sounds';
 import electromagnetImg from '@/assets/images/landing/electromagnet_coil_3d.jpg';
 import molecularImg from '@/assets/images/landing/molecular_structure_3d.jpg';
 import biologicalCellImg from '@/assets/images/landing/biological_cell_3d.jpg';
-import volcanoImg from '@/assets/images/landing/volcano_lab_chamber.jpg';
+import volcanoImg from '@/assets/images/landing/volcano_lab_loading.jpg';
 import planetImg from '@/assets/images/landing/planet_celestial_3d.jpg';
 import biodomeImg from '@/assets/images/landing/ecosystem_biodome_3d.jpg';
 

@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Sparkles, ArrowRight, X, Gauge, Zap, Activity } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 
-import volcanoImg from '@/assets/images/landing/volcano_lab_chamber.jpg';
+import volcanoLoadingImg from '@/assets/images/landing/volcano_lab_loading.jpg';
+import volcanoDoneImg from '@/assets/images/landing/volcano_lab_done.jpg';
 import planetImg from '@/assets/images/landing/planet_celestial_3d.jpg';
 import electromagnetImg from '@/assets/images/landing/electromagnet_coil_3d.jpg';
 
@@ -25,7 +26,7 @@ export const ExperimentShowcase: React.FC = () => {
       id: 'volcano',
       title: 'Subsurface Magma Viscosity & Eruption Chamber',
       discipline: 'EARTH SCIENCE',
-      visual: volcanoImg,
+      visual: volcanoLoadingImg,
       summary: 'Regulate gas saturation and magma silica levels inside a pressurized glass chamber to compare explosive vs effusive lava flows.',
       metricLabel: 'Chamber Pressure',
       metricValue: '48.2 MPa',
@@ -171,9 +172,30 @@ export const ExperimentShowcase: React.FC = () => {
                   <h3 className="text-2xl font-display font-black text-slate-900 mb-2">
                     Magma Chamber Pressure Test
                   </h3>
-                  <p className="text-xs text-slate-600 mb-6 font-medium">
+                  <p className="text-xs text-slate-600 mb-4 font-medium">
                     Adjust pressure slider to observe internal chamber stress. Trigger an eruption pulse when critical threshold is exceeded.
                   </p>
+
+                  {/* Live Animated 3D Preview Frame */}
+                  <div className="relative aspect-16/9 w-full rounded-2xl overflow-hidden bg-slate-950 mb-4 border border-slate-800 shadow-inner">
+                    <motion.img
+                      src={volcanoLoadingImg}
+                      alt="Volcano Lab - Loading"
+                      animate={{ opacity: isEruptingSim ? 0 : 1 }}
+                      transition={{ duration: 0.6 }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <motion.img
+                      src={volcanoDoneImg}
+                      alt="Volcano Lab - Done"
+                      animate={{ opacity: isEruptingSim ? 1 : 0 }}
+                      transition={{ duration: 0.6 }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    {isEruptingSim && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-orange-600/30 to-transparent pointer-events-none" />
+                    )}
+                  </div>
 
                   <div className="p-4 bg-slate-900 rounded-2xl text-white mb-6 border border-slate-800">
                     <div className="flex items-center justify-between mb-3 text-xs font-mono">

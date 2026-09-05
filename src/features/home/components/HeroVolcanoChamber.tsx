@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Play, Pause, Volume2, VolumeX, ArrowRight, Gauge, Activity, Sparkles } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, ArrowRight, Activity, Sparkles, Flame, RotateCcw } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 import { voiceAssistant } from '@/lib/voiceAssistant';
-import volcanoLabChamberImg from '@/assets/images/landing/volcano_lab_chamber.jpg';
+import volcanoLoadingImg from '@/assets/images/landing/volcano_lab_loading.jpg';
+import volcanoDoneImg from '@/assets/images/landing/volcano_lab_done.jpg';
 
 interface HeroVolcanoChamberProps {
   onOpenPreview?: () => void;
@@ -15,29 +16,47 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
 
   // Interactive Simulation State
   const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(72);
-  const [chamberPressure, setChamberPressure] = useState(42.5);
+  const [progress, setProgress] = useState(64);
+  const [chamberPressure, setChamberPressure] = useState(48.2);
   const [viscosity, setViscosity] = useState<'low' | 'high'>('high');
   const [isErupting, setIsErupting] = useState(false);
 
   // Pip Audio Assistant State
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Simulation heartbeat
+  // Simulation heartbeat: advances progress and triggers eruption when reaching 100%
   useEffect(() => {
     if (!isPlaying) return;
+
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const next = prev >= 99 ? 15 : prev + 1;
+        if (isErupting) {
+          return prev;
+        }
+
+        if (prev >= 98) {
+          sounds.sparkle();
+          setIsErupting(true);
+          setChamberPressure(86.4);
+          
+          setTimeout(() => {
+            setIsErupting(false);
+            setChamberPressure(38.5);
+            setProgress(18);
+          }, 4500);
+
+          return 100;
+        }
+
+        const next = prev + 2;
+        const calculatedPressure = Number((34 + (next / 100) * 38 + (Math.random() - 0.5) * 2).toFixed(1));
+        setChamberPressure(calculatedPressure);
         return next;
       });
-      setChamberPressure((prev) => {
-        const delta = (Math.random() - 0.48) * 1.2;
-        return Number(Math.max(30, Math.min(85, prev + delta)).toFixed(1));
-      });
-    }, 1200);
+    }, 1100);
+
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, isErupting]);
 
   const toggleSimulation = () => {
     sounds.pop();
@@ -45,13 +64,24 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
   };
 
   const triggerEruption = () => {
+    if (isErupting) {
+      sounds.pop();
+      setIsErupting(false);
+      setProgress(25);
+      setChamberPressure(41.0);
+      return;
+    }
+
     sounds.sparkle();
     setIsErupting(true);
-    setChamberPressure(78.4);
-    setProgress(95);
+    setChamberPressure(88.7);
+    setProgress(100);
+
     setTimeout(() => {
       setIsErupting(false);
-    }, 1800);
+      setChamberPressure(39.2);
+      setProgress(20);
+    }, 5000);
   };
 
   const handlePipAudio = () => {
@@ -63,10 +93,12 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
 
     sounds.pop();
     setIsSpeaking(true);
-    voiceAssistant.speak(
-      "Volcanoes erupt when molten rock called magma rises through the Earth's crust! Deep underground, trapped dissolved gases expand under immense pressure. When the pressure exceeds the surrounding rock strength, magma explodes through the summit vent!",
-      () => setIsSpeaking(false)
-    );
+
+    const speechText = isErupting
+      ? "KABOOM! Pressure exceeded rock strength! Magma violently blasts through the summit vent creating a glowing pyroclastic fountain, safely contained in our laboratory vacuum chamber!"
+      : "Volcanoes erupt when molten rock called magma rises through the Earth's crust! Trapped dissolved gases expand under immense pressure until it breaches the summit vent. Tap Trigger Eruption Pulse to test it!";
+
+    voiceAssistant.speak(speechText, () => setIsSpeaking(false));
   };
 
   return (
@@ -141,38 +173,99 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
           {/* ── RIGHT COLUMN: HERO 3D EXPERIMENT CHAMBER ── */}
           <div className="lg:col-span-6 relative w-full flex justify-center">
             
-            {/* Visual Frame Container */}
-            <div className="relative w-full max-w-xl rounded-3xl overflow-hidden bg-gradient-to-b from-slate-100/80 to-slate-200/50 border-2 border-slate-200/90 shadow-2xl p-2 sm:p-3 group">
+            {/* Visual Frame Container with camera rumble on eruption */}
+            <motion.div
+              animate={isErupting ? { x: [-1.5, 1.5, -1, 1, 0], y: [-1, 1, -1.5, 0.5, 0] } : { x: 0, y: 0 }}
+              transition={{ repeat: isErupting ? 3 : 0, duration: 0.35 }}
+              className="relative w-full max-w-xl rounded-3xl overflow-hidden bg-gradient-to-b from-slate-100/80 to-slate-200/50 border-2 border-slate-200/90 shadow-2xl p-2 sm:p-3 group"
+            >
               
               {/* Soft Ambient Light Halo */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 via-amber-500/10 to-emerald-500/10 rounded-3xl blur-2xl pointer-events-none" />
+              <div
+                className={`absolute -inset-1 rounded-3xl blur-2xl pointer-events-none transition-all duration-700 ${
+                  isErupting
+                    ? 'bg-gradient-to-r from-orange-500/30 via-amber-500/30 to-red-500/20'
+                    : 'bg-gradient-to-r from-blue-500/10 via-amber-500/10 to-emerald-500/10'
+                }`}
+              />
 
-              {/* 3D Exhibit Artwork */}
-              <div className="relative aspect-4/3 w-full rounded-2xl overflow-hidden bg-slate-900 shadow-inner">
-                <img
-                  src={volcanoLabChamberImg}
-                  alt="PolyQuest 3D Interactive Volcano Laboratory Chamber with Pip"
-                  className={`w-full h-full object-cover transition-transform duration-700 ${
-                    isErupting ? 'scale-105 filter brightness-110' : 'group-hover:scale-102'
-                  }`}
+              {/* 3D Exhibit Artwork Container */}
+              <div className="relative aspect-4/3 w-full rounded-2xl overflow-hidden bg-slate-950 shadow-inner">
+                
+                {/* ── LAYER 1: EXPERIMENT LOADING / HEATING STATE ── */}
+                <motion.img
+                  src={volcanoLoadingImg}
+                  alt="PolyQuest 3D Interactive Volcano Laboratory Chamber - Experiment Loading"
+                  initial={false}
+                  animate={{
+                    opacity: isErupting ? 0 : 1,
+                    scale: isErupting ? 1.04 : 1,
+                  }}
+                  transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
 
-                {/* Subtle volcanic glow flash overlay on eruption */}
+                {/* ── LAYER 2: EXPERIMENT DONE / ERUPTION COMPLETE STATE ── */}
+                <motion.img
+                  src={volcanoDoneImg}
+                  alt="PolyQuest 3D Interactive Volcano Laboratory Chamber - Experiment Done & Erupted"
+                  initial={false}
+                  animate={{
+                    opacity: isErupting ? 1 : 0,
+                    scale: isErupting ? 1 : 0.97,
+                  }}
+                  transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+
+                {/* ── DYNAMIC VOLCANIC GLOW FLASH ON ERUPTION ── */}
                 {isErupting && (
                   <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.4, 0] }}
-                    transition={{ duration: 1.5 }}
-                    className="absolute inset-0 bg-gradient-to-t from-orange-600/50 via-amber-500/20 to-transparent pointer-events-none"
+                    animate={{ opacity: [0, 0.45, 0.15] }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className="absolute inset-0 bg-gradient-to-t from-orange-600/40 via-amber-500/20 to-transparent pointer-events-none mix-blend-screen"
                   />
                 )}
 
-                {/* ── RESTAINED INTERACTIVE UI OVERLAY (Top-Left) ── */}
-                <div className="absolute top-3.5 left-3.5 bg-slate-950/80 backdrop-blur-md border border-white/20 text-white rounded-2xl p-3.5 shadow-xl max-w-[220px]">
+                {/* ── STATE TRANSITION PILL BAR (Top-Right: allows previewing both video frames) ── */}
+                <div className="absolute top-3.5 right-3.5 z-20 flex items-center gap-1 bg-slate-950/80 backdrop-blur-md border border-white/20 rounded-full p-1 shadow-lg">
+                  <button
+                    onClick={() => {
+                      sounds.pop();
+                      setIsErupting(false);
+                    }}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                      !isErupting
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    1. Loading
+                  </button>
+                  <button
+                    onClick={() => {
+                      sounds.sparkle();
+                      setIsErupting(true);
+                      setChamberPressure(88.4);
+                      setProgress(100);
+                    }}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                      isErupting
+                        ? 'bg-orange-600 text-white shadow-sm'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    2. Done (Erupted)
+                  </button>
+                </div>
+
+                {/* ── INTERACTIVE TELEMETRY OVERLAY (Top-Left) ── */}
+                <div className="absolute top-3.5 left-3.5 z-20 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white rounded-2xl p-3 sm:p-3.5 shadow-xl max-w-[220px]">
                   <div className="flex items-center justify-between gap-2 mb-1.5">
                     <span className="text-[10px] font-mono font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-emerald-400 animate-ping' : 'bg-slate-500'}`} />
-                      VOLCANO EXPERIMENT
+                      <span className={`w-2 h-2 rounded-full ${isErupting ? 'bg-orange-400 animate-ping' : isPlaying ? 'bg-emerald-400 animate-ping' : 'bg-slate-500'}`} />
+                      {isErupting ? 'VENT ERUPTION ACTIVE' : 'VOLCANO EXPERIMENT'}
                     </span>
                     <button
                       onClick={toggleSimulation}
@@ -184,15 +277,27 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                   </div>
 
                   <div className="text-[11px] font-bold text-slate-300 flex items-center justify-between">
-                    <span>{isPlaying ? 'Simulation running' : 'Simulation paused'}</span>
-                    <span className="font-mono text-emerald-400 font-bold">{progress}%</span>
+                    <span>
+                      {isErupting
+                        ? '💥 Eruption Achieved!'
+                        : isPlaying
+                        ? 'Simulating ascent'
+                        : 'Simulation paused'}
+                    </span>
+                    <span className={`font-mono font-bold ${isErupting ? 'text-orange-400' : 'text-emerald-400'}`}>
+                      {isErupting ? '100%' : `${progress}%`}
+                    </span>
                   </div>
 
                   {/* Telemetry Progress Bar */}
                   <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mt-1.5">
                     <div
-                      className="h-full bg-gradient-to-r from-emerald-400 to-amber-400 rounded-full transition-all duration-300"
-                      style={{ width: `${progress}%` }}
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        isErupting
+                          ? 'bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 w-full'
+                          : 'bg-gradient-to-r from-emerald-400 to-amber-400'
+                      }`}
+                      style={{ width: isErupting ? '100%' : `${progress}%` }}
                     />
                   </div>
 
@@ -200,7 +305,9 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                   <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/10 text-[10px]">
                     <div>
                       <span className="text-slate-400 block">Pressure</span>
-                      <span className="font-mono font-bold text-amber-300">{chamberPressure} MPa</span>
+                      <span className={`font-mono font-bold ${isErupting ? 'text-orange-400 animate-pulse' : 'text-amber-300'}`}>
+                        {chamberPressure} MPa
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-400 block">Viscosity</span>
@@ -218,49 +325,81 @@ export const HeroVolcanoChamber: React.FC<HeroVolcanoChamberProps> = ({ onOpenPr
                 </div>
 
                 {/* Eruption Pulse Button (Bottom-Left) */}
-                <div className="absolute bottom-3.5 left-3.5">
+                <div className="absolute bottom-3.5 left-3.5 z-20">
                   <button
                     onClick={triggerEruption}
-                    disabled={isErupting}
-                    className="px-3.5 py-1.5 rounded-xl bg-orange-500/90 hover:bg-orange-500 text-white font-mono font-bold text-xs backdrop-blur-md border border-orange-300/40 shadow-lg flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
+                    className={`px-3.5 py-1.5 rounded-xl font-mono font-bold text-xs backdrop-blur-md border shadow-lg flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all ${
+                      isErupting
+                        ? 'bg-amber-600/95 hover:bg-amber-600 text-white border-amber-300/60 shadow-orange-500/30'
+                        : 'bg-orange-500/90 hover:bg-orange-500 text-white border-orange-300/40 shadow-lg'
+                    }`}
                   >
-                    <Activity className="w-3.5 h-3.5 text-amber-200" />
-                    <span>{isErupting ? 'VENT PRESSURE RELEASE...' : 'Trigger Eruption Pulse ▶'}</span>
+                    {isErupting ? (
+                      <>
+                        <RotateCcw className="w-3.5 h-3.5 text-amber-200" />
+                        <span>↺ COOL DOWN CHAMBER</span>
+                      </>
+                    ) : (
+                      <>
+                        <Activity className="w-3.5 h-3.5 text-amber-200 animate-pulse" />
+                        <span>TRIGGER ERUPTION PULSE ▶</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* ── AI SCIENCE ASSISTANT: PIP'S SCIENCE CORNER ── */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="absolute -bottom-6 right-2 sm:right-6 bg-white/95 backdrop-blur-md border-2 border-slate-200 shadow-xl rounded-2xl p-3 sm:p-4 max-w-xs text-left z-20 flex items-start gap-3"
+              className={`absolute -bottom-6 right-2 sm:right-6 bg-white/95 backdrop-blur-md border-2 shadow-xl rounded-2xl p-3 sm:p-4 max-w-xs text-left z-20 flex items-start gap-3 transition-colors ${
+                isErupting ? 'border-orange-300 shadow-orange-500/10' : 'border-slate-200'
+              }`}
             >
-              <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center shrink-0 text-purple-600">
-                <Sparkles className="w-5 h-5 text-purple-600" />
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                  isErupting
+                    ? 'bg-orange-100 border border-orange-300 text-orange-600'
+                    : 'bg-purple-50 border border-purple-200 text-purple-600'
+                }`}
+              >
+                {isErupting ? (
+                  <Flame className="w-5 h-5 text-orange-600 animate-bounce" />
+                ) : (
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                )}
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1 mb-0.5">
-                  <span className="text-[10px] font-mono font-black uppercase tracking-wider text-purple-700">
-                    PIP'S SCIENCE CORNER
+                  <span
+                    className={`text-[10px] font-mono font-black uppercase tracking-wider ${
+                      isErupting ? 'text-orange-600' : 'text-purple-700'
+                    }`}
+                  >
+                    {isErupting ? "PIP • ERUPTION SUCCESS!" : "PIP'S SCIENCE CORNER"}
                   </span>
                   <button
                     onClick={handlePipAudio}
                     title={isSpeaking ? 'Stop Audio' : 'Listen to Explanation'}
                     className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
                       isSpeaking
-                        ? 'bg-purple-600 text-white animate-pulse'
-                        : 'bg-slate-100 hover:bg-purple-100 text-purple-700'
+                        ? isErupting
+                          ? 'bg-orange-600 text-white animate-pulse'
+                          : 'bg-purple-600 text-white animate-pulse'
+                        : 'bg-slate-100 hover:bg-purple-100 text-slate-700'
                     }`}
                   >
                     {isSpeaking ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
                   </button>
                 </div>
                 <p className="text-xs font-bold text-slate-800 leading-snug">
-                  "Want to know why volcanoes erupt?"
+                  {isErupting
+                    ? '"KABOOM! Trapped gas breached the summit vent!"'
+                    : '"Want to know why volcanoes erupt?"'}
                 </p>
                 <span className="text-[10px] text-slate-500 font-medium block mt-1">
                   {isSpeaking ? 'Speaking explanation...' : 'Tap speaker to hear Pip explain'}
